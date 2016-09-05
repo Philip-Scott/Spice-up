@@ -1,0 +1,27 @@
+<schemalist>
+    <schema id="org.up.spice" path="/org/up/spice/" gettext-domain="spice-up">
+        <key name="pos-x" type="i">
+            <default>920</default>
+            <summary>The saved width of the window.</summary>
+            <description>The saved width of the window. Must be greater than 700, or it will not take effect.</description>
+        </key>
+
+        <key name="pos-y" type="i">
+            <default>920</default>
+            <summary>The saved width of the window.</summary>
+            <description>The saved width of the window. Must be greater than 700, or it will not take effect.</description>
+        </key>
+
+        <key name="window-width" type="i">
+            <default>1100</default>
+            <summary>The saved width of the window.</summary>
+            <description>The saved width of the window. Must be greater than 700, or it will not take effect.</description>
+        </key>
+
+        <key name="window-height" type="i">
+            <default>640</default>
+            <summary>The saved height of the window.</summary>
+            <description>The saved height of the window. Must be greater than 400, or it will not take effect.</description>
+        </key>
+    </schema>
+</schemalist>
