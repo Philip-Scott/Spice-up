@@ -20,15 +20,65 @@
 */
 
 public class Spice.Headerbar : Gtk.HeaderBar {
+    private HeaderbarButton undo;
+    private HeaderbarButton redo;
+    private HeaderbarButton text;
+    private HeaderbarButton image;
+    private HeaderbarButton shape;
+
+    private HeaderbarButton present;
 
     public Headerbar () {
         set_title ("Presentation");
         set_show_close_button (true);
 
         build_ui ();
+        connect_signals ();
     }
 
-    public void build_ui () {
-        //var
+    private void build_ui () {
+        undo = new HeaderbarButton ("edit-undo-symbolic");
+        redo = new HeaderbarButton ("edit-redo-symbolic");
+        text = new HeaderbarButton ("insert-text-symbolic");
+        image = new HeaderbarButton ("insert-image-symbolic");
+        shape = new HeaderbarButton ("insert-object-symbolic");
+
+
+        present = new HeaderbarButton ("media-playback-start-symbolic");
+        present.get_style_context ().add_class ("suggested-action");
+
+        var undo_redo_box = new Gtk.Grid ();
+        var object_box = new Gtk.Grid ();
+
+        undo_redo_box.get_style_context ().add_class ("linked");
+        object_box.get_style_context ().add_class ("linked");
+
+        undo_redo_box.add (undo);
+        undo_redo_box.add (redo);
+
+        object_box.add (text);
+        object_box.add (image);
+        object_box.add (shape);
+
+        pack_start (undo_redo_box);
+        pack_start (object_box);
+
+        pack_end (present);
+    }
+    
+    private void connect_signals () {
+        present.clicked.connect (() => {
+            window.fullscreen ();
+        });
+    }
+
+    protected class HeaderbarButton : Gtk.Button {
+        protected HeaderbarButton (string icon_name) {
+            can_focus = false;
+
+            var image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
+            image.margin = 3;
+            this.add (image);
+        }
     }
 }
