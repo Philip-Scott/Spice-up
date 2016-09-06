@@ -20,7 +20,35 @@
 */
 
 public class Spice.Window : Gtk.ApplicationWindow {
+    public static bool is_fullscreen { public get; private set; default = false; }
+
     private Gtk.Paned pane1;
+
+    private Spice.Headerbar headerbar;
+    private Spice.Canvas canvas;
+
+    private Gtk.Revealer sidebar_revealer;
+    private Gtk.Revealer toolbar_revealer;
+
+    private static string ELEMENTARY_STYLESHEET = "
+    @define-color colorPrimary #2C2D2E;
+    .slide-list {
+        background-color: #2A2B2C;
+    }
+
+    .new{
+        background-color: #363738;
+    }
+
+    .slide {
+        border-color: black;
+        border-radius: 6px;
+    }
+
+    .canvas {
+        box-shadow: inset 0 0 0 2px alpha (#fff, 0.05);
+        border-radius: 6px
+    }";
 
     public Window (Gtk.Application app) {
         Object (application: app);
@@ -32,18 +60,42 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private void build_ui () {
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
-        
-        var headerbar = new Headerbar ();
-        
+        Granite.Widgets.Utils.set_theming_for_screen (this.get_screen (), ELEMENTARY_STYLESHEET,
+                                                      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+        canvas = new Spice.Canvas ();
+        headerbar = new Spice.Headerbar ();
+        var slide_list = new Spice.SlideList ();
         set_titlebar (headerbar);
-        
-        this.add (new Spice.Canvas ());
-        
+
+        sidebar_revealer = new Gtk.Revealer ();
+        toolbar_revealer = new Gtk.Revealer ();
+
+        sidebar_revealer.add (slide_list);
+        sidebar_revealer.reveal_child = true;
+
+        var grid = new Gtk.Grid ();
+        grid.get_style_context ().add_class ("app-back");
+        grid.attach (toolbar_revealer, 0, 0, 2, 1);
+        grid.attach (sidebar_revealer, 0, 1, 1, 1);
+        grid.attach (canvas,           1, 1, 1, 1);
+
+        this.add (grid);
+
         this.show_all ();
     }
 
     private void connect_signals (Gtk.Application app) {
+        window_state_event.connect ((e) => {
+            if (Gdk.WindowState.FULLSCREEN in e.changed_mask) {
+                is_fullscreen = (Gdk.WindowState.FULLSCREEN in e.new_window_state);
+                sidebar_revealer.visible = !is_fullscreen;
+                sidebar_revealer.reveal_child = !is_fullscreen;
+                toolbar_revealer.reveal_child = !is_fullscreen;
+            }
 
+            return false;
+        });
     }
 
     protected bool delete_eventop (Gdk.EventAny event) {
@@ -52,7 +104,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
         int x;
         int y;
 
-       // editor.save_file ();
         get_size (out width, out height);
         get_position (out x, out y);
 
@@ -67,10 +118,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private void load_settings () {
         resize (settings.window_width, settings.window_height);
         //pane2.position = settings.panel_size;
-    }
-
-    private void request_close () {
-        close ();
     }
 
     public void show_app () {

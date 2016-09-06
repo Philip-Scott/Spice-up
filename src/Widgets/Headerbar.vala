@@ -43,7 +43,6 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         image = new HeaderbarButton ("insert-image-symbolic");
         shape = new HeaderbarButton ("insert-object-symbolic");
 
-
         present = new HeaderbarButton ("media-playback-start-symbolic");
         present.get_style_context ().add_class ("suggested-action");
 

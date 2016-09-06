@@ -71,10 +71,11 @@ vala_precompile(VALA_C
   src/Main.vala
   src/Application.vala
   src/Window.vala
-  src/Canvas.vala
-  src/CanvasItem.vala
   src/Services/Settings.vala
+  src/Widgets/Canvas.vala
+  src/Widgets/CanvasItem.vala
   src/Widgets/Headerbar.vala
+  src/Widgets/SlideList.vala
   #src/config.vala
 PACKAGES
   ${VALA_DEPS}
