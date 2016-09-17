@@ -16,6 +16,7 @@ pkg_check_modules(DEPS REQUIRED
   granite>=0.3
   gtksourceview-3.0>=3.10
   gthread-2.0
+  json-glib-1.0
   gtk+-3.0>=3.9.10
 )
 
@@ -23,12 +24,14 @@ set (PKG_DEPS
  granite>=0.3
  gee-0.8
  gtk+-3.0
+ json-glib-1.0
 )
 
 set (VALA_DEPS
  granite
  gee-0.8
  gtk+-3.0
+ json-glib-1.0
 )
 
 pkg_check_modules (DEPS REQUIRED ${PKG_DEPS})
@@ -73,9 +76,13 @@ vala_precompile(VALA_C
   src/Window.vala
   src/Services/Settings.vala
   src/Widgets/Canvas.vala
-  src/Widgets/CanvasItem.vala
+  src/Widgets/CanvasItems/CanvasItem.vala
+  src/Widgets/CanvasItems/TextItem.vala
+  src/Widgets/CanvasItems/ColorItem.vala
+  src/Widgets/CanvasItems/Grabber.vala
   src/Widgets/Headerbar.vala
   src/Widgets/SlideList.vala
+  src/Widgets/DynamicToolbar.vala
   #src/config.vala
 PACKAGES
   ${VALA_DEPS}

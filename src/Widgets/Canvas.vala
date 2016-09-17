@@ -20,47 +20,80 @@
 */
 
 public class Spice.Canvas : Gtk.Overlay {
+    public signal void item_clicked (CanvasItem item);
+
     private const int SNAP_LIMIT = int.MAX - 1;
 
     public signal void configuration_changed ();
 
-    private bool scanning = false;
-    private double current_ratio = 1.0f;
+    public static double current_ratio = 1.0f;
     private int current_allocated_width = 0;
     private int current_allocated_height = 0;
     private int default_x_margin = 0;
     private int default_y_margin = 0;
     public int active_displays { get; set; default = 0; }
-    private static string[] colors = {"#3892e0", "#da4d45", "#f37329", "#fbd25d", "#93d844", "#8a4ebf", "#333333"};
 
-    const string COLORED_STYLE_CSS = """
-        .colored {
-            background-color: %s;
-            color: %s;
-        }
-
-        .colored.disabled {
-            background-color: #aaa;
-        }
+    private const string TESTING_DATA = """
+        {
+	"items": [
+	{
+	    "type": "color",
+	    "x": 100,
+	    "y": 50,
+	    "w": 830,
+	    "h": 500,
+	    "background_color": "#36f"
+    },{
+		"type":"text",
+		"text":"Spice-up",
+		"x": 100,
+		"y": 50,
+		"w": 230,
+		"h": 50
+	}]
+}
     """;
 
     public Canvas () {
-        this.margin = 24;
+        events |= Gdk.EventMask.BUTTON_PRESS_MASK;
+    
         var grid = new Gtk.Grid ();
         grid.get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
         grid.get_style_context ().add_class ("canvas");
         grid.expand = true;
 
+        set_size_request (500, 380);
+
+        load_data (TESTING_DATA);
+
         add (grid);
 
-        add_output ();
-        add_output ();
-        add_output ();
-        add_output ();
-        add_output ();
-        add_output ();
-
         calculate_ratio ();
+    }
+
+    public void load_data (string data) {
+        var parser = new Json.Parser ();
+        parser.load_from_data (data);
+
+        var root_object = parser.get_root ().get_object ();
+        var items = root_object.get_array_member ("items");
+
+        foreach (var raw in items.get_elements ()) {
+            var item = raw.get_object ();
+
+            string type = item.get_string_member ("type");
+
+            switch (type) {
+                case "text":
+                    var canvas_item = new TextItem ();
+                    add_output (canvas_item);
+                break;
+                case "color":
+                    var canvas_item = new ColorItem (item);
+                    add_output (canvas_item);
+                break;
+            }
+        }
     }
 
     public override bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation) {
@@ -85,11 +118,7 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     private void check_configuration_changed () {
-        try {
-            configuration_changed ();
-        } catch (Error e) {
-            // Nothing to show here
-        }
+        configuration_changed ();
     }
 
     private void calculate_ratio () {
@@ -97,16 +126,13 @@ public class Spice.Canvas : Gtk.Overlay {
         int added_height = 0;
         int max_width = 0;
         int max_height = 0;
-        get_children ().foreach ((child) => {
-            if (child is CanvasItem) {
-                var display_widget = (CanvasItem) child;
-                int x = 20, y = 20, width = 200, height = 200;
-                added_width += width;
-                added_height += height;
-                max_width = int.max (max_width, x + width);
-                max_height = int.max (max_height, y + height);
-            }
-        });
+
+        int x = 20, y = 20, width = 1500, height = 1500;
+        added_width += width;
+        added_height += height;
+        max_width = int.max (max_width, x + width);
+        max_height = int.max (max_height, y + height);
+
         current_allocated_width = get_allocated_width ();
         current_allocated_height = get_allocated_height ();
         current_ratio = double.min ((double)(get_allocated_width () -24) / (double) added_width, (double)(get_allocated_height ()-24) / (double) added_height);
@@ -114,119 +140,61 @@ public class Spice.Canvas : Gtk.Overlay {
         default_y_margin = (int) ((get_allocated_height () - max_height*current_ratio)/2);
     }
 
-    private void add_output () {
-        var display_widget = new CanvasItem ();
+    public CanvasItem add_output (CanvasItem item) {
+        var canvas_item = item;
+
         current_allocated_width = 0;
         current_allocated_height = 0;
-        add_overlay (display_widget);
-        var provider = new Gtk.CssProvider ();
-        try {
-            var color_number = (get_children ().length ()-2)%7;
-            var font_color = "#ffffff";
-            if (color_number == 3 || color_number == 4) {
-                font_color = "#333333";
-            }
 
-            var colored_css = COLORED_STYLE_CSS.printf (colors[color_number], font_color);
-            provider.load_from_data (colored_css, colored_css.length);
-            var context = display_widget.get_style_context ();
-            context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        add_overlay (canvas_item);
+
+        try {
+            var context = canvas_item.get_style_context ();
             context.add_class ("colored");
         } catch (GLib.Error e) {
             critical (e.message);
         }
 
-        display_widget.show_all ();
-        display_widget.configuration_changed.connect (() => check_configuration_changed ());
-        display_widget.check_position.connect (() => check_intersects (display_widget));
-        display_widget.active_changed.connect (() => {
-            active_displays += 1;
-            check_configuration_changed ();
-            calculate_ratio ();
+        canvas_item.show_all ();
+        canvas_item.configuration_changed.connect (() => check_configuration_changed ());
+        canvas_item.check_position.connect (() => check_intersects (canvas_item));
+
+        canvas_item.clicked.connect (() => {
+            unselect_all ();
+            item_clicked (canvas_item);
         });
 
-        display_widget.show_all ();
+        canvas_item.show_all ();
 
-        display_widget.move_display.connect ((delta_x, delta_y) => {
+        canvas_item.move_display.connect ((delta_x, delta_y) => {
             if (Spice.Window.is_fullscreen) return;
 
             int x, y, width, height;
-            display_widget.get_geometry (out x, out y, out width, out height);
-            display_widget.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
-            display_widget.queue_resize_no_redraw ();
-            check_configuration_changed ();
-            calculate_ratio ();
+            canvas_item.get_geometry (out x, out y, out width, out height);
+            canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
+            canvas_item.queue_resize_no_redraw ();
         });
 
-        //check_intersects (display_widget);
-        var old_delta_x = display_widget.delta_x;
-        var old_delta_y = display_widget.delta_y;
-        display_widget.delta_x = 0;
-        display_widget.delta_y = 0;
-        display_widget.move_display (old_delta_x, old_delta_y);
+        var old_delta_x = canvas_item.delta_x;
+        var old_delta_y = canvas_item.delta_y;
+        canvas_item.delta_x = 0;
+        canvas_item.delta_y = 0;
+        canvas_item.move_display (old_delta_x, old_delta_y);
 
         calculate_ratio ();
+
+        return canvas_item;
+    }
+    
+    private void unselect_all () {
+        foreach (var item in get_children ()) {
+            if (item is CanvasItem)
+                ((CanvasItem) item).unselect ();
+        }
+        
     }
 
     public void check_intersects (CanvasItem source_display_widget) {
-        if (Spice.Window.is_fullscreen) return;
-
-        int orig_x, orig_y, src_x, src_y, src_width, src_height;
-        source_display_widget.get_geometry (out orig_x, out orig_y, out src_width, out src_height);
-        src_x = orig_x + (int)(source_display_widget.delta_x/current_ratio);
-        src_y = orig_y + (int)(source_display_widget.delta_y/current_ratio);
-        Gdk.Rectangle src_rect = {src_x, src_y, src_width, src_height};
-        get_children ().foreach ((child) => {
-            if (child is Spice.CanvasItem) {
-                var display_widget = (Spice.CanvasItem) child;
-                if (display_widget == source_display_widget) {
-                    return;
-                }
-
-                int x, y, width, height;
-                display_widget.get_geometry (out x, out y, out width, out height);
-                Gdk.Rectangle test_rect = {x, y, width, height};
-                /*Gdk.Rectangle intersection;
-                if (src_rect.intersect (test_rect, out intersection)) {
-                    if (intersection.height == src_height) {
-                        // on the left side
-                        if (intersection.x <= x + width/2) {
-                            source_display_widget.delta_x = (int) ((x - (orig_x + src_width)) * current_ratio);
-                        // on the right side
-                        } else {
-                            source_display_widget.delta_x = (int) ((x - orig_x + width) * current_ratio);
-                        }
-                    } else if (intersection.width == src_width) {
-                        // on the bottom side
-                        if (intersection.y <= y + height/2) {
-                            source_display_widget.delta_y = (int) ((y - (orig_y + src_height)) * current_ratio);
-                        } else {
-                        // on the upper side
-                            source_display_widget.delta_y = (int) ((y - orig_y + height) * current_ratio);
-                        }
-                    } else {
-                        if (intersection.width < intersection.height) {
-                            // on the left side
-                            if (intersection.x <= x + width/2) {
-                                source_display_widget.delta_x = (int) ((x - (orig_x + src_width)) * current_ratio);
-                            // on the right side
-                            } else {
-                                source_display_widget.delta_x = (int) ((x - orig_x + width) * current_ratio);
-                            }
-                        } else {
-                            // on the bottom side
-                            if (intersection.y <= y + height/2) {
-                                source_display_widget.delta_y = (int) ((y - (orig_y + src_height)) * current_ratio);
-                            } else {
-                            // on the upper side
-                                source_display_widget.delta_y = (int) ((y - orig_y + height) * current_ratio);
-                            }
-                        }
-                    }
-                }*/
-            }
-        });
-
         source_display_widget.queue_resize_no_redraw ();
     }
 }

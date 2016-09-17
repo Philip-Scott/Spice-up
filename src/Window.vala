@@ -22,10 +22,9 @@
 public class Spice.Window : Gtk.ApplicationWindow {
     public static bool is_fullscreen { public get; private set; default = false; }
 
-    private Gtk.Paned pane1;
-
     private Spice.Headerbar headerbar;
     private Spice.Canvas canvas;
+    private Spice.DynamicToolbar toolbar;
 
     private Gtk.Revealer sidebar_revealer;
     private Gtk.Revealer toolbar_revealer;
@@ -36,7 +35,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         background-color: #2A2B2C;
     }
 
-    .new{
+    .new {
         background-color: #363738;
     }
 
@@ -48,7 +47,17 @@ public class Spice.Window : Gtk.ApplicationWindow {
     .canvas {
         box-shadow: inset 0 0 0 2px alpha (#fff, 0.05);
         border-radius: 6px
-    }";
+    }
+
+    .canvas, frame {
+        border-radius: 6px;
+    }
+
+    .background {
+        background-color: #333435;
+    }
+
+    ";
 
     public Window (Gtk.Application app) {
         Object (application: app);
@@ -65,6 +74,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         canvas = new Spice.Canvas ();
         headerbar = new Spice.Headerbar ();
+        toolbar = new Spice.DynamicToolbar ();
+
         var slide_list = new Spice.SlideList ();
         set_titlebar (headerbar);
 
@@ -74,11 +85,18 @@ public class Spice.Window : Gtk.ApplicationWindow {
         sidebar_revealer.add (slide_list);
         sidebar_revealer.reveal_child = true;
 
+        toolbar_revealer.add (toolbar);
+        toolbar_revealer.reveal_child = true;
+
+        var aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.3, false);
+        aspect_frame.add (canvas);
+        aspect_frame.margin = 24;
+
         var grid = new Gtk.Grid ();
         grid.get_style_context ().add_class ("app-back");
-        grid.attach (toolbar_revealer, 0, 0, 2, 1);
-        grid.attach (sidebar_revealer, 0, 1, 1, 1);
-        grid.attach (canvas,           1, 1, 1, 1);
+        grid.attach (toolbar_revealer, 1, 0, 2, 1);
+        grid.attach (sidebar_revealer, 0, 0, 1, 2);
+        grid.attach (aspect_frame,     1, 1, 1, 1);
 
         this.add (grid);
 
@@ -86,6 +104,29 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private void connect_signals (Gtk.Application app) {
+        headerbar.button_clicked.connect ((button) => {
+            CanvasItem? item = null;
+            if (button == HeaderButton.TEXT) {
+                item = new TextItem ();
+                item.load_data ();
+                canvas.add_output (item);
+            } else if (button == HeaderButton.IMAGE) {
+
+            } else if (button == HeaderButton.SHAPE) {
+                item = new ColorItem ();
+                item.load_data ();
+                item = canvas.add_output (item);
+            }
+
+            if (item != null) {
+                toolbar.item_selected (item);
+            }
+        });
+
+        canvas.item_clicked.connect ((item) => {
+            toolbar.item_selected (item);
+        });
+        
         window_state_event.connect ((e) => {
             if (Gdk.WindowState.FULLSCREEN in e.changed_mask) {
                 is_fullscreen = (Gdk.WindowState.FULLSCREEN in e.new_window_state);

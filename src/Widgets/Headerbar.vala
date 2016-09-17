@@ -19,7 +19,17 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
+public enum Spice.HeaderButton {
+    UNDO,
+    REDO,
+    TEXT,
+    IMAGE,
+    SHAPE;
+}
+
 public class Spice.Headerbar : Gtk.HeaderBar {
+    public signal void button_clicked (Spice.HeaderButton button);
+
     private HeaderbarButton undo;
     private HeaderbarButton redo;
     private HeaderbarButton text;
@@ -37,13 +47,15 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     }
 
     private void build_ui () {
-        undo = new HeaderbarButton ("edit-undo-symbolic");
-        redo = new HeaderbarButton ("edit-redo-symbolic");
-        text = new HeaderbarButton ("insert-text-symbolic");
-        image = new HeaderbarButton ("insert-image-symbolic");
-        shape = new HeaderbarButton ("insert-object-symbolic");
+        HeaderbarButton.headerbar = this;
 
-        present = new HeaderbarButton ("media-playback-start-symbolic");
+        undo = new HeaderbarButton ("edit-undo-symbolic", HeaderButton.UNDO);
+        redo = new HeaderbarButton ("edit-redo-symbolic", HeaderButton.REDO);
+        text = new HeaderbarButton ("insert-text-symbolic", HeaderButton.TEXT);
+        image = new HeaderbarButton ("insert-image-symbolic", HeaderButton.IMAGE);
+        shape = new HeaderbarButton ("insert-object-symbolic", HeaderButton.SHAPE);
+
+        present = new HeaderbarButton ("media-playback-start-symbolic", null);
         present.get_style_context ().add_class ("suggested-action");
 
         var undo_redo_box = new Gtk.Grid ();
@@ -64,7 +76,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         pack_end (present);
     }
-    
+
     private void connect_signals () {
         present.clicked.connect (() => {
             window.fullscreen ();
@@ -72,12 +84,22 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     }
 
     protected class HeaderbarButton : Gtk.Button {
-        protected HeaderbarButton (string icon_name) {
+        public static Headerbar headerbar;
+
+        protected HeaderbarButton (string icon_name, HeaderButton? signal_mask) {
             can_focus = false;
 
             var image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
             image.margin = 3;
             this.add (image);
+
+            if (signal_mask != null) {
+                this.clicked.connect (() => {
+                    headerbar.button_clicked (signal_mask);
+                });
+            }
         }
     }
 }
+
+
