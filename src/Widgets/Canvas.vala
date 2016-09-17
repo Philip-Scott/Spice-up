@@ -21,6 +21,7 @@
 
 public class Spice.Canvas : Gtk.Overlay {
     public signal void item_clicked (CanvasItem item);
+    public signal void ratio_changed (double ratio);
 
     private const int SNAP_LIMIT = int.MAX - 1;
 
@@ -48,7 +49,7 @@ public class Spice.Canvas : Gtk.Overlay {
 		"text":"Spice-up",
 		"x": 100,
 		"y": 50,
-		"w": 230,
+		"w": 430,
 		"h": 50
 	}]
 }
@@ -56,7 +57,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
     public Canvas () {
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
-    
+
         var grid = new Gtk.Grid ();
         grid.get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
         grid.get_style_context ().add_class ("canvas");
@@ -85,7 +86,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
             switch (type) {
                 case "text":
-                    var canvas_item = new TextItem ();
+                    var canvas_item = new TextItem (this);
                     add_output (canvas_item);
                 break;
                 case "color":
@@ -138,6 +139,8 @@ public class Spice.Canvas : Gtk.Overlay {
         current_ratio = double.min ((double)(get_allocated_width () -24) / (double) added_width, (double)(get_allocated_height ()-24) / (double) added_height);
         default_x_margin = (int) ((get_allocated_width () - max_width*current_ratio)/2);
         default_y_margin = (int) ((get_allocated_height () - max_height*current_ratio)/2);
+        
+        ratio_changed (current_ratio);
     }
 
     public CanvasItem add_output (CanvasItem item) {
@@ -185,13 +188,12 @@ public class Spice.Canvas : Gtk.Overlay {
 
         return canvas_item;
     }
-    
+
     private void unselect_all () {
         foreach (var item in get_children ()) {
             if (item is CanvasItem)
                 ((CanvasItem) item).unselect ();
         }
-        
     }
 
     public void check_intersects (CanvasItem source_display_widget) {

@@ -24,7 +24,8 @@ public class Spice.TextItem : Spice.CanvasItem {
     private Gtk.Entry entry;
     private Gtk.Stack stack;
 
-    public string font = "Raleway 24";
+    public string font = "Raleway";
+    public int font_size = 24;
     public string font_color = "#fff";
 
     public bool bold = false;
@@ -38,11 +39,12 @@ public class Spice.TextItem : Spice.CanvasItem {
             color: %s;
 
             font: %s;
+            font-size: %dpx;
             background: 0;
         }
     """;
 
-    public TextItem () {
+    public TextItem (Canvas canvas) {
         label = new Gtk.Label (_("Click to add text..."));
         label.halign = Gtk.Align.CENTER;
         label.valign = Gtk.Align.CENTER;
@@ -86,6 +88,10 @@ public class Spice.TextItem : Spice.CanvasItem {
             }
         });
 
+        canvas.ratio_changed.connect ((ratio) => {
+            style ();
+        });
+
         style ();
     }
 
@@ -101,9 +107,12 @@ public class Spice.TextItem : Spice.CanvasItem {
         var provider = new Gtk.CssProvider ();
         var context = get_style_context ();
 
-        var colored_css = TEXT_STYLE_CSS.printf (font_color, font);
+        var colored_css = TEXT_STYLE_CSS.printf (font_color, font, (int) (4 * font_size * (Canvas.current_ratio)));
+
         provider.load_from_data (colored_css, colored_css.length);
 
         context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+        un_select ();
     }
 }

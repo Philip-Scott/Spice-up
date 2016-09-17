@@ -91,6 +91,9 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
             var image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
             image.margin = 3;
+
+            get_style_context ().add_class ("spice");
+
             this.add (image);
 
             if (signal_mask != null) {

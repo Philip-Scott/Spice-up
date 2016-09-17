@@ -57,6 +57,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
         background-color: #333435;
     }
 
+    .button.spice {
+        background-color: #343536;
+        padding-top: 1;
+        padding-bottom: 1;
+        padding-right: 6;
+        padding-left: 6;
+    }
+
     ";
 
     public Window (Gtk.Application app) {
@@ -107,7 +115,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         headerbar.button_clicked.connect ((button) => {
             CanvasItem? item = null;
             if (button == HeaderButton.TEXT) {
-                item = new TextItem ();
+                item = new TextItem (canvas);
                 item.load_data ();
                 canvas.add_output (item);
             } else if (button == HeaderButton.IMAGE) {
@@ -126,7 +134,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         canvas.item_clicked.connect ((item) => {
             toolbar.item_selected (item);
         });
-        
+
         window_state_event.connect ((e) => {
             if (Gdk.WindowState.FULLSCREEN in e.changed_mask) {
                 is_fullscreen = (Gdk.WindowState.FULLSCREEN in e.new_window_state);
