@@ -101,6 +101,8 @@ public class Spice.TextItem : Spice.CanvasItem {
             label.label = text;
             entry.text = text;
         }
+        
+        font_size = (int) save_data.get_int_member ("font_size");
     }
 
     public override void style () {

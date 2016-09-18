@@ -58,11 +58,16 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     .button.spice {
+        color: #DEDEDE;
         background-color: #343536;
         padding-top: 1;
         padding-bottom: 1;
         padding-right: 6;
         padding-left: 6;
+    }
+
+    .inline-toolbar.toolbar {
+        background-image: linear-gradient(to bottom, #222324, #292A2B);
     }
 
     ";

@@ -107,7 +107,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         grabber_7.halign = Gtk.Align.START;
         grabber_7.valign = Gtk.Align.END;
         grabber_8.halign = Gtk.Align.START;
-        grabber_8.valign = Gtk.Align.CENTER;        
+        grabber_8.valign = Gtk.Align.CENTER;
 
         connect_grabber (grabber_1);
         connect_grabber (grabber_2);
