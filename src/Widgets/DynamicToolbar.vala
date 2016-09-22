@@ -91,16 +91,14 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         text_color_button = new Gtk.ColorButton ();
         text_color_button.color_set.connect (() => {
-            ((TextItem) this.item).font_color = text_color_button.rgba.to_string ();
-            this.item.style ();
+            update_text_properties ();
         });
 
         font_button = new Gtk.FontButton ();
         font_button.show_size = false;
 
         font_button.font_set.connect (() => {
-            ((TextItem) this.item).font = font_button.font;
-            this.item.style ();
+            update_text_properties ();
         });
 
         int[] font_sizes = {6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 38, 42};
@@ -111,8 +109,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         }
 
         font_size.changed.connect (() => {
-            ((TextItem) this.item).font_size = int.parse (font_size.get_active_text ());
-            this.item.style ();
+            update_text_properties ();
         });
 
         text_bar.add (font_button);
@@ -120,6 +117,17 @@ public class Spice.DynamicToolbar : Gtk.Box {
         text_bar.add (text_color_button);
 
         stack.add_named (text_bar, TEXT);
+    }
+
+    private void update_text_properties () {
+        if (item != null && item is TextItem) {
+            TextItem text = (TextItem) item;
+            text.font_color = text_color_button.rgba.to_string ();
+            text.font = font_button.font;
+            text.font_size = int.parse (font_size.get_active_text ());
+
+            this.item.style ();
+        }
     }
 
     private void build_imagebar () {
@@ -139,13 +147,21 @@ public class Spice.DynamicToolbar : Gtk.Box {
         background_color_button.use_alpha = true;
 
         background_color_button.color_set.connect (() => {
-            ((ColorItem) this.item).background_color = background_color_button.rgba.to_string ();
-            this.item.style ();
+            update_shape_properties ();
         });
 
         shape_bar.add (background_color_button);
 
         stack.add_named (shape_bar, SHAPE);
+    }
+
+    private void update_shape_properties () {
+        if (item != null && item is ColorItem) {
+            ColorItem color = (ColorItem) item;
+            color.background_color = background_color_button.rgba.to_string ();
+
+            this.item.style ();
+        }
     }
 
     private void build_canvasbar () {
