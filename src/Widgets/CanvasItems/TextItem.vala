@@ -24,8 +24,8 @@ public class Spice.TextItem : Spice.CanvasItem {
     private Gtk.Entry entry;
     private Gtk.Stack stack;
 
-    public string font = "Raleway";
-    public int font_size = 24;
+    public string font = "Open Sans";
+    public int font_size = 14;
     public string font_color = "#fff";
 
     public bool bold = false;
@@ -44,7 +44,9 @@ public class Spice.TextItem : Spice.CanvasItem {
         }
     """;
 
-    public TextItem (Canvas canvas) {
+    public TextItem (Canvas canvas, Json.Object? save_data = null) {
+        this.save_data = save_data;
+
         label = new Gtk.Label (_("Click to add text..."));
         label.halign = Gtk.Align.CENTER;
         label.valign = Gtk.Align.CENTER;
@@ -92,6 +94,7 @@ public class Spice.TextItem : Spice.CanvasItem {
             style ();
         });
 
+        load_data ();
         style ();
     }
 
@@ -101,8 +104,14 @@ public class Spice.TextItem : Spice.CanvasItem {
             label.label = text;
             entry.text = text;
         }
-        
-        font_size = (int) save_data.get_int_member ("font_size");
+
+        font_size = (int) save_data.get_int_member ("font-size");
+        font = save_data.get_string_member ("font");
+        font_color = save_data.get_string_member ("color");
+    }
+
+    protected override string serialise_item () {
+        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d""".printf (label.label, font, font_color, font_size);
     }
 
     public override void style () {

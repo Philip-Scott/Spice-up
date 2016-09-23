@@ -26,39 +26,70 @@ public class Spice.Canvas : Gtk.Overlay {
     private const int SNAP_LIMIT = int.MAX - 1;
 
     public signal void configuration_changed ();
-
     public static double current_ratio = 1.0f;
+
     private int current_allocated_width = 0;
     private int current_allocated_height = 0;
     private int default_x_margin = 0;
     private int default_y_margin = 0;
-    public int active_displays { get; set; default = 0; }
 
     private const string TESTING_DATA = """
-        {
-	"items": [
-	{
-	    "type": "color",
-	    "x": 100,
-	    "y": 50,
-	    "w": 830,
-	    "h": 500,
-	    "background_color": "#36f"
-    },{
-		"type":"text",
-		"text":"Spice-up",
-		"font-size": 24,
-		"x": 100,
-		"y": 50,
-		"w": 430,
-		"h": 50
-	}]
-}
+{"items": [ {
+              "x": -313,
+              "y": -76,
+              "w": 2203,
+              "h": 1731,
+
+           "type": "color",
+           "background_color": "rgb(114,159,207)"
+
+              }
+       , {
+              "x": -354,
+              "y": 970,
+              "w": 1925,
+              "h": 122,
+
+           "type": "color",
+           "background_color": "rgb(252,233,79)"
+
+              }
+       , {
+              "x": -280,
+              "y": 458,
+              "w": 1897,
+              "h": 336,
+
+           "type":"text",
+           "text": "New Presentation",
+           "font": "Raleway Medium 10",
+           "color": "rgb(255,255,255)",
+           "font-size": 42
+
+              }
+       , {
+              "x": -339,
+              "y": 552,
+              "w": 902,
+              "h": 500,
+
+           "type":"text",
+           "text": "By Felipe Escoto",
+           "font": "Open Sans",
+           "color": "rgb(255,255,255)",
+           "font-size": 18
+
+              }
+       ]}
     """;
 
     public Canvas () {
+        events |= Gdk.EventMask.BUTTON_PRESS_MASK;
+
         var grid = new CanvasGrid (this);
         set_size_request (500, 380);
+
+        get_style_context ().add_class ("canvas");
 
         load_data (TESTING_DATA);
         add (grid);
@@ -80,7 +111,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
             switch (type) {
                 case "text":
-                    var canvas_item = new TextItem (this);
+                    var canvas_item = new TextItem (this, item);
                     add_output (canvas_item);
                 break;
                 case "color":
@@ -89,6 +120,20 @@ public class Spice.Canvas : Gtk.Overlay {
                 break;
             }
         }
+    }
+
+    public string serialise () {
+        string data = "";
+
+        foreach (var widget in get_children ()) {
+            if (widget is CanvasItem) {
+                CanvasItem item = (CanvasItem) widget;
+
+                data = data + (data != "" ? "," + item.serialise () : item.serialise ());
+            }
+        }
+
+        return """{"items": [%s]}""".printf (data);
     }
 
     public override bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation) {
@@ -185,8 +230,9 @@ public class Spice.Canvas : Gtk.Overlay {
 
     public void unselect_all () {
         foreach (var item in get_children ()) {
-            if (item is CanvasItem)
+            if (item is CanvasItem) {
                 ((CanvasItem) item).unselect ();
+            }
         }
     }
 
@@ -194,7 +240,20 @@ public class Spice.Canvas : Gtk.Overlay {
         source_display_widget.queue_resize_no_redraw ();
     }
 
-    protected class CanvasGrid : Gtk.Grid {
+    public override bool button_press_event (Gdk.EventButton event) {
+        stderr.printf ("Pressed item indirectly\n");
+
+        if (Spice.Window.is_fullscreen) {
+            // Next slide
+        } else {
+            item_clicked (null);
+            unselect_all ();
+        }
+
+        return true;
+    }
+
+    protected class CanvasGrid : Gtk.EventBox {
         Canvas canvas;
 
         protected CanvasGrid (Canvas canvas) {
@@ -202,12 +261,12 @@ public class Spice.Canvas : Gtk.Overlay {
             this.canvas = canvas;
 
             get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
-            get_style_context ().add_class ("canvas");
+
             expand = true;
         }
 
         public override bool button_press_event (Gdk.EventButton event) {
-            stderr.printf ("Pressed\n");
+            stderr.printf ("Pressed canvas\n");
 
             if (Spice.Window.is_fullscreen) {
                 // Next slide

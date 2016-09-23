@@ -35,6 +35,16 @@ public class Spice.ColorItem : Spice.CanvasItem {
         style ();
     }
 
+    protected override string serialise_item () {
+        string data = """
+            "type": "color",
+            "background_color": "%s"
+         """.printf (background_color);
+
+
+        return data;
+    }
+
     protected override void load_item_data () {
         background_color = save_data.get_string_member ("background_color");
     }

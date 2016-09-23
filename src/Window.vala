@@ -152,7 +152,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
         });
     }
 
-    protected bool delete_eventop (Gdk.EventAny event) {
+    protected override bool delete_event (Gdk.EventAny event) {
+        stdout.printf ("%s\n", canvas.serialise ());
+        stderr.printf ("exiting...");
         int width;
         int height;
         int x;

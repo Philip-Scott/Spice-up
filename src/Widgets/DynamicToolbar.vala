@@ -34,6 +34,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private CanvasItem? item = null;
     private Gtk.Stack stack;
 
+    private bool selecting = false;
+
     //Text Toolbar
     private Gtk.FontButton font_button;
     private Gtk.ColorButton text_color_button;
@@ -62,6 +64,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     public void item_selected (Spice.CanvasItem? item) {
+        selecting = true;
+        this.item = item;
         if (item == null) {
             stack.set_visible_child_name (CANVAS);
         } else if (item is TextItem) {
@@ -81,7 +85,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
             background_color_button.rgba = rgba;
         }
 
-        this.item = item;
+        selecting = false;
     }
 
     private void build_textbar () {
@@ -120,7 +124,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void update_text_properties () {
-        if (item != null && item is TextItem) {
+        if (item != null && item is TextItem && !selecting) {
             TextItem text = (TextItem) item;
             text.font_color = text_color_button.rgba.to_string ();
             text.font = font_button.font;
@@ -156,7 +160,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void update_shape_properties () {
-        if (item != null && item is ColorItem) {
+        if (item != null && item is ColorItem && !selecting) {
             ColorItem color = (ColorItem) item;
             color.background_color = background_color_button.rgba.to_string ();
 

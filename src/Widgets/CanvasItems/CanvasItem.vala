@@ -51,7 +51,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     protected Gtk.Revealer grabber_revealer;
 
     protected const string CSS = """.colored.selected {
-                                  	border: 2px dotted white;
+                                     border: 2px dotted white;
                                   }""";
 
     construct {
@@ -151,7 +151,15 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
             configuration_changed ();
             check_position ();
-        } else {}
+        } else {
+            stderr.printf ("creating new item \n");
+        }
+    }
+
+    protected abstract string serialise_item ();
+
+    public string serialise () {
+        return """ {"x": %d,"y": %d,"w": %d,"h": %d,%s}""".printf (real_x, real_y, real_width, real_height, serialise_item ());
     }
 
     protected virtual void load_item_data () {}
@@ -181,14 +189,13 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     }
 
     private void resize (int id) {
-        stderr.printf ("Resizing... id: %d\n", id);
         holding = true;
         this.holding_id = id;
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
         if (holding || Spice.Window.is_fullscreen) {
-            return true;
+            return false;
         }
 
         start_x = event.x_root;
@@ -240,7 +247,6 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
                     real_height = (int)(start_h - 1/Canvas.current_ratio * y);
                     break;
                 case 3:
-                    //delta_x = x;
                     delta_y = y;
                     real_height = (int)(start_h - 1/Canvas.current_ratio * y);
                     real_width = (int)(start_w + 1/Canvas.current_ratio * x);
