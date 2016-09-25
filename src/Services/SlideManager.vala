@@ -63,10 +63,10 @@ public class Spice.SlideManager : Object {
 
         slides.add (slide);
         slideshow.add (slide.canvas);
-        current_slide = slide;
         slideshow.show_all ();
 
         new_slide_created (slide);
+        current_slide = slide;
     }
 
     public CanvasItem? request_new_item (Spice.HeaderButton type) {
