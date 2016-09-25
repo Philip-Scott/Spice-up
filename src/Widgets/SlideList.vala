@@ -29,18 +29,26 @@ public class Spice.SlideList : Gtk.Box {
         slides_grid = new Gtk.Grid ();
         slides_grid.orientation = Gtk.Orientation.VERTICAL;
 
-        var slide = new Gtk.Button ();
-        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.DIALOG);
-        slide.can_focus = false;
-        plus_icon.margin = 24;
-        slide.margin = 12;
-        slide.get_style_context ().add_class ("slide");
-        slide.get_style_context ().add_class ("new");
-        slide.add (plus_icon);
-
-        slides_grid.add (slide);
+        add_slide (new Spice.Canvas.preview ());
+        add_new_slide ();
 
         this.add (slides_grid);
+    }
+
+    public void add_slide (Gtk.Widget slide) {
+        var button = new Gtk.Button ();
+        button.get_style_context ().add_class ("slide");
+        button.get_style_context ().add_class ("new");
+        button.add (slide);
+        button.margin = 12;
+
+        slides_grid.add (button);
+    }
+
+    public void add_new_slide () {
+        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.DIALOG);
+        plus_icon.margin = 24;
+        add_slide (plus_icon);
     }
 }
 

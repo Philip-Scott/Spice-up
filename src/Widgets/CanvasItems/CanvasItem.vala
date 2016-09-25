@@ -54,6 +54,12 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
                                      border: 2px dotted white;
                                   }""";
 
+    protected Canvas canvas;
+
+    public CanvasItem (Spice.Canvas canvas) {
+        this.canvas = canvas;
+    }
+
     construct {
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
         events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
@@ -194,7 +200,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
-        if (holding || Spice.Window.is_fullscreen) {
+        if (holding || Spice.Window.is_fullscreen || !canvas.editable) {
             return false;
         }
 
@@ -239,35 +245,35 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
                 case 1:
                     delta_x = x;
                     delta_y = y;
-                    real_height = (int)(start_h - 1/Canvas.current_ratio * y);
-                    real_width = (int)(start_w - 1/Canvas.current_ratio * x);
+                    real_height = (int)(start_h - 1/canvas.current_ratio * y);
+                    real_width = (int)(start_w - 1/canvas.current_ratio * x);
                     break;
                 case 2:
                     delta_y = y;
-                    real_height = (int)(start_h - 1/Canvas.current_ratio * y);
+                    real_height = (int)(start_h - 1/canvas.current_ratio * y);
                     break;
                 case 3:
                     delta_y = y;
-                    real_height = (int)(start_h - 1/Canvas.current_ratio * y);
-                    real_width = (int)(start_w + 1/Canvas.current_ratio * x);
+                    real_height = (int)(start_h - 1/canvas.current_ratio * y);
+                    real_width = (int)(start_w + 1/canvas.current_ratio * x);
                     break;
                 case 4:
-                    real_width = (int)(start_w + 1/Canvas.current_ratio * x);
+                    real_width = (int)(start_w + 1/canvas.current_ratio * x);
                     break;
                 case 5:
-                    real_width = (int)(start_w + 1/Canvas.current_ratio * x);
-                    real_height = (int)(start_h + 1/Canvas.current_ratio * y);
+                    real_width = (int)(start_w + 1/canvas.current_ratio * x);
+                    real_height = (int)(start_h + 1/canvas.current_ratio * y);
                     break;
                 case 6:
-                    real_height = (int)(start_h + 1/Canvas.current_ratio * y);
+                    real_height = (int)(start_h + 1/canvas.current_ratio * y);
                     break;
                 case 7:
-                    real_height = (int)(start_h + 1/Canvas.current_ratio * y);
-                    real_width = (int)(start_w - 1/Canvas.current_ratio * x);
+                    real_height = (int)(start_h + 1/canvas.current_ratio * y);
+                    real_width = (int)(start_w - 1/canvas.current_ratio * x);
                     delta_x = x;
                     break;
                 case 8:
-                    real_width = (int)(start_w - 1/Canvas.current_ratio * x);
+                    real_width = (int)(start_w - 1/canvas.current_ratio * x);
                     delta_x = x;
                     break;
             }

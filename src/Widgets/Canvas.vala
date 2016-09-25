@@ -26,12 +26,14 @@ public class Spice.Canvas : Gtk.Overlay {
     private const int SNAP_LIMIT = int.MAX - 1;
 
     public signal void configuration_changed ();
-    public static double current_ratio = 1.0f;
+    public double current_ratio = 1.0f;
 
     private int current_allocated_width = 0;
     private int current_allocated_height = 0;
     private int default_x_margin = 0;
     private int default_y_margin = 0;
+
+    public bool editable = true;
 
     private const string TESTING_DATA = """
 {"items": [ {
@@ -97,6 +99,18 @@ public class Spice.Canvas : Gtk.Overlay {
         calculate_ratio ();
     }
 
+    public Canvas.preview () {
+        editable = false;
+        var grid = new CanvasGrid (this);
+        set_size_request (100, 100);
+        expand = false;
+
+        get_style_context ().add_class ("canvas");
+
+        load_data (TESTING_DATA);
+        calculate_ratio ();
+    }
+
     public void load_data (string data) {
         var parser = new Json.Parser ();
         parser.load_from_data (data);
@@ -115,7 +129,7 @@ public class Spice.Canvas : Gtk.Overlay {
                     add_output (canvas_item);
                 break;
                 case "color":
-                    var canvas_item = new ColorItem (item);
+                    var canvas_item = new ColorItem (this, item);
                     add_output (canvas_item);
                 break;
             }
@@ -197,26 +211,26 @@ public class Spice.Canvas : Gtk.Overlay {
             critical (e.message);
         }
 
+        if (editable) {
+            canvas_item.configuration_changed.connect (() => check_configuration_changed ());
+            canvas_item.check_position.connect (() => check_intersects (canvas_item));
+            canvas_item.clicked.connect (() => {
+                unselect_all ();
+                item_clicked (canvas_item);
+            });
+
+            canvas_item.move_display.connect ((delta_x, delta_y) => {
+                if (Spice.Window.is_fullscreen) return;
+
+                int x, y, width, height;
+                canvas_item.get_geometry (out x, out y, out width, out height);
+                canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
+                canvas_item.queue_resize_no_redraw ();
+            });
+
+        }
+
         canvas_item.show_all ();
-        canvas_item.configuration_changed.connect (() => check_configuration_changed ());
-        canvas_item.check_position.connect (() => check_intersects (canvas_item));
-
-        canvas_item.clicked.connect (() => {
-            unselect_all ();
-            item_clicked (canvas_item);
-        });
-
-        canvas_item.show_all ();
-
-        canvas_item.move_display.connect ((delta_x, delta_y) => {
-            if (Spice.Window.is_fullscreen) return;
-
-            int x, y, width, height;
-            canvas_item.get_geometry (out x, out y, out width, out height);
-            canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
-            canvas_item.queue_resize_no_redraw ();
-        });
-
         var old_delta_x = canvas_item.delta_x;
         var old_delta_y = canvas_item.delta_y;
         canvas_item.delta_x = 0;
@@ -241,6 +255,7 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
+        if (!editable) return false;
         stderr.printf ("Pressed item indirectly\n");
 
         if (Spice.Window.is_fullscreen) {
@@ -266,6 +281,7 @@ public class Spice.Canvas : Gtk.Overlay {
         }
 
         public override bool button_press_event (Gdk.EventButton event) {
+        //if (!editable) return false;
             stderr.printf ("Pressed canvas\n");
 
             if (Spice.Window.is_fullscreen) {

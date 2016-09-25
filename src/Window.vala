@@ -126,7 +126,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
             } else if (button == HeaderButton.IMAGE) {
 
             } else if (button == HeaderButton.SHAPE) {
-                item = new ColorItem ();
+                item = new ColorItem (canvas);
                 item.load_data ();
                 item = canvas.add_output (item);
             }

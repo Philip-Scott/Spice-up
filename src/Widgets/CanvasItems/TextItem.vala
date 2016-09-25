@@ -45,6 +45,8 @@ public class Spice.TextItem : Spice.CanvasItem {
     """;
 
     public TextItem (Canvas canvas, Json.Object? save_data = null) {
+        base (canvas);
+
         this.save_data = save_data;
 
         label = new Gtk.Label (_("Click to add text..."));
@@ -118,7 +120,7 @@ public class Spice.TextItem : Spice.CanvasItem {
         var provider = new Gtk.CssProvider ();
         var context = get_style_context ();
 
-        var colored_css = TEXT_STYLE_CSS.printf (font_color, font, (int) (4 * font_size * (Canvas.current_ratio)));
+        var colored_css = TEXT_STYLE_CSS.printf (font_color, font, (int) (4 * font_size * (canvas.current_ratio)));
 
         provider.load_from_data (colored_css, colored_css.length);
 

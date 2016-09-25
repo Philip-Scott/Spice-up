@@ -28,7 +28,9 @@ public class Spice.ColorItem : Spice.CanvasItem {
         }
     """;
 
-    public ColorItem (Json.Object? save_data = null) {
+    public ColorItem (Canvas canvas, Json.Object? save_data = null) {
+        base (canvas);
+
         this.save_data = save_data;
 
         load_data ();
