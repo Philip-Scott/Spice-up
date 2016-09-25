@@ -4,7 +4,9 @@ Create simple and beautiful presentations
 Based upon [SpiceOfDesign's presentation concept](http://spiceofdesign.deviantart.com/art/New-Presentation-Concept-401767854), the goal with this project is to create a presentation app that has everything you need to create simple and beautiful presentations 
 
 ## Current Status
-At this moment, the app should be considered in **ALPHA**. But things are starting to come up together!
+At this moment, the app should be considered in a super **PRE-ALPHA** state. But things are starting to come up together!
+
+![screenshot](Screenshot.png)
 
 ### What works:
 - The Canvas! You can add and remove Text and Color items, move them around and resize them!
@@ -19,9 +21,7 @@ At this moment, the app should be considered in **ALPHA**. But things are starti
 - Animations
 - And much more!
 
-![screenshot](Screenshot.png)
-
-#### Donations
+### Donations
 Liked Spice-up? Would like to support it's development of this app and more? Feel free to [leave a little tip :)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYD9ZJK6ZFUDQ) 
 
 
