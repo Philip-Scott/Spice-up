@@ -19,36 +19,71 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class Spice.SlideList : Gtk.Box {
+public class Spice.SlideList : Gtk.ScrolledWindow {
     private Gtk.Grid slides_grid;
+    private SlideManager manager;
 
-    public SlideList () {
+    private Gtk.Button new_slide_button;
+
+    public SlideList (SlideManager manager) {
+        this.manager = manager;
+
         get_style_context ().add_class ("slide-list");
+        hscrollbar_policy = Gtk.PolicyType.NEVER;
         vexpand = true;
 
         slides_grid = new Gtk.Grid ();
+        slides_grid.get_style_context ().add_class ("linked");
         slides_grid.orientation = Gtk.Orientation.VERTICAL;
-
-        add_slide (new Spice.Canvas.preview ());
-        add_new_slide ();
-
         this.add (slides_grid);
+
+        manager.new_slide_created.connect ((slide) => {
+            add_slide (slide);
+        });
+
+        new_slide_button = add_new_slide ();
+
+        new_slide_button.clicked.connect (() => {
+            manager.new_slide ();
+        });
+
+        foreach (var slide in manager.slides) {
+            var button = add_slide (slide);
+        }
     }
 
-    public void add_slide (Gtk.Widget slide) {
+    public Gtk.Button add_slide (Slide slide) {
         var button = new Gtk.Button ();
+
+        button.clicked.connect (() => {
+            manager.current_slide = slide;
+        });
+
+        button.get_style_context ().add_class ("slide");
+        button.add (slide.preview);
+
+        slides_grid.remove (new_slide_button);
+        slides_grid.add (button);
+        slides_grid.add (new_slide_button);
+        slides_grid.show_all ();
+
+        return button;
+    }
+
+    public Gtk.Button add_new_slide () {
+        var button = new Gtk.Button ();
+        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.DIALOG);
+        plus_icon.margin = 24;
+
         button.get_style_context ().add_class ("slide");
         button.get_style_context ().add_class ("new");
-        button.add (slide);
+        button.add (plus_icon);
         button.margin = 12;
 
         slides_grid.add (button);
-    }
+        slides_grid.show_all ();
 
-    public void add_new_slide () {
-        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.DIALOG);
-        plus_icon.margin = 24;
-        add_slide (plus_icon);
+        return button;
     }
 }
 

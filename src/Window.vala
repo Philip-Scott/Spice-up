@@ -23,7 +23,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     public static bool is_fullscreen { public get; private set; default = false; }
 
     private Spice.Headerbar headerbar;
-    private Spice.Canvas canvas;
+    private Spice.SlideManager slide_manager;
     private Spice.DynamicToolbar toolbar;
 
     private Gtk.Revealer sidebar_revealer;
@@ -85,11 +85,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
         Granite.Widgets.Utils.set_theming_for_screen (this.get_screen (), ELEMENTARY_STYLESHEET,
                                                       Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-        canvas = new Spice.Canvas ();
+        slide_manager = new Spice.SlideManager ();
         headerbar = new Spice.Headerbar ();
         toolbar = new Spice.DynamicToolbar ();
 
-        var slide_list = new Spice.SlideList ();
+        var slide_list = new Spice.SlideList (slide_manager);
         set_titlebar (headerbar);
 
         sidebar_revealer = new Gtk.Revealer ();
@@ -102,7 +102,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         toolbar_revealer.reveal_child = true;
 
         var aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.3, false);
-        aspect_frame.add (canvas);
+        aspect_frame.add (slide_manager.slideshow);
         aspect_frame.margin = 24;
 
         var grid = new Gtk.Grid ();
@@ -118,25 +118,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private void connect_signals (Gtk.Application app) {
         headerbar.button_clicked.connect ((button) => {
-            CanvasItem? item = null;
-            if (button == HeaderButton.TEXT) {
-                item = new TextItem (canvas);
-                item.load_data ();
-                canvas.add_output (item);
-            } else if (button == HeaderButton.IMAGE) {
-
-            } else if (button == HeaderButton.SHAPE) {
-                item = new ColorItem (canvas);
-                item.load_data ();
-                item = canvas.add_output (item);
-            }
+            var item = slide_manager.request_new_item (button);
 
             if (item != null) {
                 toolbar.item_selected (item);
             }
         });
 
-        canvas.item_clicked.connect ((item) => {
+        slide_manager.item_clicked.connect ((item) => {
             toolbar.item_selected (item);
         });
 
@@ -153,7 +142,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     protected override bool delete_event (Gdk.EventAny event) {
-        stdout.printf ("%s\n", canvas.serialise ());
+        //stdout.printf ("%s\n", canvas.serialise ());
         stderr.printf ("exiting...");
         int width;
         int height;
@@ -173,7 +162,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private void load_settings () {
         resize (settings.window_width, settings.window_height);
-        //pane2.position = settings.panel_size;
     }
 
     public void show_app () {

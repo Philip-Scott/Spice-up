@@ -35,56 +35,6 @@ public class Spice.Canvas : Gtk.Overlay {
 
     public bool editable = true;
 
-    private const string TESTING_DATA = """
-{"items": [ {
-              "x": -313,
-              "y": -76,
-              "w": 2203,
-              "h": 1731,
-
-           "type": "color",
-           "background_color": "rgb(114,159,207)"
-
-              }
-       , {
-              "x": -354,
-              "y": 970,
-              "w": 1925,
-              "h": 122,
-
-           "type": "color",
-           "background_color": "rgb(252,233,79)"
-
-              }
-       , {
-              "x": -280,
-              "y": 458,
-              "w": 1897,
-              "h": 336,
-
-           "type":"text",
-           "text": "New Presentation",
-           "font": "Raleway Medium 10",
-           "color": "rgb(255,255,255)",
-           "font-size": 42
-
-              }
-       , {
-              "x": -339,
-              "y": 552,
-              "w": 902,
-              "h": 500,
-
-           "type":"text",
-           "text": "By Felipe Escoto",
-           "font": "Open Sans",
-           "color": "rgb(255,255,255)",
-           "font-size": 18
-
-              }
-       ]}
-    """;
-
     public Canvas () {
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
 
@@ -92,8 +42,6 @@ public class Spice.Canvas : Gtk.Overlay {
         set_size_request (500, 380);
 
         get_style_context ().add_class ("canvas");
-
-        load_data (TESTING_DATA);
         add (grid);
 
         calculate_ratio ();
@@ -106,48 +54,7 @@ public class Spice.Canvas : Gtk.Overlay {
         expand = false;
 
         get_style_context ().add_class ("canvas");
-
-        load_data (TESTING_DATA);
         calculate_ratio ();
-    }
-
-    public void load_data (string data) {
-        var parser = new Json.Parser ();
-        parser.load_from_data (data);
-
-        var root_object = parser.get_root ().get_object ();
-        var items = root_object.get_array_member ("items");
-
-        foreach (var raw in items.get_elements ()) {
-            var item = raw.get_object ();
-
-            string type = item.get_string_member ("type");
-
-            switch (type) {
-                case "text":
-                    var canvas_item = new TextItem (this, item);
-                    add_output (canvas_item);
-                break;
-                case "color":
-                    var canvas_item = new ColorItem (this, item);
-                    add_output (canvas_item);
-                break;
-            }
-        }
-    }
-
-    public string serialise () {
-        string data = "";
-
-        foreach (var widget in get_children ()) {
-            if (widget is CanvasItem) {
-                CanvasItem item = (CanvasItem) widget;
-
-                data = data + (data != "" ? "," + item.serialise () : item.serialise ());
-            }
-        }
-
-        return """{"items": [%s]}""".printf (data);
     }
 
     public override bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation) {
@@ -196,7 +103,7 @@ public class Spice.Canvas : Gtk.Overlay {
         ratio_changed (current_ratio);
     }
 
-    public CanvasItem add_output (CanvasItem item) {
+    public CanvasItem add_item (CanvasItem item) {
         var canvas_item = item;
 
         current_allocated_width = 0;
@@ -249,6 +156,15 @@ public class Spice.Canvas : Gtk.Overlay {
             }
         }
     }
+    
+    public void clear_all () {
+        foreach (var item in get_children ()) {
+            if (item is CanvasItem) {
+                ((CanvasItem) item).unselect ();
+                ((CanvasItem) item).destroy ();
+            }
+        }
+    }
 
     public void check_intersects (CanvasItem source_display_widget) {
         source_display_widget.queue_resize_no_redraw ();
@@ -281,7 +197,6 @@ public class Spice.Canvas : Gtk.Overlay {
         }
 
         public override bool button_press_event (Gdk.EventButton event) {
-        //if (!editable) return false;
             stderr.printf ("Pressed canvas\n");
 
             if (Spice.Window.is_fullscreen) {
