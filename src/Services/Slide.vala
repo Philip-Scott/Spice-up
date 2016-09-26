@@ -26,29 +26,23 @@ public class Spice.Slide {
     public Canvas canvas;
     public Canvas preview;
 
-    public Slide (Json.Object? save_data = null, string? temp_data = null) {
+    public Slide (Json.Object? save_data = null) {
         this.save_data = save_data;
         canvas = new Spice.Canvas ();
         preview = new Spice.Canvas.preview ();
 
-        if (temp_data == null) {
-            load_data (TESTING_DATA);
-        } else {
-            load_data (temp_data);
-        }
+        load_data (save_data);
     }
 
-    public void load_data (string data, bool preview_only = false) {
+    public void load_data (Json.Object? save_data, bool preview_only = false) {
+        if (save_data == null) return;
+
         preview.clear_all ();
         if (!preview_only) {
             canvas.clear_all ();
         }
-    
-        var parser = new Json.Parser ();
-        parser.load_from_data (data);
 
-        var root_object = parser.get_root ().get_object ();
-        var items = root_object.get_array_member ("items");
+        var items = save_data.get_array_member ("items");
 
         foreach (var raw in items.get_elements ()) {
             var item = raw.get_object ();
@@ -81,54 +75,4 @@ public class Spice.Slide {
 
         return """{"items": [%s]}""".printf (data);
     }
-
-    private const string TESTING_DATA = """
-{"items": [ {
-              "x": -313,
-              "y": -76,
-              "w": 2203,
-              "h": 1731,
-
-           "type": "color",
-           "background_color": "rgb(114,159,207)"
-
-              }
-       , {
-              "x": -354,
-              "y": 970,
-              "w": 1925,
-              "h": 122,
-
-           "type": "color",
-           "background_color": "rgb(252,233,79)"
-
-              }
-       , {
-              "x": -280,
-              "y": 458,
-              "w": 1897,
-              "h": 336,
-
-           "type":"text",
-           "text": "New Presentation",
-           "font": "Raleway Medium 10",
-           "color": "rgb(255,255,255)",
-           "font-size": 42
-
-              }
-       , {
-              "x": -339,
-              "y": 702,
-              "w": 902,
-              "h": 300,
-
-           "type":"text",
-           "text": "By Felipe Escoto",
-           "font": "Open Sans",
-           "color": "rgb(255,255,255)",
-           "font-size": 18
-
-              }
-       ]}
-    """;
 }
