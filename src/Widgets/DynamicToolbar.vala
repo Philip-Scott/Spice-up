@@ -83,6 +83,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
             rgba.parse (((ColorItem) item).background_color);
 
             background_color_button.rgba = rgba;
+        } else if (item is ImageItem) {
+            stack.set_visible_child_name (IMAGE);
         }
 
         selecting = false;

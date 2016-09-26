@@ -81,6 +81,7 @@ vala_precompile(VALA_C
   src/Widgets/CanvasItems/CanvasItem.vala
   src/Widgets/CanvasItems/TextItem.vala
   src/Widgets/CanvasItems/ColorItem.vala
+  src/Widgets/CanvasItems/ImageItem.vala
   src/Widgets/CanvasItems/Grabber.vala
   src/Widgets/Headerbar.vala
   src/Widgets/SlideList.vala

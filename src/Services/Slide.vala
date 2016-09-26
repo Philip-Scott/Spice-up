@@ -58,6 +58,10 @@ public class Spice.Slide {
                     if (!preview_only) canvas.add_item (new ColorItem (canvas, item));
                     preview.add_item (new ColorItem (preview, item));
                 break;
+                case "image":
+                    if (!preview_only) canvas.add_item (new ImageItem (canvas, item));
+                    preview.add_item (new ColorItem (preview, item));
+                break;
             }
         }
     }

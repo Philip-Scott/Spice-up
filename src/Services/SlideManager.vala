@@ -101,7 +101,8 @@ public class Spice.SlideManager : Object {
             item.load_data ();
             current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.IMAGE) {
-
+            item = new ImageItem (current_slide.canvas);
+            item = current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.SHAPE) {
             item = new ColorItem (current_slide.canvas);
             item.load_data ();
