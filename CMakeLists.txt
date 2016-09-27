@@ -77,6 +77,7 @@ vala_precompile(VALA_C
   src/Services/Settings.vala
   src/Services/Slide.vala
   src/Services/SlideManager.vala
+  src/Services/FileManager.vala
   src/Widgets/Canvas.vala
   src/Widgets/CanvasItems/CanvasItem.vala
   src/Widgets/CanvasItems/TextItem.vala

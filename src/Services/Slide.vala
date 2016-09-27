@@ -20,27 +20,20 @@
 */
 
 public class Spice.Slide {
-
     protected Json.Object? save_data = null;
 
     public Canvas canvas;
-    public Canvas preview;
 
     public Slide (Json.Object? save_data = null) {
         this.save_data = save_data;
         canvas = new Spice.Canvas ();
-        preview = new Spice.Canvas.preview ();
 
         load_data (save_data);
     }
 
-    public void load_data (Json.Object? save_data, bool preview_only = false) {
+    public void load_data (Json.Object? save_data) {
         if (save_data == null) return;
-
-        preview.clear_all ();
-        if (!preview_only) {
-            canvas.clear_all ();
-        }
+        canvas.clear_all ();
 
         var items = save_data.get_array_member ("items");
 
@@ -51,16 +44,13 @@ public class Spice.Slide {
 
             switch (type) {
                 case "text":
-                    if (!preview_only) canvas.add_item (new TextItem (canvas, item));
-                    preview.add_item (new TextItem (preview, item));
+                    canvas.add_item (new TextItem (canvas, item));
                 break;
                 case "color":
-                    if (!preview_only) canvas.add_item (new ColorItem (canvas, item));
-                    preview.add_item (new ColorItem (preview, item));
+                    canvas.add_item (new ColorItem (canvas, item));
                 break;
                 case "image":
-                    if (!preview_only) canvas.add_item (new ImageItem (canvas, item));
-                    preview.add_item (new ColorItem (preview, item));
+                    canvas.add_item (new ImageItem (canvas, item));
                 break;
             }
         }

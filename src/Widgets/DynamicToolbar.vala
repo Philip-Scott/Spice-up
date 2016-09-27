@@ -91,7 +91,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void build_textbar () {
-        text_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        text_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
         text_bar.border_width = 6;
         text_bar.spacing = 6;
 

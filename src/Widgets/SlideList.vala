@@ -18,6 +18,7 @@
 *
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
+using Cairo;
 
 public class Spice.SlideList : Gtk.ScrolledWindow {
     private Gtk.Grid slides_grid;
@@ -54,13 +55,16 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
 
     public Gtk.Button add_slide (Slide slide) {
         var button = new Gtk.Button ();
+        var image = new Gtk.Image ();
 
         button.clicked.connect (() => {
             manager.current_slide = slide;
+            set_preview (image, slide);
         });
 
+        set_preview (image, slide);
         button.get_style_context ().add_class ("slide");
-        button.add (slide.preview);
+        button.add (image);
 
         slides_grid.remove (new_slide_button);
         slides_grid.add (button);
@@ -69,6 +73,16 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
 
         return button;
     }
+
+    public void set_preview (Gtk.Image image, Slide slide) {
+        var buffer = new  Granite.Drawing.BufferSurface (slide.canvas.current_allocated_width, slide.canvas.current_allocated_height);
+        slide.canvas.draw (buffer.context);
+
+        image.set_from_pixbuf (buffer.load_to_pixbuf ().scale_simple (width, height, Gdk.InterpType.BILINEAR ));
+    }
+
+    int width = 200;
+    int height = 150;
 
     public Gtk.Button add_new_slide () {
         var button = new Gtk.Button ();

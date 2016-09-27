@@ -32,14 +32,6 @@ public class Spice.SlideManager : Object {
         get { return slide_; }
         set {
             if (slides.contains (value)) {
-                if (slide_ != null) {
-                    var data = slide_.serialise ();
-                    var parser = new Json.Parser ();
-                    parser.load_from_data (data);
-
-                    slide_.load_data (parser.get_root ().get_object (), true);
-                }
-
                 slide_ = value;
                 item_clicked (null);
                 slideshow.set_visible_child (value.canvas);
@@ -101,7 +93,9 @@ public class Spice.SlideManager : Object {
             item.load_data ();
             current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.IMAGE) {
-            item = new ImageItem (current_slide.canvas);
+            var file = Spice.Services.FileManager.get_file_from_user ();
+
+            item = new ImageItem.from_file (current_slide.canvas, file);
             item = current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.SHAPE) {
             item = new ColorItem (current_slide.canvas);
@@ -113,57 +107,16 @@ public class Spice.SlideManager : Object {
     }
 
     private const string TESTING_DATA = """
-    {
-"slides": [{
-	"background_color": "red",
-	"items": [{
-		"x": -313,
-		"y": -76,
-		"w": 2203,
-		"h": 1731,
-
-		"type": "color",
-		"background_color": "rgb(114,159,207)"
-
-	}, {
-		"x": -354,
-		"y": 970,
-		"w": 1925,
-		"h": 122,
-
-		"type": "color",
-		"background_color": "rgb(252,233,79)"
-
-	}, {
-		"x": -280,
-		"y": 458,
-		"w": 1897,
-		"h": 336,
-
-		"type": "text",
-		"text": "New Presentation",
-		"font": "Raleway Medium 10",
-		"color": "rgb(255,255,255)",
-		"font-size": 42
-
-	}, {
-		"x": -339,
-		"y": 702,
-		"w": 902,
-		"h": 300,
-
-		"type": "text",
-		"text": "By Felipe Escoto",
-		"font": "Open Sans",
-		"color": "rgb(255,255,255)",
-		"font-size": 18
-
-	}]
-}, {
-    "background_color": "red",
-	"items": [{}]
-}]
-}
-        """;
+{"slides": [{"items": [ {"x": -313,"y": -76,"w": 2203,"h": 1731,
+            "type": "color",
+            "background_color": "rgb(114,159,207)"
+         }, {"x": -354,"y": 970,"w": 1925,"h": 122,
+            "type": "color",
+            "background_color": "rgb(252,233,79)"
+         }, {"x": -280,"y": 458,"w": 1897,"h": 336,"type":"text","text": "New Presentation","font": "Raleway Medium 10","color": "rgb(255,255,255)","font-size": 42}, {"x": -339,"y": 702,"w": 902,"h": 300,"type":"text","text": "By Felipe Escoto","font": "Open Sans","color": "rgb(255,255,255)","font-size": 18}]},{"items": [ {"x": -286,"y": -42,"w": 2093,"h": 1605,
+            "type": "color",
+            "background_color": "rgb(255,255,255)"
+         }, {"x": 1112,"y": 662,"w": 800,"h": 800,"type":"image", "image":"file:///home/felipe/Pictures/xkcd/yet.png" }, {"x": -265,"y": 1053,"w": 1065,"h": 442,"type":"text","text": "Text here...","font": "Open Sans","color": "rgb(164,0,0)","font-size": 28}]}]}
+""";
 }
 

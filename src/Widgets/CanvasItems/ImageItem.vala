@@ -20,10 +20,8 @@
 */
 
 public class Spice.ImageItem : Spice.CanvasItem {
-    private Gtk.Image image;
 
-    private string uri = "/home/felipe/Pictures/xkcd/squirrel.png";
-    private bool editing = false;
+    public string uri = "/home/felipe/Pictures/xkcd/squirrel.png";
 
     const string IMAGE_STYLE_CSS = """
         .colored {
@@ -39,14 +37,23 @@ public class Spice.ImageItem : Spice.CanvasItem {
         base (canvas);
         this.save_data = save_data;
 
+        load_data ();
+        style ();
+    }
+
+    public ImageItem.from_file (Canvas canvas, File file) {
+        base (canvas);
+        uri = file.get_uri ();
+
         style ();
     }
 
     protected override void load_item_data () {
+        this.uri = save_data.get_string_member ("image");
     }
 
     protected override string serialise_item () {
-        return """"type":"image""".printf ();
+        return """"type":"image", "image":"%s" """.printf (uri);
     }
 
     public override void style () {
