@@ -21,7 +21,7 @@
 
 public class Spice.ImageItem : Spice.CanvasItem {
 
-    public string uri = "/home/felipe/Pictures/xkcd/squirrel.png";
+    public string uri = "";
 
     const string IMAGE_STYLE_CSS = """
         .colored {
