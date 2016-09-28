@@ -19,7 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class Grabber : Gtk.Button {
+public class Spice.Grabber : Gtk.Button {
     public signal void grabbed (Gdk.EventButton event, int id);
     public signal void grabbed_motion (Gdk.EventMotion event);
     public signal void grabbed_stoped (Gdk.EventButton event);
@@ -37,6 +37,13 @@ public class Grabber : Gtk.Button {
         var image = new Gtk.Image.from_icon_name ("user-offline", Gtk.IconSize.MENU);
         this.add (image);
     }
+
+    public override bool draw (Cairo.Context ctx) {
+        if (Spice.Window.is_fullscreen) return false;
+
+        return base.draw (ctx);
+    }
+
 
     public override bool button_press_event (Gdk.EventButton event) {
         grabbed (event, id);
