@@ -30,7 +30,7 @@ public class Spice.Application : Gtk.Application {
     public const string COMMENT = N_("");
     public const string ABOUT_STOCK = N_("About Spice-up");
 
-    public bool running = false;
+    public static bool running = false;
 
     public Application () {
         Object (application_id: "org.up.spice");
