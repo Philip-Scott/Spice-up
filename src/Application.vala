@@ -26,7 +26,7 @@ namespace Spice {
 }
 
 public class Spice.Application : Gtk.Application {
-    public const string PROGRAM_NAME = N_("Precentations");
+    public const string PROGRAM_NAME = N_("Presentations");
     public const string COMMENT = N_("");
     public const string ABOUT_STOCK = N_("About Spice-up");
 
