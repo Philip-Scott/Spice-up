@@ -38,6 +38,20 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
     private HeaderbarButton present;
 
+    public new bool sensitive {
+        get {
+            return present.sensitive;
+        }
+        set {
+            undo.sensitive = value;
+            redo.sensitive = value;
+            text.sensitive = value;
+            image.sensitive = value;
+            shape.sensitive = value;
+            present.sensitive = value;
+        }
+    }
+
     public Headerbar () {
         set_title ("Presentation");
         set_show_close_button (true);

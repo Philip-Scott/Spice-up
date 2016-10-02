@@ -42,8 +42,6 @@ public class Spice.SlideManager : Object {
     public SlideManager () {
         slideshow = new Gtk.Stack ();
         slides = new Gee.ArrayList<Slide> ();
-
-        load_data (TESTING_DATA);
     }
 
     public string serialise () {
@@ -56,7 +54,7 @@ public class Spice.SlideManager : Object {
         return """{"slides": [%s]}""".printf (data);
     }
 
-    public void load_data (string data, bool preview_only = false) {
+    public void load_data (string data) {
         var parser = new Json.Parser ();
         parser.load_from_data (data);
 
@@ -66,6 +64,8 @@ public class Spice.SlideManager : Object {
         foreach (var slide_object in slides_array.get_elements ()) {
             new_slide (slide_object.get_object ());
         }
+
+        if (slides.size == 0) new_slide ();
     }
 
     public void new_slide (Json.Object? save_data = null) {
@@ -105,18 +105,5 @@ public class Spice.SlideManager : Object {
 
         return item;
     }
-
-    private const string TESTING_DATA = """
-{"slides": [{"items": [ {"x": -313,"y": -76,"w": 2203,"h": 1731,
-            "type": "color",
-            "background_color": "rgb(114,159,207)"
-         }, {"x": -354,"y": 970,"w": 1925,"h": 122,
-            "type": "color",
-            "background_color": "rgb(252,233,79)"
-         }, {"x": -280,"y": 458,"w": 1897,"h": 336,"type":"text","text": "New Presentation","font": "Raleway Medium 10","color": "rgb(255,255,255)","font-size": 42}, {"x": -339,"y": 702,"w": 902,"h": 300,"type":"text","text": "By Felipe Escoto","font": "Open Sans","color": "rgb(255,255,255)","font-size": 18}]},{"items": [ {"x": -286,"y": -42,"w": 2093,"h": 1605,
-            "type": "color",
-            "background_color": "rgb(255,255,255)"
-         }, {"x": 1112,"y": 662,"w": 800,"h": 800,"type":"image", "image":"file:///home/felipe/Pictures/xkcd/yet.png" }, {"x": -265,"y": 1053,"w": 1065,"h": 442,"type":"text","text": "Text here...","font": "Open Sans","color": "rgb(164,0,0)","font-size": 28}]}]}
-""";
 }
 

@@ -20,12 +20,9 @@
 */
 
 public class Spice.Services.FileManager {
+    public static File? current_file;
 
-    //public static File? get_file () {
-    
-    //}
-    
-    public static File? get_file_from_user (bool image = false) {
+    public static File? get_file_from_user (bool image = false, bool save = false) {
         File? result = null;
 
         string title = "";
@@ -33,13 +30,23 @@ public class Spice.Services.FileManager {
         string accept_button_label = "";
         List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
 
-        title =  ("Open file");
-        chooser_action = Gtk.FileChooserAction.OPEN;
-        accept_button_label = ("Open");
+        if (save) {
+            title =  _("Save file");
+            accept_button_label = _("Save");
+        } else {
+            title =  _("Open file");
+            chooser_action = Gtk.FileChooserAction.OPEN;
+            accept_button_label = _("Open");
+        }
 
         var filter = new Gtk.FileFilter ();
-        filter.set_filter_name ("Images");
-        filter.add_mime_type ("image/*");
+        if (image) {
+            filter.set_filter_name ("Images");
+            filter.add_mime_type ("image/*");
+        } else if (save) {
+            filter.set_filter_name ("Presentation");
+            filter.add_mime_type ("application/x-spice");
+        }
 
         filters.append (filter);
 
@@ -53,7 +60,7 @@ public class Spice.Services.FileManager {
             title,
             window,
             chooser_action,
-            ("Cancel"), Gtk.ResponseType.CANCEL,
+            _("Cancel"), Gtk.ResponseType.CANCEL,
             accept_button_label, Gtk.ResponseType.ACCEPT);
 
 
@@ -69,23 +76,37 @@ public class Spice.Services.FileManager {
 
         return result;
     }
-    
-    public static void write_file (File file, string contents, bool overrite = false) throws Error {
-        if (file.query_exists () && overrite) {
-            file.delete ();
+
+    public static void write_file (string contents) throws Error {
+        if (current_file.query_exists ()) {
+            current_file.delete ();
         }
 
-        create_file_if_not_exists (file);
+        create_file_if_not_exists (current_file);
 
-        file.open_readwrite_async.begin (Priority.DEFAULT, null, (obj, res) => {
+        current_file.open_readwrite_async.begin (Priority.DEFAULT, null, (obj, res) => {
             try {
-                var iostream = file.open_readwrite_async.end (res);
+                var iostream = current_file.open_readwrite_async.end (res);
                 var ostream = iostream.output_stream;
                 ostream.write_all (contents.data, null);
             } catch (Error e) {
-                warning ("Could not write file \"%s\": %s", file.get_basename (), e.message);
+                warning ("Could not write file \"%s\": %s", current_file.get_basename (), e.message);
             }
         });
+    }
+
+    public static string open_file () throws Error {
+        if (current_file.query_exists ()) {
+            try {
+                var dis = new DataInputStream (current_file.read ());
+                size_t size;
+                return dis.read_upto ("\0", -1, out size);
+            } catch (Error e) {
+                warning ("Error loading file: %s", e.message);
+            }
+        }
+
+        return "";
     }
 
     public static void create_file_if_not_exists (File file) throws Error{

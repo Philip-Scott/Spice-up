@@ -33,6 +33,7 @@ public class Spice.EntryCombo : Gtk.Box {
                 listbox.select_row (map.get (value.down()));
                 entry.text = ((Gtk.Label) map.get (value.down()).get_child ()).label;
             } else if (!strict_signal){
+                listbox.select_row (null);
                 entry.text = value;
             }
 
@@ -45,7 +46,6 @@ public class Spice.EntryCombo : Gtk.Box {
             return entry.max_length;
         }
         set {
-            //entry.max_length = value;
             entry.max_width_chars = value + 1;
             entry.width_chars = value;
         }
@@ -73,7 +73,7 @@ public class Spice.EntryCombo : Gtk.Box {
     // If strict_signal == true, it will only send activated if the entry is the same as a value on the list
     public EntryCombo (bool strict_signal = false, bool alphabetize = false) {
         this.strict_signal = strict_signal;
-    
+
         map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
 
         entry = new Gtk.Entry ();

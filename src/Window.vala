@@ -29,6 +29,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Gtk.Revealer sidebar_revealer;
     private Gtk.Revealer toolbar_revealer;
 
+    private Gtk.Stack app_stack;
+    private Spice.Welcome welcome;
+
     private static string ELEMENTARY_STYLESHEET = "
     @define-color colorPrimary #2C2D2E;
     .slide-list {
@@ -85,8 +88,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
         Granite.Widgets.Utils.set_theming_for_screen (this.get_screen (), ELEMENTARY_STYLESHEET,
                                                       Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
+        app_stack = new Gtk.Stack ();
+
         slide_manager = new Spice.SlideManager ();
         headerbar = new Spice.Headerbar ();
+        headerbar.sensitive = false;
+
         toolbar = new Spice.DynamicToolbar ();
 
         var slide_list = new Spice.SlideList (slide_manager);
@@ -111,9 +118,15 @@ public class Spice.Window : Gtk.ApplicationWindow {
         grid.attach (sidebar_revealer, 0, 0, 1, 2);
         grid.attach (aspect_frame,     1, 1, 1, 1);
 
-        this.add (grid);
+        welcome = new Spice.Welcome ();
 
+        app_stack.add_named (grid, "application");
+        app_stack.add_named (welcome, "welcome");
+
+        this.add (app_stack);
         this.show_all ();
+
+        app_stack.set_visible_child_name  ("welcome");
     }
 
     private void connect_signals (Gtk.Application app) {
@@ -139,11 +152,27 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
             return false;
         });
+
+        welcome.open_file.connect ((file) => {
+            Services.FileManager.current_file = file;
+            string content = Services.FileManager.open_file ();
+
+            slide_manager.load_data (content);
+            headerbar.sensitive = true;
+            app_stack.set_visible_child_name  ("application");
+
+            var basename = Services.FileManager.current_file.get_basename ();
+
+            var index_of_last_dot = basename.last_index_of (".");
+            var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
+
+            title = launcher_base;
+        });
     }
 
     protected override bool delete_event (Gdk.EventAny event) {
-        stdout.printf ("%s\n", slide_manager.serialise ());
-        stderr.printf ("exiting...");
+        Services.FileManager.write_file (slide_manager.serialise ());
+
         int width;
         int height;
         int x;

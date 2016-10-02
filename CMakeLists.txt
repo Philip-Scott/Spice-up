@@ -88,6 +88,7 @@ vala_precompile(VALA_C
   src/Widgets/Headerbar.vala
   src/Widgets/SlideList.vala
   src/Widgets/DynamicToolbar.vala
+  src/Widgets/Welcome.vala
   #src/config.vala
 PACKAGES
   ${VALA_DEPS}

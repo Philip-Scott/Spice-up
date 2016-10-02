@@ -25,7 +25,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     private Gtk.Stack stack;
 
     public string font = "Open Sans";
-    public int font_size = 14;
+    public int font_size = 16;
     public string font_color = "#fff";
     public string font_style = "Regular";
 
@@ -111,9 +111,9 @@ public class Spice.TextItem : Spice.CanvasItem {
         font_size = (int) save_data.get_int_member ("font-size");
         font = save_data.get_string_member ("font");
 
-        var style = save_data.get_string_member ("font_style");
+        var style = save_data.get_string_member ("font-style");
         if (style != null) {
-            //font_style = style;
+            font_style = style;
         }
 
         font_color = save_data.get_string_member ("color");
