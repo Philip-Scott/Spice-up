@@ -33,6 +33,10 @@ public class Spice.Services.FileManager {
         if (save) {
             title =  _("Save file");
             accept_button_label = _("Save");
+        } else if (image) {
+            title =  _("Open image");
+            chooser_action = Gtk.FileChooserAction.OPEN;
+            accept_button_label = _("Open");
         } else {
             title =  _("Open file");
             chooser_action = Gtk.FileChooserAction.OPEN;

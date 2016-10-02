@@ -107,7 +107,7 @@ public class Spice.SlideManager : Object {
             item.load_data ();
             current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.IMAGE) {
-            var file = Spice.Services.FileManager.get_file_from_user ();
+            var file = Spice.Services.FileManager.get_file_from_user (true);
 
             item = new ImageItem.from_file (current_slide.canvas, file);
             item = current_slide.canvas.add_item (item);
