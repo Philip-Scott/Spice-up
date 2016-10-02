@@ -24,4 +24,13 @@ At this moment, the app should be considered in an **ALPHA** state. But things a
 ### Donations
 Liked Spice-up? Would like to support it's development of this app and more? Feel free to [leave a little tip :)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYD9ZJK6ZFUDQ) 
 
+### How to try it out
+So.... You're feeling brave enough to try it out, even on it's **ALPHA** state? Alright then! Good luck! 
 
+```
+sudo add-apt-repository ppa:philip.scott/spice-up-daily
+sudo apt-get update
+sudo apt-get install spice-up
+```
+
+This PPA should give you regular upgrades every time there is a new commit. In other words: IT’S UNSTABLE
