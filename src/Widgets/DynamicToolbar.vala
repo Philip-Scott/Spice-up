@@ -37,14 +37,21 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private bool selecting = false;
 
     //Text Toolbar
-    private Gtk.FontButton font_button;
+    private Spice.EntryCombo font_button;
     private Gtk.ColorButton text_color_button;
-    private Gtk.ComboBoxText font_size;
+    private Spice.EntryCombo font_size;
 
     //Color Toolbar
     private Gtk.ColorButton background_color_button;
 
     //Common Bar
+
+    const string TEXT_STYLE_CSS = """
+        .label {
+            font: %s;
+            font-size: 14;
+        }
+    """;
 
     public DynamicToolbar () {
         stack = new Gtk.Stack ();
@@ -70,8 +77,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
             stack.set_visible_child_name (CANVAS);
         } else if (item is TextItem) {
             stack.set_visible_child_name (TEXT);
-            font_button.font_name = ((TextItem) item).font;
-            font_size.set_active_id (((TextItem) item).font_size.to_string ());
+            font_button.text = ((TextItem) item).font;
+            font_size.text = ((TextItem) item).font_size.to_string ();
 
             Gdk.RGBA rgba = Gdk.RGBA ();
             rgba.parse (((TextItem) item).font_color);
@@ -100,21 +107,34 @@ public class Spice.DynamicToolbar : Gtk.Box {
             update_text_properties ();
         });
 
-        font_button = new Gtk.FontButton ();
-        font_button.show_size = false;
+        font_button = new Spice.EntryCombo (true, true);
 
-        font_button.font_set.connect (() => {
+        Pango.FontFamily[] families;
+        create_pango_context ().list_families (out families);
+
+        foreach (var family in families) {
+             var provider = new Gtk.CssProvider ();
+             var context = font_button.add_entry (family.get_name ()).get_style_context ();
+
+             var colored_css = TEXT_STYLE_CSS.printf (family.get_name ());
+
+             provider.load_from_data (colored_css, colored_css.length);
+             context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        }
+
+        font_button.activated.connect (() => {
             update_text_properties ();
         });
 
         int[] font_sizes = {6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 38, 42};
-        font_size = new Gtk.ComboBoxText ();
+        font_size = new Spice.EntryCombo ();
+        font_size.max_length = 3;
 
         foreach (var size in font_sizes) {
-            font_size.append (size.to_string (), size.to_string ());
+            font_size.add_entry (size.to_string ());
         }
 
-        font_size.changed.connect (() => {
+        font_size.activated.connect (() => {
             update_text_properties ();
         });
 
@@ -129,8 +149,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         if (item != null && item is TextItem && !selecting) {
             TextItem text = (TextItem) item;
             text.font_color = text_color_button.rgba.to_string ();
-            text.font = font_button.font;
-            text.font_size = int.parse (font_size.get_active_text ());
+            text.font = font_button.text;
+            text.font_size = int.parse (font_size.text);
 
             this.item.style ();
         }
