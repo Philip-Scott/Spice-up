@@ -37,9 +37,13 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private bool selecting = false;
 
     //Text Toolbar
+    private Pango.FontFamily[] families;
+    private Gee.HashMap<string, Pango.FontFamily> family_cache;
+    private Gee.HashMap<string, Array<Pango.FontFace>> face_cache;
     private Spice.EntryCombo font_button;
     private Gtk.ColorButton text_color_button;
     private Spice.EntryCombo font_size;
+    private Spice.EntryCombo font_type;
 
     //Color Toolbar
     private Gtk.ColorButton background_color_button;
@@ -80,6 +84,9 @@ public class Spice.DynamicToolbar : Gtk.Box {
             font_button.text = ((TextItem) item).font;
             font_size.text = ((TextItem) item).font_size.to_string ();
 
+            reset_font_type (((TextItem) item).font);
+            font_type.text = ((TextItem) item).font_style;
+
             Gdk.RGBA rgba = Gdk.RGBA ();
             rgba.parse (((TextItem) item).font_color);
             text_color_button.rgba = rgba;
@@ -107,26 +114,35 @@ public class Spice.DynamicToolbar : Gtk.Box {
             update_text_properties ();
         });
 
-        font_button = new Spice.EntryCombo (true, true);
+        font_type = new Spice.EntryCombo (true, true);
+        font_type.max_length = 10;
+        font_type.editable = false;
 
-        Pango.FontFamily[] families;
+        family_cache = new Gee.HashMap<string, Pango.FontFamily> ();
+        face_cache = new Gee.HashMap<string, Array<Pango.FontFace>> ();
+        font_button = new Spice.EntryCombo (true, true);
         create_pango_context ().list_families (out families);
 
         foreach (var family in families) {
              var provider = new Gtk.CssProvider ();
              var context = font_button.add_entry (family.get_name ()).get_style_context ();
-
              var colored_css = TEXT_STYLE_CSS.printf (family.get_name ());
 
              provider.load_from_data (colored_css, colored_css.length);
              context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+             family_cache.set (family.get_name ().down(), family);
         }
 
         font_button.activated.connect (() => {
+            reset_font_type (font_button.text);
+            update_text_properties ();
+        });
+        
+        font_type.activated.connect (() => {
             update_text_properties ();
         });
 
-        int[] font_sizes = {6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 38, 42};
+        int[] font_sizes = {5, 7, 9, 12, 16, 21, 28, 37, 42, 50, 67};
         font_size = new Spice.EntryCombo ();
         font_size.max_length = 3;
 
@@ -140,9 +156,40 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         text_bar.add (font_button);
         text_bar.add (font_size);
+        text_bar.add (font_type);
         text_bar.add (text_color_button);
 
         stack.add_named (text_bar, TEXT);
+    }
+
+    private void reset_font_type (string selected_family) {
+        string key = selected_family.down ();
+
+        if (selected_family != null && selected_family != "" && family_cache.has_key (key)) {
+            if (key == font_type.text) return;
+
+            Array<Pango.FontFace> font_faces;
+
+            if (face_cache.has_key (key)) {
+                font_faces = face_cache.get (key);
+            } else {
+                Pango.FontFace[] temp_face;
+                var family = family_cache.get (key);
+                family.list_faces (out temp_face);
+                font_faces = new Array<Pango.FontFace>();
+                foreach (var face in temp_face) {
+                    font_faces.append_val (face);
+                }
+
+                face_cache.set (key, font_faces);
+            }
+
+            font_type.clear_all ();
+
+            for (int i = 0; i < font_faces.length ; i++) {
+                font_type.add_entry (font_faces.index (i).get_face_name ());
+            }
+        }
     }
 
     private void update_text_properties () {
@@ -150,6 +197,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
             TextItem text = (TextItem) item;
             text.font_color = text_color_button.rgba.to_string ();
             text.font = font_button.text;
+            text.font_style = font_type.text;
             text.font_size = int.parse (font_size.text);
 
             this.item.style ();

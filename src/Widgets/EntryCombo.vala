@@ -29,11 +29,13 @@ public class Spice.EntryCombo : Gtk.Box {
         set {
             outsize_set = true;
 
-            if (map.has_key (value)) {
+            if (map.has_key (value.down())) {
                 listbox.select_row (map.get (value.down()));
+                entry.text = ((Gtk.Label) map.get (value.down()).get_child ()).label;
+            } else if (!strict_signal){
+                entry.text = value;
             }
 
-            entry.text = value;
             outsize_set = false;
         }
     }
@@ -42,11 +44,19 @@ public class Spice.EntryCombo : Gtk.Box {
         get {
             return entry.max_length;
         }
-
         set {
-            entry.max_length = value;
+            //entry.max_length = value;
             entry.max_width_chars = value + 1;
             entry.width_chars = value;
+        }
+    }
+
+    public bool editable {
+        get {
+            return entry.editable;
+        }
+        set {
+            entry.sensitive = value;
         }
     }
 
@@ -58,9 +68,12 @@ public class Spice.EntryCombo : Gtk.Box {
 
     private Gee.HashMap<string, Gtk.ListBoxRow> map;
     private bool outsize_set = false;
+    private bool strict_signal = false;
 
     // If strict_signal == true, it will only send activated if the entry is the same as a value on the list
     public EntryCombo (bool strict_signal = false, bool alphabetize = false) {
+        this.strict_signal = strict_signal;
+    
         map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
 
         entry = new Gtk.Entry ();
@@ -69,6 +82,7 @@ public class Spice.EntryCombo : Gtk.Box {
         listbox.set_activate_on_single_click (false);
 
         button = new Gtk.Button.from_icon_name ("pan-down-symbolic", Gtk.IconSize.MENU);
+        button.can_focus = false;
 
         scroll = new Gtk.ScrolledWindow (null, null);
         scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -118,7 +132,18 @@ public class Spice.EntryCombo : Gtk.Box {
         show_all ();
     }
 
-    public Gtk.Label add_entry (string entry) {
+    public void clear_all () {
+        outsize_set = true;
+        map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
+        foreach (var child in listbox.get_children ()) {
+            if (child is Gtk.ListBoxRow)
+                child.destroy ();
+        }
+
+        outsize_set = false;
+    }
+
+    public Gtk.Label? add_entry (string entry) {
         var label = new Gtk.Label (entry);
         if (entry.contains ("Noto Sans") && entry != "Noto Sans") return label;
 

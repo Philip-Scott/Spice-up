@@ -27,6 +27,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     public string font = "Open Sans";
     public int font_size = 14;
     public string font_color = "#fff";
+    public string font_style = "Regular";
 
     public bool bold = false;
     public bool italics = false;
@@ -38,7 +39,7 @@ public class Spice.TextItem : Spice.CanvasItem {
         .colored {
             color: %s;
 
-            font: %s;
+            font: %s %s;
             font-size: %dpx;
             background: 0;
         }
@@ -109,18 +110,24 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         font_size = (int) save_data.get_int_member ("font-size");
         font = save_data.get_string_member ("font");
+
+        var style = save_data.get_string_member ("font_style");
+        if (style != null) {
+            //font_style = style;
+        }
+
         font_color = save_data.get_string_member ("color");
     }
 
     protected override string serialise_item () {
-        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d""".printf (label.label, font, font_color, font_size);
+        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s" """.printf (label.label, font, font_color, font_size, font_style);
     }
 
     public override void style () {
         var provider = new Gtk.CssProvider ();
         var context = get_style_context ();
 
-        var colored_css = TEXT_STYLE_CSS.printf (font_color, font, (int) (4 * font_size * (canvas.current_ratio)));
+        var colored_css = TEXT_STYLE_CSS.printf (font_color, font, font_style, (int) (4 * font_size * (canvas.current_ratio)));
 
         provider.load_from_data (colored_css, colored_css.length);
 
