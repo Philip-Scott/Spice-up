@@ -78,7 +78,7 @@ public class Spice.Services.FileManager {
 
         dialog.close ();
 
-        if (result != null) {
+        if (result != null && !image) {
             settings.last_file = result.get_path ();
         }
 
