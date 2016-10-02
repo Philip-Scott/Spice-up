@@ -4,7 +4,6 @@ Priority: optional
 Maintainer: Felipe Escoto <felescoto95@hotmail.com>
 Build-Depends: cmake,
                debhelper (>= 9), 
-               libwebkit2gtk-3.0-dev,
                libgtk-3-dev,
                valac (>= 0.26),
                libgranite-dev,
