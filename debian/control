@@ -1,0 +1,18 @@
+Source: spice-up
+Section: editors
+Priority: optional
+Maintainer: Felipe Escoto <felescoto95@hotmail.com>
+Build-Depends: granite>=0.3
+               gtksourceview-3.0>=3.10
+               gthread-2.0
+               json-glib-1.0
+               gtk+-3.0>=3.9.10
+Standards-Version: 3.9.6
+Homepage: https://github.com/Philip-Scott/Spice-up
+
+Package: spice-up
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Pre-Depends: dpkg (>= 1.15.6)
+Description: Create simple and beautiful presentations
+ 
