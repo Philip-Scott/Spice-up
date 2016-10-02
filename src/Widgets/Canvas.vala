@@ -36,8 +36,19 @@ public class Spice.Canvas : Gtk.Overlay {
 
     private CanvasGrid grid;
 
-    public Canvas () {
+    // Serializable items
+    private Json.Object? save_data = null;
+    public string background_color = "#383E41";
+
+    const string CANVAS_CSS = """
+        .view {
+            background: %s;
+        }
+    """;
+
+    public Canvas (Json.Object? save_data = null) {
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
+        this.save_data = save_data;
 
         grid = new CanvasGrid (this);
         set_size_request (500, 380);
@@ -46,6 +57,8 @@ public class Spice.Canvas : Gtk.Overlay {
         add (grid);
 
         calculate_ratio ();
+        load_data ();
+        style ();
     }
 
     public override bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation) {
@@ -166,6 +179,27 @@ public class Spice.Canvas : Gtk.Overlay {
         }
 
         return true;
+    }
+
+    public void load_data () {
+        var background_color_ = save_data.get_string_member ("background-color");
+        if (background_color != null)
+            background_color = background_color_;
+    }
+
+    public string serialise () {
+        return """"background-color":"%s" """.printf (background_color);
+    }
+
+    public void style () {
+        var provider = new Gtk.CssProvider ();
+        var context = grid.get_style_context ();
+
+        var colored_css = CANVAS_CSS.printf (background_color);
+
+        provider.load_from_data (colored_css, colored_css.length);
+
+        context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
     protected class CanvasGrid : Gtk.EventBox {

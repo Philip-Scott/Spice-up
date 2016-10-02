@@ -26,7 +26,7 @@ public class Spice.Slide {
 
     public Slide (Json.Object? save_data = null) {
         this.save_data = save_data;
-        canvas = new Spice.Canvas ();
+        canvas = new Spice.Canvas (save_data);
 
         load_data (save_data);
     }
@@ -67,6 +67,6 @@ public class Spice.Slide {
             }
         }
 
-        return """{"items": [%s]}""".printf (data);
+        return """{%s, "items": [%s]}""".printf (canvas.serialise (), data);
     }
 }
