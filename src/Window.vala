@@ -20,7 +20,20 @@
 */
 
 public class Spice.Window : Gtk.ApplicationWindow {
-    public static bool is_fullscreen { public get; private set; default = false; }
+    public bool is_fullscreen { public get {
+        return is_full_;
+    } private set {
+        is_full_ = value;
+        if (is_full_) {
+            aspect_frame.margin = 0;
+        } else {
+            aspect_frame.margin = 24;
+        }
+    } default = false;
+
+    }
+
+    private bool is_full_;
 
     private Spice.Headerbar headerbar;
     private Spice.SlideManager slide_manager;
@@ -28,6 +41,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private Gtk.Revealer sidebar_revealer;
     private Gtk.Revealer toolbar_revealer;
+    private Gtk.AspectFrame aspect_frame;
 
     private Gtk.Stack app_stack;
     private Spice.Welcome welcome;
@@ -108,7 +122,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         toolbar_revealer.add (toolbar);
         toolbar_revealer.reveal_child = true;
 
-        var aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.3, false);
+        aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.3, false);
         aspect_frame.add (slide_manager.slideshow);
         aspect_frame.margin = 24;
 

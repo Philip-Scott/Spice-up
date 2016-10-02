@@ -68,6 +68,16 @@ public class Spice.SlideManager : Object {
         if (slides.size == 0) new_slide ();
     }
 
+    public void next_slide () {
+        var next_index = slides.index_of (current_slide) + 1;
+        if (next_index < slides.size) {
+            current_slide = slides.get (next_index);
+        } else {
+            // TODO: Show end of presentation slide
+            window.unfullscreen ();
+        }
+    }
+
     public void new_slide (Json.Object? save_data = null) {
         Slide slide;
 
@@ -75,6 +85,10 @@ public class Spice.SlideManager : Object {
 
         slide.canvas.item_clicked.connect ((item) => {
             this.item_clicked (item);
+        });
+
+        slide.canvas.next_slide.connect (() => {
+            next_slide ();
         });
 
         slides.add (slide);

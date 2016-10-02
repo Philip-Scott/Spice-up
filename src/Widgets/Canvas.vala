@@ -22,6 +22,7 @@
 public class Spice.Canvas : Gtk.Overlay {
     public signal void item_clicked (CanvasItem? item);
     public signal void ratio_changed (double ratio);
+    public signal void next_slide ();
 
     private const int SNAP_LIMIT = int.MAX - 1;
 
@@ -116,7 +117,7 @@ public class Spice.Canvas : Gtk.Overlay {
         });
 
         canvas_item.move_display.connect ((delta_x, delta_y) => {
-            if (Spice.Window.is_fullscreen) return;
+            if (window.is_fullscreen) return;
 
             int x, y, width, height;
             canvas_item.get_geometry (out x, out y, out width, out height);
@@ -157,10 +158,8 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
-        stderr.printf ("Pressed item indirectly\n");
-
-        if (Spice.Window.is_fullscreen) {
-            // Next slide
+        if (window.is_fullscreen) {
+            next_slide ();
         } else {
             item_clicked (null);
             unselect_all ();
@@ -182,10 +181,8 @@ public class Spice.Canvas : Gtk.Overlay {
         }
 
         public override bool button_press_event (Gdk.EventButton event) {
-            stderr.printf ("Pressed canvas\n");
-
-            if (Spice.Window.is_fullscreen) {
-                // Next slide
+            if (window.is_fullscreen) {
+                canvas.next_slide ();
             } else {
                 canvas.item_clicked (null);
                 canvas.unselect_all ();

@@ -200,7 +200,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
-        if (holding || Spice.Window.is_fullscreen) {
+        if (holding || window.is_fullscreen) {
             return false;
         }
 

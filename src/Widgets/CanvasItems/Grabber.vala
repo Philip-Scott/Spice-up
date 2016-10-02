@@ -39,7 +39,7 @@ public class Spice.Grabber : Gtk.Button {
     }
 
     public override bool draw (Cairo.Context ctx) {
-        if (Spice.Window.is_fullscreen) return false;
+        if (window.is_fullscreen) return false;
 
         return base.draw (ctx);
     }
