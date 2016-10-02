@@ -21,7 +21,7 @@
 
 public class Spice.TextItem : Spice.CanvasItem {
     private Gtk.Label label;
-    private Gtk.Entry entry;
+    private Gtk.TextView entry;
     private Gtk.Stack stack;
 
     public string font = "Open Sans";
@@ -51,13 +51,16 @@ public class Spice.TextItem : Spice.CanvasItem {
         this.save_data = save_data;
 
         label = new Gtk.Label (_("Click to add text..."));
+        label.justify = Gtk.Justification.CENTER;
         label.halign = Gtk.Align.CENTER;
         label.valign = Gtk.Align.CENTER;
         label.expand = true;
+        label.wrap = true;
 
-        entry = new Gtk.Entry ();
-        entry.get_style_context ().remove_class ("entry");
-        entry.xalign = 0.5f;
+        entry = new Gtk.TextView ();
+        entry.justification = Gtk.Justification.CENTER;
+        entry.valign = Gtk.Align.CENTER;
+        entry.set_wrap_mode (Gtk.WrapMode.WORD);
 
         stack = new Gtk.Stack ();
         stack.set_transition_type (Gtk.StackTransitionType.NONE);
@@ -68,8 +71,8 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         grid.attach (stack, 0, 0, 3, 2);
 
-        entry.changed.connect (() => {
-            label.label = entry.text;
+        entry.buffer.changed.connect (() => {
+            label.label = entry.buffer.text;
         });
 
         this.clicked.connect (() => {
@@ -78,10 +81,6 @@ public class Spice.TextItem : Spice.CanvasItem {
                 stack.set_visible_child_name ("entry");
                 entry.grab_focus ();
             }
-        });
-
-        entry.activate.connect (() => {
-            unselect ();
         });
 
         un_select.connect (() => {
@@ -105,7 +104,7 @@ public class Spice.TextItem : Spice.CanvasItem {
         var text = save_data.get_string_member ("text");
         if (text != null) {
             label.label = text;
-            entry.text = text;
+            entry.buffer.text = text;
         }
 
         font_size = (int) save_data.get_int_member ("font-size");
