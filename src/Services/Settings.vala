@@ -26,6 +26,7 @@ public class Spice.Services.Settings : Granite.Services.Settings {
     public int pos_y { get; set; }
     public int window_width { get; set; }
     public int window_height { get; set; }
+    public string last_file { get; set; }
 
     public static Settings get_instance () {
         if (instance == null) {

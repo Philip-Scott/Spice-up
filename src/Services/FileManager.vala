@@ -78,6 +78,10 @@ public class Spice.Services.FileManager {
 
         dialog.close ();
 
+        if (result != null) {
+            settings.last_file = result.get_path ();
+        }
+
         return result;
     }
 

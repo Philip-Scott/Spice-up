@@ -21,16 +21,23 @@
 
 public class Spice.Welcome : Granite.Widgets.Welcome {
     public signal void open_file (File file);
-    
+
     public Welcome () {
         base ("Spice up", "Make a Simple Presentation");
         append ("document-new", _("New Presentation"), _("Create a new presentation"));
         append ("folder-open", _("Open File"), _("Open a saved presentation"));
-    
+
+        if (settings.last_file != "") {
+            append ("x-office-presentation", _("Open previous file"), _("Open a saved presentation"));
+        }
+
         this.activated.connect ((index) => {
-            var file = Spice.Services.FileManager.get_file_from_user (false, index == 0);
-            
-            if (file != null) open_file (file);
+            if (index != 2) {
+                var file = Spice.Services.FileManager.get_file_from_user (false, index == 0);
+                if (file != null) open_file (file);
+            } else {
+                open_file (File.new_for_path (settings.last_file));
+            }
         });
     }
 }

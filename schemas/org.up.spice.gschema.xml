@@ -23,5 +23,11 @@
             <summary>The saved height of the window.</summary>
             <description>The saved height of the window. Must be greater than 400, or it will not take effect.</description>
         </key>
+
+        <key name="last-file" type="s">
+            <default>""</default>
+            <summary>The last opened file</summary>
+            <description>The last file you opened is here</description>
+        </key>
     </schema>
 </schemalist>
