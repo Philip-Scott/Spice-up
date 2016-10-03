@@ -31,6 +31,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private Gtk.Box canvas_bar;
     private Gtk.Box common_bar;
 
+    private SlideManager manager;
     private CanvasItem? item = null;
     private Gtk.Stack stack;
 
@@ -41,14 +42,15 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private Gee.HashMap<string, Pango.FontFamily> family_cache;
     private Gee.HashMap<string, Array<Pango.FontFace>> face_cache;
     private Spice.EntryCombo font_button;
-    private Gtk.ColorButton text_color_button;
+    private Spice.ColorPicker text_color_button;
     private Spice.EntryCombo font_size;
     private Spice.EntryCombo font_type;
 
     // Color Toolbar
-    private Gtk.ColorButton background_color_button;
+    private Spice.ColorPicker background_color_button;
 
     // Canvas Bar
+    private Spice.ColorPicker canvas_gradient_background;
 
     // Common Bar
 
@@ -59,7 +61,9 @@ public class Spice.DynamicToolbar : Gtk.Box {
         }
     """;
 
-    public DynamicToolbar () {
+    public DynamicToolbar (SlideManager slide_manager) {
+        manager = slide_manager;
+
         stack = new Gtk.Stack ();
         stack.set_transition_type (Gtk.StackTransitionType.OVER_DOWN);
 
@@ -81,6 +85,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         this.item = item;
         if (item == null) {
             stack.set_visible_child_name (CANVAS);
+            canvas_gradient_background.color = manager.current_slide.canvas.background_color;
         } else if (item is TextItem) {
             stack.set_visible_child_name (TEXT);
             font_button.text = ((TextItem) item).font;
@@ -89,16 +94,11 @@ public class Spice.DynamicToolbar : Gtk.Box {
             reset_font_type (((TextItem) item).font);
             font_type.text = ((TextItem) item).font_style;
 
-            Gdk.RGBA rgba = Gdk.RGBA ();
-            rgba.parse (((TextItem) item).font_color);
-            text_color_button.rgba = rgba;
+            text_color_button.color = ((TextItem) item).font_color;
         } else if (item is ColorItem) {
             stack.set_visible_child_name (SHAPE);
 
-            Gdk.RGBA rgba = Gdk.RGBA ();
-            rgba.parse (((ColorItem) item).background_color);
-
-            background_color_button.rgba = rgba;
+            background_color_button.color = ((ColorItem) item).background_color;
         } else if (item is ImageItem) {
             stack.set_visible_child_name (IMAGE);
         }
@@ -111,8 +111,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         text_bar.border_width = 6;
         text_bar.spacing = 6;
 
-        text_color_button = new Gtk.ColorButton ();
-        text_color_button.color_set.connect (() => {
+        text_color_button = new Spice.ColorPicker ();
+        text_color_button.color_picked.connect (() => {
             update_text_properties ();
         });
 
@@ -197,7 +197,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private void update_text_properties () {
         if (item != null && item is TextItem && !selecting) {
             TextItem text = (TextItem) item;
-            text.font_color = text_color_button.rgba.to_string ();
+            text.font_color = text_color_button.color;
             text.font = font_button.text;
             text.font_style = font_type.text;
             text.font_size = int.parse (font_size.text);
@@ -219,10 +219,10 @@ public class Spice.DynamicToolbar : Gtk.Box {
         shape_bar.border_width = 6;
         shape_bar.spacing = 6;
 
-        background_color_button = new Gtk.ColorButton ();
-        background_color_button.use_alpha = true;
+        background_color_button = new Spice.ColorPicker ();
+        background_color_button.gradient = true;
 
-        background_color_button.color_set.connect (() => {
+        background_color_button.color_picked.connect ((color) => {
             update_shape_properties ();
         });
 
@@ -234,7 +234,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private void update_shape_properties () {
         if (item != null && item is ColorItem && !selecting) {
             ColorItem color = (ColorItem) item;
-            color.background_color = background_color_button.rgba.to_string ();
+            color.background_color = background_color_button.color;
 
             this.item.style ();
         }
@@ -245,11 +245,13 @@ public class Spice.DynamicToolbar : Gtk.Box {
         canvas_bar.border_width = 6;
         canvas_bar.spacing = 6;
 
-        var canvas_background = new Spice.ColorPicker ();
-        var canvas_gradient_background = new Spice.ColorPicker ();
+        canvas_gradient_background = new Spice.ColorPicker ();
         canvas_gradient_background.gradient = true;
 
-        canvas_bar.add (canvas_background);
+        canvas_gradient_background.color_picked.connect (() => {
+            update_canvas_properties ();
+        });
+
         canvas_bar.add (canvas_gradient_background);
 
         stack.add_named (canvas_bar, CANVAS);
@@ -257,7 +259,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
     private void update_canvas_properties () {
         if (item == null && !selecting) {
-            //color.background_color = background_color_button.rgba.to_string ();
+            manager.current_slide.canvas.background_color = canvas_gradient_background.color;
+            manager.current_slide.canvas.style ();
         }
     }
 

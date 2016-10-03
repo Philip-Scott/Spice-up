@@ -108,7 +108,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         headerbar = new Spice.Headerbar ();
         headerbar.sensitive = false;
 
-        toolbar = new Spice.DynamicToolbar ();
+        toolbar = new Spice.DynamicToolbar (slide_manager);
 
         var slide_list = new Spice.SlideList (slide_manager);
         set_titlebar (headerbar);

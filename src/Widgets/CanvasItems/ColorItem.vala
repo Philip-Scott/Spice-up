@@ -24,7 +24,7 @@ public class Spice.ColorItem : Spice.CanvasItem {
 
     const string TEXT_STYLE_CSS = """
         .colored {
-            background-color: %s;
+            background: %s;
         }
     """;
 
