@@ -36,7 +36,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
     private bool selecting = false;
 
-    //Text Toolbar
+    // Text Toolbar
     private Pango.FontFamily[] families;
     private Gee.HashMap<string, Pango.FontFamily> family_cache;
     private Gee.HashMap<string, Array<Pango.FontFace>> face_cache;
@@ -45,10 +45,12 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private Spice.EntryCombo font_size;
     private Spice.EntryCombo font_type;
 
-    //Color Toolbar
+    // Color Toolbar
     private Gtk.ColorButton background_color_button;
 
-    //Common Bar
+    // Canvas Bar
+
+    // Common Bar
 
     const string TEXT_STYLE_CSS = """
         .label {
@@ -137,7 +139,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
             reset_font_type (font_button.text);
             update_text_properties ();
         });
-        
+
         font_type.activated.connect (() => {
             update_text_properties ();
         });
@@ -243,7 +245,20 @@ public class Spice.DynamicToolbar : Gtk.Box {
         canvas_bar.border_width = 6;
         canvas_bar.spacing = 6;
 
+        var canvas_background = new Spice.ColorPicker ();
+        var canvas_gradient_background = new Spice.ColorPicker ();
+        canvas_gradient_background.gradient = true;
+
+        canvas_bar.add (canvas_background);
+        canvas_bar.add (canvas_gradient_background);
+
         stack.add_named (canvas_bar, CANVAS);
+    }
+
+    private void update_canvas_properties () {
+        if (item == null && !selecting) {
+            //color.background_color = background_color_button.rgba.to_string ();
+        }
     }
 
     private void build_common () {

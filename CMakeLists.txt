@@ -83,6 +83,7 @@ vala_precompile(VALA_C
   src/Widgets/CanvasItems/ColorItem.vala
   src/Widgets/CanvasItems/ImageItem.vala
   src/Widgets/CanvasItems/Grabber.vala
+  src/Widgets/ColorButton.vala
   src/Widgets/EntryCombo.vala
   src/Widgets/Headerbar.vala
   src/Widgets/SlideList.vala
