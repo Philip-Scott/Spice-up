@@ -57,7 +57,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     const string TEXT_STYLE_CSS = """
         .label {
             font: %s;
-            font-size: 14;
+            font-size: 14px;
         }
     """;
 

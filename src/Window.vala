@@ -58,12 +58,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     .slide {
         border-color: black;
-        border-radius: 0px;
+        border-radius: 0;
     }
 
     .canvas {
         box-shadow: inset 0 0 0 2px alpha (#fff, 0.05);
-        border-radius: 6px
+        border-radius: 6px;
     }
 
     .canvas, frame {
@@ -77,10 +77,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     .button.spice {
         color: #DEDEDE;
         background-color: #343536;
-        padding-top: 1;
-        padding-bottom: 1;
-        padding-right: 6;
-        padding-left: 6;
+        padding: 1px 6px;
     }
 
     .inline-toolbar.toolbar {
