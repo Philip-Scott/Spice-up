@@ -58,7 +58,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     .slide {
         border-color: black;
-        border-radius: 6px;
+        border-radius: 0px;
     }
 
     .canvas {

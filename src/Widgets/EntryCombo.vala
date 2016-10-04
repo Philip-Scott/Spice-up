@@ -77,11 +77,14 @@ public class Spice.EntryCombo : Gtk.Box {
         map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
 
         entry = new Gtk.Entry ();
+        entry.margin = 3;
 
         listbox = new Gtk.ListBox ();
         listbox.set_activate_on_single_click (false);
 
         button = new Gtk.Button.from_icon_name ("pan-down-symbolic", Gtk.IconSize.MENU);
+        button.get_style_context ().remove_class ("button");
+        button.get_child ().margin = 4;
         button.can_focus = false;
 
         scroll = new Gtk.ScrolledWindow (null, null);
@@ -92,7 +95,7 @@ public class Spice.EntryCombo : Gtk.Box {
         popover.position = Gtk.PositionType.BOTTOM;
 
         orientation = Gtk.Orientation.HORIZONTAL;
-        get_style_context ().add_class ("linked");
+        get_style_context ().add_class ("frame");
 
         button.clicked.connect (() => {
             popover.show_all ();

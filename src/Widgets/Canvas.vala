@@ -170,6 +170,38 @@ public class Spice.Canvas : Gtk.Overlay {
         configuration_changed ();
     }
 
+    public void move_up (CanvasItem item_) {
+        int index = 0;
+        foreach (var item in get_children ()) {
+            if (item == item_) break;
+            index++;
+        }
+
+        reorder_overlay (item_, index + 1);
+    }
+
+    public void move_down (CanvasItem item_) {
+        int index = 0;
+        foreach (var item in get_children ()) {
+            if (item == item_) break;
+            index++;
+        }
+
+        if (index - 2 > -1) {
+            reorder_overlay (item_, index - 2);
+        }
+    }
+
+    /* Commented until used
+    public void move_top (CanvasItem item) {
+        reorder_overlay (item, -1);
+    }
+
+    public void move_bottom (CanvasItem item) {
+        reorder_overlay (item, 0);
+    }
+    */
+
     public void check_intersects (CanvasItem source_display_widget) {
         source_display_widget.queue_resize_no_redraw ();
     }

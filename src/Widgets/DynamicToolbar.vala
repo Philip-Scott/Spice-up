@@ -265,9 +265,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void build_common () {
-        common_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        common_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
         common_bar.border_width = 6;
-        common_bar.spacing = 6;
         common_bar.hexpand = true;
         common_bar.halign = Gtk.Align.END;
 
@@ -278,6 +277,30 @@ public class Spice.DynamicToolbar : Gtk.Box {
             item_selected (null);
         });
 
+        var to_top = new Gtk.Button.from_icon_name ("go-up-symbolic", Gtk.IconSize.MENU);
+        to_top.get_style_context ().add_class ("spice");
+
+        var to_bottom = new Gtk.Button.from_icon_name ("go-down-symbolic", Gtk.IconSize.MENU);
+        to_bottom.get_style_context ().add_class ("spice");
+
+        var position_grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        position_grid.get_style_context ().add_class ("linked");
+        position_grid.add (to_top);
+        position_grid.add (to_bottom);
+
+        to_top.clicked.connect (() => {
+            if (this.item != null) {
+                this.manager.current_slide.canvas.move_up (this.item);
+            }
+        });
+
+        to_bottom.clicked.connect (() => {
+            if (this.item != null) {
+                this.manager.current_slide.canvas.move_down (this.item);
+            }
+        });
+
+        common_bar.add (position_grid);
         common_bar.add (delete_button);
     }
 }
