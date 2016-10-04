@@ -86,7 +86,7 @@ public class Spice.EntryCombo : Gtk.Box {
 
         scroll = new Gtk.ScrolledWindow (null, null);
         scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
-        scroll.height_request = 220;
+        scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
         popover = new Gtk.Popover (button);
         popover.position = Gtk.PositionType.BOTTOM;
@@ -145,6 +145,10 @@ public class Spice.EntryCombo : Gtk.Box {
 
     public Gtk.Label? add_entry (string entry) {
         var label = new Gtk.Label (entry);
+        label.margin = 2;
+        label.margin_right = 6;
+        label.margin_left = 6;
+
         if (entry.contains ("Noto Sans") && entry != "Noto Sans") return label;
 
         var row = new Gtk.ListBoxRow ();
@@ -153,6 +157,11 @@ public class Spice.EntryCombo : Gtk.Box {
         row.add (label);
         listbox.add (row);
         listbox.show_all ();
+
+        if (listbox.get_children().length () > 15) {
+            scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+            scroll.height_request = 220;
+        }
 
         return label;
     }

@@ -55,10 +55,13 @@ public class Spice.ColorPicker : ColorButton {
     // 0 == main, N = Gradient Color
     private int color_selector = 0;
 
+    private Gtk.Stack colors_grid_stack;
+
     private Gtk.Popover popover;
     private Gtk.Grid colors_grid;
     private Gtk.Revealer gradient_revealer;
     private Gtk.Button custom_button;
+    private Gtk.ColorChooserWidget color_chooser;
 
     private ColorSurface preview;
     private ColorButton color1;
@@ -69,13 +72,21 @@ public class Spice.ColorPicker : ColorButton {
     public ColorPicker () {
         base ("white");
 
+        colors_grid_stack = new Gtk.Stack ();
+        colors_grid_stack.homogeneous = false;
+
         colors_grid = new Gtk.Grid ();
-        colors_grid.margin = 6;
+        var main_grid = new Gtk.Grid ();
+        main_grid.margin = 6;
 
         generate_colors ();
 
         custom_button = new Gtk.Button.with_label (_("Custom Color"));
-        colors_grid.attach (custom_button, 0, 8, 4, 1);
+        custom_button.clicked.connect (() => {
+            colors_grid_stack.set_visible_child_name ("custom");
+        });
+
+        main_grid.attach (custom_button, 0, 8, 4, 1);
 
         gradient_revealer = new Gtk.Revealer ();
 
@@ -91,7 +102,7 @@ public class Spice.ColorPicker : ColorButton {
         color1_label.halign = Gtk.Align.END;
         color2_label.halign = Gtk.Align.END;
 
-        preview_label.margin_left = 6;
+        preview_label.margin_right = 6;
         color1_label.margin_right = 6;
         color2_label.margin_right = 6;
 
@@ -102,19 +113,23 @@ public class Spice.ColorPicker : ColorButton {
         color2.clicked.connect (() => {color_selector = 2;});
 
         var gradient_grid = new Gtk.Grid ();
+        gradient_grid.row_spacing = 6;
 
         preview = new ColorSurface ("");
         preview.set_size_request (100,100);
 
         gradient_type = new EntryCombo (true, false);
+        gradient_type.vexpand = true;
         gradient_type.editable = false;
         gradient_type.max_length = 10;
+        gradient_type.halign = Gtk.Align.END;
+        gradient_type.valign = Gtk.Align.END;
 
         gradient_type.add_entry ("Vertical");
         gradient_type.add_entry ("Horizontal");
         gradient_type.add_entry ("Radial");
 
-        gradient_grid.attach (preview_label, 0, 0, 3, 1);
+        //gradient_grid.attach (preview_label, 0, 0, 3, 1);
         gradient_grid.attach (preview,       1, 1, 2, 2);
         gradient_grid.attach (color1_label,  0, 3, 2, 1);
         gradient_grid.attach (color1,        2, 3, 2, 1);
@@ -124,13 +139,27 @@ public class Spice.ColorPicker : ColorButton {
 
         gradient_revealer.add (gradient_grid);
 
-        colors_grid.attach (gradient_revealer, 4, 0, 1, 9);
+        main_grid.attach (gradient_revealer, 4, 0, 1, 9);
+
+        color_chooser = new Gtk.ColorChooserWidget ();
+        color_chooser.show_editor = true;
+
+        color_chooser.notify["rgba"].connect (() => {
+            color = color_chooser.rgba.to_string ();
+            color_picked (color);
+        });
+
+        main_grid.attach (colors_grid_stack, 0, 0, 4, 8);
 
         var popover = new Gtk.Popover (this);
         popover.position = Gtk.PositionType.BOTTOM;
-        popover.add (colors_grid);
+        popover.add (main_grid);
+
+        colors_grid_stack.add_named (colors_grid, "palete");
+        colors_grid_stack.add_named (color_chooser, "custom");
 
         this.clicked.connect (() => {
+            colors_grid_stack.set_visible_child_name ("palete");
             popover.show_all ();
         });
 
@@ -140,8 +169,6 @@ public class Spice.ColorPicker : ColorButton {
     public void parse_gradient (string color) {
         string[] parts = color.split(","); //linear-gradient(to bottom | #CCC 0% | #666 100%)
 
-        stderr.printf ("Parsing Gradient: %s\n", color);
-
         if (color.contains ("gradient")) {
             color1.color = parts[1].strip ().split (" ")[0];
             color2.color = parts[2].strip ().split (" ")[0];
@@ -149,6 +176,10 @@ public class Spice.ColorPicker : ColorButton {
             color1.color = color;
             color2.color = color;
         }
+    }
+
+    public string rgb_to_hex (string rgb) {
+        return "%04x";
     }
 
     public string make_gradient () {
@@ -271,8 +302,6 @@ public class Spice.ColorPicker : ColorButton {
         public void style () {
             var provider = new Gtk.CssProvider ();
             var context = get_style_context ();
-
-            stderr.printf ("Styling using %s\n", color_);
 
             var colored_css = STYLE_CSS.printf (color_);
             provider.load_from_data (colored_css, colored_css.length);
