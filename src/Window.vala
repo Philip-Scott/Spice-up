@@ -86,6 +86,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
     .inline-toolbar.toolbar {
         background-image: linear-gradient(to bottom, #222324, #292A2B);
     }
+    
+    .view.canvas {
+        border-width: 1px;
+        border-style: outset;
+        border-color: rgba(0,0,0,0.75);
+    }
 
     ";
 
@@ -123,6 +129,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         toolbar_revealer.reveal_child = true;
 
         aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.3, false);
+        aspect_frame.get_style_context ().remove_class ("frame");
         aspect_frame.add (slide_manager.slideshow);
         aspect_frame.margin = 24;
 

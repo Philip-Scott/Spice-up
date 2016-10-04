@@ -65,7 +65,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         manager = slide_manager;
 
         stack = new Gtk.Stack ();
-        stack.set_transition_type (Gtk.StackTransitionType.OVER_DOWN);
+        stack.set_transition_type (Gtk.StackTransitionType.SLIDE_DOWN);
 
         get_style_context ().add_class ("toolbar");
         get_style_context ().add_class ("inline-toolbar");

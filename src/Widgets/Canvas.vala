@@ -83,6 +83,7 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     private void check_configuration_changed () {
+        stderr.printf ("Configuration changed signal\n");
         configuration_changed ();
     }
 
@@ -155,6 +156,8 @@ public class Spice.Canvas : Gtk.Overlay {
                 ((CanvasItem) item).unselect ();
             }
         }
+
+        configuration_changed ();
     }
 
     public void clear_all () {
@@ -164,6 +167,7 @@ public class Spice.Canvas : Gtk.Overlay {
                 ((CanvasItem) item).destroy ();
             }
         }
+        configuration_changed ();
     }
 
     public void check_intersects (CanvasItem source_display_widget) {
@@ -176,6 +180,7 @@ public class Spice.Canvas : Gtk.Overlay {
         } else {
             item_clicked (null);
             unselect_all ();
+            //
         }
 
         return true;
@@ -200,6 +205,7 @@ public class Spice.Canvas : Gtk.Overlay {
         provider.load_from_data (colored_css, colored_css.length);
 
         context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        configuration_changed ();
     }
 
     protected class CanvasGrid : Gtk.EventBox {
@@ -210,6 +216,7 @@ public class Spice.Canvas : Gtk.Overlay {
             this.canvas = canvas;
 
             get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
+            get_style_context ().add_class ("canvas");
 
             expand = true;
         }
