@@ -37,6 +37,6 @@ public class Spice.Services.Settings : Granite.Services.Settings {
     }
 
     private Settings () {
-        base ("org.up.spice");
+        base ("com.github.philip-scott.spice-up");
     }
 }

@@ -1,5 +1,5 @@
 <schemalist>
-    <schema id="org.up.spice" path="/org/up/spice/" gettext-domain="spice-up">
+    <schema id="com.github.philip-scott.spice-up" path="/com/github/philip-scott/spice-up/" gettext-domain="spice-up">
         <key name="pos-x" type="i">
             <default>920</default>
             <summary>The saved width of the window.</summary>

@@ -105,13 +105,13 @@ add_executable(spice-up ${VALA_C} ${generated_resources})
 install(TARGETS spice-up RUNTIME
   DESTINATION bin)
 
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/Spice-up.desktop
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.philip-scott.spice-up.desktop
   DESTINATION ${DATADIR}/applications/)
 
 #install assets
 file(GLOB assets "${CMAKE_CURRENT_SOURCE_DIR}/data/assets/*")
 install (FILES ${assets}
   DESTINATION ${DATADIR}/spice-up/)
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/data/spice.svg"
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.philip-scott.spice-up.svg"
   DESTINATION ${DATADIR}/pixmaps/)
 
