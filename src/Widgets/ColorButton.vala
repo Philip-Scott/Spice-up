@@ -33,8 +33,6 @@ public class Spice.ColorPicker : ColorButton {
             gradient_revealer.no_show_all = !value;
 
             color_selector = value ? 1 : 0;
-
-            if (value) make_gradient ();
         }
     }
 
@@ -60,7 +58,7 @@ public class Spice.ColorPicker : ColorButton {
     private Gtk.Popover popover;
     private Gtk.Grid colors_grid;
     private Gtk.Revealer gradient_revealer;
-    private Gtk.Button custom_button;
+    private Gtk.ToggleButton custom_button;
     private Gtk.ColorChooserWidget color_chooser;
 
     private ColorSurface preview;
@@ -81,9 +79,13 @@ public class Spice.ColorPicker : ColorButton {
 
         generate_colors ();
 
-        custom_button = new Gtk.Button.with_label (_("Custom Color"));
-        custom_button.clicked.connect (() => {
-            colors_grid_stack.set_visible_child_name ("custom");
+        custom_button = new Gtk.ToggleButton.with_label (_("Custom Color"));
+        custom_button.toggled.connect (() => {
+            if (custom_button.active) {
+                colors_grid_stack.set_visible_child_name ("custom");
+            } else {
+                colors_grid_stack.set_visible_child_name ("palete");
+            }
         });
 
         main_grid.attach (custom_button, 0, 8, 4, 1);
@@ -109,8 +111,8 @@ public class Spice.ColorPicker : ColorButton {
         color1 = new ColorButton ("red");
         color2 = new ColorButton ("orange");
 
-        color1.clicked.connect (() => {color_selector = 1;});
-        color2.clicked.connect (() => {color_selector = 2;});
+        color1.clicked.connect (() => {color_selector = 1; });
+        color2.clicked.connect (() => {color_selector = 2; });
 
         var gradient_grid = new Gtk.Grid ();
         gradient_grid.row_spacing = 6;
@@ -145,8 +147,7 @@ public class Spice.ColorPicker : ColorButton {
         color_chooser.show_editor = true;
 
         color_chooser.notify["rgba"].connect (() => {
-            color = color_chooser.rgba.to_string ();
-            color_picked (color);
+            set_color_smart (rgb_to_hex (color_chooser.rgba.to_string ()));
         });
 
         main_grid.attach (colors_grid_stack, 0, 0, 4, 8);
@@ -160,6 +161,7 @@ public class Spice.ColorPicker : ColorButton {
 
         this.clicked.connect (() => {
             colors_grid_stack.set_visible_child_name ("palete");
+            custom_button.active = false;
             popover.show_all ();
         });
 
@@ -179,7 +181,10 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public string rgb_to_hex (string rgb) {
-        return "%04x";
+        Gdk.RGBA rgba = new Gdk.RGBA ();
+        rgba.parse (rgb);
+
+        return "#%02x%02x%02x".printf ((int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255));
     }
 
     public string make_gradient () {
@@ -249,18 +254,28 @@ public class Spice.ColorPicker : ColorButton {
         colors_grid.attach (color_button, x, y, 1, 1);
 
         color_button.clicked.connect (() => {
-            if (this.color_selector == 0) {
-                this.color = color;
-            } else if (this.color_selector == 1) {
-                color1.color = color;
-                this.color = make_gradient ();
-            } else {
-                color2.color = color;
-                this.color = make_gradient ();
-            }
-
-            color_picked (this.color);
+            set_color_smart (color, true);
         });
+    }
+
+    private void set_color_smart (string color, bool from_button = false) {
+        if (this.color_selector == 0) {
+            this.color = color;
+        } else if (this.color_selector == 1) {
+            color1.color = color;
+            this.color = make_gradient ();
+        } else {
+            color2.color = color;
+            this.color = make_gradient ();
+        }
+
+        if (from_button) {
+            Gdk.RGBA rgba = new Gdk.RGBA ();
+            rgba.parse (color);
+            color_chooser.rgba = rgba;
+        }
+
+        color_picked (this.color);
     }
 
     protected class ColorButton : Gtk.Button {
