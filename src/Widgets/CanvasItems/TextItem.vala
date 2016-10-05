@@ -59,8 +59,8 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         entry = new Gtk.TextView ();
         entry.justification = Gtk.Justification.CENTER;
-        entry.valign = Gtk.Align.CENTER;
         entry.set_wrap_mode (Gtk.WrapMode.WORD);
+
 
         stack = new Gtk.Stack ();
         stack.set_transition_type (Gtk.StackTransitionType.NONE);
@@ -75,10 +75,25 @@ public class Spice.TextItem : Spice.CanvasItem {
             label.label = entry.buffer.text;
         });
 
+        this.check_position.connect (() => {
+            entry.valign = Gtk.Align.FILL;
+            entry.halign = Gtk.Align.CENTER;
+
+            entry.expand = true;
+            entry.valign = Gtk.Align.CENTER;
+            entry.halign = Gtk.Align.FILL;
+        });
+
         this.clicked.connect (() => {
             if (!editing) {
                 editing = true;
                 stack.set_visible_child_name ("entry");
+                entry.valign = Gtk.Align.FILL;
+                entry.halign = Gtk.Align.CENTER;
+
+                entry.expand = true;
+                entry.valign = Gtk.Align.CENTER;
+                entry.halign = Gtk.Align.FILL;
                 entry.grab_focus ();
             }
         });

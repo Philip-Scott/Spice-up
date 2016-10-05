@@ -90,6 +90,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
         border-color: rgba(0,0,0,0.75);
     }
 
+    GtkTextView {
+        background-color: transparent;
+    }
+
     ";
 
     public Window (Gtk.Application app) {
