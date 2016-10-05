@@ -112,17 +112,20 @@ public class Spice.DynamicToolbar : Gtk.Box {
         text_bar.spacing = 6;
 
         text_color_button = new Spice.ColorPicker ();
+        text_color_button.set_tooltip_text (_("Font color"));
         text_color_button.color_picked.connect (() => {
             update_text_properties ();
         });
 
         font_type = new Spice.EntryCombo (true, true);
+        font_type.set_tooltip_text (_("Font Style"));
         font_type.max_length = 10;
         font_type.editable = false;
 
         family_cache = new Gee.HashMap<string, Pango.FontFamily> ();
         face_cache = new Gee.HashMap<string, Array<Pango.FontFace>> ();
         font_button = new Spice.EntryCombo (true, true);
+        font_button.set_tooltip_text (_("Font"));
         create_pango_context ().list_families (out families);
 
         foreach (var family in families) {
@@ -146,6 +149,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         int[] font_sizes = {5, 7, 9, 12, 16, 21, 28, 37, 42, 50, 67};
         font_size = new Spice.EntryCombo ();
+        font_size.set_tooltip_text (_("Font size"));
         font_size.max_length = 3;
 
         foreach (var size in font_sizes) {
@@ -220,6 +224,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         shape_bar.spacing = 6;
 
         background_color_button = new Spice.ColorPicker ();
+        background_color_button.set_tooltip_text (_("Shape color"));
         background_color_button.gradient = true;
 
         background_color_button.color_picked.connect ((color) => {
@@ -247,6 +252,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         canvas_gradient_background = new Spice.ColorPicker ();
         canvas_gradient_background.gradient = true;
+        canvas_gradient_background.set_tooltip_text (_("Background color"));
 
         canvas_gradient_background.color_picked.connect (() => {
             update_canvas_properties ();
@@ -271,6 +277,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         common_bar.halign = Gtk.Align.END;
 
         var delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.MENU);
+        delete_button.set_tooltip_text (_("Delete"));
         delete_button.get_style_context ().add_class ("spice");
         delete_button.clicked.connect (() => {
             this.item.destroy ();
@@ -279,9 +286,11 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         var to_top = new Gtk.Button.from_icon_name ("go-up-symbolic", Gtk.IconSize.MENU);
         to_top.get_style_context ().add_class ("spice");
+        to_top.set_tooltip_text (_("Move up"));
 
         var to_bottom = new Gtk.Button.from_icon_name ("go-down-symbolic", Gtk.IconSize.MENU);
         to_bottom.get_style_context ().add_class ("spice");
+        to_bottom.set_tooltip_text (_("Move down"));
 
         var position_grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         position_grid.get_style_context ().add_class ("linked");

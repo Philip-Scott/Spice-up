@@ -63,13 +63,13 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     private void build_ui () {
         HeaderbarButton.headerbar = this;
 
-        undo = new HeaderbarButton ("edit-undo-symbolic", HeaderButton.UNDO);
-        redo = new HeaderbarButton ("edit-redo-symbolic", HeaderButton.REDO);
-        text = new HeaderbarButton ("insert-text-symbolic", HeaderButton.TEXT);
-        image = new HeaderbarButton ("insert-image-symbolic", HeaderButton.IMAGE);
-        shape = new HeaderbarButton ("insert-object-symbolic", HeaderButton.SHAPE);
+        undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO);
+        redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO);
+        text = new HeaderbarButton ("insert-text-symbolic", _("Text Box"), HeaderButton.TEXT);
+        image = new HeaderbarButton ("insert-image-symbolic", _("Image"), HeaderButton.IMAGE);
+        shape = new HeaderbarButton ("insert-object-symbolic", _("Shape"), HeaderButton.SHAPE);
 
-        present = new HeaderbarButton ("media-playback-start-symbolic", null);
+        present = new HeaderbarButton ("media-playback-start-symbolic",_("Start Presentation"), null);
         present.get_style_context ().add_class ("suggested-action");
 
         var undo_redo_box = new Gtk.Grid ();
@@ -100,14 +100,14 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     protected class HeaderbarButton : Gtk.Button {
         public static Headerbar headerbar;
 
-        protected HeaderbarButton (string icon_name, HeaderButton? signal_mask) {
+        protected HeaderbarButton (string icon_name, string tooltip, HeaderButton? signal_mask) {
             can_focus = false;
 
             var image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
             image.margin = 3;
 
             get_style_context ().add_class ("spice");
-
+            set_tooltip_text (tooltip);
             this.add (image);
 
             if (signal_mask != null) {
