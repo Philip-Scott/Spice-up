@@ -87,6 +87,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         if (item == null) {
             stack.set_visible_child_name (CANVAS);
             canvas_gradient_background.color = manager.current_slide.canvas.background_color;
+            canvas_pattern.text = manager.current_slide.canvas.background_pattern;
         } else if (item is TextItem) {
             stack.set_visible_child_name (TEXT);
             font_button.text = ((TextItem) item).font;
@@ -262,6 +263,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         canvas_pattern = new Spice.EntryCombo (true, true);
         canvas_pattern.set_tooltip_text (_("Background pattern"));
+        canvas_pattern.editable = false;
 
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/3px-tile.png", _("3px tile"));
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/45-degree-fabric-dark.png", _("Fabric dark"));

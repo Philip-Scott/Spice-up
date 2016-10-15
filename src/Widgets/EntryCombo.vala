@@ -39,6 +39,7 @@ public class Spice.EntryCombo : Gtk.Box {
             if (map.has_key (new_val)) {
                 listbox.select_row (map.get (new_val));
                 entry.text = ((Gtk.Label) map.get (new_val).get_child ()).label;
+                substitute_label.label = entry.text;
             } else if (!strict_signal){
                 listbox.select_row (null);
                 entry.text = value;
@@ -64,14 +65,22 @@ public class Spice.EntryCombo : Gtk.Box {
         }
         set {
             entry.sensitive = value;
+
+            if (value) {
+                entry_button_stack.set_visible_child_name ("entry");
+            } else {
+                entry_button_stack.set_visible_child_name ("button");
+            }
         }
     }
 
+    private Gtk.Stack entry_button_stack;
     private Gtk.ScrolledWindow scroll;
     private Gtk.Popover popover;
     private Gtk.ListBox listbox;
     private Gtk.Entry entry;
     private Gtk.Button button;
+    private Gtk.Label substitute_label;
 
     private Gee.HashMap<string, Gtk.ListBoxRow> map;
     private Gee.HashMap<string, string> keys;
@@ -85,11 +94,22 @@ public class Spice.EntryCombo : Gtk.Box {
         map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
         keys = new Gee.HashMap<string, string> ();
 
+        entry_button_stack = new Gtk.Stack ();
+        entry_button_stack.margin = 3;
+
         entry = new Gtk.Entry ();
-        entry.margin = 3;
 
         listbox = new Gtk.ListBox ();
         listbox.set_activate_on_single_click (false);
+
+        substitute_label = new Gtk.Label ("");
+        substitute_label.halign = Gtk.Align.START;
+
+        var entry_substitute = new Gtk.Button ();
+        entry_substitute.get_style_context ().remove_class ("button");
+        entry_substitute.get_style_context ().add_class ("entry");
+        entry_substitute.add (substitute_label);
+        entry_substitute.can_focus = false;
 
         button = new Gtk.Button.from_icon_name ("pan-down-symbolic", Gtk.IconSize.MENU);
         button.get_style_context ().remove_class ("button");
@@ -107,6 +127,10 @@ public class Spice.EntryCombo : Gtk.Box {
         get_style_context ().add_class ("frame");
 
         button.clicked.connect (() => {
+            popover.show_all ();
+        });
+
+        entry_substitute.clicked.connect (() => {
             popover.show_all ();
         });
 
@@ -140,9 +164,15 @@ public class Spice.EntryCombo : Gtk.Box {
 
         scroll.add (listbox);
         popover.add (scroll);
-        base.add (entry);
+
+        entry_button_stack.add_named (entry, "entry");
+        entry_button_stack.add_named (entry_substitute, "button");
+
+        base.add (entry_button_stack);
         base.add (button);
         show_all ();
+
+        entry_button_stack.set_visible_child_name ("entry");
     }
 
     public void clear_all () {
