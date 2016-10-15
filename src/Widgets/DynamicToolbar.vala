@@ -51,6 +51,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
     // Canvas Bar
     private Spice.ColorPicker canvas_gradient_background;
+    private Spice.EntryCombo canvas_pattern;
 
     // Common Bar
 
@@ -203,6 +204,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
             TextItem text = (TextItem) item;
             text.font_color = text_color_button.color;
             text.font = font_button.text;
+            stderr.printf ("Got key: %s\n", font_button.text);
             text.font_style = font_type.text;
             text.font_size = int.parse (font_size.text);
 
@@ -258,13 +260,32 @@ public class Spice.DynamicToolbar : Gtk.Box {
             update_canvas_properties ();
         });
 
-        canvas_bar.add (canvas_gradient_background);
+        canvas_pattern = new Spice.EntryCombo (true, true);
+        canvas_pattern.set_tooltip_text (_("Background pattern"));
 
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/light-wool.png", "Light Wool");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/3px-tile.png", "3px tile");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/bright-squares.png", "Bright Squares");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/egg-shell.png", "Egg Shell");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/groovepaper.png", "Groove Paper");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/noisy-grid.png", "Noisy Grid");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/silver-scales.png", "Silver Scales");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/subtle-grey.png", "Suble Gray");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/tex2res5.png", "Text Res");
+        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/xv.png", "XV");
+
+        canvas_pattern.activated.connect (() => {
+            update_canvas_properties ();
+        });
+
+        canvas_bar.add (canvas_gradient_background);
+        canvas_bar.add (canvas_pattern);
         stack.add_named (canvas_bar, CANVAS);
     }
 
     private void update_canvas_properties () {
         if (item == null && !selecting) {
+            manager.current_slide.canvas.background_pattern = canvas_pattern.text;
             manager.current_slide.canvas.background_color = canvas_gradient_background.color;
             manager.current_slide.canvas.style ();
         }

@@ -39,6 +39,7 @@ public class Spice.Canvas : Gtk.Overlay {
     // Serializable items
     private Json.Object? save_data = null;
     public string background_color = "#383E41";
+    public string background_pattern = "";
 
     const string CANVAS_CSS = """
         .view {
@@ -212,7 +213,6 @@ public class Spice.Canvas : Gtk.Overlay {
         } else {
             item_clicked (null);
             unselect_all ();
-            //
         }
 
         return true;
@@ -222,10 +222,14 @@ public class Spice.Canvas : Gtk.Overlay {
         var background_color_ = save_data.get_string_member ("background-color");
         if (background_color != null)
             background_color = background_color_;
+
+        var background_pattern_ = save_data.get_string_member ("background-pattern");
+        if (background_pattern_ != null)
+            background_pattern = background_pattern_;
     }
 
     public string serialise () {
-        return """"background-color":"%s" """.printf (background_color);
+        return """"background-color":"%s", "background-pattern":"%s" """.printf (background_color, background_pattern);
     }
 
     public void style () {
@@ -237,15 +241,35 @@ public class Spice.Canvas : Gtk.Overlay {
         provider.load_from_data (colored_css, colored_css.length);
 
         context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+        grid.style (background_pattern);
         configuration_changed ();
     }
 
     protected class CanvasGrid : Gtk.EventBox {
         Canvas canvas;
 
+        Gtk.Grid grid;
+
+        const string PATTERN_CSS = """
+            .pattern {
+                background-image: url("%s");
+            }
+        """;
+
+        const string NO_PATTERN_CSS = """
+            .pattern {
+                background-image: none;
+            }
+        """;
+
         protected CanvasGrid (Canvas canvas) {
             events |= Gdk.EventMask.BUTTON_PRESS_MASK;
             this.canvas = canvas;
+
+            grid = new Gtk.Grid ();
+            this.add (grid);
+            grid.get_style_context ().add_class ("pattern");
 
             get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
             get_style_context ().add_class ("canvas");
@@ -262,6 +286,20 @@ public class Spice.Canvas : Gtk.Overlay {
             }
 
             return true;
+        }
+
+        public void style (string pattern) {
+            var provider = new Gtk.CssProvider ();
+            var colored_css = PATTERN_CSS.printf (pattern);
+
+            stderr.printf ("Current pattern: %s", pattern);
+
+            if (pattern != "")
+                provider.load_from_data (colored_css, colored_css.length);
+            else
+                provider.load_from_data (NO_PATTERN_CSS, NO_PATTERN_CSS.length);
+
+            grid.get_style_context ().add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
     }
 }

@@ -111,8 +111,13 @@ public class Spice.ColorPicker : ColorButton {
         color1 = new ColorButton ("red");
         color2 = new ColorButton ("orange");
 
-        color1.clicked.connect (() => {color_selector = 1; });
-        color2.clicked.connect (() => {color_selector = 2; });
+        color1.clicked.connect (() => {
+            color_selector = 1;
+        });
+
+        color2.clicked.connect (() => {
+            color_selector = 2;
+        });
 
         var gradient_grid = new Gtk.Grid ();
         gradient_grid.row_spacing = 6;

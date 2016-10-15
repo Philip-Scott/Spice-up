@@ -22,16 +22,23 @@
 public class Spice.EntryCombo : Gtk.Box {
     public signal void activated (string data);
 
+    private string key;
+
     public string text {
         get {
-            return entry.text;
+            if (keys.has_key (entry.text.down ())) {
+                key = keys.get (entry.text.down ());
+                return key;
+            } else
+                return entry.text;
         }
+
         set {
             outsize_set = true;
-
-            if (map.has_key (value.down())) {
-                listbox.select_row (map.get (value.down()));
-                entry.text = ((Gtk.Label) map.get (value.down()).get_child ()).label;
+            var new_val = value.down ();
+            if (map.has_key (new_val)) {
+                listbox.select_row (map.get (new_val));
+                entry.text = ((Gtk.Label) map.get (new_val).get_child ()).label;
             } else if (!strict_signal){
                 listbox.select_row (null);
                 entry.text = value;
@@ -67,6 +74,7 @@ public class Spice.EntryCombo : Gtk.Box {
     private Gtk.Button button;
 
     private Gee.HashMap<string, Gtk.ListBoxRow> map;
+    private Gee.HashMap<string, string> keys;
     private bool outsize_set = false;
     private bool strict_signal = false;
 
@@ -75,6 +83,7 @@ public class Spice.EntryCombo : Gtk.Box {
         this.strict_signal = strict_signal;
 
         map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
+        keys = new Gee.HashMap<string, string> ();
 
         entry = new Gtk.Entry ();
         entry.margin = 3;
@@ -114,7 +123,8 @@ public class Spice.EntryCombo : Gtk.Box {
         listbox.row_selected.connect ((row) => {
             if (outsize_set) return;
             var label = (Gtk.Label) row.get_child ();
-            text = label.label;
+            text = keys.get (label.label.down ());
+
             activated (label.label);
         });
 
@@ -145,17 +155,27 @@ public class Spice.EntryCombo : Gtk.Box {
 
         outsize_set = false;
     }
+    /*
+    Label -> Translated
+    Key -> Real Value
 
-    public Gtk.Label? add_entry (string entry) {
-        var label = new Gtk.Label (entry);
+    Map <RealValue, ListBoxRow>
+    Keys <Translated, RealValue>*/
+                                // Key = real value, entry = translated
+    public Gtk.Label? add_entry (string real, string? translated = null) {
+        if (translated == null) translated = real;
+
+        keys.set (translated.down (), real.down ());
+
+        var label = new Gtk.Label (translated);
         label.margin = 2;
         label.margin_right = 6;
         label.margin_left = 6;
 
-        if (entry.contains ("Noto Sans") && entry != "Noto Sans") return label;
+        if (translated.contains ("Noto Sans") && translated != "Noto Sans") return label;
 
         var row = new Gtk.ListBoxRow ();
-        map.set (entry.down(), row);
+        map.set (real.down (), row);
 
         row.add (label);
         listbox.add (row);
