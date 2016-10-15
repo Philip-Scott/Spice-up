@@ -263,16 +263,19 @@ public class Spice.DynamicToolbar : Gtk.Box {
         canvas_pattern = new Spice.EntryCombo (true, true);
         canvas_pattern.set_tooltip_text (_("Background pattern"));
 
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/light-wool.png", "Light Wool");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/3px-tile.png", "3px tile");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/bright-squares.png", "Bright Squares");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/egg-shell.png", "Egg Shell");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/groovepaper.png", "Groove Paper");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/noisy-grid.png", "Noisy Grid");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/silver-scales.png", "Silver Scales");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/subtle-grey.png", "Suble Gray");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/tex2res5.png", "Text Res");
-        canvas_pattern.add_entry ("https://www.transparenttextures.com/patterns/xv.png", "XV");
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/3px-tile.png", _("3px tile"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/45-degree-fabric-dark.png", _("Fabric dark"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/45-degree-fabric-light.png", _("Fabric light"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/beige-paper.png", _("Beige paper"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/black-linen.png", _("Black linen"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/bright-squares.png", _("Bright squares"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/flowers.png", _("Flowers"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/light-wool.png", _("Light wool"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/silver-scales.png", _("Silver scales"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/subtle-freckles.png", _("Subtle grid"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/subtle-grey.png", _("Subtle squares"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/xv.png", _("XV"));
+        canvas_pattern.add_entry ("", _(" None"));
 
         canvas_pattern.activated.connect (() => {
             update_canvas_properties ();

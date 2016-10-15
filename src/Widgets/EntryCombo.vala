@@ -113,9 +113,9 @@ public class Spice.EntryCombo : Gtk.Box {
         entry.changed.connect (() => {
             if (outsize_set) return;
             text = entry.text;
-            if (strict_signal) {
+            if (strict_signal && keys.has_key (text.down ())) {
                 activated (entry.text);
-            } else {
+            } else if (!strict_signal){
                 activated (entry.text);
             }
         });
