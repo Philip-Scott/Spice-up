@@ -117,12 +117,8 @@ public class Spice.Canvas : Gtk.Overlay {
 
         add_overlay (canvas_item);
 
-        try {
-            var context = canvas_item.get_style_context ();
-            context.add_class ("colored");
-        } catch (GLib.Error e) {
-            critical (e.message);
-        }
+        var context = canvas_item.get_style_context ();
+        context.add_class ("colored");
 
         canvas_item.configuration_changed.connect (() => check_configuration_changed ());
         canvas_item.check_position.connect (() => check_intersects (canvas_item));
@@ -232,15 +228,8 @@ public class Spice.Canvas : Gtk.Overlay {
         return """"background-color":"%s", "background-pattern":"%s" """.printf (background_color, background_pattern);
     }
 
-    public void style () {
-        var provider = new Gtk.CssProvider ();
-        var context = grid.get_style_context ();
-
-        var colored_css = CANVAS_CSS.printf (background_color);
-
-        provider.load_from_data (colored_css, colored_css.length);
-
-        context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+    public new void style () {
+        Utils.set_style (grid, CANVAS_CSS.printf (background_color));
 
         grid.style (background_pattern);
         configuration_changed ();
@@ -288,18 +277,12 @@ public class Spice.Canvas : Gtk.Overlay {
             return true;
         }
 
-        public void style (string pattern) {
-            var provider = new Gtk.CssProvider ();
-            var colored_css = PATTERN_CSS.printf (pattern);
-
-            stderr.printf ("Current pattern: %s", pattern);
-
-            if (pattern != "")
-                provider.load_from_data (colored_css, colored_css.length);
-            else
-                provider.load_from_data (NO_PATTERN_CSS, NO_PATTERN_CSS.length);
-
-            grid.get_style_context ().add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        public new void style (string pattern) {
+            if (pattern != "") {
+                Utils.set_style (grid, PATTERN_CSS.printf (pattern));
+            } else {
+                Utils.set_style (grid, NO_PATTERN_CSS);
+            }
         }
     }
 }

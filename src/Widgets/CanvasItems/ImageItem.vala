@@ -57,12 +57,6 @@ public class Spice.ImageItem : Spice.CanvasItem {
     }
 
     public override void style () {
-        var provider = new Gtk.CssProvider ();
-        var context = get_style_context ();
-
-        var colored_css = IMAGE_STYLE_CSS.printf (uri);
-
-        provider.load_from_data (colored_css, colored_css.length);
-        context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Utils.set_style (this, IMAGE_STYLE_CSS.printf (uri));
     }
 }

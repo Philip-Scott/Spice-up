@@ -55,14 +55,18 @@ public class Spice.SlideManager : Object {
     }
 
     public void load_data (string data) {
-        var parser = new Json.Parser ();
-        parser.load_from_data (data);
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (data);
 
-        var root_object = parser.get_root ().get_object ();
-        var slides_array = root_object.get_array_member ("slides");
+            var root_object = parser.get_root ().get_object ();
+            var slides_array = root_object.get_array_member ("slides");
 
-        foreach (var slide_object in slides_array.get_elements ()) {
-            new_slide (slide_object.get_object ());
+            foreach (var slide_object in slides_array.get_elements ()) {
+                new_slide (slide_object.get_object ());
+            }
+        } catch (Error e) {
+            error ("Error loading file: %s", e.message);
         }
 
         if (slides.size == 0) new_slide ();

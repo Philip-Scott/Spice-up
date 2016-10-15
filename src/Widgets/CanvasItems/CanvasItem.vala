@@ -68,13 +68,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         real_width = 720;
         real_height = 510;
 
-        var provider = new Gtk.CssProvider ();
-        var context = get_style_context ();
-
-        var colored_css = CSS;
-        provider.load_from_data (colored_css, colored_css.length);
-
-        context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Utils.set_style (this, CSS);
 
         /*
             Grabber Pos: 1 2 3
@@ -177,7 +171,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         }
     }
 
-    public abstract void style ();
+    public new abstract void style ();
 
     private void connect_grabber (Grabber grabber) {
         grabber.grabbed.connect ((event, id) => {

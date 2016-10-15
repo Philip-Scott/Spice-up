@@ -36,9 +36,9 @@ public class Spice.EntryCombo : Gtk.Box {
         set {
             outsize_set = true;
             var new_val = value.down ();
-            if (map.has_key (new_val)) {
-                listbox.select_row (map.get (new_val));
-                entry.text = ((Gtk.Label) map.get (new_val).get_child ()).label;
+            if (row_map.has_key (new_val)) {
+                listbox.select_row (row_map.get (new_val));
+                entry.text = ((Gtk.Label) row_map.get (new_val).get_child ()).label;
                 substitute_label.label = entry.text;
             } else if (!strict_signal){
                 listbox.select_row (null);
@@ -82,7 +82,7 @@ public class Spice.EntryCombo : Gtk.Box {
     private Gtk.Button button;
     private Gtk.Label substitute_label;
 
-    private Gee.HashMap<string, Gtk.ListBoxRow> map;
+    private Gee.HashMap<string, Gtk.ListBoxRow> row_map;
     private Gee.HashMap<string, string> keys;
     private bool outsize_set = false;
     private bool strict_signal = false;
@@ -91,7 +91,7 @@ public class Spice.EntryCombo : Gtk.Box {
     public EntryCombo (bool strict_signal = false, bool alphabetize = false) {
         this.strict_signal = strict_signal;
 
-        map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
+        row_map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
         keys = new Gee.HashMap<string, string> ();
 
         entry_button_stack = new Gtk.Stack ();
@@ -177,7 +177,7 @@ public class Spice.EntryCombo : Gtk.Box {
 
     public void clear_all () {
         outsize_set = true;
-        map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
+        row_map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
         foreach (var child in listbox.get_children ()) {
             if (child is Gtk.ListBoxRow)
                 child.destroy ();
@@ -205,7 +205,7 @@ public class Spice.EntryCombo : Gtk.Box {
         if (translated.contains ("Noto Sans") && translated != "Noto Sans") return label;
 
         var row = new Gtk.ListBoxRow ();
-        map.set (real.down (), row);
+        row_map.set (real.down (), row);
 
         row.add (label);
         listbox.add (row);

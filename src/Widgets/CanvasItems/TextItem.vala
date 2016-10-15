@@ -40,7 +40,7 @@ public class Spice.TextItem : Spice.CanvasItem {
             color: %s;
 
             font: %s %s;
-            font-size: %dpx;
+            font-size: %fpx;
             background: 0;
         }
     """;
@@ -138,15 +138,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     public override void style () {
-        var provider = new Gtk.CssProvider ();
-        var context = get_style_context ();
-
-        var colored_css = TEXT_STYLE_CSS.printf (font_color, font, font_style, (int) (4 * font_size * (canvas.current_ratio)));
-
-        provider.load_from_data (colored_css, colored_css.length);
-
-        context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
+        Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, 4.0 * canvas.current_ratio * font_size ));
         un_select ();
     }
 }

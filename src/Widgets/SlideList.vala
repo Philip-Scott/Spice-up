@@ -49,7 +49,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         });
 
         foreach (var slide in manager.slides) {
-            var button = add_slide (slide);
+            add_slide (slide);
         }
     }
 

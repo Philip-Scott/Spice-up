@@ -157,7 +157,7 @@ public class Spice.ColorPicker : ColorButton {
 
         main_grid.attach (colors_grid_stack, 0, 0, 4, 8);
 
-        var popover = new Gtk.Popover (this);
+        popover = new Gtk.Popover (this);
         popover.position = Gtk.PositionType.BOTTOM;
         popover.add (main_grid);
 
@@ -186,7 +186,7 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public string rgb_to_hex (string rgb) {
-        Gdk.RGBA rgba = new Gdk.RGBA ();
+        Gdk.RGBA rgba = Gdk.RGBA ();
         rgba.parse (rgb);
 
         return "#%02x%02x%02x".printf ((int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255));
@@ -275,7 +275,7 @@ public class Spice.ColorPicker : ColorButton {
         }
 
         if (from_button) {
-            Gdk.RGBA rgba = new Gdk.RGBA ();
+            Gdk.RGBA rgba = Gdk.RGBA ();
             rgba.parse (color);
             color_chooser.rgba = rgba;
         }
@@ -319,14 +319,8 @@ public class Spice.ColorPicker : ColorButton {
             style ();
         }
 
-        public void style () {
-            var provider = new Gtk.CssProvider ();
-            var context = get_style_context ();
-
-            var colored_css = STYLE_CSS.printf (color_);
-            provider.load_from_data (colored_css, colored_css.length);
-
-            context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        public new void style () {
+            Utils.set_style (this, STYLE_CSS.printf (color_));
         }
 
         private const string STYLE_CSS = """

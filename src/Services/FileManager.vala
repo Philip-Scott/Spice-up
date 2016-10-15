@@ -85,9 +85,13 @@ public class Spice.Services.FileManager {
         return result;
     }
 
-    public static void write_file (string contents) throws Error {
+    public static void write_file (string contents) {
         if (current_file.query_exists ()) {
-            current_file.delete ();
+            try {
+                current_file.delete ();
+            } catch (Error e) {
+                warning ("Could not delete file: %s", e.message);
+            }
         }
 
         create_file_if_not_exists (current_file);
@@ -103,7 +107,7 @@ public class Spice.Services.FileManager {
         });
     }
 
-    public static string open_file () throws Error {
+    public static string open_file () {
         if (current_file.query_exists ()) {
             try {
                 var dis = new DataInputStream (current_file.read ());
@@ -117,12 +121,12 @@ public class Spice.Services.FileManager {
         return "";
     }
 
-    public static void create_file_if_not_exists (File file) throws Error{
+    public static void create_file_if_not_exists (File file) {
         if (!file.query_exists ()) {
             try {
                 file.create (FileCreateFlags.REPLACE_DESTINATION);
             } catch (Error e) {
-                throw new Error (Quark.from_string (""), -1, "Could not write file: %s", e.message);
+                error ("Could not write file: %s", e.message);
             }
         }
     }

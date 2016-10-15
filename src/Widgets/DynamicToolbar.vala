@@ -131,13 +131,9 @@ public class Spice.DynamicToolbar : Gtk.Box {
         create_pango_context ().list_families (out families);
 
         foreach (var family in families) {
-             var provider = new Gtk.CssProvider ();
-             var context = font_button.add_entry (family.get_name ()).get_style_context ();
-             var colored_css = TEXT_STYLE_CSS.printf (family.get_name ());
-
-             provider.load_from_data (colored_css, colored_css.length);
-             context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-             family_cache.set (family.get_name ().down(), family);
+            var entry = font_button.add_entry (family.get_name ());
+            Utils.set_style (entry, TEXT_STYLE_CSS.printf (family.get_name ()));
+            family_cache.set (family.get_name ().down(), family);
         }
 
         font_button.activated.connect (() => {
