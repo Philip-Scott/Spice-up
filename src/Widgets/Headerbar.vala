@@ -65,9 +65,9 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO);
         redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO);
-        text = new HeaderbarButton ("insert-text-symbolic", _("Text Box"), HeaderButton.TEXT);
-        image = new HeaderbarButton ("insert-image-symbolic", _("Image"), HeaderButton.IMAGE);
-        shape = new HeaderbarButton ("insert-object-symbolic", _("Shape"), HeaderButton.SHAPE);
+        text = new HeaderbarButton ("spiceup-text-symbolic", _("Text Box"), HeaderButton.TEXT);
+        image = new HeaderbarButton ("emblem-photos-symbolic", _("Image"), HeaderButton.IMAGE);
+        shape = new HeaderbarButton ("spiceup-shape-symbolic", _("Shape"), HeaderButton.SHAPE);
 
         present = new HeaderbarButton ("media-playback-start-symbolic",_("Start Presentation"), null);
         present.get_style_context ().add_class ("suggested-action");

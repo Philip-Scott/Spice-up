@@ -72,6 +72,10 @@ public class Spice.SlideManager : Object {
         if (slides.size == 0) new_slide ();
     }
 
+    public void move_up (Slide slide) {}
+
+    public void move_down (Slide slide) {}
+
     public void next_slide () {
         var next_index = slides.index_of (current_slide) + 1;
         if (next_index < slides.size) {
