@@ -28,7 +28,8 @@ public class Spice.Welcome : Granite.Widgets.Welcome {
         append ("folder-open", _("Open File"), _("Open a saved presentation"));
 
         if (settings.last_file != "") {
-            append ("x-office-presentation", _("Open previous file"), _("Open a saved presentation"));
+            var file = File.new_for_path (settings.last_file);
+            append ("x-office-presentation", _("Open Last File"), file.get_basename ());
         }
 
         this.activated.connect ((index) => {

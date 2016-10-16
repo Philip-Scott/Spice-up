@@ -37,9 +37,11 @@ public class Spice.Canvas : Gtk.Overlay {
     private CanvasGrid grid;
 
     // Serializable items
-    private Json.Object? save_data = null;
+    public Json.Object? save_data = null;
     public string background_color = "#383E41";
     public string background_pattern = "";
+
+    public bool editable = true;
 
     const string CANVAS_CSS = """
         .view {
@@ -59,6 +61,22 @@ public class Spice.Canvas : Gtk.Overlay {
 
         calculate_ratio ();
         load_data ();
+        style ();
+    }
+
+    public Canvas.preview (Json.Object? save_data = null) {
+        this.save_data = save_data;
+
+        editable = false;
+        grid = new CanvasGrid (this);
+        add (grid);
+        set_size_request (200, 154);
+        expand = false;
+
+        get_style_context ().add_class ("canvas");
+
+        load_data ();
+        calculate_ratio ();
         style ();
     }
 
@@ -120,21 +138,23 @@ public class Spice.Canvas : Gtk.Overlay {
         var context = canvas_item.get_style_context ();
         context.add_class ("colored");
 
-        canvas_item.configuration_changed.connect (() => check_configuration_changed ());
-        canvas_item.check_position.connect (() => check_intersects (canvas_item));
-        canvas_item.clicked.connect (() => {
-            unselect_all ();
-            item_clicked (canvas_item);
-        });
+        if (editable) {
+            canvas_item.configuration_changed.connect (() => check_configuration_changed ());
+            canvas_item.check_position.connect (() => check_intersects (canvas_item));
+            canvas_item.clicked.connect (() => {
+                unselect_all ();
+                item_clicked (canvas_item);
+            });
 
-        canvas_item.move_display.connect ((delta_x, delta_y) => {
-            if (window.is_fullscreen) return;
+            canvas_item.move_display.connect ((delta_x, delta_y) => {
+                if (window.is_fullscreen) return;
 
-            int x, y, width, height;
-            canvas_item.get_geometry (out x, out y, out width, out height);
-            canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
-            canvas_item.queue_resize_no_redraw ();
-        });
+                int x, y, width, height;
+                canvas_item.get_geometry (out x, out y, out width, out height);
+                canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
+                canvas_item.queue_resize_no_redraw ();
+            });
+        }
 
         canvas_item.show_all ();
         var old_delta_x = canvas_item.delta_x;
@@ -204,24 +224,30 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
+        if (!editable) return false;
+
         if (window.is_fullscreen) {
             next_slide ();
         } else {
-            item_clicked (null);
             unselect_all ();
+            item_clicked (null);
         }
 
         return true;
     }
 
     public void load_data () {
+        if (save_data == null) return;
+
         var background_color_ = save_data.get_string_member ("background-color");
-        if (background_color != null)
+        if (background_color != null) {
             background_color = background_color_;
+        }
 
         var background_pattern_ = save_data.get_string_member ("background-pattern");
-        if (background_pattern_ != null)
+        if (background_pattern_ != null) {
             background_pattern = background_pattern_;
+        }
     }
 
     public string serialise () {
@@ -267,6 +293,8 @@ public class Spice.Canvas : Gtk.Overlay {
         }
 
         public override bool button_press_event (Gdk.EventButton event) {
+            if (!canvas.editable) return false;
+
             if (window.is_fullscreen) {
                 canvas.next_slide ();
             } else {

@@ -138,7 +138,11 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     public override void style () {
-        Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, 4.0 * canvas.current_ratio * font_size ));
-        un_select ();
+        var converted_font_size = 4.0 * canvas.current_ratio * font_size;
+
+        if (converted_font_size > 0) {
+            Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, converted_font_size));
+            un_select ();
+        }
     }
 }

@@ -22,6 +22,7 @@ using Cairo;
 
 public class Spice.SlideList : Gtk.ScrolledWindow {
     private Gtk.Grid slides_grid;
+    private Gtk.ListBox slides_list;
     private SlideManager manager;
 
     private Gtk.Button new_slide_button;
@@ -29,14 +30,29 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
     public SlideList (SlideManager manager) {
         this.manager = manager;
 
-        get_style_context ().add_class ("slide-list");
         hscrollbar_policy = Gtk.PolicyType.NEVER;
         vexpand = true;
 
         slides_grid = new Gtk.Grid ();
-        slides_grid.get_style_context ().add_class ("linked");
         slides_grid.orientation = Gtk.Orientation.VERTICAL;
+        slides_grid.get_style_context ().add_class ("slide-list");
+
+        slides_list = new Gtk.ListBox ();
+        slides_list.get_style_context ().add_class ("slide-list");
+        slides_list.get_style_context ().add_class ("linked");
+
+        slides_grid.add (slides_list);
+        slides_grid.add (add_new_slide ());
         this.add (slides_grid);
+
+        slides_list.row_selected.connect ((row) => {
+            if (row is SlideListRow) {
+                var slide = (SlideListRow) row;
+                manager.current_slide.reload_preview_data ();
+
+                manager.current_slide = slide.slide;
+            }
+        });
 
         manager.new_slide_created.connect ((slide) => {
             add_slide (slide);
@@ -53,36 +69,26 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         }
     }
 
-    public Gtk.Button add_slide (Slide slide) {
-        var button = new Gtk.Button ();
-        var image = new Gtk.Image ();
+    private SlideListRow add_slide (Slide slide) {
+        var slide_row = new SlideListRow (slide);
 
-        button.clicked.connect (() => {
-            manager.current_slide = slide;
-            set_preview (image, slide);
-        });
+        slide_row.get_style_context ().add_class ("slide");
 
-        set_preview (image, slide);
-        button.get_style_context ().add_class ("slide");
-        button.add (image);
+        slides_list.add (slide_row);
+        slides_list.show_all ();
 
-        slides_grid.remove (new_slide_button);
-        slides_grid.add (button);
-        slides_grid.add (new_slide_button);
-        slides_grid.show_all ();
-
-        return button;
+        return slide_row;
     }
 
     public void set_preview (Gtk.Image image, Slide slide) {
         var buffer = new  Granite.Drawing.BufferSurface (slide.canvas.current_allocated_width, slide.canvas.current_allocated_height);
         slide.canvas.draw (buffer.context);
-
+        image.set_from_file ("/home/felipe/2.png");
         image.set_from_pixbuf (buffer.load_to_pixbuf ().scale_simple (width, height, Gdk.InterpType.BILINEAR ));
     }
 
-    int width = 200;
-    int height = 150;
+    public static int width = 200;
+    public static int height = 154;
 
     public Gtk.Button add_new_slide () {
         var button = new Gtk.Button ();
@@ -94,12 +100,22 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         button.add (plus_icon);
         button.set_size_request (width - 24, height - 24);
         button.margin = 12;
-
-        slides_grid.add (button);
-        slides_grid.show_all ();
+        button.halign = Gtk.Align.CENTER;
+        button.valign = Gtk.Align.CENTER;
 
         return button;
     }
+
+    private class SlideListRow : Gtk.ListBoxRow {
+        public Spice.Slide slide;
+
+        public SlideListRow (Slide slide) {
+            this.slide = slide;
+            this.add (slide.preview);
+
+            margin = 6;
+            margin_top = 3;
+            margin_bottom = 3;
+        }
+    }
 }
-
-

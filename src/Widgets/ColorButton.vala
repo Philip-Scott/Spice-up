@@ -301,14 +301,16 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     protected class ColorSurface : Gtk.EventBox {
-        public string color_;
+        public string color_ = "none";
 
         public string color {
             get {
                 return color_;
             } set {
-                color_ = value;
-                style ();
+                if (value != "") {
+                    color_ = value;
+                    style ();
+                }
             }
         }
 

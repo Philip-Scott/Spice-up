@@ -101,6 +101,7 @@ public class Spice.SlideManager : Object {
 
         new_slide_created (slide);
         current_slide = slide;
+        slide.position = slides.size;
     }
 
     public CanvasItem? request_new_item (Spice.HeaderButton type) {

@@ -20,20 +20,24 @@
 */
 
 public class Spice.Slide {
+    public int position = 0;
+
     protected Json.Object? save_data = null;
 
     public Canvas canvas;
+    public Canvas preview;
 
     public Slide (Json.Object? save_data = null) {
         this.save_data = save_data;
         canvas = new Spice.Canvas (save_data);
+        preview = new Spice.Canvas.preview (save_data);
 
         load_data (save_data);
     }
 
-    public void load_data (Json.Object? save_data) {
+    public void load_data (Json.Object? save_data, bool load_canvas = true) {
         if (save_data == null) return;
-        canvas.clear_all ();
+        if (load_canvas) canvas.clear_all ();
 
         var items = save_data.get_array_member ("items");
 
@@ -44,16 +48,34 @@ public class Spice.Slide {
 
             switch (type) {
                 case "text":
-                    canvas.add_item (new TextItem (canvas, item));
+                    if (load_canvas) canvas.add_item (new TextItem (canvas, item));
+                    preview.add_item (new TextItem (preview, item));
                 break;
                 case "color":
-                    canvas.add_item (new ColorItem (canvas, item));
+                    if (load_canvas) canvas.add_item (new ColorItem (canvas, item));
+                    preview.add_item (new ColorItem (preview, item));
                 break;
                 case "image":
-                    canvas.add_item (new ImageItem (canvas, item));
+                    if (load_canvas) canvas.add_item (new ImageItem (canvas, item));
+                    preview.add_item (new ImageItem (preview, item));
                 break;
             }
         }
+    }
+
+    public void reload_preview_data () {
+        string data = serialise ();
+        var parser = new Json.Parser ();
+        parser.load_from_data (data);
+        var root_object = parser.get_root ().get_object ();
+
+        preview.clear_all ();
+
+        load_data (root_object, false);
+
+        preview.save_data = root_object;
+        preview.load_data ();
+        preview.style ();
     }
 
     public string serialise () {
