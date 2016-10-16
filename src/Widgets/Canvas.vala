@@ -268,7 +268,9 @@ public class Spice.Canvas : Gtk.Overlay {
 
         const string PATTERN_CSS = """
             .pattern {
+                box-shadow: inset 0 0 0 2px alpha (#fff, 0.05);
                 background-image: url("%s");
+                border-radius: 6px;
             }
         """;
 

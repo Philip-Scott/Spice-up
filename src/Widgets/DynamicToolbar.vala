@@ -268,6 +268,10 @@ public class Spice.DynamicToolbar : Gtk.Box {
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/black-linen.png", _("Black linen"));
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/bright-squares.png", _("Bright squares"));
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/flowers.png", _("Flowers"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/hexellence.png", _("Hexellence"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/gplay.png", _("Gplay"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/inspiration-geometry.png", _("Geometry"));
+        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/dark-geometric.png", _("Dark geometric"));
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/light-wool.png", _("Light wool"));
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/silver-scales.png", _("Silver scales"));
         canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/subtle-freckles.png", _("Subtle grid"));
