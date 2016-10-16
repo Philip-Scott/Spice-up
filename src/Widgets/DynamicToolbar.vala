@@ -41,6 +41,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     private Pango.FontFamily[] families;
     private Gee.HashMap<string, Pango.FontFamily> family_cache;
     private Gee.HashMap<string, Array<Pango.FontFace>> face_cache;
+    private Granite.Widgets.ModeButton justification;
     private Spice.EntryCombo font_button;
     private Spice.ColorPicker text_color_button;
     private Spice.EntryCombo font_size;
@@ -97,6 +98,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
             font_type.text = ((TextItem) item).font_style;
 
             text_color_button.color = ((TextItem) item).font_color;
+            justification.set_active (((TextItem) item).justification);
         } else if (item is ColorItem) {
             stack.set_visible_child_name (SHAPE);
 
@@ -109,9 +111,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void build_textbar () {
-        text_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        text_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12);
         text_bar.border_width = 6;
-        text_bar.spacing = 6;
 
         text_color_button = new Spice.ColorPicker ();
         text_color_button.set_tooltip_text (_("Font color"));
@@ -158,10 +159,25 @@ public class Spice.DynamicToolbar : Gtk.Box {
             update_text_properties ();
         });
 
+        justification = new Granite.Widgets.ModeButton ();
+        justification.append_icon ("format-justify-left-symbolic", Gtk.IconSize.MENU);
+        justification.append_icon ("format-justify-center-symbolic", Gtk.IconSize.MENU);
+        justification.append_icon ("format-justify-right-symbolic", Gtk.IconSize.MENU);
+        justification.append_icon ("format-justify-fill-symbolic", Gtk.IconSize.MENU);
+
+        justification.mode_changed.connect ((widget) => {
+            update_text_properties ();
+        });
+
+        foreach (var child in justification.get_children ()) {
+            child.get_style_context ().add_class ("spice");
+        }
+
         text_bar.add (font_button);
         text_bar.add (font_size);
         text_bar.add (font_type);
         text_bar.add (text_color_button);
+        text_bar.add (justification);
 
         stack.add_named (text_bar, TEXT);
     }
@@ -201,9 +217,9 @@ public class Spice.DynamicToolbar : Gtk.Box {
             TextItem text = (TextItem) item;
             text.font_color = text_color_button.color;
             text.font = font_button.text;
-            stderr.printf ("Got key: %s\n", font_button.text);
             text.font_style = font_type.text;
             text.font_size = int.parse (font_size.text);
+            text.justification = justification.selected;
 
             this.item.style ();
         }
@@ -218,9 +234,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void build_shapebar () {
-        shape_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        shape_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12);
         shape_bar.border_width = 6;
-        shape_bar.spacing = 6;
 
         background_color_button = new Spice.ColorPicker ();
         background_color_button.set_tooltip_text (_("Shape color"));
@@ -245,9 +260,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void build_canvasbar () {
-        canvas_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        canvas_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12);
         canvas_bar.border_width = 6;
-        canvas_bar.spacing = 6;
 
         canvas_gradient_background = new Spice.ColorPicker ();
         canvas_gradient_background.gradient = true;
@@ -297,7 +311,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
     }
 
     private void build_common () {
-        common_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        common_bar = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12);
         common_bar.border_width = 6;
         common_bar.hexpand = true;
         common_bar.halign = Gtk.Align.END;

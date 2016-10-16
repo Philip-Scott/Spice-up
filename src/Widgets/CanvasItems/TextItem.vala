@@ -29,9 +29,8 @@ public class Spice.TextItem : Spice.CanvasItem {
     public string font_color = "#fff";
     public string font_style = "Regular";
 
-    public bool bold = false;
-    public bool italics = false;
     public bool underlined = false;
+    public int justification = 1;
 
     private bool editing = false;
 
@@ -130,11 +129,16 @@ public class Spice.TextItem : Spice.CanvasItem {
             font_style = style;
         }
 
+        int64? justify = save_data.get_int_member ("justification");
+        if (justify != null) {
+            justification = (int) justify;
+        }
+
         font_color = save_data.get_string_member ("color");
     }
 
     protected override string serialise_item () {
-        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s" """.printf (label.label, font, font_color, font_size, font_style);
+        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d """.printf (label.label, font, font_color, font_size, font_style, justification);
     }
 
     public override void style () {
@@ -143,6 +147,29 @@ public class Spice.TextItem : Spice.CanvasItem {
         if (converted_font_size > 0) {
             Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, converted_font_size));
             un_select ();
+        }
+
+        switch (justification) {
+            case 0:
+                label.justify = Gtk.Justification.LEFT;
+                label.halign = Gtk.Align.START;
+                entry.justification = Gtk.Justification.LEFT;
+                break;
+            case 1:
+                label.justify = Gtk.Justification.CENTER;
+                label.halign = Gtk.Align.CENTER;
+                entry.justification = Gtk.Justification.CENTER;
+                break;
+            case 2:
+                label.justify = Gtk.Justification.RIGHT;
+                label.halign = Gtk.Align.END;
+                entry.justification = Gtk.Justification.RIGHT;
+                break;
+            case 3:
+                label.justify = Gtk.Justification.FILL;
+                label.halign = Gtk.Align.FILL;
+                entry.justification = Gtk.Justification.FILL;
+                break;
         }
     }
 }

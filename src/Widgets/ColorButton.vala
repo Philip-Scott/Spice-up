@@ -234,7 +234,7 @@ public class Spice.ColorPicker : ColorButton {
         attach_color ("#3C1B50", 2, 7);
 
         // GrayScale
-        attach_color ("#EEE", 3, 0);
+        attach_color ("#FFF", 3, 0);
         attach_color ("#CCC", 3, 1);
         attach_color ("#AAA", 3, 2);
         attach_color ("#888", 3, 3);

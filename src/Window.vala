@@ -80,10 +80,19 @@ public class Spice.Window : Gtk.ApplicationWindow {
         padding: 1px 6px;
     }
 
+    .button.spice:checked {
+        background-color: alpha (#000, 0.05);
+        background-image: none;
+        border-color: alpha (#000, 0.27);
+        box-shadow:
+            inset 0 0 0 1px alpha (#000, 0.05),
+            0 1px 0 0 alpha (@bg_highlight_color, 0.3);
+        }
+
     .inline-toolbar.toolbar {
         background-image: linear-gradient(to bottom, #222324, #292A2B);
     }
-    
+
     .view.canvas {
         border-width: 1px;
         border-style: outset;
