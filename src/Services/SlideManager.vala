@@ -22,6 +22,7 @@
 public class Spice.SlideManager : Object {
     public signal void item_clicked (CanvasItem? item);
     public signal void new_slide_created (Slide slide);
+    public signal void slides_sorted ();
 
     public Gtk.Stack slideshow {get; private set;}
     public Gee.ArrayList<Slide> slides {get; private set;}
@@ -72,9 +73,31 @@ public class Spice.SlideManager : Object {
         if (slides.size == 0) new_slide ();
     }
 
-    public void move_up (Slide slide) {}
+    public void move_down (Slide slide) {
+        var index = slides.index_of (slide);
 
-    public void move_down (Slide slide) {}
+        if (index + 1 < slides.size) {
+            var slide_2 = slides.get (index + 1);
+
+            slides.set (index + 1, slide);
+            slides.set (index, slide_2);
+
+            slides_sorted ();
+        }
+    }
+
+    public void move_up (Slide slide) {
+        var index = slides.index_of (slide);
+
+        if (index - 1 >= 0) {
+            var slide_2 = slides.get (index - 1);
+
+            slides.set (index - 1, slide);
+            slides.set (index, slide_2);
+
+            slides_sorted ();
+        }
+    }
 
     public void next_slide () {
         var next_index = slides.index_of (current_slide) + 1;

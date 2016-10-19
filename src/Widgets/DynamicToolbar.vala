@@ -340,12 +340,16 @@ public class Spice.DynamicToolbar : Gtk.Box {
         to_top.clicked.connect (() => {
             if (this.item != null) {
                 this.manager.current_slide.canvas.move_up (this.item);
+            } else {
+                this.manager.move_up (this.manager.current_slide);
             }
         });
 
         to_bottom.clicked.connect (() => {
             if (this.item != null) {
                 this.manager.current_slide.canvas.move_down (this.item);
+            } else {
+                this.manager.move_down (this.manager.current_slide);
             }
         });
 

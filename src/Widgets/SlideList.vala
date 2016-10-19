@@ -56,6 +56,19 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
             add_slide (slide);
         });
 
+        manager.slides_sorted.connect (() => {
+            slides_list.invalidate_sort ();
+        });
+
+        slides_list.set_sort_func ((row1, row2) => {
+            var slide1 = manager.slides.index_of (((SlideListRow) row1).slide);
+            var slide2 = manager.slides.index_of (((SlideListRow) row2).slide );
+
+            if (slide1 < slide2) return -1;
+            else if (slide2 < slide1) return 1;
+            else return 0;
+        });
+
         new_slide_button = add_new_slide ();
         slides_grid.add (new_slide_button);
 
