@@ -185,6 +185,7 @@ public class Spice.EntryCombo : Gtk.Box {
 
         outsize_set = false;
     }
+
     /*
     Label -> Translated
     Key -> Real Value

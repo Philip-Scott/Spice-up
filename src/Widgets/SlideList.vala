@@ -42,14 +42,12 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         slides_list.get_style_context ().add_class ("linked");
 
         slides_grid.add (slides_list);
-        slides_grid.add (add_new_slide ());
         this.add (slides_grid);
 
         slides_list.row_selected.connect ((row) => {
             if (row is SlideListRow) {
                 var slide = (SlideListRow) row;
                 manager.current_slide.reload_preview_data ();
-
                 manager.current_slide = slide.slide;
             }
         });
@@ -59,6 +57,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         });
 
         new_slide_button = add_new_slide ();
+        slides_grid.add (new_slide_button);
 
         new_slide_button.clicked.connect (() => {
             manager.new_slide ();
@@ -78,13 +77,6 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         slides_list.show_all ();
 
         return slide_row;
-    }
-
-    public void set_preview (Gtk.Image image, Slide slide) {
-        var buffer = new  Granite.Drawing.BufferSurface (slide.canvas.current_allocated_width, slide.canvas.current_allocated_height);
-        slide.canvas.draw (buffer.context);
-        image.set_from_file ("/home/felipe/2.png");
-        image.set_from_pixbuf (buffer.load_to_pixbuf ().scale_simple (width, height, Gdk.InterpType.BILINEAR ));
     }
 
     public static int width = 200;

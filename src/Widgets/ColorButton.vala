@@ -92,32 +92,20 @@ public class Spice.ColorPicker : ColorButton {
 
         gradient_revealer = new Gtk.Revealer ();
 
-        var preview_label = new Gtk.Label (_("Preview:"));
         var color1_label = new Gtk.Label (_("Color 1:"));
         var color2_label = new Gtk.Label (_("Color 2:"));
 
-        preview_label.get_style_context ().add_class ("h4");
         color1_label.get_style_context ().add_class ("h4");
         color2_label.get_style_context ().add_class ("h4");
 
-        preview_label.halign = Gtk.Align.START;
         color1_label.halign = Gtk.Align.END;
         color2_label.halign = Gtk.Align.END;
 
-        preview_label.margin_right = 6;
         color1_label.margin_right = 6;
         color2_label.margin_right = 6;
 
         color1 = new ColorButton ("red");
         color2 = new ColorButton ("orange");
-
-        color1.clicked.connect (() => {
-            color_selector = 1;
-        });
-
-        color2.clicked.connect (() => {
-            color_selector = 2;
-        });
 
         var gradient_grid = new Gtk.Grid ();
         gradient_grid.row_spacing = 6;
@@ -132,11 +120,15 @@ public class Spice.ColorPicker : ColorButton {
         gradient_type.halign = Gtk.Align.END;
         gradient_type.valign = Gtk.Align.END;
 
-        gradient_type.add_entry ("Vertical");
-        gradient_type.add_entry ("Horizontal");
-        gradient_type.add_entry ("Radial");
+        gradient_type.add_entry ("to bottom", "Vertical");
+        gradient_type.add_entry ("to right", "Horizontal");
+        //gradient_type.add_entry ("radial", "Radial"); TODO: Gtk doesn't support radial gradients just yet
 
-        //gradient_grid.attach (preview_label, 0, 0, 3, 1);
+        gradient_type.activated.connect ((data) => {
+            this.color = make_gradient ();
+            color_picked (this.color);
+        });
+
         gradient_grid.attach (preview,       1, 1, 2, 2);
         gradient_grid.attach (color1_label,  0, 3, 2, 1);
         gradient_grid.attach (color1,        2, 3, 2, 1);
@@ -153,6 +145,20 @@ public class Spice.ColorPicker : ColorButton {
 
         color_chooser.notify["rgba"].connect (() => {
             set_color_smart (rgb_to_hex (color_chooser.rgba.to_string ()));
+        });
+
+        color1.clicked.connect (() => {
+            color_selector = 1;
+            var rgba = Gdk.RGBA ();
+            rgba.parse (color1.color);
+            color_chooser.set_rgba (rgba);
+        });
+
+        color2.clicked.connect (() => {
+            color_selector = 2;
+            var rgba = Gdk.RGBA ();
+            rgba.parse (color2.color);
+            color_chooser.set_rgba (rgba);
         });
 
         main_grid.attach (colors_grid_stack, 0, 0, 4, 8);
@@ -179,6 +185,12 @@ public class Spice.ColorPicker : ColorButton {
         if (color.contains ("gradient")) {
             color1.color = parts[1].strip ().split (" ")[0];
             color2.color = parts[2].strip ().split (" ")[0];
+
+            if (parts[0].contains ("to bottom")) {
+                gradient_type.text = "to bottom";
+            } else if (parts[0].contains ("to right")) {
+                gradient_type.text = "to right";
+            }
         } else {
             color1.color = color;
             color2.color = color;
@@ -193,7 +205,7 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public string make_gradient () {
-        return "linear-gradient(to bottom, %s 0%, %s 100%)".printf (color1.color, color2.color);
+        return "linear-gradient(%s, %s 0%, %s 100%)".printf (gradient_type.text, color1.color, color2.color);
     }
 
     public void generate_colors () {
