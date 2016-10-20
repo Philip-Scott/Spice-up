@@ -33,7 +33,7 @@ public class Spice.Application : Gtk.Application {
     public bool running = false;
 
     public Application () {
-        Object (application_id: "org.up.spice");
+        Object (application_id: "com.github.philip-scott.spice-up");
     }
 
     public override void activate () {
