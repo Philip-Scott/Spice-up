@@ -122,5 +122,5 @@ install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/data/symbolic/spiceup-text-symbolic.s
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.philip-scott.spice-up.svg"
   DESTINATION ${DATADIR}/pixmaps/)
 
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/data/com.github.philip-scott.spice-up.appdata.xml DESTINATION ${DATADIR}/appdata/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.philip-scott.spice-up.appdata.xml DESTINATION ${DATADIR}/appdata/)
 
