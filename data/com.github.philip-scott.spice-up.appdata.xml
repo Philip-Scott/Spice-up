@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up) -->
 <component type="desktop">
-  <id>com.github.philip-scott.spice-up</id>
+  <id>com.github.philip-scott.spice-up.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
-  <project_group>philip-scott</project_group>
   <project_license>GPL-3.0+</project_license>
   <name>Spice-Up</name>
   <summary>Create simple and beautiful presentations</summary>
   <description>
     <p>
-      Based upon SpiceOfDesign's presentation concept, the goal with this project is to create a presentation app that has everything you need to create simple and beautiful presentations
+      Based upon SpiceOfDesign's presentation concept, the goal with this project is to create a presentation app that has everything you need to create simple and beautiful presentations.
     </p>
   </description>
   <provides>
     <binary>spice-up</binary>
   </provides>
   <releases>
-    <release version="0.1.0" date="" urgency="medium">
-      <description>
-        <ul>
-          <li>Houston Beta</li>
-        </ul>
-      </description>
-    </release>
   </releases>
   <developer_name>Felipe Escoto.</developer_name>
   <url type="homepage">https://github.com/Philip-Scott</url>
   <url type="bugtracker">https://github.com/Philip-Scott/Spice-up/issues</url>
   <url type="help">https://github.com/Philip-Scott/Spice-up/issues</url>
+  <update_contact>felescoto@hotmail.com</update_contact>
 </component>
