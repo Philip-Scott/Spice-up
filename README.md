@@ -1,4 +1,6 @@
 # Spice-up
+[![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=44752823)](https://www.bountysource.com/trackers/44752823-philip-scott-spice-up)
+
 Create simple and beautiful presentations
 
 Based upon [SpiceOfDesign's presentation concept](http://spiceofdesign.deviantart.com/art/New-Presentation-Concept-401767854), the goal with this project is to create a presentation app that has everything you need to create simple and beautiful presentations 
