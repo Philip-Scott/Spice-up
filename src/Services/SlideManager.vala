@@ -52,7 +52,7 @@ public class Spice.SlideManager : Object {
             data = data + (data != "" ? "," + slide.serialise () : slide.serialise ());
         }
 
-        return """{"slides": [%s]}""".printf (data);
+        return """{"current-slide":%d, "slides": [%s]}""".printf (current_slide.position - 1, data);
     }
 
     public void load_data (string data) {
@@ -65,6 +65,11 @@ public class Spice.SlideManager : Object {
 
             foreach (var slide_object in slides_array.get_elements ()) {
                 new_slide (slide_object.get_object ());
+            }
+
+            var position = (int) root_object.get_int_member ("current-slide");
+            if (slides.size > position) {
+                current_slide = slides[position];
             }
         } catch (Error e) {
             error ("Error loading file: %s", e.message);
