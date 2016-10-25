@@ -82,7 +82,7 @@ public class Spice.Slide {
         string data = "";
 
         foreach (var widget in canvas.get_children ()) {
-            if (widget is CanvasItem) {
+            if (widget is CanvasItem && widget.visible) {
                 CanvasItem item = (CanvasItem) widget;
 
                 data = data + (data != "" ? "," + item.serialise () : item.serialise ());

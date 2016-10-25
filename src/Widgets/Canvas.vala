@@ -138,9 +138,22 @@ public class Spice.Canvas : Gtk.Overlay {
         var context = canvas_item.get_style_context ();
         context.add_class ("colored");
 
+        canvas_item.show_all ();
+        var old_delta_x = canvas_item.delta_x;
+        var old_delta_y = canvas_item.delta_y;
+        canvas_item.delta_x = 0;
+        canvas_item.delta_y = 0;
+        canvas_item.move_display (old_delta_x, old_delta_y);
+
         if (editable) {
-            canvas_item.configuration_changed.connect (() => check_configuration_changed ());
-            canvas_item.check_position.connect (() => check_intersects (canvas_item));
+            canvas_item.configuration_changed.connect (() => {
+                check_configuration_changed ();
+            });
+
+            canvas_item.check_position.connect (() => {
+                check_intersects (canvas_item);
+            });
+
             canvas_item.clicked.connect (() => {
                 unselect_all ();
                 item_clicked (canvas_item);
@@ -153,15 +166,12 @@ public class Spice.Canvas : Gtk.Overlay {
                 canvas_item.get_geometry (out x, out y, out width, out height);
                 canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
                 canvas_item.queue_resize_no_redraw ();
+
+                stderr.printf ("Item Moved\n");
+                //var action = new Spice.Services.HistoryManager.HistoryAction (HistoryActionType.ITEM_MOVED, "");
+                //Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             });
         }
-
-        canvas_item.show_all ();
-        var old_delta_x = canvas_item.delta_x;
-        var old_delta_y = canvas_item.delta_y;
-        canvas_item.delta_x = 0;
-        canvas_item.delta_y = 0;
-        canvas_item.move_display (old_delta_x, old_delta_y);
 
         calculate_ratio ();
         return canvas_item;

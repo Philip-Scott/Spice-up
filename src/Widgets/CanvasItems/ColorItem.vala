@@ -20,7 +20,7 @@
 */
 
 public class Spice.ColorItem : Spice.CanvasItem {
-    public string background_color = "#e00";
+    public string background_color {get; set; default = "#e00"; }
 
     const string TEXT_STYLE_CSS = """
         .colored {

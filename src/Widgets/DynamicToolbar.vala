@@ -80,6 +80,10 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         this.add (stack);
         this.add (common_bar);
+
+        Spice.Services.HistoryManager.get_instance ().action_called.connect ((i) => {
+            item_selected (i);
+        });
     }
 
     public void item_selected (Spice.CanvasItem? item) {
@@ -117,6 +121,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         text_color_button = new Spice.ColorPicker ();
         text_color_button.set_tooltip_text (_("Font color"));
         text_color_button.color_picked.connect (() => {
+            var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this.item as TextItem, "font-color");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             update_text_properties ();
         });
 
@@ -139,10 +145,16 @@ public class Spice.DynamicToolbar : Gtk.Box {
 
         font_button.activated.connect (() => {
             reset_font_type (font_button.text);
+
+            var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this.item as TextItem,  "font");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+
             update_text_properties ();
         });
 
         font_type.activated.connect (() => {
+            var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this.item as TextItem, "font-style");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             update_text_properties ();
         });
 
@@ -156,6 +168,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         }
 
         font_size.activated.connect (() => {
+            var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "font-size");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             update_text_properties ();
         });
 
@@ -166,7 +180,11 @@ public class Spice.DynamicToolbar : Gtk.Box {
         justification.append_icon ("format-justify-fill-symbolic", Gtk.IconSize.MENU);
 
         justification.mode_changed.connect ((widget) => {
-            update_text_properties ();
+            if (!selecting) {
+                var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "justification");
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+                update_text_properties ();
+            }
         });
 
         foreach (var child in justification.get_children ()) {
@@ -242,6 +260,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         background_color_button.gradient = true;
 
         background_color_button.color_picked.connect ((color) => {
+            var action = new Spice.Services.HistoryManager.HistoryAction<ColorItem,string>.item_changed (this.item as ColorItem, "background-color");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             update_shape_properties ();
         });
 
@@ -320,7 +340,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         delete_button.set_tooltip_text (_("Delete"));
         delete_button.get_style_context ().add_class ("spice");
         delete_button.clicked.connect (() => {
-            this.item.destroy ();
+            this.item.visible = false;
             item_selected (null);
         });
 

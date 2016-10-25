@@ -20,17 +20,17 @@
 */
 
 public class Spice.TextItem : Spice.CanvasItem {
-    private Gtk.Label label;
+    public Gtk.Label label;
     private Gtk.TextView entry;
     private Gtk.Stack stack;
 
-    public string font = "Open Sans";
-    public int font_size = 16;
-    public string font_color = "#fff";
-    public string font_style = "Regular";
+    public string font {get; set; default = "Open Sans"; }
+    public int font_size {get; set; default = 16; }
+    public string font_color {get; set; default = "#fff"; }
+    public string font_style {get; set; default = "Regular"; }
 
     public bool underlined = false;
-    public int justification = 1;
+    public int justification {get; set; default = 1; }
 
     private bool editing = false;
 

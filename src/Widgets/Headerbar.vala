@@ -43,8 +43,6 @@ public class Spice.Headerbar : Gtk.HeaderBar {
             return present.sensitive;
         }
         set {
-            undo.sensitive = value;
-            redo.sensitive = value;
             text.sensitive = value;
             image.sensitive = value;
             shape.sensitive = value;
@@ -69,6 +67,9 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         image = new HeaderbarButton ("emblem-photos-symbolic", _("Image"), HeaderButton.IMAGE);
         shape = new HeaderbarButton ("spiceup-shape-symbolic", _("Shape"), HeaderButton.SHAPE);
 
+        undo.sensitive = false;
+        redo.sensitive = false;
+
         present = new HeaderbarButton ("media-playback-start-symbolic",_("Start Presentation"), null);
         present.get_style_context ().add_class ("suggested-action");
 
@@ -92,6 +93,22 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     }
 
     private void connect_signals () {
+        Spice.Services.HistoryManager.get_instance ().undo_changed.connect ((is_empty) => {
+            undo.sensitive = !is_empty;
+        });
+
+        Spice.Services.HistoryManager.get_instance ().redo_changed.connect ((is_empty) => {
+            redo.sensitive = !is_empty;
+        });
+
+        undo.clicked.connect (() => {
+            Spice.Services.HistoryManager.get_instance ().undo ();
+        });
+
+        redo.clicked.connect (() => {
+            Spice.Services.HistoryManager.get_instance ().redo ();
+        });
+
         present.clicked.connect (() => {
             window.fullscreen ();
         });

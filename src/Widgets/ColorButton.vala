@@ -290,9 +290,10 @@ public class Spice.ColorPicker : ColorButton {
             Gdk.RGBA rgba = Gdk.RGBA ();
             rgba.parse (color);
             color_chooser.rgba = rgba;
+            color_picked (this.color);
         }
 
-        color_picked (this.color);
+        //color_picked (this.color);
     }
 
     protected class ColorButton : Gtk.Button {
