@@ -30,7 +30,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
             aspect_frame.margin = 24;
         }
     } default = false;
-
     }
 
     private bool is_full_;

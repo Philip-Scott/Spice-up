@@ -48,15 +48,15 @@ public class Spice.Slide {
 
             switch (type) {
                 case "text":
-                    if (load_canvas) canvas.add_item (new TextItem (canvas, item));
+                    if (load_canvas) canvas.add_item (new TextItem (canvas, item), true);
                     preview.add_item (new TextItem (preview, item));
                 break;
                 case "color":
-                    if (load_canvas) canvas.add_item (new ColorItem (canvas, item));
+                    if (load_canvas) canvas.add_item (new ColorItem (canvas, item), true);
                     preview.add_item (new ColorItem (preview, item));
                 break;
                 case "image":
-                    if (load_canvas) canvas.add_item (new ImageItem (canvas, item));
+                    if (load_canvas) canvas.add_item (new ImageItem (canvas, item), true);
                     preview.add_item (new ImageItem (preview, item));
                 break;
             }

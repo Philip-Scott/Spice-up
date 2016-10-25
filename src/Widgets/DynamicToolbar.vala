@@ -343,8 +343,15 @@ public class Spice.DynamicToolbar : Gtk.Box {
         var delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.MENU);
         delete_button.set_tooltip_text (_("Delete"));
         delete_button.get_style_context ().add_class ("spice");
+
         delete_button.clicked.connect (() => {
-            this.item.visible = false;
+            if (this.item != null) {
+                var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (this.item, "visible");
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+
+                this.item.visible = false;
+            }
+
             item_selected (null);
         });
 

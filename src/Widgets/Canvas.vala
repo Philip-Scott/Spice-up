@@ -127,7 +127,7 @@ public class Spice.Canvas : Gtk.Overlay {
         ratio_changed (current_ratio);
     }
 
-    public CanvasItem add_item (CanvasItem item) {
+    public CanvasItem add_item (CanvasItem item, bool loading = false) {
         var canvas_item = item;
 
         current_allocated_width = 0;
@@ -170,6 +170,13 @@ public class Spice.Canvas : Gtk.Overlay {
                 canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
                 canvas_item.queue_resize_no_redraw ();
             });
+
+            if (!loading) {
+                canvas_item.visible = false;
+                var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (canvas_item, "visible");
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+                canvas_item.visible = true;
+            }
         }
 
         calculate_ratio ();

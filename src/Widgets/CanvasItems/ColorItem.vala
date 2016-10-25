@@ -20,7 +20,7 @@
 */
 
 public class Spice.ColorItem : Spice.CanvasItem {
-    public string background_color {get; set; default = "#e00"; }
+    public string background_color {get; set; default = "linear-gradient(to bottom, #e00 0%, #e00 100%);"; }
 
     const string TEXT_STYLE_CSS = """
         .colored {
