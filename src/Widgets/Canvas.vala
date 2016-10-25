@@ -38,8 +38,8 @@ public class Spice.Canvas : Gtk.Overlay {
 
     // Serializable items
     public Json.Object? save_data = null;
-    public string background_color = "#383E41";
-    public string background_pattern = "";
+    public string background_color {get; set; default = "#383E41"; }
+    public string background_pattern {get; set; default = ""; }
 
     public bool editable = true;
 

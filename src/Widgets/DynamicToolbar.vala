@@ -288,6 +288,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         canvas_gradient_background.set_tooltip_text (_("Background color"));
 
         canvas_gradient_background.color_picked.connect (() => {
+            var action = new Spice.Services.HistoryManager.HistoryAction<Canvas,string>.canvas_changed (this.manager.current_slide.canvas, "background-color");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             update_canvas_properties ();
         });
 
@@ -314,6 +316,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         canvas_pattern.add_entry ("", _(" None"));
 
         canvas_pattern.activated.connect (() => {
+            var action = new Spice.Services.HistoryManager.HistoryAction<Canvas,string>.canvas_changed (this.manager.current_slide.canvas, "background-pattern");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             update_canvas_properties ();
         });
 

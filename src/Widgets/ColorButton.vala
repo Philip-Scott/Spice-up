@@ -144,7 +144,7 @@ public class Spice.ColorPicker : ColorButton {
         color_chooser.show_editor = true;
 
         color_chooser.notify["rgba"].connect (() => {
-            set_color_smart (rgb_to_hex (color_chooser.rgba.to_string ()));
+            set_color_smart (rgb_to_hex (color_chooser.rgba.to_string ()), true);
         });
 
         color1.clicked.connect (() => {
