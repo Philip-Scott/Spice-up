@@ -33,6 +33,18 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     public int delta_y { get; set; default = 0; }
 
     public bool only_display { get; set; default = false; }
+
+    private Gdk.Rectangle rectangle_;
+    public Gdk.Rectangle rectangle {
+        get {
+            rectangle_ = {real_x, real_y, real_width, real_height};
+            return rectangle_;
+        } set {
+            set_geometry (value.x, value.y, value.width, value.height);
+            check_position ();
+        }
+    }
+
     protected double start_x = 0;
     protected double start_y = 0;
     protected int start_w = 0;

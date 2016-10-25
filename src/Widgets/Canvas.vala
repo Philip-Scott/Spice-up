@@ -162,14 +162,13 @@ public class Spice.Canvas : Gtk.Overlay {
             canvas_item.move_display.connect ((delta_x, delta_y) => {
                 if (window.is_fullscreen) return;
 
+                var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?>.item_moved (canvas_item);
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+
                 int x, y, width, height;
                 canvas_item.get_geometry (out x, out y, out width, out height);
                 canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
                 canvas_item.queue_resize_no_redraw ();
-
-                stderr.printf ("Item Moved\n");
-                //var action = new Spice.Services.HistoryManager.HistoryAction (HistoryActionType.ITEM_MOVED, "");
-                //Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             });
         }
 
