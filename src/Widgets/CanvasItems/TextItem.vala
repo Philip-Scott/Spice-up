@@ -37,7 +37,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     const string TEXT_STYLE_CSS = """
         .colored {
             color: %s;
-
+            padding: 0;
             font: %s %s;
             font-size: %fpx;
             background: 0;
@@ -55,6 +55,7 @@ public class Spice.TextItem : Spice.CanvasItem {
         label.valign = Gtk.Align.CENTER;
         label.expand = true;
         label.wrap = true;
+        label.xalign = 0.0f;
 
         entry = new Gtk.TextView ();
         entry.justification = Gtk.Justification.CENTER;

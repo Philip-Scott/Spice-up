@@ -137,6 +137,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         toolbar_revealer.add (toolbar);
         toolbar_revealer.reveal_child = true;
+        toolbar_revealer.transition_duration = 0;
 
         aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.3, false);
         aspect_frame.get_style_context ().remove_class ("frame");
