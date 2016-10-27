@@ -19,13 +19,27 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class Spice.Slide {
+public class Spice.Slide : Object {
+    public signal void visible_changed (bool val);
     public int position = 0;
 
     protected Json.Object? save_data = null;
 
     public Canvas canvas;
     public Canvas preview;
+
+    private bool visible_ = true;
+    public bool visible {
+        get {
+            return visible_;
+        } set {
+            visible_changed (value);
+            this.visible_ = value;
+            canvas.visible = value;
+        }
+
+        default = true;
+    }
 
     public Slide (Json.Object? save_data = null) {
         this.save_data = save_data;

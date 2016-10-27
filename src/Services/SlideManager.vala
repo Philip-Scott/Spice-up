@@ -49,7 +49,9 @@ public class Spice.SlideManager : Object {
         string data = "";
 
         foreach (var slide in slides) {
-            data = data + (data != "" ? "," + slide.serialise () : slide.serialise ());
+            if (slide.visible) {
+                data = data + (data != "" ? "," + slide.serialise () : slide.serialise ());
+            }
         }
 
         return """{"current-slide":%d, "slides": [%s]}""".printf (current_slide.position - 1, data);
@@ -80,6 +82,8 @@ public class Spice.SlideManager : Object {
 
     public void move_down (Slide slide) {
         var index = slides.index_of (slide);
+        bool found = false;
+        index = 1;
 
         if (index + 1 < slides.size) {
             var slide_2 = slides.get (index + 1);
@@ -105,16 +109,25 @@ public class Spice.SlideManager : Object {
     }
 
     public void next_slide () {
-        var next_index = slides.index_of (current_slide) + 1;
-        if (next_index < slides.size) {
-            current_slide = slides.get (next_index);
-        } else {
-            // TODO: Show end of presentation slide
-            window.unfullscreen ();
-        }
+        bool found = false;
+        int n = 1;
+        do {
+            var next_index = slides.index_of (current_slide) + n++;
+            if (next_index < slides.size) {
+                var new_slide = slides.get (next_index);
+                if (new_slide.visible) {
+                    current_slide = new_slide;
+                    found = true;
+                }
+            } else {
+                // TODO: Show end of presentation slide
+                window.unfullscreen ();
+                found = true;
+            }
+        } while (!found);
     }
 
-    public void new_slide (Json.Object? save_data = null) {
+    public Slide new_slide (Json.Object? save_data = null) {
         Slide slide;
 
         slide = new Slide (save_data);
@@ -134,6 +147,8 @@ public class Spice.SlideManager : Object {
         new_slide_created (slide);
         current_slide = slide;
         slide.position = slides.size;
+
+        return slide;
     }
 
     public CanvasItem? request_new_item (Spice.HeaderButton type) {

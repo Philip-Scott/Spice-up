@@ -350,6 +350,11 @@ public class Spice.DynamicToolbar : Gtk.Box {
                 Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
 
                 this.item.visible = false;
+            } else {
+                var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (this.manager.current_slide, "visible");
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+
+                this.manager.current_slide.visible = false;
             }
 
             item_selected (null);

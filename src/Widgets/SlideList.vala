@@ -73,7 +73,12 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         slides_grid.add (new_slide_button);
 
         new_slide_button.clicked.connect (() => {
-            manager.new_slide ();
+            var slide = manager.new_slide ();
+
+            slide.visible = false;
+            var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (slide, "visible");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+            slide.visible = true;
         });
 
         foreach (var slide in manager.slides) {
@@ -119,6 +124,15 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
             margin = 6;
             margin_top = 3;
             margin_bottom = 3;
+
+            slide.visible_changed.connect ((val) => {
+                this.visible = val;
+                this.no_show_all = !val;
+
+                stderr.printf (@"Row.Visible changed $val\n");
+
+                this.show_all ();
+            });
         }
     }
 }

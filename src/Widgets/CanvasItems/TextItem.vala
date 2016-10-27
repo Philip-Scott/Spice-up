@@ -61,13 +61,13 @@ public class Spice.TextItem : Spice.CanvasItem {
         entry.justification = Gtk.Justification.CENTER;
         entry.set_wrap_mode (Gtk.WrapMode.WORD);
 
-
         stack = new Gtk.Stack ();
         stack.set_transition_type (Gtk.StackTransitionType.NONE);
+        stack.transition_duration = 0;
 
-        stack.add_named (label, "label");
+        //stack.add_named (label, "label");
         stack.add_named (entry, "entry");
-        stack.set_visible_child_name ("label");
+        stack.set_visible_child_name ("entry");
 
         grid.attach (stack, 0, 0, 3, 2);
 
@@ -84,23 +84,35 @@ public class Spice.TextItem : Spice.CanvasItem {
             entry.halign = Gtk.Align.FILL;
         });
 
+        Timeout.add (1, () => {
+            entry.valign = Gtk.Align.FILL;
+            entry.halign = Gtk.Align.CENTER;
+            entry.expand = true;
+            entry.valign = Gtk.Align.CENTER;
+            entry.halign = Gtk.Align.FILL;
+            return true;
+        });
+
         this.clicked.connect (() => {
             if (!editing) {
                 editing = true;
                 stack.set_visible_child_name ("entry");
-                entry.valign = Gtk.Align.FILL;
-                entry.halign = Gtk.Align.CENTER;
+                Timeout.add (1, () => {
+                    entry.valign = Gtk.Align.FILL;
+                    entry.halign = Gtk.Align.CENTER;
+                    entry.expand = true;
+                    entry.valign = Gtk.Align.CENTER;
+                    entry.halign = Gtk.Align.FILL;
+                    return true;
+                });
 
-                entry.expand = true;
-                entry.valign = Gtk.Align.CENTER;
-                entry.halign = Gtk.Align.FILL;
                 entry.grab_focus ();
             }
         });
 
         un_select.connect (() => {
             editing = false;
-            stack.set_visible_child_name ("label");
+//            stack.set_visible_child_name ("entry");
 
             if (label.label == "") {
                 label.label = _("Click to add text...");
