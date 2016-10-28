@@ -20,19 +20,42 @@
 */
 
 public class Spice.TextItem : Spice.CanvasItem {
-    public Gtk.Label label;
     private Gtk.TextView entry;
-    private Gtk.Stack stack;
 
-    public string font {get; set; default = "Open Sans"; }
+    public int justification {get; set; default = 1; }
     public int font_size {get; set; default = 16; }
+    public string font {get; set; default = "Open Sans"; }
     public string font_color {get; set; default = "#fff"; }
     public string font_style {get; set; default = "Regular"; }
 
-    public bool underlined = false;
-    public int justification {get; set; default = 1; }
+    private string text_;
+    public string text {
+        get {
+            text_ = entry.buffer.text;
+            return text_;
+        } set {
+            if (value == "") {
+                entry.buffer.text = _("Click to add text...");
+            } else {
+                entry.buffer.text = value;
+            }
+        }
+    }
 
-    private bool editing = false;
+    public bool underlined = false;
+
+    private bool editing {
+        get {
+            return entry.editable;
+        } set {
+            entry.editable = value;
+            entry.cursor_visible = value;
+
+            if (value) {
+                entry.grab_focus ();
+            }
+        }
+    }
 
     const string TEXT_STYLE_CSS = """
         .colored {
@@ -49,73 +72,41 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         this.save_data = save_data;
 
-        label = new Gtk.Label (_("Click to add text..."));
-        label.justify = Gtk.Justification.CENTER;
-        label.halign = Gtk.Align.CENTER;
-        label.valign = Gtk.Align.CENTER;
-        label.expand = true;
-        label.wrap = true;
-        label.xalign = 0.0f;
-
         entry = new Gtk.TextView ();
+        entry.buffer.text = (_("Click to add text..."));
         entry.justification = Gtk.Justification.CENTER;
         entry.set_wrap_mode (Gtk.WrapMode.WORD);
+        entry.can_focus = true;
 
-        stack = new Gtk.Stack ();
-        stack.set_transition_type (Gtk.StackTransitionType.NONE);
-        stack.transition_duration = 0;
-
-        //stack.add_named (label, "label");
-        stack.add_named (entry, "entry");
-        stack.set_visible_child_name ("entry");
-
-        grid.attach (stack, 0, 0, 3, 2);
-
-        entry.buffer.changed.connect (() => {
-            label.label = entry.buffer.text;
-        });
+        grid.attach (entry, 0, 0, 3, 2);
 
         this.check_position.connect (() => {
-            entry.valign = Gtk.Align.FILL;
-            entry.halign = Gtk.Align.CENTER;
-
-            entry.expand = true;
-            entry.valign = Gtk.Align.CENTER;
-            entry.halign = Gtk.Align.FILL;
+            update_size ();
         });
 
         Timeout.add (1, () => {
-            entry.valign = Gtk.Align.FILL;
-            entry.halign = Gtk.Align.CENTER;
-            entry.expand = true;
-            entry.valign = Gtk.Align.CENTER;
-            entry.halign = Gtk.Align.FILL;
+            update_size ();
             return true;
         });
 
         this.clicked.connect (() => {
             if (!editing) {
+                if (entry.buffer.text == _("Click to add text...")) {
+                    entry.buffer.text = "";
+                }
+
                 editing = true;
-                stack.set_visible_child_name ("entry");
                 Timeout.add (1, () => {
-                    entry.valign = Gtk.Align.FILL;
-                    entry.halign = Gtk.Align.CENTER;
-                    entry.expand = true;
-                    entry.valign = Gtk.Align.CENTER;
-                    entry.halign = Gtk.Align.FILL;
+                    update_size ();
                     return true;
                 });
-
-                entry.grab_focus ();
             }
         });
 
         un_select.connect (() => {
             editing = false;
-//            stack.set_visible_child_name ("entry");
-
-            if (label.label == "") {
-                label.label = _("Click to add text...");
+            if (entry.buffer.text == "") {
+                entry.buffer.text = _("Click to add text...");
             }
         });
 
@@ -123,14 +114,25 @@ public class Spice.TextItem : Spice.CanvasItem {
             style ();
         });
 
+        editing = false;
+
         load_data ();
+
         style ();
+    }
+
+    // Gtk Glitches are bad :(
+    private void update_size () {
+        entry.valign = Gtk.Align.FILL;
+        entry.halign = Gtk.Align.CENTER;
+        entry.expand = true;
+        entry.valign = Gtk.Align.CENTER;
+        entry.halign = Gtk.Align.FILL;
     }
 
     protected override void load_item_data () {
         var text = save_data.get_string_member ("text");
         if (text != null) {
-            label.label = text;
             entry.buffer.text = text;
         }
 
@@ -151,7 +153,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     protected override string serialise_item () {
-        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d """.printf (label.label, font, font_color, font_size, font_style, justification);
+        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d """.printf (entry.buffer.text, font, font_color, font_size, font_style, justification);
     }
 
     public override void style () {
@@ -159,28 +161,19 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         if (converted_font_size > 0) {
             Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, converted_font_size));
-            un_select ();
         }
 
         switch (justification) {
             case 0:
-                label.justify = Gtk.Justification.LEFT;
-                label.halign = Gtk.Align.START;
                 entry.justification = Gtk.Justification.LEFT;
                 break;
             case 1:
-                label.justify = Gtk.Justification.CENTER;
-                label.halign = Gtk.Align.CENTER;
                 entry.justification = Gtk.Justification.CENTER;
                 break;
             case 2:
-                label.justify = Gtk.Justification.RIGHT;
-                label.halign = Gtk.Align.END;
                 entry.justification = Gtk.Justification.RIGHT;
                 break;
             case 3:
-                label.justify = Gtk.Justification.FILL;
-                label.halign = Gtk.Align.FILL;
                 entry.justification = Gtk.Justification.FILL;
                 break;
         }
