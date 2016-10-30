@@ -49,6 +49,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
             text.sensitive = value;
             image.sensitive = value;
             shape.sensitive = value;
+            export.sensitive = value;
             present.sensitive = value;
         }
     }
@@ -74,7 +75,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         undo.sensitive = false;
         redo.sensitive = false;
 
-        export = new HeaderbarButton ("media-playback-start-symbolic",_("Export to PDF"), null);
+        export = new HeaderbarButton ("document-export-symbolic",_("Export to PDF"), null);
         present = new HeaderbarButton ("media-playback-start-symbolic",_("Start Presentation"), null);
         present.get_style_context ().add_class ("suggested-action");
 
@@ -118,7 +119,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         present.clicked.connect (() => {
             window.fullscreen ();
         });
-        
+
         export.clicked.connect (() => {
             Spice.Services.FileManager.export_to_pdf (this.slide_manager);
         });

@@ -277,14 +277,14 @@ public class Spice.Canvas : Gtk.Overlay {
         configuration_changed ();
     }
 
-    public Granite.Drawing.BufferSurface surface;
+    public Granite.Drawing.BufferSurface surface = null;
     public override bool draw (Cairo.Context cr) {
         base.draw (cr);
 
-        surface = new Granite.Drawing.BufferSurface (this.current_allocated_width, this.current_allocated_height);
-        base.draw (surface.context);
-
-        //buffer.surface.write_to_png ("/home/felipe/pngtest.png");
+        if (editable) {
+            surface = new Granite.Drawing.BufferSurface (this.current_allocated_width, this.current_allocated_height);
+            base.draw (surface.context);
+        }
 
         return true;
     }
