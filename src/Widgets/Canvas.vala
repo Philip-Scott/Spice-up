@@ -34,7 +34,7 @@ public class Spice.Canvas : Gtk.Overlay {
     private int default_x_margin = 0;
     private int default_y_margin = 0;
 
-    private CanvasGrid grid;
+    public CanvasGrid grid;
 
     // Serializable items
     public Json.Object? save_data = null;
@@ -275,6 +275,18 @@ public class Spice.Canvas : Gtk.Overlay {
 
         grid.style (background_pattern);
         configuration_changed ();
+    }
+
+    public Granite.Drawing.BufferSurface surface;
+    public override bool draw (Cairo.Context cr) {
+        base.draw (cr);
+
+        surface = new Granite.Drawing.BufferSurface (this.current_allocated_width, this.current_allocated_height);
+        base.draw (surface.context);
+
+        //buffer.surface.write_to_png ("/home/felipe/pngtest.png");
+
+        return true;
     }
 
     protected class CanvasGrid : Gtk.EventBox {

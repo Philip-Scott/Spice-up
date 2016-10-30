@@ -36,6 +36,8 @@ public class Spice.SlideManager : Object {
                 slide_ = value;
                 item_clicked (null);
                 slideshow.set_visible_child (value.canvas);
+
+                Spice.Services.FileManager.export_to_pdf (this);
             }
         }
     }
