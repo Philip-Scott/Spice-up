@@ -52,7 +52,7 @@ public class Spice.Services.FileManager {
     }
 
     public static File? open_image () {
-        File? result = null;
+
 
         List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
         Gtk.FileFilter filter = new Gtk.FileFilter ();
@@ -61,13 +61,7 @@ public class Spice.Services.FileManager {
 
         filters.append (filter);
 
-        result = get_file_from_user (_("Save file"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
-
-        if (result != null) {
-            settings.last_file = result.get_path ();
-        }
-
-        return result;
+        return get_file_from_user (_("Open Image"), _("Open"), Gtk.FileChooserAction.SAVE, filters);
     }
 
     public static File? open_presentation () {
@@ -90,6 +84,7 @@ public class Spice.Services.FileManager {
     }
 
     public static File? save_presentation () {
+        File? result = null;
         List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
         Gtk.FileFilter filter = new Gtk.FileFilter ();
         filter.set_filter_name ("Presentation");
@@ -97,7 +92,13 @@ public class Spice.Services.FileManager {
 
         filters.append (filter);
 
-        return get_file_from_user (_("Save file"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
+        result = get_file_from_user (_("Save file"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
+
+        if (result != null) {
+            settings.last_file = result.get_path ();
+        }
+
+        return result;
     }
 
     public static void write_file (string contents) {

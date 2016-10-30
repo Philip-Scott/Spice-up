@@ -54,7 +54,7 @@ public class Spice.SlideManager : Object {
             }
         }
 
-        return """{"current-slide":%d, "slides": [%s]}""".printf (current_slide.position - 1, data);
+        return """{"current-slide":%d, "slides": [%s]}""".printf (slides.index_of (current_slide), data);
     }
 
     public void load_data (string data) {
@@ -82,10 +82,9 @@ public class Spice.SlideManager : Object {
 
     public void move_down (Slide slide) {
         var index = slides.index_of (slide);
-        bool found = false;
-        index = 1;
-
+        
         if (index + 1 < slides.size) {
+            stderr.printf ("Moving slide %d down\n", index);
             var slide_2 = slides.get (index + 1);
 
             slides.set (index + 1, slide);
@@ -97,8 +96,8 @@ public class Spice.SlideManager : Object {
 
     public void move_up (Slide slide) {
         var index = slides.index_of (slide);
-
         if (index - 1 >= 0) {
+            stderr.printf ("Moving slide %d up\n", index);
             var slide_2 = slides.get (index - 1);
 
             slides.set (index - 1, slide);
@@ -146,7 +145,6 @@ public class Spice.SlideManager : Object {
 
         new_slide_created (slide);
         current_slide = slide;
-        slide.position = slides.size;
 
         return slide;
     }

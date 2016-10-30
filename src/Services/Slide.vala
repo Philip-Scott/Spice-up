@@ -21,7 +21,6 @@
 
 public class Spice.Slide : Object {
     public signal void visible_changed (bool val);
-    public int position = 0;
 
     protected Json.Object? save_data = null;
 

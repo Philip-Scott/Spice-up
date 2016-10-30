@@ -84,7 +84,7 @@ public class Spice.TextItem : Spice.CanvasItem {
             update_size ();
         });
 
-        Timeout.add (1, () => {
+        Timeout.add (100, () => {
             update_size ();
             return true;
         });
@@ -98,7 +98,7 @@ public class Spice.TextItem : Spice.CanvasItem {
                 editing = true;
                 Timeout.add (1, () => {
                     update_size ();
-                    return true;
+                    return false;
                 });
             }
         });
