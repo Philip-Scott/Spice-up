@@ -33,12 +33,20 @@ public class Spice.Welcome : Granite.Widgets.Welcome {
         }
 
         this.activated.connect ((index) => {
-            if (index != 2) {
-                var file = Spice.Services.FileManager.open_presentation ();
-                if (file != null) open_file (file);
-            } else {
-                open_file (File.new_for_path (settings.last_file));
-            }
+            switch (index) {
+                case 0:
+                    var file = Spice.Services.FileManager.save_presentation ();
+                    if (file != null) open_file (file);
+                    break;
+                case 1:
+                    var file = Spice.Services.FileManager.open_presentation ();
+                    if (file != null) open_file (file);
+                    break;
+
+                case 2:
+                    open_file (File.new_for_path (settings.last_file));
+                    break;
+             }
         });
     }
 }

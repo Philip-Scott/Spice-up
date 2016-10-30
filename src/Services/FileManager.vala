@@ -52,6 +52,8 @@ public class Spice.Services.FileManager {
     }
 
     public static File? open_image () {
+        File? result = null;
+
         List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
         Gtk.FileFilter filter = new Gtk.FileFilter ();
         filter.set_filter_name ("Images");
@@ -59,7 +61,13 @@ public class Spice.Services.FileManager {
 
         filters.append (filter);
 
-        return get_file_from_user (_("Open image"), _("Open"), Gtk.FileChooserAction.OPEN, filters);
+        result = get_file_from_user (_("Save file"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
+
+        if (result != null) {
+            settings.last_file = result.get_path ();
+        }
+
+        return result;
     }
 
     public static File? open_presentation () {
