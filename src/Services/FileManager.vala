@@ -159,7 +159,7 @@ public class Spice.Services.FileManager {
         if (file == null) return;
 
         var current_slide = manager.current_slide.canvas;
-        Cairo.Surface pdf = new Cairo.PdfSurface ("/home/felipe/pdftest.pdf",
+        Cairo.Surface pdf = new Cairo.PdfSurface (file.get_path (),
                                            current_slide.get_allocated_width (),
                                            current_slide.get_allocated_height ());
         int pages_to_draw = 1;
