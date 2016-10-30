@@ -80,17 +80,25 @@ vala_precompile(VALA_C
   src/Services/HistoryManager.vala
   src/Services/Utils.vala
   src/Widgets/Canvas.vala
-  src/Widgets/CanvasItems/CanvasItem.vala
-  src/Widgets/CanvasItems/TextItem.vala
-  src/Widgets/CanvasItems/ColorItem.vala
-  src/Widgets/CanvasItems/ImageItem.vala
-  src/Widgets/CanvasItems/Grabber.vala
   src/Widgets/ColorButton.vala
   src/Widgets/EntryCombo.vala
   src/Widgets/Headerbar.vala
   src/Widgets/SlideList.vala
   src/Widgets/DynamicToolbar.vala
   src/Widgets/Welcome.vala
+
+  src/Widgets/CanvasItems/CanvasItem.vala
+  src/Widgets/CanvasItems/TextItem.vala
+  src/Widgets/CanvasItems/ColorItem.vala
+  src/Widgets/CanvasItems/ImageItem.vala
+  src/Widgets/CanvasItems/Grabber.vala
+
+  src/Widgets/Toolbars/CanvasBar.vala
+  src/Widgets/Toolbars/CommonBar.vala
+  src/Widgets/Toolbars/ImageBar.vala
+  src/Widgets/Toolbars/ShapeBar.vala
+  src/Widgets/Toolbars/TextBar.vala
+  src/Widgets/Toolbars/Toolbar.vala
   #src/config.vala
 PACKAGES
   ${VALA_DEPS}
