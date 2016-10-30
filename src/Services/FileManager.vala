@@ -132,24 +132,25 @@ public class Spice.Services.FileManager {
     }
 
     public static void export_to_pdf (SlideManager manager) {
-        //var file = get_file_from_user (false, true);
-        //if (file == null) return;
-        Timeout.add (50, () => {
-            var current_slide = manager.current_slide.canvas;
-            if (current_slide == null && !current_slide.get_app_paintable ()) return false;
-            var buffer = current_slide.surface;
+        var file = get_file_from_user (true, true);
+        if (file == null) return;
 
-            //buffer.surface.write_to_png ("/home/felipe/pngtest.png");
-            var canvas = new Cairo.PdfSurface ("/home/felipe/pdftest.pdf",
-                                               current_slide.get_allocated_width (),
-                                               current_slide.get_allocated_height ());
+        var current_slide = manager.current_slide.canvas;
+        Cairo.Surface pdf = new Cairo.PdfSurface ("/home/felipe/pdftest.pdf",
+                                           current_slide.get_allocated_width (),
+                                           current_slide.get_allocated_height ());
 
-            //var cr = new Cairo.Context (canvas);
-            //cr.set_source_surface (canvas, 0, 0);
-            //manager.current_slide.canvas.draw (cr);
-            canvas.finish ();
-            return false;
-        });
+        foreach (var slide in manager.slides) {
+            var buffer = slide.canvas.surface;
+
+            Cairo.Context pdfcontext = new Cairo.Context (pdf);
+            pdfcontext.set_source_surface (buffer.surface, 0, 0);
+            pdfcontext.paint ();
+
+            pdf.copy_page ();
+        }
+
+        pdf.finish ();
     }
 }
 

@@ -35,8 +35,11 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     private HeaderbarButton text;
     private HeaderbarButton image;
     private HeaderbarButton shape;
+    private HeaderbarButton export;
 
     private HeaderbarButton present;
+
+    private Spice.SlideManager slide_manager;
 
     public new bool sensitive {
         get {
@@ -50,7 +53,8 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         }
     }
 
-    public Headerbar () {
+    public Headerbar (Spice.SlideManager slide_manager) {
+        this.slide_manager = slide_manager;
         set_title ("Presentation");
         set_show_close_button (true);
 
@@ -70,6 +74,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         undo.sensitive = false;
         redo.sensitive = false;
 
+        export = new HeaderbarButton ("media-playback-start-symbolic",_("Export to PDF"), null);
         present = new HeaderbarButton ("media-playback-start-symbolic",_("Start Presentation"), null);
         present.get_style_context ().add_class ("suggested-action");
 
@@ -90,6 +95,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         pack_start (object_box);
 
         pack_end (present);
+        pack_end (export);
     }
 
     private void connect_signals () {
@@ -111,6 +117,10 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         present.clicked.connect (() => {
             window.fullscreen ();
+        });
+        
+        export.clicked.connect (() => {
+            Spice.Services.FileManager.export_to_pdf (this.slide_manager);
         });
     }
 

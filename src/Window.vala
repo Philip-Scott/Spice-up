@@ -120,7 +120,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_stack = new Gtk.Stack ();
 
         slide_manager = new Spice.SlideManager ();
-        headerbar = new Spice.Headerbar ();
+        headerbar = new Spice.Headerbar (slide_manager);
         headerbar.sensitive = false;
 
         toolbar = new Spice.DynamicToolbar (slide_manager);
