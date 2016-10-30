@@ -34,7 +34,7 @@ public class Spice.Welcome : Granite.Widgets.Welcome {
 
         this.activated.connect ((index) => {
             if (index != 2) {
-                var file = Spice.Services.FileManager.get_file_from_user (false, index == 0);
+                var file = Spice.Services.FileManager.open_presentation ();
                 if (file != null) open_file (file);
             } else {
                 open_file (File.new_for_path (settings.last_file));

@@ -22,43 +22,8 @@
 public class Spice.Services.FileManager {
     public static File? current_file;
 
-    public static File? get_file_from_user (bool image = false, bool save = false) {
+    private static File? get_file_from_user (string title, string accept_button_label, Gtk.FileChooserAction chooser_action, List<Gtk.FileFilter> filters) {
         File? result = null;
-
-        string title = "";
-        Gtk.FileChooserAction chooser_action = Gtk.FileChooserAction.SAVE;
-        string accept_button_label = "";
-        List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
-
-        if (save) {
-            title =  _("Save file");
-            accept_button_label = _("Save");
-        } else if (image) {
-            title =  _("Open image");
-            chooser_action = Gtk.FileChooserAction.OPEN;
-            accept_button_label = _("Open");
-        } else {
-            title =  _("Open file");
-            chooser_action = Gtk.FileChooserAction.OPEN;
-            accept_button_label = _("Open");
-        }
-
-        var filter = new Gtk.FileFilter ();
-        if (image) {
-            filter.set_filter_name ("Images");
-            filter.add_mime_type ("image/*");
-        } else if (save) {
-            filter.set_filter_name ("Presentation");
-            filter.add_mime_type ("application/x-spice");
-        }
-
-        filters.append (filter);
-
-        var all_filter = new Gtk.FileFilter ();
-        all_filter.set_filter_name ("All Files");
-        all_filter.add_pattern ("*");
-
-        filters.append (all_filter);
 
         var dialog = new Gtk.FileChooserDialog (
             title,
@@ -67,6 +32,11 @@ public class Spice.Services.FileManager {
             _("Cancel"), Gtk.ResponseType.CANCEL,
             accept_button_label, Gtk.ResponseType.ACCEPT);
 
+        var all_filter = new Gtk.FileFilter ();
+        all_filter.set_filter_name ("All Files");
+        all_filter.add_pattern ("*");
+
+        filters.append (all_filter);
 
         filters.@foreach ((filter) => {
             dialog.add_filter (filter);
@@ -78,11 +48,48 @@ public class Spice.Services.FileManager {
 
         dialog.close ();
 
-        if (result != null && !image) {
+        return result;
+    }
+
+    public static File? open_image () {
+        List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
+        Gtk.FileFilter filter = new Gtk.FileFilter ();
+        filter.set_filter_name ("Images");
+        filter.add_mime_type ("image/*");
+
+        filters.append (filter);
+
+        return get_file_from_user (_("Open image"), _("Open"), Gtk.FileChooserAction.OPEN, filters);
+    }
+
+    public static File? open_presentation () {
+        File? result = null;
+
+        List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
+        Gtk.FileFilter filter = new Gtk.FileFilter ();
+        filter.set_filter_name ("Presentation");
+        filter.add_mime_type ("application/x-spice");
+
+        filters.append (filter);
+
+        result = get_file_from_user (_("Open file"), _("Open"), Gtk.FileChooserAction.OPEN, filters);
+
+        if (result != null) {
             settings.last_file = result.get_path ();
         }
 
         return result;
+    }
+
+    public static File? save_presentation () {
+        List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
+        Gtk.FileFilter filter = new Gtk.FileFilter ();
+        filter.set_filter_name ("Presentation");
+        filter.add_mime_type ("application/x-spice");
+
+        filters.append (filter);
+
+        return get_file_from_user (_("Save file"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
     }
 
     public static void write_file (string contents) {
@@ -129,5 +136,52 @@ public class Spice.Services.FileManager {
                 error ("Could not write file: %s", e.message);
             }
         }
+    }
+
+    public static void export_to_pdf (SlideManager manager) {
+        List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
+        Gtk.FileFilter filter = new Gtk.FileFilter ();
+        filter.set_filter_name ("PDF");
+        filter.add_mime_type ("application/pdf");
+
+        filters.append (filter);
+
+        var file = get_file_from_user (_("Export to PDF"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
+        if (file == null) return;
+
+        var current_slide = manager.current_slide.canvas;
+        Cairo.Surface pdf = new Cairo.PdfSurface ("/home/felipe/pdftest.pdf",
+                                           current_slide.get_allocated_width (),
+                                           current_slide.get_allocated_height ());
+        int pages_to_draw = 1;
+        foreach (var slide in manager.slides) {
+            if (slide.canvas.surface == null || slide.canvas.get_allocated_width () != current_slide.get_allocated_width ()) {
+                Timeout.add (500 * pages_to_draw++, () => {
+                    manager.current_slide = slide;
+                    manager.current_slide.canvas.queue_draw ();
+                    return false;
+                });
+            }
+        }
+
+        Timeout.add (600 * pages_to_draw, () => {
+            bool first = true;
+            foreach (var slide in manager.slides) {
+                if (!first) {
+                    pdf.copy_page ();
+                } else {
+                    first = false;
+                }
+
+                var buffer = slide.canvas.surface;
+
+                Cairo.Context pdfcontext = new Cairo.Context (pdf);
+                pdfcontext.set_source_surface (buffer.surface, 0, 0);
+                pdfcontext.paint ();
+            }
+
+            pdf.finish ();
+            return false;
+        });
     }
 }
