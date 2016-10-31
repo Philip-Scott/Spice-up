@@ -60,9 +60,9 @@ public class Spice.TextItem : Spice.CanvasItem {
     const string TEXT_STYLE_CSS = """
         .colored {
             color: %s;
-            padding: 0;
+            padding: 0px;
             font: %s %s;
-            font-size: %fpx;
+            font-size: %spx;
             background: 0;
         }
     """;
@@ -157,10 +157,10 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     public override void style () {
-        var converted_font_size = 4.0 * canvas.current_ratio * font_size;
+        var converted_font_size = (4.0 * canvas.current_ratio * font_size);
 
         if (converted_font_size > 0) {
-            Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, converted_font_size));
+            Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, converted_font_size.to_string ().replace (",", ".")));
         }
 
         switch (justification) {
