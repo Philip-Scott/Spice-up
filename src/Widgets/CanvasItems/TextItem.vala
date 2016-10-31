@@ -105,6 +105,7 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         un_select.connect (() => {
             editing = false;
+            entry.select_all (false);
             if (entry.buffer.text == "") {
                 entry.buffer.text = _("Click to add text...");
             }
