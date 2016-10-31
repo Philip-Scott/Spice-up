@@ -130,22 +130,37 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         connect_grabber (grabber_7);
         connect_grabber (grabber_8);
 
-        grabber_grid.attach (grabber_1, 0, 0);
-        grabber_grid.attach (grabber_2, 1, 0);
-        grabber_grid.attach (grabber_3, 2, 0);
-        grabber_grid.attach (grabber_4, 2, 1);
-        grabber_grid.attach (grabber_5, 2, 2);
-        grabber_grid.attach (grabber_6, 1, 2);
-        grabber_grid.attach (grabber_7, 0, 2);
-        grabber_grid.attach (grabber_8, 0, 1);
-
         var overlay = new Gtk.Overlay ();
         overlay.add (grid);
-        overlay.add_overlay (grabber_revealer);
-        grabber_revealer.add (grabber_grid);
+        overlay.add_overlay (grabber_1);
+        overlay.add_overlay (grabber_2);
+        overlay.add_overlay (grabber_3);
+        overlay.add_overlay (grabber_4);
+        overlay.add_overlay (grabber_5);
+        overlay.add_overlay (grabber_6);
+        overlay.add_overlay (grabber_7);
+        overlay.add_overlay (grabber_8);
 
         this.clicked.connect (() => {
-            grabber_revealer.set_reveal_child (true);
+            grabber_1.make_visible = true;
+            grabber_2.make_visible = true;
+            grabber_3.make_visible = true;
+            grabber_4.make_visible = true;
+            grabber_5.make_visible = true;
+            grabber_6.make_visible = true;
+            grabber_7.make_visible = true;
+            grabber_8.make_visible = true;
+        });
+
+        this.un_select.connect (() => {
+            grabber_1.make_visible = false;
+            grabber_2.make_visible = false;
+            grabber_3.make_visible = false;
+            grabber_4.make_visible = false;
+            grabber_5.make_visible = false;
+            grabber_6.make_visible = false;
+            grabber_7.make_visible = false;
+            grabber_8.make_visible = false;
         });
 
         add (overlay);
@@ -178,7 +193,6 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
     public void unselect () {
         if (!holding) {
-            grabber_revealer.set_reveal_child (false);
             un_select ();
         }
     }
