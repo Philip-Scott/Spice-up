@@ -34,13 +34,17 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
     public bool only_display { get; set; default = false; }
 
+    private Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?> undo_move_action;
     private Gdk.Rectangle rectangle_;
     public Gdk.Rectangle rectangle {
         get {
             rectangle_ = {real_x, real_y, real_width, real_height};
             return rectangle_;
         } set {
-            set_geometry (value.x, value.y, value.width, value.height);
+            real_x = value.x;
+            real_y = value.y;
+            real_width = value.width;
+            real_height = value.height;
             check_position ();
         }
     }
@@ -224,6 +228,8 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
             return false;
         }
 
+        undo_move_action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?>.item_moved (this);
+
         start_x = event.x_root;
         start_y = event.y_root;
         start_w = real_width;
@@ -242,9 +248,11 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         holding = false;
         holding_id = 0;
 
-        if ((delta_x == 0 && delta_y == 0)) {
+        if (delta_x == 0 && delta_y == 0 && (start_w == real_width) && (start_h == real_height)) {
             return false;
         }
+
+        Spice.Services.HistoryManager.get_instance ().add_undoable_action (undo_move_action, true);
 
         var old_delta_x = delta_x;
         var old_delta_y = delta_y;
@@ -257,6 +265,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
     public override bool motion_notify_event (Gdk.EventMotion event) {
         if (holding) {
+
             int x = (int) (event.x_root - start_x);
             int y = (int) (event.y_root - start_y);
             switch (holding_id) {
@@ -313,19 +322,5 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         }
 
         return false;
-    }
-
-    public void get_geometry (out int x, out int y, out int width, out int height) {
-        x = real_x;
-        y = real_y;
-        width = real_width;
-        height = real_height;
-    }
-
-    public void set_geometry (int x, int y, int width, int height) {
-        real_x = x;
-        real_y = y;
-        real_width = width;
-        real_height = height;
     }
 }

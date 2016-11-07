@@ -88,13 +88,12 @@ public class Spice.Canvas : Gtk.Overlay {
         if (widget is CanvasItem) {
             var display_widget = (CanvasItem) widget;
 
-            int x, y, width, height;
-            display_widget.get_geometry (out x, out y, out width, out height);
+            var r = display_widget.rectangle;
             allocation = Gdk.Rectangle ();
-            allocation.width = (int)(width * current_ratio);
-            allocation.height = (int)(height * current_ratio);
-            allocation.x = default_x_margin + (int)(x * current_ratio) + display_widget.delta_x;
-            allocation.y = default_y_margin + (int)(y * current_ratio) + display_widget.delta_y;
+            allocation.width = (int)(r.width * current_ratio);
+            allocation.height = (int)(r.height * current_ratio);
+            allocation.x = default_x_margin + (int)(r.x * current_ratio) + display_widget.delta_x;
+            allocation.y = default_y_margin + (int)(r.y * current_ratio) + display_widget.delta_y;
             return true;
         }
 
@@ -162,12 +161,8 @@ public class Spice.Canvas : Gtk.Overlay {
             canvas_item.move_display.connect ((delta_x, delta_y) => {
                 if (window.is_fullscreen) return;
 
-                var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?>.item_moved (canvas_item);
-                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
-
-                int x, y, width, height;
-                canvas_item.get_geometry (out x, out y, out width, out height);
-                canvas_item.set_geometry ((int)(delta_x / current_ratio) + x, (int)(delta_y / current_ratio) + y, width, height);
+                var r = canvas_item.rectangle;
+                canvas_item.rectangle = { (int)(delta_x / current_ratio) + r.x, (int)(delta_y / current_ratio) + r.y, r.width, r.height };
                 canvas_item.queue_resize_no_redraw ();
             });
 
