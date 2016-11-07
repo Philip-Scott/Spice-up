@@ -99,7 +99,6 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     private void check_configuration_changed () {
-        stderr.printf ("Configuration changed signal\n");
         configuration_changed ();
     }
 

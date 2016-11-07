@@ -78,18 +78,12 @@ public class Spice.TextItem : Spice.CanvasItem {
         entry.buffer.text = (_("Click to add text..."));
         entry.justification = Gtk.Justification.CENTER;
         entry.set_wrap_mode (Gtk.WrapMode.WORD);
+        entry.valign = Gtk.Align.CENTER;
+        entry.halign = Gtk.Align.FILL;
         entry.can_focus = true;
+        entry.expand = true;
 
         grid.attach (entry, 0, 0, 3, 2);
-
-        this.check_position.connect (() => {
-            update_size ();
-        });
-
-        Timeout.add (100, () => {
-            update_size ();
-            return true;
-        });
 
         this.clicked.connect (() => {
             if (!editing) {
@@ -98,10 +92,6 @@ public class Spice.TextItem : Spice.CanvasItem {
                 }
 
                 editing = true;
-                Timeout.add (1, () => {
-                    update_size ();
-                    return false;
-                });
             }
         });
 
@@ -131,13 +121,12 @@ public class Spice.TextItem : Spice.CanvasItem {
         style ();
     }
 
-    // Gtk Glitches are bad :(
-    private void update_size () {
-        entry.valign = Gtk.Align.FILL;
-        entry.halign = Gtk.Align.CENTER;
-        entry.expand = true;
-        entry.valign = Gtk.Align.CENTER;
-        entry.halign = Gtk.Align.FILL;
+    // Needed to fix GTK glitches
+    public void resize_entry () {
+        Timeout.add (150, () => {
+            entry.queue_resize_no_redraw ();
+            return false;
+        });
     }
 
     protected override void load_item_data () {
@@ -187,5 +176,7 @@ public class Spice.TextItem : Spice.CanvasItem {
                 entry.justification = Gtk.Justification.FILL;
                 break;
         }
+
+        resize_entry ();
     }
 }
