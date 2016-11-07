@@ -237,6 +237,8 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     }
 
     public override bool button_release_event (Gdk.EventButton event) {
+        Utils.set_cursor (Gdk.CursorType.ARROW);
+
         holding = false;
         holding_id = 0;
 
@@ -259,40 +261,49 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
             int y = (int) (event.y_root - start_y);
             switch (holding_id) {
                 case 0:
+                    Utils.set_cursor (Gdk.CursorType.FLEUR);
                     delta_x = x;
                     delta_y = y;
                     break;
                 case 1:
+                    Utils.set_cursor (Gdk.CursorType.TOP_LEFT_CORNER);
                     delta_x = x;
                     delta_y = y;
                     real_height = (int)(start_h - 1/canvas.current_ratio * y);
                     real_width = (int)(start_w - 1/canvas.current_ratio * x);
                     break;
                 case 2:
+                    Utils.set_cursor (Gdk.CursorType.TOP_SIDE);
                     delta_y = y;
                     real_height = (int)(start_h - 1/canvas.current_ratio * y);
                     break;
                 case 3:
+                    Utils.set_cursor (Gdk.CursorType.TOP_RIGHT_CORNER);
                     delta_y = y;
                     real_height = (int)(start_h - 1/canvas.current_ratio * y);
                     real_width = (int)(start_w + 1/canvas.current_ratio * x);
                     break;
                 case 4:
+                    Utils.set_cursor (Gdk.CursorType.RIGHT_SIDE);
                     real_width = (int)(start_w + 1/canvas.current_ratio * x);
                     break;
                 case 5:
+                    Utils.set_cursor (Gdk.CursorType.BOTTOM_RIGHT_CORNER);
                     real_width = (int)(start_w + 1/canvas.current_ratio * x);
                     real_height = (int)(start_h + 1/canvas.current_ratio * y);
                     break;
                 case 6:
+                    Utils.set_cursor (Gdk.CursorType.BOTTOM_SIDE);
                     real_height = (int)(start_h + 1/canvas.current_ratio * y);
                     break;
                 case 7:
+                    Utils.set_cursor (Gdk.CursorType.BOTTOM_LEFT_CORNER);
                     real_height = (int)(start_h + 1/canvas.current_ratio * y);
                     real_width = (int)(start_w - 1/canvas.current_ratio * x);
                     delta_x = x;
                     break;
                 case 8:
+                    Utils.set_cursor (Gdk.CursorType.LEFT_SIDE);
                     real_width = (int)(start_w - 1/canvas.current_ratio * x);
                     delta_x = x;
                     break;
