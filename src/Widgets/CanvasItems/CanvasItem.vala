@@ -24,23 +24,24 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     protected signal void un_select ();
 
     public signal void set_as_primary ();
-    public signal void move_display (int delta_x, int delta_y);
+    public signal void move_item (int delta_x, int delta_y);
     public signal void check_position ();
-    public signal void configuration_changed ();
     public signal void active_changed ();
 
     public int delta_x { get; set; default = 0; }
     public int delta_y { get; set; default = 0; }
 
-    public bool only_display { get; set; default = false; }
-
+    private Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?> undo_move_action;
     private Gdk.Rectangle rectangle_;
     public Gdk.Rectangle rectangle {
         get {
             rectangle_ = {real_x, real_y, real_width, real_height};
             return rectangle_;
         } set {
-            set_geometry (value.x, value.y, value.width, value.height);
+            real_x = value.x;
+            real_y = value.y;
+            real_width = value.width;
+            real_height = value.height;
             check_position ();
         }
     }
@@ -79,6 +80,9 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
         real_width = 720;
         real_height = 510;
+
+        var context = get_style_context ();
+        context.add_class ("colored");
 
         Utils.set_style (this, CSS);
 
@@ -176,7 +180,6 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
             load_item_data ();
 
-            configuration_changed ();
             check_position ();
         } else {
             stderr.printf ("creating new item \n");
@@ -224,6 +227,8 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
             return false;
         }
 
+        undo_move_action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?>.item_moved (this);
+
         start_x = event.x_root;
         start_y = event.y_root;
         start_w = real_width;
@@ -237,20 +242,24 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     }
 
     public override bool button_release_event (Gdk.EventButton event) {
+        if (!holding) return false;
+
         Utils.set_cursor (Gdk.CursorType.ARROW);
 
         holding = false;
         holding_id = 0;
 
-        if ((delta_x == 0 && delta_y == 0)) {
+        if (delta_x == 0 && delta_y == 0 && (start_w == real_width) && (start_h == real_height)) {
             return false;
         }
+
+        Spice.Services.HistoryManager.get_instance ().add_undoable_action (undo_move_action, true);
 
         var old_delta_x = delta_x;
         var old_delta_y = delta_y;
         delta_x = 0;
         delta_y = 0;
-        move_display (old_delta_x, old_delta_y);
+        move_item (old_delta_x, old_delta_y);
 
         return false;
     }
@@ -313,19 +322,5 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         }
 
         return false;
-    }
-
-    public void get_geometry (out int x, out int y, out int width, out int height) {
-        x = real_x;
-        y = real_y;
-        width = real_width;
-        height = real_height;
-    }
-
-    public void set_geometry (int x, int y, int width, int height) {
-        real_x = x;
-        real_y = y;
-        real_width = width;
-        real_height = height;
     }
 }
