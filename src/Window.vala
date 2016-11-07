@@ -114,6 +114,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
         build_ui ();
         connect_signals (app);
         load_settings ();
+        show_app ();
+        app_stack.set_visible_child_name  ("welcome");
     }
 
     private void build_ui () {
@@ -159,9 +161,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_stack.add_named (welcome, "welcome");
 
         this.add (app_stack);
-        this.show_all ();
-
-        app_stack.set_visible_child_name  ("welcome");
     }
 
     private void connect_signals (Gtk.Application app) {
@@ -226,9 +225,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private void load_settings () {
         resize (settings.window_width, settings.window_height);
+        move (settings.pos_x, settings.pos_y);
     }
 
     public void show_app () {
+        show_all ();
         show ();
         present ();
     }

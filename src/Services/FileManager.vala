@@ -20,7 +20,7 @@
 */
 
 public class Spice.Services.FileManager {
-    public static File? current_file;
+    public static File? current_file = null;
 
     private static File? get_file_from_user (string title, string accept_button_label, Gtk.FileChooserAction chooser_action, List<Gtk.FileFilter> filters) {
         File? result = null;
@@ -102,6 +102,10 @@ public class Spice.Services.FileManager {
     }
 
     public static void write_file (string contents) {
+        if (current_file == null) {
+            return;
+        }
+
         if (current_file.query_exists ()) {
             try {
                 current_file.delete ();
@@ -124,7 +128,7 @@ public class Spice.Services.FileManager {
     }
 
     public static string open_file () {
-        if (current_file.query_exists ()) {
+        if (current_file != null && current_file.query_exists ()) {
             try {
                 var dis = new DataInputStream (current_file.read ());
                 size_t size;
