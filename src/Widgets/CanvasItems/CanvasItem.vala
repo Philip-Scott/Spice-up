@@ -24,15 +24,12 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     protected signal void un_select ();
 
     public signal void set_as_primary ();
-    public signal void move_display (int delta_x, int delta_y);
+    public signal void move_item (int delta_x, int delta_y);
     public signal void check_position ();
-    public signal void configuration_changed ();
     public signal void active_changed ();
 
     public int delta_x { get; set; default = 0; }
     public int delta_y { get; set; default = 0; }
-
-    public bool only_display { get; set; default = false; }
 
     private Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?> undo_move_action;
     private Gdk.Rectangle rectangle_;
@@ -83,6 +80,9 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
         real_width = 720;
         real_height = 510;
+
+        var context = get_style_context ();
+        context.add_class ("colored");
 
         Utils.set_style (this, CSS);
 
@@ -180,7 +180,6 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
 
             load_item_data ();
 
-            configuration_changed ();
             check_position ();
         } else {
             stderr.printf ("creating new item \n");
@@ -258,14 +257,13 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         var old_delta_y = delta_y;
         delta_x = 0;
         delta_y = 0;
-        move_display (old_delta_x, old_delta_y);
+        move_item (old_delta_x, old_delta_y);
 
         return false;
     }
 
     public override bool motion_notify_event (Gdk.EventMotion event) {
         if (holding) {
-
             int x = (int) (event.x_root - start_x);
             int y = (int) (event.y_root - start_y);
             switch (holding_id) {

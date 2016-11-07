@@ -24,8 +24,6 @@ public class Spice.Canvas : Gtk.Overlay {
     public signal void ratio_changed (double ratio);
     public signal void next_slide ();
 
-    private const int SNAP_LIMIT = int.MAX - 1;
-
     public signal void configuration_changed ();
     public double current_ratio = 1.0f;
 
@@ -38,8 +36,8 @@ public class Spice.Canvas : Gtk.Overlay {
 
     // Serializable items
     public Json.Object? save_data = null;
-    public string background_color {get; set; default = "#383E41"; }
-    public string background_pattern {get; set; default = ""; }
+    public string background_color { get; set; default = "#383E41"; }
+    public string background_pattern { get; set; default = ""; }
 
     public bool editable = true;
 
@@ -129,26 +127,9 @@ public class Spice.Canvas : Gtk.Overlay {
     public CanvasItem add_item (CanvasItem item, bool loading = false) {
         var canvas_item = item;
 
-        current_allocated_width = 0;
-        current_allocated_height = 0;
-
         add_overlay (canvas_item);
 
-        var context = canvas_item.get_style_context ();
-        context.add_class ("colored");
-
-        canvas_item.show_all ();
-        var old_delta_x = canvas_item.delta_x;
-        var old_delta_y = canvas_item.delta_y;
-        canvas_item.delta_x = 0;
-        canvas_item.delta_y = 0;
-        canvas_item.move_display (old_delta_x, old_delta_y);
-
         if (editable) {
-            canvas_item.configuration_changed.connect (() => {
-                check_configuration_changed ();
-            });
-
             canvas_item.check_position.connect (() => {
                 check_intersects (canvas_item);
             });
@@ -158,7 +139,7 @@ public class Spice.Canvas : Gtk.Overlay {
                 item_clicked (canvas_item);
             });
 
-            canvas_item.move_display.connect ((delta_x, delta_y) => {
+            canvas_item.move_item.connect ((delta_x, delta_y) => {
                 if (window.is_fullscreen) return;
 
                 var r = canvas_item.rectangle;
@@ -174,7 +155,6 @@ public class Spice.Canvas : Gtk.Overlay {
             }
         }
 
-        calculate_ratio ();
         return canvas_item;
     }
 
@@ -195,6 +175,7 @@ public class Spice.Canvas : Gtk.Overlay {
                 ((CanvasItem) item).destroy ();
             }
         }
+
         configuration_changed ();
     }
 
