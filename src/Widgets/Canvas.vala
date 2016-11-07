@@ -128,6 +128,7 @@ public class Spice.Canvas : Gtk.Overlay {
         var canvas_item = item;
 
         add_overlay (canvas_item);
+        canvas_item.show_all ();
 
         if (editable) {
             canvas_item.check_position.connect (() => {
