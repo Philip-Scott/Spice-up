@@ -26,6 +26,14 @@ public class Spice.Grabber : Gtk.Button {
 
     private int id;
 
+    public bool make_visible {
+        set {
+            visible = value;
+            no_show_all = !value;
+            show_all ();
+        }
+    }
+
     public Grabber (int id) {
         this.id = id;
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
@@ -36,6 +44,8 @@ public class Spice.Grabber : Gtk.Button {
 
         var image = new Gtk.Image.from_icon_name ("user-offline", Gtk.IconSize.MENU);
         this.add (image);
+
+        make_visible = false;
     }
 
     public override bool draw (Cairo.Context ctx) {

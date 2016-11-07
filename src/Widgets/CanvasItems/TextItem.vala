@@ -28,17 +28,19 @@ public class Spice.TextItem : Spice.CanvasItem {
     public string font_color {get; set; default = "#fff"; }
     public string font_style {get; set; default = "Regular"; }
 
-    private string text_;
+    public bool setting_text = false;
     public string text {
-        get {
-            text_ = entry.buffer.text;
-            return text_;
+        owned get {
+            return entry.buffer.text;
         } set {
+            setting_text = true;
             if (value == "") {
                 entry.buffer.text = _("Click to add text...");
             } else {
                 entry.buffer.text = value;
             }
+
+            setting_text = false;
         }
     }
 
@@ -105,6 +107,7 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         un_select.connect (() => {
             editing = false;
+            entry.select_all (false);
             if (entry.buffer.text == "") {
                 entry.buffer.text = _("Click to add text...");
             }
@@ -117,6 +120,13 @@ public class Spice.TextItem : Spice.CanvasItem {
         editing = false;
 
         load_data ();
+
+        entry.buffer.changed.connect (() => {
+            if (!setting_text) {
+                var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this as TextItem, "text");
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            }
+        });
 
         style ();
     }
@@ -133,7 +143,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     protected override void load_item_data () {
         var text = save_data.get_string_member ("text");
         if (text != null) {
-            entry.buffer.text = text;
+            this.text = text;
         }
 
         font_size = (int) save_data.get_int_member ("font-size");

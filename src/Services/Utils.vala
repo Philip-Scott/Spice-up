@@ -34,4 +34,9 @@ public class Spice.Utils {
             stderr.printf ("%s %s\n", widget.name, css);
         }
     }
+
+    public static void set_cursor (Gdk.CursorType cursor_type) {
+        var cursor = new Gdk.Cursor.for_display (Gdk.Display.get_default (), cursor_type);
+        window.get_screen ().get_active_window ().set_cursor (cursor);
+    }
 }

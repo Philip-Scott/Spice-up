@@ -102,6 +102,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
         background-color: transparent;
     }
 
+    GtkTextView:selected {
+        background-color: black;
+	    color: white;
+    }
     ";
 
     public Window (Gtk.Application app) {
