@@ -242,6 +242,8 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     }
 
     public override bool button_release_event (Gdk.EventButton event) {
+        if (!holding) return false;
+
         Utils.set_cursor (Gdk.CursorType.ARROW);
 
         holding = false;
