@@ -23,6 +23,7 @@ public class Spice.Canvas : Gtk.Overlay {
     public signal void item_clicked (CanvasItem? item);
     public signal void ratio_changed (double ratio);
     public signal void next_slide ();
+    public signal void previous_slide ();
 
     public signal void configuration_changed ();
     public double current_ratio = 1.0f;
@@ -216,10 +217,15 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
+        stderr.printf ("Button %u\n", event.button);
         if (!editable) return false;
 
         if (window.is_fullscreen) {
-            next_slide ();
+            if (event.button == 1) {
+                next_slide ();
+            } else if (event.button == 3) {
+                previous_slide ();
+            }
         } else {
             unselect_all ();
             item_clicked (null);
@@ -299,16 +305,7 @@ public class Spice.Canvas : Gtk.Overlay {
         }
 
         public override bool button_press_event (Gdk.EventButton event) {
-            if (!canvas.editable) return false;
-
-            if (window.is_fullscreen) {
-                canvas.next_slide ();
-            } else {
-                canvas.item_clicked (null);
-                canvas.unselect_all ();
-            }
-
-            return true;
+            return canvas.button_press_event (event);
         }
 
         public new void style (string pattern) {

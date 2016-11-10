@@ -108,6 +108,14 @@ public class Spice.SlideManager : Object {
         }
     }
 
+    public void previous_slide () {
+        var previous_slide = get_previous_slide (current_slide);
+
+        if (previous_slide != null) {
+            current_slide = previous_slide;
+        }
+    }
+
     public void next_slide () {
         var next_slide = get_next_slide (current_slide);
 
@@ -147,13 +155,15 @@ public class Spice.SlideManager : Object {
 
         do {
             var previous_index = slides.index_of (current) - n++;
-            if (previous_index < slides.size) {
+            if (previous_index >= 0 && previous_index < slides.size) {
                 var slide = slides.get (previous_index);
                 if (slide.visible) {
                     previous_slide = slide;
                     found = true;
                 }
-            } else {
+            }
+
+            if (previous_index < 0) {
                 found = true;
             }
         } while (!found);
@@ -172,6 +182,10 @@ public class Spice.SlideManager : Object {
 
         slide.canvas.next_slide.connect (() => {
             next_slide ();
+        });
+
+        slide.canvas.previous_slide.connect (() => {
+            previous_slide ();
         });
 
         slides.add (slide);
