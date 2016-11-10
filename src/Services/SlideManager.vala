@@ -82,13 +82,13 @@ public class Spice.SlideManager : Object {
 
     public void move_down (Slide slide) {
         var index = slides.index_of (slide);
-        
-        if (index + 1 < slides.size) {
-            stderr.printf ("Moving slide %d down\n", index);
-            var slide_2 = slides.get (index + 1);
 
-            slides.set (index + 1, slide);
-            slides.set (index, slide_2);
+        var next_slide = get_next_slide (slide);
+        if (next_slide != null) {
+            var next_index = slides.index_of (next_slide);
+
+            slides.set (next_index, slide);
+            slides.set (index, next_slide);
 
             slides_sorted ();
         }
@@ -96,34 +96,69 @@ public class Spice.SlideManager : Object {
 
     public void move_up (Slide slide) {
         var index = slides.index_of (slide);
-        if (index - 1 >= 0) {
-            stderr.printf ("Moving slide %d up\n", index);
-            var slide_2 = slides.get (index - 1);
 
-            slides.set (index - 1, slide);
-            slides.set (index, slide_2);
+        var previous_slide = get_previous_slide (slide);
+        if (previous_slide != null) {
+            var previous_index = slides.index_of (previous_slide);
+
+            slides.set (previous_index, slide);
+            slides.set (index, previous_slide);
 
             slides_sorted ();
         }
     }
 
     public void next_slide () {
+        var next_slide = get_next_slide (current_slide);
+
+        if (next_slide != null) {
+            current_slide = next_slide;
+        } else {
+            // TODO: Show end of presentation slide
+            window.unfullscreen ();
+        }
+    }
+
+    private Slide? get_next_slide (Slide current) {
+        Slide? next_slide = null;
         bool found = false;
         int n = 1;
+
         do {
-            var next_index = slides.index_of (current_slide) + n++;
+            var next_index = slides.index_of (current) + n++;
             if (next_index < slides.size) {
-                var new_slide = slides.get (next_index);
-                if (new_slide.visible) {
-                    current_slide = new_slide;
+                var slide = slides.get (next_index);
+                if (slide.visible) {
+                    next_slide = slide;
                     found = true;
                 }
             } else {
-                // TODO: Show end of presentation slide
-                window.unfullscreen ();
                 found = true;
             }
         } while (!found);
+
+        return next_slide;
+    }
+
+    private Slide? get_previous_slide (Slide current) {
+        Slide? previous_slide = null;
+        bool found = false;
+        int n = 1;
+
+        do {
+            var previous_index = slides.index_of (current) - n++;
+            if (previous_index < slides.size) {
+                var slide = slides.get (previous_index);
+                if (slide.visible) {
+                    previous_slide = slide;
+                    found = true;
+                }
+            } else {
+                found = true;
+            }
+        } while (!found);
+
+        return previous_slide;
     }
 
     public Slide new_slide (Json.Object? save_data = null) {
