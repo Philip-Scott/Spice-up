@@ -52,8 +52,6 @@ public class Spice.Services.FileManager {
     }
 
     public static File? open_image () {
-
-
         List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
         Gtk.FileFilter filter = new Gtk.FileFilter ();
         filter.set_filter_name ("Images");
@@ -180,6 +178,8 @@ public class Spice.Services.FileManager {
         Timeout.add (600 * pages_to_draw, () => {
             bool first = true;
             foreach (var slide in manager.slides) {
+                if (!slide.visible) continue;
+
                 if (!first) {
                     pdf.copy_page ();
                 } else {

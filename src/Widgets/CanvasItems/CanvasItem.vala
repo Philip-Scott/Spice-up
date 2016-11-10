@@ -46,6 +46,15 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         }
     }
 
+    public bool item_visible {
+        get {
+            return this.visible;
+        } set {
+            this.visible = value;
+            this.no_show_all = !value;
+        }
+    }
+
     protected double start_x = 0;
     protected double start_y = 0;
     protected int start_w = 0;

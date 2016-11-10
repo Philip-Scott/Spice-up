@@ -36,10 +36,10 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
 
         delete_button.clicked.connect (() => {
             if (this.item != null) {
-                var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (this.item, "visible");
+                var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (this.item, "item-visible");
                 Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
 
-                this.item.visible = false;
+                this.item.item_visible = false;
             } else {
                 var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (this.manager.current_slide, "visible");
                 Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
