@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Presentation
 Comment=Spice up your slides
 Exec=/usr/bin/spice-up
@@ -7,5 +6,5 @@ Icon=spice
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=Office
+Categories=Office;
 MimeType=application/x-spice;
