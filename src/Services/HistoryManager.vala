@@ -39,13 +39,10 @@ public class Spice.Services.HistoryManager : Object {
         private Value value;
 
         public HistoryActionType history_type { get; construct set; }
-        public I item { get; construct set; default = null; }
+        public unowned I item { get; construct set; }
+        public unowned Canvas parent { private get; construct set; }
 
         public string property { get; construct set; }
-        
-        public Canvas parent { private get; construct set; }
-        
-        private HistoryAction () {}       
 
         public HistoryAction.depth_changed (I item, Canvas canvas, bool moved_up) {
             Object (item: item, history_type: HistoryActionType.ITEM_DEPTH, property: "depth", parent: canvas);
@@ -82,13 +79,13 @@ public class Spice.Services.HistoryManager : Object {
                 var temp = Value (typeof (T));
                 (item as Object).get_property (property, ref temp);
                 (item as Object).set_property (property, value);
-    
+
                 if (history_type == HistoryActionType.ITEM_CHANGED) {
                     (item as CanvasItem).style ();
                 } else if (history_type == HistoryActionType.CANVAS_CHANGED) {
                     (item as Canvas).style ();
                 }
-    
+
                 this.value = temp;
             } else {
                 if (value.get_boolean ()) {
@@ -96,7 +93,7 @@ public class Spice.Services.HistoryManager : Object {
                 } else {
                     parent.move_up (item as CanvasItem, false);
                 }
-                
+
                 value.set_boolean (!value.get_boolean ());
             }
         }
