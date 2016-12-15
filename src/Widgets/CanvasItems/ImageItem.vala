@@ -20,9 +20,6 @@
 */
 
 public class Spice.ImageItem : Spice.CanvasItem {
-
-    public string uri = "";
-
     const string IMAGE_STYLE_CSS = """
         .colored {
             background-color: transparent;
@@ -32,6 +29,24 @@ public class Spice.ImageItem : Spice.CanvasItem {
             background-repeat: no-repeat;
         }
     """;
+    const string IMAGE_MISSING_CSS = """
+        .colored {
+           border: 4px dashed #000000;
+           border-color: #c92e34;
+        }""";
+
+    private bool valid = false;
+
+    private string uri_ = "";
+    public string uri {
+        get {
+            return uri_;
+        } set {
+            uri_ = value;
+            var file = File.new_for_uri (value);
+            valid = (file.query_exists () && Utils.is_valid_image (file));
+        }
+    }
 
     public ImageItem (Canvas canvas, Json.Object? save_data = null) {
         base (canvas);
@@ -57,6 +72,10 @@ public class Spice.ImageItem : Spice.CanvasItem {
     }
 
     public override void style () {
-        Utils.set_style (this, IMAGE_STYLE_CSS.printf (uri));
+        if (valid) {
+            Utils.set_style (this, IMAGE_STYLE_CSS.printf (uri));
+        } else {
+            Utils.set_style (this, IMAGE_MISSING_CSS);
+        }
     }
 }
