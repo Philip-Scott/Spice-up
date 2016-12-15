@@ -180,17 +180,22 @@ public class Spice.Canvas : Gtk.Overlay {
         configuration_changed ();
     }
 
-    public void move_up (CanvasItem item_) {
+    public void move_up (CanvasItem item_, bool add_undo_action = true) {
         int index = 0;
         foreach (var item in get_children ()) {
             if (item == item_) break;
             index++;
         }
-
+        
+        if (add_undo_action) {
+            var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.depth_changed (item_, this, true);
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+        }
+        
         reorder_overlay (item_, index + 1);
     }
 
-    public void move_down (CanvasItem item_) {
+    public void move_down (CanvasItem item_, bool add_undo_action = true) {
         int index = 0;
         foreach (var item in get_children ()) {
             if (item == item_) break;
@@ -199,6 +204,11 @@ public class Spice.Canvas : Gtk.Overlay {
 
         if (index - 2 > -1) {
             reorder_overlay (item_, index - 2);
+        }
+        
+        if (add_undo_action) {
+            var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.depth_changed (item_, this, false);
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
         }
     }
 

@@ -129,7 +129,6 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
                 this.visible = val;
                 this.no_show_all = !val;
 
-
                 this.show_all ();
             });
         }

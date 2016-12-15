@@ -23,7 +23,8 @@ public enum Spice.HistoryActionType {
     ITEM_MOVED,
     SLIDE_CHANGED,
     ITEM_CHANGED,
-    CANVAS_CHANGED
+    CANVAS_CHANGED,
+    ITEM_DEPTH
 }
 
 public class Spice.Services.HistoryManager : Object {
@@ -34,45 +35,40 @@ public class Spice.Services.HistoryManager : Object {
     public signal void undo_changed (bool is_empty);
     public signal void redo_changed (bool is_empty);
 
-    public class HistoryAction<I,T> {
+    public class HistoryAction<I,T> : Object {
         private Value value;
 
-        public HistoryActionType history_type;
-        public I item = null;
+        public HistoryActionType history_type { get; construct set; }
+        public I item { get; construct set; default = null; }
 
-        public string property;
+        public string property { get; construct set; }
+        
+        public Canvas parent { private get; construct set; }
+        
+        private HistoryAction () {}       
 
-        private HistoryAction () {}
+        public HistoryAction.depth_changed (I item, Canvas canvas, bool moved_up) {
+            Object (item: item, history_type: HistoryActionType.ITEM_DEPTH, property: "depth", parent: canvas);
+            value = moved_up;
+        }
 
         public HistoryAction.item_moved (I item) {
-            this.item = item;
-            this.property = "rectangle";
-
-            history_type = HistoryActionType.ITEM_MOVED;
+            Object (item: item, history_type: HistoryActionType.ITEM_MOVED, property: "rectangle");
             get_item_property ();
         }
 
         public HistoryAction.item_changed (I item, string property) {
-            this.item = item;
-            this.property = property;
-            history_type = HistoryActionType.ITEM_CHANGED;
-
+            Object (item: item, history_type: HistoryActionType.ITEM_CHANGED, property: property);
             get_item_property ();
         }
 
         public HistoryAction.slide_changed (I item, string property) {
-            this.item = item;
-            this.property = property;
-            history_type = HistoryActionType.SLIDE_CHANGED;
-
+            Object (item: item, history_type: HistoryActionType.SLIDE_CHANGED, property: property);
             get_item_property ();
         }
 
         public HistoryAction.canvas_changed (I item, string property) {
-            this.item = item;
-            this.property = property;
-
-            history_type = HistoryActionType.CANVAS_CHANGED;
+            Object (item: item, history_type: HistoryActionType.CANVAS_CHANGED, property: property);
             get_item_property ();
         }
 
@@ -82,17 +78,27 @@ public class Spice.Services.HistoryManager : Object {
         }
 
         public void action () {
-            var temp = Value (typeof (T));
-            (item as Object).get_property (property, ref temp);
-            (item as Object).set_property (property, value);
-
-            if (history_type == HistoryActionType.ITEM_CHANGED) {
-                (item as CanvasItem).style ();
-            } else if (history_type == HistoryActionType.CANVAS_CHANGED) {
-                (item as Canvas).style ();
+            if (history_type != HistoryActionType.ITEM_DEPTH) {
+                var temp = Value (typeof (T));
+                (item as Object).get_property (property, ref temp);
+                (item as Object).set_property (property, value);
+    
+                if (history_type == HistoryActionType.ITEM_CHANGED) {
+                    (item as CanvasItem).style ();
+                } else if (history_type == HistoryActionType.CANVAS_CHANGED) {
+                    (item as Canvas).style ();
+                }
+    
+                this.value = temp;
+            } else {
+                if (value.get_boolean ()) {
+                    parent.move_down (item as CanvasItem, false);
+                } else {
+                    parent.move_up (item as CanvasItem, false);
+                }
+                
+                value.set_boolean (!value.get_boolean ());
             }
-
-            this.value = temp;
         }
     }
 
