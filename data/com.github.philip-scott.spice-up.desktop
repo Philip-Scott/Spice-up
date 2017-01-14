@@ -2,7 +2,7 @@
 Name=Presentation
 Comment=Spice up your slides
 Exec=/usr/bin/spice-up
-Icon=spice
+Icon=com.github.philip-scott.spice-up
 Terminal=false
 Type=Application
 StartupNotify=true
