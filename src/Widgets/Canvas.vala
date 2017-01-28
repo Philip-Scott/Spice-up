@@ -300,7 +300,7 @@ public class Spice.Canvas : Gtk.Overlay {
             }
         """;
 
-        protected CanvasGrid (Canvas canvas) {
+        public CanvasGrid (Canvas canvas) {
             events |= Gdk.EventMask.BUTTON_PRESS_MASK;
             this.canvas = canvas;
 
