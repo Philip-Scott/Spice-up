@@ -128,7 +128,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     protected class HeaderbarButton : Gtk.Button {
         public static Headerbar headerbar;
 
-        protected HeaderbarButton (string icon_name, string tooltip, HeaderButton? signal_mask) {
+        public HeaderbarButton (string icon_name, string tooltip, HeaderButton? signal_mask) {
             can_focus = false;
 
             var image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
