@@ -6,5 +6,5 @@ Icon=com.github.philip-scott.spice-up
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=Office;
+Categories=Office;Presentation;
 MimeType=application/x-spice;
