@@ -47,7 +47,6 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         slides_list.row_selected.connect ((row) => {
             if (row is SlideListRow) {
                 var slide = (SlideListRow) row;
-                manager.current_slide.reload_preview_data ();
                 manager.current_slide = slide.slide;
             }
         });
@@ -58,6 +57,18 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
 
         manager.slides_sorted.connect (() => {
             slides_list.invalidate_sort ();
+        });
+
+        manager.current_slide_changed.connect ((selected) => {
+            foreach (var row in slides_list.get_children ()) {
+                if (row is SlideListRow) {
+                    var preview = (SlideListRow) row;
+                    if (preview.slide == selected) {
+                        slides_list.select_row (preview);
+                        break;
+                    }
+                }
+            }
         });
 
         slides_list.set_sort_func ((row1, row2) => {
@@ -79,6 +90,8 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
             var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (slide, "visible");
             Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
             slide.visible = true;
+
+            manager.current_slide = slide;
         });
 
         foreach (var slide in manager.slides) {
