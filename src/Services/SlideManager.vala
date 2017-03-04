@@ -20,6 +20,7 @@
 */
 
 public class Spice.SlideManager : Object {
+    public signal void current_slide_changed (Slide slide);
     public signal void item_clicked (CanvasItem? item);
     public signal void new_slide_created (Slide slide);
     public signal void slides_sorted ();
@@ -32,10 +33,15 @@ public class Spice.SlideManager : Object {
     public Slide? current_slide {
         get { return slide_; }
         set {
+            if (!window.is_fullscreen) {
+                current_slide.reload_preview_data ();
+            }
+
             if (slides.contains (value)) {
                 slide_ = value;
                 item_clicked (null);
                 slideshow.set_visible_child (value.canvas);
+                current_slide_changed (value);
             }
         }
     }
@@ -172,9 +178,7 @@ public class Spice.SlideManager : Object {
     }
 
     public Slide new_slide (Json.Object? save_data = null) {
-        Slide slide;
-
-        slide = new Slide (save_data);
+        Slide slide = new Slide (save_data);
 
         slide.canvas.item_clicked.connect ((item) => {
             this.item_clicked (item);
@@ -193,7 +197,6 @@ public class Spice.SlideManager : Object {
         slideshow.show_all ();
 
         new_slide_created (slide);
-        current_slide = slide;
 
         return slide;
     }

@@ -78,6 +78,7 @@ public class Spice.Slide : Object {
 
     public void reload_preview_data () {
         string data = serialise ();
+
         var parser = new Json.Parser ();
         parser.load_from_data (data);
         var root_object = parser.get_root ().get_object ();
