@@ -16,6 +16,11 @@
   </provides>
   <releases>
   </releases>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot.png</image>
+    </screenshot>
+  </screenshots>
   <developer_name>Felipe Escoto.</developer_name>
   <url type="homepage">https://github.com/Philip-Scott</url>
   <url type="bugtracker">https://github.com/Philip-Scott/Spice-up/issues</url>
