@@ -8,12 +8,11 @@ Build-Depends: cmake,
                valac (>= 0.26),
                libgranite-dev,
                libjson-glib-dev
-Standards-Version: 3.9.6
-Homepage: https://github.com/Philip-Scott/Spice-up
 
+Standards-Version: 3.9.6
 Package: com.github.philip-scott.spice-up
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: dpkg (>= 1.15.6)
-Description: Create simple and beautiful presentations
- 
+Description: Spice-Up
+ Create simple and beautiful presentations
