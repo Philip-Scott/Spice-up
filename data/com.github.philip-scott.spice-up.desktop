@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Presentation
+Name=Spice-Up
 Comment=Spice up your slides
 Exec=/usr/bin/spice-up
 Icon=com.github.philip-scott.spice-up
