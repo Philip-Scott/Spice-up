@@ -100,6 +100,7 @@ public class Spice.EntryCombo : Gtk.Box {
         entry = new Gtk.Entry ();
 
         listbox = new Gtk.ListBox ();
+        listbox.margin_top = listbox.margin_bottom = 3;
         listbox.set_activate_on_single_click (false);
 
         substitute_label = new Gtk.Label ("");
@@ -199,13 +200,12 @@ public class Spice.EntryCombo : Gtk.Box {
         keys.set (translated.down (), real.down ());
 
         var label = new Gtk.Label (translated);
-        label.margin = 2;
-        label.margin_right = 6;
-        label.margin_left = 6;
+        label.xalign = 0;
 
         if (translated.contains ("Noto Sans") && translated != "Noto Sans") return label;
 
         var row = new Gtk.ListBoxRow ();
+        row.get_style_context ().add_class (Gtk.STYLE_CLASS_MENUITEM);
         row_map.set (real.down (), row);
 
         row.add (label);
