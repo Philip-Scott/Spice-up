@@ -8,7 +8,7 @@
   <summary>Create simple and beautiful presentations</summary>
   <description>
     <p>
-      Based upon SpiceOfDesign's presentation concept, the goal with this project is to create a presentation app that has everything you need to create simple and beautiful presentations.
+      A modern and intuitive app with everything you need to create simple and beautiful presentation such as text, images, and shapes as well as beautiful background patterns and easy to make custom gradsudients.
     </p>
   </description>
   <provides>
@@ -26,4 +26,8 @@
   <url type="bugtracker">https://github.com/Philip-Scott/Spice-up/issues</url>
   <url type="help">https://github.com/Philip-Scott/Spice-up/issues</url>
   <update_contact>felescoto@hotmail.com</update_contact>
+  <custom>
+    <value key="x-appcenter-color-primary">#E8F0FF</value>
+    <value key="x-appcenter-color-primary-text">#223b69</value>
+  </custom>
 </component>
