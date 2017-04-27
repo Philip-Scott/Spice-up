@@ -7,4 +7,4 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Categories=Office;Presentation;
-MimeType=application/x-spice;
+MimeType=application-x-spiceup;

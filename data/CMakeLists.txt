@@ -17,3 +17,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.svg
 # install the appdata
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.appdata.xml
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/metainfo/)
+
+# install the mimefile
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.mime.xml
+        DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/mime/packages/)

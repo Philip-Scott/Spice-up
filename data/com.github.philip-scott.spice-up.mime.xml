@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="application/x-spiceup">
+        <comment>Spice-Up Presentation</comment>
+        <icon name="application-x-spiceup"/>
+        <glob-deleteall/>
+        <glob pattern="*.spice"/>
+    </mime-type>
+</mime-info>

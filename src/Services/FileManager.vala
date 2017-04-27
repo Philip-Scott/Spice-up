@@ -68,7 +68,7 @@ public class Spice.Services.FileManager {
         List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
         Gtk.FileFilter filter = new Gtk.FileFilter ();
         filter.set_filter_name ("Presentation");
-        filter.add_mime_type ("application/x-spice");
+        filter.add_mime_type ("application/x-spiceup");
 
         filters.append (filter);
 
