@@ -20,6 +20,7 @@
 */
 
 public class Spice.SlideManager : Object {
+    public signal void reseted ();
     public signal void current_slide_changed (Slide slide);
     public signal void item_clicked (CanvasItem? item);
     public signal void new_slide_created (Slide slide);
@@ -33,6 +34,10 @@ public class Spice.SlideManager : Object {
     public Slide? current_slide {
         get { return slide_; }
         set {
+            if (slide_ != null) {
+                slide_.canvas.unselect_all ();
+            }
+
             if (!window.is_fullscreen) {
                 current_slide.reload_preview_data ();
             }
@@ -49,6 +54,17 @@ public class Spice.SlideManager : Object {
     public SlideManager () {
         slideshow = new Gtk.Stack ();
         slides = new Gee.ArrayList<Slide> ();
+    }
+
+    public void reset () {
+        foreach (var slide in slides) {
+            slideshow.remove (slide.canvas);
+        }
+
+        slides.clear ();
+
+        slide_ = null;
+        reseted ();
     }
 
     public string serialise () {

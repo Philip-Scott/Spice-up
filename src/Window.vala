@@ -188,20 +188,29 @@ public class Spice.Window : Gtk.ApplicationWindow {
         });
 
         welcome.open_file.connect ((file) => {
-            Services.FileManager.current_file = file;
-            string content = Services.FileManager.open_file ();
-
-            slide_manager.load_data (content);
-            headerbar.sensitive = true;
-            app_stack.set_visible_child_name  ("application");
-
-            var basename = Services.FileManager.current_file.get_basename ();
-
-            var index_of_last_dot = basename.last_index_of (".");
-            var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
-
-            title = launcher_base;
+            open_file (file);
         });
+    }
+
+    public void open_file (File file) {
+        slide_manager.reset ();
+        Services.FileManager.current_file = file;
+        string content = Services.FileManager.open_file ();
+
+        slide_manager.load_data (content);
+        headerbar.sensitive = true;
+        app_stack.set_visible_child_name  ("application");
+
+        var basename = Services.FileManager.current_file.get_basename ();
+
+        var index_of_last_dot = basename.last_index_of (".");
+        var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
+
+        title = launcher_base;
+    }
+
+    public void save_current_file () {
+        Services.FileManager.write_file (slide_manager.serialise ());
     }
 
     protected override bool delete_event (Gdk.EventAny event) {

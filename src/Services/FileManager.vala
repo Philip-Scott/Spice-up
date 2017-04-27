@@ -114,15 +114,12 @@ public class Spice.Services.FileManager {
 
         create_file_if_not_exists (current_file);
 
-        current_file.open_readwrite_async.begin (Priority.DEFAULT, null, (obj, res) => {
-            try {
-                var iostream = current_file.open_readwrite_async.end (res);
-                var ostream = iostream.output_stream;
-                ostream.write_all (contents.data, null);
-            } catch (Error e) {
-                warning ("Could not write file \"%s\": %s", current_file.get_basename (), e.message);
-            }
-        });
+        try {
+            GLib.FileUtils.set_data (current_file. get_path (), contents.data);
+        } catch (Error e) {
+            warning ("Could not write file \"%s\": %s", current_file.get_basename (), e.message);
+        }
+
     }
 
     public static string open_file () {

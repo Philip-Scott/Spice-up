@@ -1,10 +1,15 @@
 [Desktop Entry]
 Name=Spice-Up
 Comment=Spice up your slides
-Exec=/usr/bin/spice-up
+Exec=/usr/bin/spice-up %u
 Icon=com.github.philip-scott.spice-up
 Terminal=false
 Type=Application
 StartupNotify=true
 Categories=Office;Presentation;
 MimeType=application-x-spiceup;
+Actions=AboutDialog;
+
+[Desktop Action AboutDialog]
+Exec=spice-up --about
+Name=About Spice-Up

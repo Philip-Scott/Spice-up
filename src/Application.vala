@@ -25,15 +25,44 @@ namespace Spice {
     public string DATA_DIR;
 }
 
-public class Spice.Application : Gtk.Application {
-    public const string PROGRAM_NAME = N_("Presentations");
+public class Spice.Application : Granite.Application {
+    public const string PROGRAM_NAME = N_("Spice-Up");
     public const string COMMENT = N_("");
-    public const string ABOUT_STOCK = N_("About Spice-up");
+    public const string ABOUT_STOCK = N_("About Spice-Up");
 
     public bool running = false;
 
-    public Application () {
-        Object (application_id: "com.github.philip-scott.spice-up");
+    construct {
+        flags |= ApplicationFlags.HANDLES_OPEN;
+
+        application_id = "com.github.philip-scott.spice-up";
+        program_name = PROGRAM_NAME;
+        app_years = "2016-2017";
+        exec_name = "spice-up";
+        app_launcher = "com.github.philip-scott.spice-up";
+
+        build_version = "0.5";
+        app_icon = "com.github.philip-scott.spice-up";
+        main_url = "https://github.com/Philip-Scott/Spice-up/";
+        bug_url = "https://github.com/Philip-Scott/Spice-up/issues";
+        help_url = "https://github.com/Philip-Scott/Spice-up/";
+        translate_url = "https://github.com/Philip-Scott/Spice-up/tree/master/po";
+        about_authors = {"Felipe Escoto <felescoto95@hotmail.com>", null};
+        about_translators = _("translator-credits");
+
+        about_license_type = Gtk.License.GPL_3_0;
+    }
+
+    public override void open (File[] files, string hint) {
+        string[] uris = {};
+        foreach (var file in files) {
+            uris += file.get_uri ();
+        }
+
+        activate ();
+        if (window != null) {
+            window.open_file (File.new_for_uri (uris[0]));
+        }
     }
 
     public override void activate () {

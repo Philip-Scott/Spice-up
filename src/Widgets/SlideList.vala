@@ -70,6 +70,12 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
                 }
             }
         });
+        
+        manager.reseted.connect (() => {
+            foreach (var row in slides_list.get_children ()) {
+                row.destroy ();
+            }
+        });
 
         slides_list.set_sort_func ((row1, row2) => {
             var slide1 = manager.slides.index_of (((SlideListRow) row1).slide);
@@ -110,8 +116,8 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         return slide_row;
     }
 
-    public static int width = 200;
-    public static int height = 154;
+    public static int WIDTH = 200;
+    public static int HEIGHT = 154;
 
     public Gtk.Button add_new_slide () {
         var button = new Gtk.Button ();
@@ -121,7 +127,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         button.get_style_context ().add_class ("slide");
         button.get_style_context ().add_class ("new");
         button.add (plus_icon);
-        button.set_size_request (width - 24, height - 24);
+        button.set_size_request (WIDTH - 24, HEIGHT - 24);
         button.margin = 6;
 
         return button;
@@ -137,6 +143,8 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
             margin = 6;
             margin_top = 3;
             margin_bottom = 3;
+
+            set_size_request (SlideList.WIDTH - 24, SlideList.HEIGHT - 24);
 
             slide.visible_changed.connect ((val) => {
                 this.visible = val;
