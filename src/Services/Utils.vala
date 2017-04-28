@@ -29,6 +29,36 @@ public class Spice.Utils {
         "image/gif"
     };
 
+    public static Gdk.Pixbuf base64_to_pixbuf (string base64) {
+        var raw_data = GLib.Base64.decode (base64);
+        var loader = new Gdk.PixbufLoader ();
+        loader.write (raw_data);
+        loader.close ();
+
+        return loader.get_pixbuf ();
+    }
+
+    public static string pixbuf_to_base64 (Gdk.Pixbuf pixbuf) {
+        var w = pixbuf.get_width();
+        var h = pixbuf.get_height();
+
+        var surface = new Granite.Drawing.BufferSurface (w, h);
+        Gdk.cairo_set_source_pixbuf (surface.context, pixbuf, 0, 0);
+        surface.context.paint ();
+
+        return surface_to_base64 (surface.surface);
+    }
+
+    public static string surface_to_base64 (Cairo.Surface surface) {
+        var data_raw = new Array<uchar>();
+        surface.write_to_png_stream ((raw) => {
+            data_raw.append_vals (raw, raw.length);
+            return Cairo.Status.SUCCESS;
+        });
+
+        return GLib.Base64.encode (data_raw.data);
+    }
+
     // Check if the filename has a picture file extension.
     public static bool is_valid_image (GLib.File file) {
         var file_info = file.query_info ("standard::*", 0);

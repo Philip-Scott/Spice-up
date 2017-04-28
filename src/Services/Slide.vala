@@ -25,7 +25,11 @@ public class Spice.Slide : Object {
     protected Json.Object? save_data = null;
 
     public Canvas canvas;
-    public Canvas preview;
+    public Gtk.Image preview;
+
+    private string preview_data = "";
+    private int width = -1;
+    private int height = -1;
 
     private bool visible_ = true;
     public bool visible {
@@ -43,14 +47,16 @@ public class Spice.Slide : Object {
     public Slide (Json.Object? save_data = null) {
         this.save_data = save_data;
         canvas = new Spice.Canvas (save_data);
-        preview = new Spice.Canvas.preview (save_data);
+        preview = new Gtk.Image ();
 
         load_data (save_data);
+
+        canvas.item_clicked.connect ((item) => {reload_preview_data ();});
     }
 
-    public void load_data (Json.Object? save_data, bool load_canvas = true) {
+    public void load_data (Json.Object? save_data) {
         if (save_data == null) return;
-        if (load_canvas) canvas.clear_all ();
+        canvas.clear_all ();
 
         var items = save_data.get_array_member ("items");
 
@@ -61,35 +67,32 @@ public class Spice.Slide : Object {
 
             switch (type) {
                 case "text":
-                    if (load_canvas) canvas.add_item (new TextItem (canvas, item), true);
-                    preview.add_item (new TextItem (preview, item));
+                    canvas.add_item (new TextItem (canvas, item), true);
                 break;
                 case "color":
-                    if (load_canvas) canvas.add_item (new ColorItem (canvas, item), true);
-                    preview.add_item (new ColorItem (preview, item));
+                    canvas.add_item (new ColorItem (canvas, item), true);
                 break;
                 case "image":
-                    if (load_canvas) canvas.add_item (new ImageItem (canvas, item), true);
-                    preview.add_item (new ImageItem (preview, item));
+                    canvas.add_item (new ImageItem (canvas, item), true);
                 break;
             }
+        }
+
+        preview_data = save_data.get_string_member ("preview");
+        if (preview_data != null && preview_data != "") {
+            var pixbuf = Utils.base64_to_pixbuf (preview_data);
+
+            preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
         }
     }
 
     public void reload_preview_data () {
-        string data = serialise ();
+        if (canvas.surface != null) {
+            var pixbuf = canvas.surface.load_to_pixbuf ().scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR);
 
-        var parser = new Json.Parser ();
-        parser.load_from_data (data);
-        var root_object = parser.get_root ().get_object ();
-
-        preview.clear_all ();
-
-        load_data (root_object, false);
-
-        preview.save_data = root_object;
-        preview.load_data ();
-        preview.style ();
+            preview.set_from_pixbuf (pixbuf);
+            preview_data = Utils.pixbuf_to_base64 (pixbuf);
+        }
     }
 
     public string serialise () {
@@ -103,6 +106,6 @@ public class Spice.Slide : Object {
             }
         }
 
-        return """{%s, "items": [%s]}""".printf (canvas.serialise (), data);
+        return """{%s, "items": [%s], "preview": "%s"}""".printf (canvas.serialise (), data, preview_data);
     }
 }

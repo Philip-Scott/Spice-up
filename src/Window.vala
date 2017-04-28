@@ -193,6 +193,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     public void open_file (File file) {
+        save_current_file ();
+
         slide_manager.reset ();
         Services.FileManager.current_file = file;
         string content = Services.FileManager.open_file ();
@@ -210,7 +212,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     public void save_current_file () {
-        Services.FileManager.write_file (slide_manager.serialise ());
+        if (Services.FileManager.current_file != null) {
+            Services.FileManager.write_file (slide_manager.serialise ());
+        }
     }
 
     protected override bool delete_event (Gdk.EventAny event) {

@@ -20,6 +20,8 @@
 */
 
 public class Spice.Canvas : Gtk.Overlay {
+    public static bool drawing_preview = false;
+
     public signal void item_clicked (CanvasItem? item);
     public signal void ratio_changed (double ratio);
     public signal void next_slide ();
@@ -40,8 +42,6 @@ public class Spice.Canvas : Gtk.Overlay {
     public string background_color { get; set; default = "#383E41"; }
     public string background_pattern { get; set; default = ""; }
 
-    public bool editable = true;
-
     const string CANVAS_CSS = """
         .view {
             background: %s;
@@ -60,22 +60,6 @@ public class Spice.Canvas : Gtk.Overlay {
 
         calculate_ratio ();
         load_data ();
-        style ();
-    }
-
-    public Canvas.preview (Json.Object? save_data = null) {
-        this.save_data = save_data;
-
-        editable = false;
-        grid = new CanvasGrid (this);
-        add (grid);
-        set_size_request (200, 154);
-        expand = false;
-
-        get_style_context ().add_class ("canvas");
-
-        load_data ();
-        calculate_ratio ();
         style ();
     }
 
@@ -130,30 +114,28 @@ public class Spice.Canvas : Gtk.Overlay {
         add_overlay (canvas_item);
         canvas_item.show_all ();
 
-        if (editable) {
-            canvas_item.check_position.connect (() => {
-                check_intersects (canvas_item);
-            });
+        canvas_item.check_position.connect (() => {
+            check_intersects (canvas_item);
+        });
 
-            canvas_item.clicked.connect (() => {
-                unselect_all ();
-                item_clicked (canvas_item);
-            });
+        canvas_item.clicked.connect (() => {
+            unselect_all ();
+            item_clicked (canvas_item);
+        });
 
-            canvas_item.move_item.connect ((delta_x, delta_y) => {
-                if (window.is_fullscreen) return;
+        canvas_item.move_item.connect ((delta_x, delta_y) => {
+            if (window.is_fullscreen) return;
 
-                var r = canvas_item.rectangle;
-                canvas_item.rectangle = { (int)(delta_x / current_ratio) + r.x, (int)(delta_y / current_ratio) + r.y, r.width, r.height };
-                canvas_item.queue_resize_no_redraw ();
-            });
+            var r = canvas_item.rectangle;
+            canvas_item.rectangle = { (int)(delta_x / current_ratio) + r.x, (int)(delta_y / current_ratio) + r.y, r.width, r.height };
+            canvas_item.queue_resize_no_redraw ();
+        });
 
-            if (!loading) {
-                canvas_item.visible = false;
-                var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (canvas_item, "visible");
-                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
-                canvas_item.visible = true;
-            }
+        if (!loading) {
+            canvas_item.visible = false;
+            var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (canvas_item, "visible");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            canvas_item.visible = true;
         }
 
         return canvas_item;
@@ -227,9 +209,6 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
-        stderr.printf ("Button %u\n", event.button);
-        if (!editable) return false;
-
         if (window.is_fullscreen) {
             if (event.button == 1) {
                 next_slide ();
@@ -269,14 +248,14 @@ public class Spice.Canvas : Gtk.Overlay {
         configuration_changed ();
     }
 
-    public Granite.Drawing.BufferSurface surface = null;
+    public Granite.Drawing.BufferSurface? surface = null;
     public override bool draw (Cairo.Context cr) {
         base.draw (cr);
 
-        if (editable) {
-            surface = new Granite.Drawing.BufferSurface (this.current_allocated_width, this.current_allocated_height);
-            base.draw (surface.context);
-        }
+        drawing_preview = true;
+        surface = new Granite.Drawing.BufferSurface (this.current_allocated_width, this.current_allocated_height);
+        base.draw (surface.context);
+        drawing_preview = false;
 
         return true;
     }
