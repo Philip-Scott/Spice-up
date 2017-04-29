@@ -28,8 +28,6 @@ public class Spice.Slide : Object {
     public Gtk.Image preview;
 
     private string preview_data = "";
-    private int width = -1;
-    private int height = -1;
 
     private bool visible_ = true;
     public bool visible {

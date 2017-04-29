@@ -20,6 +20,7 @@
 */
 
 public class Spice.SlideManager : Object {
+    public signal void aspect_ratio_changed (Spice.AspectRatio ratio);
     public signal void reseted ();
     public signal void current_slide_changed (Slide slide);
     public signal void item_clicked (CanvasItem? item);
@@ -30,6 +31,7 @@ public class Spice.SlideManager : Object {
     public Gee.ArrayList<Slide> slides {get; private set;}
 
     private Slide? slide_ = null;
+    private Spice.AspectRatio current_ratio;
 
     public Slide? current_slide {
         get { return slide_; }
@@ -76,7 +78,7 @@ public class Spice.SlideManager : Object {
             }
         }
 
-        return """{"current-slide":%d, "slides": [%s]}""".printf (slides.index_of (current_slide), data);
+        return """{"current-slide":%d, "aspect-ratio":%d, "slides": [%s]}""".printf (slides.index_of (current_slide), current_ratio, data);
     }
 
     public void load_data (string data) {
@@ -86,6 +88,11 @@ public class Spice.SlideManager : Object {
 
             var root_object = parser.get_root ().get_object ();
             var slides_array = root_object.get_array_member ("slides");
+
+            var ratio = (int) root_object.get_int_member ("aspect-ratio");
+
+            current_ratio = Spice.AspectRatio.get_mode (ratio);
+            aspect_ratio_changed (current_ratio);
 
             foreach (var slide_object in slides_array.get_elements ()) {
                 new_slide (slide_object.get_object ());

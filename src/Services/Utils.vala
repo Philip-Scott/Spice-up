@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
+* Copyright (c) 2016-2017 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -32,8 +32,13 @@ public class Spice.Utils {
     public static Gdk.Pixbuf base64_to_pixbuf (string base64) {
         var raw_data = GLib.Base64.decode (base64);
         var loader = new Gdk.PixbufLoader ();
-        loader.write (raw_data);
-        loader.close ();
+
+        try {
+            loader.write (raw_data);
+            loader.close ();
+        } catch (Error e) {
+            warning ("Loading image failed: %s", e.message);
+        }
 
         return loader.get_pixbuf ();
     }
@@ -94,5 +99,61 @@ public class Spice.Utils {
     public static void set_cursor (Gdk.CursorType cursor_type) {
         var cursor = new Gdk.Cursor.for_display (Gdk.Display.get_default (), cursor_type);
         window.get_screen ().get_active_window ().set_cursor (cursor);
+    }
+}
+
+public enum Spice.AspectRatio {
+    ASPECT_4_3 = 1,
+    ASPECT_16_9 = 2,
+    ASPECT_16_10 = 3,
+    ASPECT_3_2 = 4,
+    ASPECT_5_4 = 5;
+
+    public static Spice.AspectRatio get_mode (int? value) {
+        switch (value) {
+            case 1: return ASPECT_4_3;
+            case 2: return ASPECT_16_9;
+            case 3: return ASPECT_16_10;
+            case 4: return ASPECT_3_2;
+            case 5: return ASPECT_5_4;
+        }
+
+        // get current aspect ratio if none was set
+        var h = Gdk.Screen.height ();
+        var w = Gdk.Screen.width ();
+
+        var ratio = (int) ((double) w / h * 10);
+
+        switch (ratio) {
+            case 12: return ASPECT_5_4;
+            case 13: return ASPECT_4_3;
+            case 14: return ASPECT_3_2;
+            case 16: return ASPECT_16_10;
+            case 17: return ASPECT_16_9;
+        }
+
+        return ASPECT_16_9;
+    }
+
+    public static float get_ratio_value (Spice.AspectRatio value) {
+        switch (value) {
+            case ASPECT_4_3: return 1.3333f;
+            case ASPECT_16_9: return 1.7777f;
+            case ASPECT_16_10: return 1.6666f;
+            case ASPECT_3_2: return 1.5f;
+            case ASPECT_5_4: return 1.25f;
+        }
+        assert_not_reached();
+    }
+
+    public static int get_width_value (Spice.AspectRatio value) {
+        switch (value) {
+            case ASPECT_4_3: return 200;
+            case ASPECT_16_9: return 267;
+            case ASPECT_16_10: return 250;
+            case ASPECT_3_2: return 225;
+            case ASPECT_5_4: return 187;
+        }
+        assert_not_reached();
     }
 }

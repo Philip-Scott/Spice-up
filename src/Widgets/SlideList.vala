@@ -117,7 +117,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
     }
 
     public static int WIDTH = 200;
-    public static int HEIGHT = 154;
+    public static int HEIGHT = 150;
 
     public Gtk.Button add_new_slide () {
         var button = new Gtk.Button ();

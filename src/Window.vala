@@ -36,6 +36,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private Spice.Headerbar headerbar;
     private Spice.SlideManager slide_manager;
+    private Spice.SlideList slide_list;
     private Spice.DynamicToolbar toolbar;
 
     private Gtk.Revealer sidebar_revealer;
@@ -131,7 +132,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         toolbar = new Spice.DynamicToolbar (slide_manager);
 
-        var slide_list = new Spice.SlideList (slide_manager);
+        slide_list = new Spice.SlideList (slide_manager);
         set_titlebar (headerbar);
 
         sidebar_revealer = new Gtk.Revealer ();
@@ -144,7 +145,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         toolbar_revealer.reveal_child = true;
         toolbar_revealer.transition_duration = 0;
 
-        aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.3, false);
+        aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.7777, false);
         aspect_frame.get_style_context ().remove_class ("frame");
         aspect_frame.add (slide_manager.slideshow);
         aspect_frame.margin = 24;
@@ -174,6 +175,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         slide_manager.item_clicked.connect ((item) => {
             toolbar.item_selected (item);
+        });
+
+        slide_manager.aspect_ratio_changed.connect ((new_ratio) => {
+            SlideList.WIDTH = Spice.AspectRatio.get_width_value (new_ratio);
+            aspect_frame.ratio = Spice.AspectRatio.get_ratio_value (new_ratio);
         });
 
         window_state_event.connect ((e) => {
