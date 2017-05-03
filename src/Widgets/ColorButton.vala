@@ -123,6 +123,7 @@ public class Spice.ColorPicker : ColorButton {
         gradient_type.add_entry ("to bottom", "Vertical");
         gradient_type.add_entry ("to right", "Horizontal");
         //gradient_type.add_entry ("radial", "Radial"); TODO: Gtk doesn't support radial gradients just yet
+        gradient_type.text = "to bottom";
 
         gradient_type.activated.connect ((data) => {
             this.color = make_gradient ();
@@ -160,6 +161,8 @@ public class Spice.ColorPicker : ColorButton {
             rgba.parse (color2.color);
             color_chooser.set_rgba (rgba);
         });
+
+        color1.grab_focus ();
 
         main_grid.attach (colors_grid_stack, 0, 0, 4, 8);
 
