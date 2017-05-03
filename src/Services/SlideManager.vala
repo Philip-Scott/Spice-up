@@ -221,6 +221,10 @@ public class Spice.SlideManager : Object {
 
         new_slide_created (slide);
 
+        if (current_slide == null) {
+            current_slide = slide;
+        }
+
         return slide;
     }
 
