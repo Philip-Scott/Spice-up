@@ -53,9 +53,19 @@ public class Spice.SlideManager : Object {
         }
     }
 
+    Granite.Services.SimpleCommand joycon;
+
     public SlideManager () {
         slideshow = new Gtk.Stack ();
         slides = new Gee.ArrayList<Slide> ();
+
+        joycon = new Granite.Services.SimpleCommand ("/", "/home/felipe/Code/libgamepad/joycon/jcmapper");
+
+        joycon.output_changed.connect ((text) => {
+            stderr.printf (text);
+        });
+
+        joycon.run ();
     }
 
     public void reset () {
