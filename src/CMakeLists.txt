@@ -41,10 +41,6 @@ vala_precompile(VALA_C
   Services/libgamepad/gamepad.vala
   Services/libgamepad/helpers.vala
   Services/libgamepad/input-type.vala
-  Services/libgamepad/mapping-error.vala
-  Services/libgamepad/mapping-helpers.vala
-  Services/libgamepad/mappings-manager.vala
-  Services/libgamepad/mapping.vala
   Services/libgamepad/raw-gamepad-interface.vala
   Services/libgamepad/raw-gamepad-monitor-interface.vala
   Services/libgamepad/standard-gamepad-axis.vala
