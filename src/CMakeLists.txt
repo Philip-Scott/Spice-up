@@ -12,6 +12,7 @@ vala_precompile(VALA_C
   Services/FileManager.vala
   Services/HistoryManager.vala
   Services/Utils.vala
+  Services/GamepadSlideController.vala
   Widgets/Canvas.vala
   Widgets/ColorButton.vala
   Widgets/EntryCombo.vala
@@ -33,6 +34,25 @@ vala_precompile(VALA_C
   Widgets/Toolbars/TextBar.vala
   Widgets/Toolbars/Toolbar.vala
   #${CMAKE_CURRENT_BINARY_DIR}/config.vala
+  
+  # LibGamepad
+  Services/libgamepad/libgamepad.vala
+  Services/libgamepad/gamepad-monitor.vala
+  Services/libgamepad/gamepad.vala
+  Services/libgamepad/helpers.vala
+  Services/libgamepad/input-type.vala
+  Services/libgamepad/mapping-error.vala
+  Services/libgamepad/mapping-helpers.vala
+  Services/libgamepad/mappings-manager.vala
+  Services/libgamepad/mapping.vala
+  Services/libgamepad/raw-gamepad-interface.vala
+  Services/libgamepad/raw-gamepad-monitor-interface.vala
+  Services/libgamepad/standard-gamepad-axis.vala
+  Services/libgamepad/standard-gamepad-button.vala
+
+  Services/libgamepad/drivers/linux/guid-helpers.vala
+  Services/libgamepad/drivers/linux/raw-gamepad.vala
+  Services/libgamepad/drivers/linux/raw-gamepad-monitor.vala
 PACKAGES
   ${VALA_DEPS}
 OPTIONS
@@ -40,6 +60,7 @@ OPTIONS
   -g
   --thread
   --target-glib=2.38 # FIXME check before, and target the same version
+  --vapidir=${CMAKE_SOURCE_DIR}/vapi
 )
 
 add_executable(spice-up ${VALA_C})
