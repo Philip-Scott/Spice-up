@@ -52,11 +52,6 @@ public class LibGamepad.Gamepad : Object {
      */
     public RawGamepad raw_gamepad { get; private set; }
 
-    /**
-     * Whether this gamepad is mapped
-     */
-    public bool mapped { get; private set; }
-
     public Gamepad (RawGamepad raw_gamepad) {
         this.raw_gamepad = raw_gamepad;
         raw_name = raw_gamepad.name;
@@ -80,14 +75,12 @@ public class LibGamepad.Gamepad : Object {
             debug ("Raw button released event: %d", button);
         }
     }
+/*
+    private void on_raw_axis_event (int axis, double value) {
+        debug ("On raw axis event: %d %s", axis, value.to_string ());
 
-    /*private void on_raw_axis_event (int axis, double value) {
-        InputType type;
-        StandardGamepadAxis output_axis;
-        StandardGamepadButton output_button;
-
-        mapping.get_axis_mapping (axis, out type, out output_axis, out output_button);
-        emit_event (type, output_axis, output_button, value);
+        //mapping.get_axis_mapping (axis, out type, out output_axis, out output_button);
+        //emit_event (type, output_axis, output_button, value);
     }
 
     private void on_raw_dpad_event (int dpad_index, int axis, int value) {

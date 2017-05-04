@@ -53,17 +53,17 @@ public class Spice.SlideManager : Object {
         }
     }
 
-    
+
     public SlideManager () {
         slideshow = new Gtk.Stack ();
         slides = new Gee.ArrayList<Slide> ();
-        
+
         GamepadSlideController.startup (this);
-        
+
         /*joycon.output_changed.connect ((text) => {
             stderr.printf (text);
 
-            
+
         });
 
         joycon.done.connect ((i) => {
@@ -258,6 +258,23 @@ public class Spice.SlideManager : Object {
         }
 
         return item;
+    }
+
+    public Slide? checkpoint = null;
+    public void jump_to_checkpoint () {
+        if (!window.is_fullscreen) return;
+
+        if (checkpoint != null) {
+            var temp = checkpoint;
+            checkpoint = current_slide;
+            current_slide = temp;
+        }
+    }
+
+    public void set_checkpoint () {
+        if (!window.is_fullscreen) return;
+
+        checkpoint = current_slide;
     }
 }
 
