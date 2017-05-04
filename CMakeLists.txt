@@ -21,6 +21,8 @@ set (PKG_DEPS
     gee-0.8
     gtk+-3.0>=3.9.10
     json-glib-1.0
+    gudev-1.0
+    libevdev
 )
 
 set (VALA_DEPS
@@ -28,6 +30,9 @@ set (VALA_DEPS
     gee-0.8
     gtk+-3.0
     json-glib-1.0
+    gudev-1.0
+    libevdev
+    linux
 )
 
 find_package(PkgConfig)
