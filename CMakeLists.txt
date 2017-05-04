@@ -23,7 +23,6 @@ set (PKG_DEPS
     json-glib-1.0
     gudev-1.0
     libevdev
-    linux
 )
 
 set (VALA_DEPS

@@ -8,6 +8,8 @@ Build-Depends: cmake,
                valac (>= 0.26),
                libgranite-dev,
                libjson-glib-dev
+               gudev-1.0-dev
+               libevdev-dev
 
 Standards-Version: 3.9.6
 Package: com.github.philip-scott.spice-up
