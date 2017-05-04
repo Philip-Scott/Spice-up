@@ -197,6 +197,42 @@ public class Spice.Window : Gtk.ApplicationWindow {
         welcome.open_file.connect ((file) => {
             open_file (file);
         });
+
+        this.key_press_event.connect (on_key_pressed);
+    }
+
+    private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
+        // stderr.printf ("Key: %s %u\n", key.str, key.keyval);
+
+        switch (key.keyval) {
+            // Next Slide
+            case 65363: // Right Arrow
+            case 65364: // Down Arrow
+            case 32:    // Spaceeeeeeee
+            case 65293: // Enter
+                next_slide ();
+                return true;
+            // Previous Slide
+            case 65361: //Left Arrow
+            case 65362: // Up Arrow
+            case 65288: // Backspace
+                previous_slide ();
+                return true;
+        }
+
+        return false;
+    }
+
+    private void next_slide () {
+        if (is_fullscreen) {
+            this.slide_manager.next_slide ();
+        }
+    }
+
+    private void previous_slide () {
+        if (is_fullscreen) {
+            this.slide_manager.previous_slide ();
+        }
     }
 
     public void open_file (File file) {
