@@ -19,7 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public const string APP_NAME = "Presentations";
+public const string APP_NAME = "Spice-Up";
 public const string TERMINAL_NAME = "spice-up";
 
 public static int main (string[] args) {
