@@ -42,6 +42,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Gtk.Revealer sidebar_revealer;
     private Gtk.Revealer toolbar_revealer;
     private Gtk.AspectFrame aspect_frame;
+    public Gtk.Overlay app_overlay;
 
     private Gtk.Stack app_stack;
     private Spice.Welcome welcome;
@@ -123,7 +124,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
         Granite.Widgets.Utils.set_theming_for_screen (this.get_screen (), ELEMENTARY_STYLESHEET,
                                                       Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
+        app_overlay = new Gtk.Overlay ();
         app_stack = new Gtk.Stack ();
 
         slide_manager = new Spice.SlideManager ();
@@ -161,7 +162,13 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_stack.add_named (grid, "application");
         app_stack.add_named (welcome, "welcome");
 
-        this.add (app_stack);
+        app_overlay.add (app_stack);
+        var toast = new Granite.Widgets.Toast (_("Controller connected"));
+        toast.set_default_action (_("Configure"));
+        
+        app_overlay.add_overlay (toast);
+
+        this.add (app_overlay);
     }
 
     private void connect_signals (Gtk.Application app) {

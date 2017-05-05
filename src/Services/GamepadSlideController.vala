@@ -45,6 +45,7 @@ public class Spice.GamepadSlideController : Object {
             gamepad.button_event.connect (button_event);
             //gamepad.axis_event.connect ((axis, value) => print (@"$(gamepad.raw_name) - $(axis.to_string ()) - $value\n"));
             gamepad.unplugged.connect (() => print (@"$(gamepad.raw_name) - G Unplugged\n"));
+            //show_controller_toast ();
         });
 
         // Initialize initially plugged in gamepads
@@ -55,7 +56,14 @@ public class Spice.GamepadSlideController : Object {
             gamepad.button_event.connect (button_event);
             //gamepad.axis_event.connect ((axis, value) => print (@"$(gamepad.name) - $(axis.to_string ()) - $value\n"));
             gamepad.unplugged.connect (() => print (@"$(gamepad.raw_name) - G Unplugged\n"));
+            //show_controller_toast ();
         });
+    }
+    
+    Granite.Widgets.Toast toast;
+    private void show_controller_toast () {
+        toast = new Granite.Widgets.Toast (_("Controller connected"));
+        toast.set_default_action (_("Configure"));
     }
 
     private void button_event (int button) {
