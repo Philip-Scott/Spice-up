@@ -189,6 +189,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 sidebar_revealer.reveal_child = !is_fullscreen;
                 toolbar_revealer.reveal_child = !is_fullscreen;
                 slide_manager.checkpoint = null;
+
+                if (slide_manager.current_slide != null) {
+                    slide_manager.current_slide.canvas.unselect_all ();
+                }
             }
 
             return false;
