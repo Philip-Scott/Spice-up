@@ -32,6 +32,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     } default = false;
     }
 
+    private bool notification_shown = false;
     private bool is_full_;
 
     private Spice.Headerbar headerbar;
@@ -39,10 +40,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Spice.SlideList slide_list;
     private Spice.DynamicToolbar toolbar;
 
+    private unowned Granite.Widgets.Toast? toast = null;
+
     private Gtk.Revealer sidebar_revealer;
     private Gtk.Revealer toolbar_revealer;
     private Gtk.AspectFrame aspect_frame;
-    public Gtk.Overlay app_overlay;
+    private Gtk.Overlay app_overlay;
 
     private Gtk.Stack app_stack;
     private Spice.Welcome welcome;
@@ -163,12 +166,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_stack.add_named (welcome, "welcome");
 
         app_overlay.add (app_stack);
-        var toast = new Granite.Widgets.Toast (_("Controller connected"));
-        toast.set_default_action (_("Configure"));
-        
-        app_overlay.add_overlay (toast);
-
         this.add (app_overlay);
+
+        GamepadSlideController.startup (slide_manager, this);
     }
 
     private void connect_signals (Gtk.Application app) {
@@ -196,6 +196,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 sidebar_revealer.reveal_child = !is_fullscreen;
                 toolbar_revealer.reveal_child = !is_fullscreen;
                 slide_manager.checkpoint = null;
+
+                if (toast != null && notification_shown) {
+                    toast.reveal_child = !is_fullscreen;
+                }
             }
 
             return false;
@@ -240,6 +244,24 @@ public class Spice.Window : Gtk.ApplicationWindow {
         if (is_fullscreen) {
             this.slide_manager.previous_slide ();
         }
+    }
+
+    public void add_toast_notification (Granite.Widgets.Toast toast) {
+        if (toast != this.toast) {
+            this.toast = toast;
+            toast.closed.connect (() => {
+                notification_shown = false;
+            });
+
+            toast.default_action.connect (() => {
+                notification_shown = false;
+            });
+
+            app_overlay.add_overlay (toast);
+        }
+
+        notification_shown = true;
+        toast.send_notification ();
     }
 
     public void open_file (File file) {
