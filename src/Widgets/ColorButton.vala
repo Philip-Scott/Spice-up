@@ -120,8 +120,8 @@ public class Spice.ColorPicker : ColorButton {
         gradient_type.halign = Gtk.Align.END;
         gradient_type.valign = Gtk.Align.END;
 
-        gradient_type.add_entry ("to bottom", "Vertical");
-        gradient_type.add_entry ("to right", "Horizontal");
+        gradient_type.add_entry ("to bottom", _("Vertical"));
+        gradient_type.add_entry ("to right", _("Horizontal"));
         //gradient_type.add_entry ("radial", "Radial"); TODO: Gtk doesn't support radial gradients just yet
         gradient_type.text = "to bottom";
 

@@ -23,7 +23,7 @@ public class Spice.Welcome : Granite.Widgets.Welcome {
     public signal void open_file (File file);
 
     public Welcome () {
-        base ("Spice up", "Make a Simple Presentation");
+        base ("Spice up", _("Make a Simple Presentation"));
         append ("document-new", _("New Presentation"), _("Create a new presentation"));
         append ("folder-open", _("Open File"), _("Open a saved presentation"));
 

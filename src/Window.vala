@@ -200,6 +200,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 if (toast != null && notification_shown) {
                     toast.reveal_child = !is_fullscreen;
                 }
+                
+                if (slide_manager.current_slide != null) {
+                    slide_manager.current_slide.canvas.unselect_all ();
+                }
             }
 
             return false;
@@ -221,29 +225,33 @@ public class Spice.Window : Gtk.ApplicationWindow {
             case 65364: // Down Arrow
             case 32:    // Spaceeeeeeee
             case 65293: // Enter
-                next_slide ();
-                return true;
+                return next_slide ();
             // Previous Slide
             case 65361: //Left Arrow
             case 65362: // Up Arrow
             case 65288: // Backspace
-                previous_slide ();
-                return true;
+                return previous_slide ();
         }
 
         return false;
     }
 
-    private void next_slide () {
+    private bool next_slide () {
         if (is_fullscreen) {
             this.slide_manager.next_slide ();
+            return true;
         }
+
+        return false;
     }
 
-    private void previous_slide () {
+    private bool previous_slide () {
         if (is_fullscreen) {
             this.slide_manager.previous_slide ();
+            return true;
         }
+
+        return false;
     }
 
     public void add_toast_notification (Granite.Widgets.Toast toast) {
