@@ -147,11 +147,15 @@ public class Spice.GamepadSlideController : Object {
             resizable = false;
             modal = true;
 
+            var label = new Gtk.Label (_("Controller Configuration"));
+            label.get_style_context ().add_class ("h4");
+
             this.grid = new Gtk.Grid ();
             grid.orientation = Gtk.Orientation.VERTICAL;
             grid.column_spacing = 12;
             grid.row_spacing = 6;
 
+            grid.attach (label, 0, row++, 1, 1);
             add_row (_("Next Slide:"), &(config.next));
             add_row (_("Previous Slide:"), &(config.back));
             add_row (_("Set Jump:"), &(config.checkpoint));
