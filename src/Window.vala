@@ -258,6 +258,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
             });
 
             app_overlay.add_overlay (toast);
+            app_overlay.show_all ();
         }
 
         notification_shown = true;
