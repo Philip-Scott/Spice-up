@@ -32,6 +32,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     } default = false;
     }
 
+    private bool notification_shown = false;
     private bool is_full_;
 
     private Spice.Headerbar headerbar;
@@ -39,9 +40,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Spice.SlideList slide_list;
     private Spice.DynamicToolbar toolbar;
 
+    private unowned Granite.Widgets.Toast? toast = null;
+
     private Gtk.Revealer sidebar_revealer;
     private Gtk.Revealer toolbar_revealer;
     private Gtk.AspectFrame aspect_frame;
+    private Gtk.Overlay app_overlay;
 
     private Gtk.Stack app_stack;
     private Spice.Welcome welcome;
@@ -123,7 +127,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
         Granite.Widgets.Utils.set_theming_for_screen (this.get_screen (), ELEMENTARY_STYLESHEET,
                                                       Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
+        app_overlay = new Gtk.Overlay ();
         app_stack = new Gtk.Stack ();
 
         slide_manager = new Spice.SlideManager ();
@@ -161,7 +165,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_stack.add_named (grid, "application");
         app_stack.add_named (welcome, "welcome");
 
-        this.add (app_stack);
+        app_overlay.add (app_stack);
+        this.add (app_overlay);
+
+        GamepadSlideController.startup (slide_manager, this);
     }
 
     private void connect_signals (Gtk.Application app) {
@@ -190,6 +197,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 toolbar_revealer.reveal_child = !is_fullscreen;
                 slide_manager.checkpoint = null;
 
+                if (toast != null && notification_shown) {
+                    toast.reveal_child = !is_fullscreen;
+                }
+                
                 if (slide_manager.current_slide != null) {
                     slide_manager.current_slide.canvas.unselect_all ();
                 }
@@ -241,6 +252,25 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
 
         return false;
+    }
+
+    public void add_toast_notification (Granite.Widgets.Toast toast) {
+        if (toast != this.toast) {
+            this.toast = toast;
+            toast.closed.connect (() => {
+                notification_shown = false;
+            });
+
+            toast.default_action.connect (() => {
+                notification_shown = false;
+            });
+
+            app_overlay.add_overlay (toast);
+            app_overlay.show_all ();
+        }
+
+        notification_shown = true;
+        toast.send_notification ();
     }
 
     public void open_file (File file) {

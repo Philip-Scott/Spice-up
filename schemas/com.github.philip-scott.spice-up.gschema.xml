@@ -29,5 +29,10 @@
             <summary>The last opened file</summary>
             <description>The last file you opened is here</description>
         </key>
+        <key name="controler-config" type="s">
+            <default>""</default>
+            <summary>Controler configuration for presentation mode</summary>
+            <description>In JSON format</description>
+        </key>
     </schema>
 </schemalist>

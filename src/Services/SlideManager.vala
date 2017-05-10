@@ -57,20 +57,6 @@ public class Spice.SlideManager : Object {
     public SlideManager () {
         slideshow = new Gtk.Stack ();
         slides = new Gee.ArrayList<Slide> ();
-
-        GamepadSlideController.startup (this);
-
-        /*joycon.output_changed.connect ((text) => {
-            stderr.printf (text);
-
-
-        });
-
-        joycon.done.connect ((i) => {
-            stderr.printf ("Done :(\n");
-        });
-
-        joycon.run ();*/
     }
 
     public void reset () {
