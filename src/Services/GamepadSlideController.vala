@@ -223,11 +223,11 @@ public class Spice.GamepadSlideController : Object {
 
     private class ControlerConfiguration : Object {
         // Defaults to JoyCon's Configuration
-        public int next;
-        public int back;
-        public int checkpoint;
-        public int jump;
-        public int home;
+        public int next = 0;
+        public int back = 2;
+        public int checkpoint = 3;
+        public int jump = 1;
+        public int home = 12;
 
         public ControlerConfiguration () {
             load ();
@@ -272,6 +272,7 @@ public class Spice.GamepadSlideController : Object {
                 home = (int) root.get_int_member ("home");
             } catch (Error e) {
                 warning ("Error loading controler config: %s", e.message);
+                save ();
             }
         }
 
