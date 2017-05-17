@@ -232,7 +232,7 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
     }
 
     public void delete () {
-        var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (this., "item-visible");
+        var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.item_changed (this, "item-visible");
         Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
 
         this.item_visible = false;
