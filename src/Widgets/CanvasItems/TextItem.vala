@@ -123,7 +123,7 @@ public class Spice.TextItem : Spice.CanvasItem {
 
     // Needed to fix GTK glitches
     public void resize_entry () {
-        Timeout.add (100, () => {
+        Timeout.add (300, () => {
             entry.queue_resize_no_redraw ();
             return false;
         });

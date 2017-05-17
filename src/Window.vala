@@ -200,7 +200,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 if (toast != null && notification_shown) {
                     toast.reveal_child = !is_fullscreen;
                 }
-                
+
                 if (slide_manager.current_slide != null) {
                     slide_manager.current_slide.canvas.unselect_all ();
                 }
@@ -231,9 +231,28 @@ public class Spice.Window : Gtk.ApplicationWindow {
             case 65362: // Up Arrow
             case 65288: // Backspace
                 return previous_slide ();
+
+            case 65535: // Delete Key
+                return delete_object (key);
         }
 
         return false;
+    }
+
+    private bool delete_object (Gdk.EventKey key) {
+        if ((key.state & Gdk.ModifierType.CONTROL_MASK) != 0) {
+            var current_item = slide_manager.current_item;
+
+            if (current_item != null) {
+                current_item.delete ();
+            } else {
+                if (slide_manager.current_slide != null) {
+                    slide_manager.current_slide.delete ();
+                }
+            }
+        }
+
+        return true;
     }
 
     private bool next_slide () {

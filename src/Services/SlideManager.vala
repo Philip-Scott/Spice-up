@@ -31,7 +31,16 @@ public class Spice.SlideManager : Object {
     public Gee.ArrayList<Slide> slides {get; private set;}
 
     private Slide? slide_ = null;
+    private Spice.CanvasItem? current_item_ = null;
     private Spice.AspectRatio current_ratio;
+
+    public CanvasItem? current_item {
+        get { return current_item_; }
+        set {
+            current_item_ = value;
+            item_clicked (value);
+        }
+    }
 
     public Slide? current_slide {
         get { return slide_; }
@@ -46,13 +55,12 @@ public class Spice.SlideManager : Object {
 
             if (slides.contains (value)) {
                 slide_ = value;
-                item_clicked (null);
+                current_item = null;
                 slideshow.set_visible_child (value.canvas);
                 current_slide_changed (value);
             }
         }
     }
-
 
     public SlideManager () {
         slideshow = new Gtk.Stack ();
@@ -205,7 +213,7 @@ public class Spice.SlideManager : Object {
         Slide slide = new Slide (save_data);
 
         slide.canvas.item_clicked.connect ((item) => {
-            this.item_clicked (item);
+            current_item = item;
         });
 
         slide.canvas.next_slide.connect (() => {

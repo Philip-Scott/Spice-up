@@ -231,6 +231,13 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         this.holding_id = id;
     }
 
+    public void delete () {
+        var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (this., "item-visible");
+        Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+
+        this.item_visible = false;
+    }
+
     public override bool button_press_event (Gdk.EventButton event) {
         if (holding || window.is_fullscreen) {
             return false;

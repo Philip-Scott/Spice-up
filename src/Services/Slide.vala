@@ -106,4 +106,11 @@ public class Spice.Slide : Object {
 
         return """{%s, "items": [%s], "preview": "%s"}""".printf (canvas.serialise (), data, preview_data);
     }
+
+    public void delete () {
+        var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (this, "visible");
+        Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+
+        this.visible = false;
+    }
 }
