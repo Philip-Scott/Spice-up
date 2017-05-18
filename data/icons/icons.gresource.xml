@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/github/philip-scott/spice-up">
+  <file alias="drag.svg" compressed="true" preprocess="xml-stripblanks">drag.svg</file>
+  <file alias="text.svg" compressed="true" preprocess="xml-stripblanks">text-symbolic.svg</file>
+  <file alias="photo.svg" compressed="true" preprocess="xml-stripblanks">photos-symbolic.svg</file>
+  <file alias="shape.svg" compressed="false" preprocess="">shape-symbolic.svg</file>
+  </gresource>
+</gresources>

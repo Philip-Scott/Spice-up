@@ -59,6 +59,10 @@ OPTIONS
   --vapidir=${CMAKE_SOURCE_DIR}/vapi
 )
 
-add_executable(spice-up ${VALA_C})
+include (GResource)
+glib_compile_resources (GLIB_RESOURCES_ICONS SOURCE ../data/icons/icons.gresource.xml)
+
+
+add_executable(spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS})
 
 install(TARGETS spice-up RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

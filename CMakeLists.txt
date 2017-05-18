@@ -35,6 +35,7 @@ set (VALA_DEPS
     linux
 )
 
+
 find_package(PkgConfig)
 pkg_check_modules (DEPS REQUIRED ${PKG_DEPS})
 

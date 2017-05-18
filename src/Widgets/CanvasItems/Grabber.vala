@@ -42,7 +42,7 @@ public class Spice.Grabber : Gtk.Button {
 
         get_style_context ().remove_class ("button");
 
-        var image = new Gtk.Image.from_icon_name ("user-offline", Gtk.IconSize.MENU);
+        var image = new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/drag.svg");
         this.add (image);
 
         make_visible = false;

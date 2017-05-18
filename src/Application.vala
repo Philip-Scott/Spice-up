@@ -67,6 +67,9 @@ public class Spice.Application : Granite.Application {
 
     public override void activate () {
         if (!running) {
+            weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
+            default_theme.add_resource_path ("/com/github/philip-scott/spice-up");
+
             settings = Spice.Services.Settings.get_instance ();
             window = new Spice.Window (this);
             this.add_window (window);
