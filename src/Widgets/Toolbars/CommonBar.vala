@@ -77,7 +77,7 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         add (delete_button);
     }
 
-    protected override void item_selected (Spice.CanvasItem? item) {
+    protected override void item_selected (Spice.CanvasItem? item, bool new_item = false) {
 
     }
 

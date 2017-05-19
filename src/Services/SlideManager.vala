@@ -29,6 +29,7 @@ public class Spice.SlideManager : Object {
 
     public Gtk.Stack slideshow {get; private set;}
     public Gee.ArrayList<Slide> slides {get; private set;}
+    public bool making_new_slide = false;
 
     private Slide? slide_ = null;
     private Spice.CanvasItem? current_item_ = null;
@@ -242,16 +243,13 @@ public class Spice.SlideManager : Object {
 
         if (type == HeaderButton.TEXT) {
             item = new TextItem (current_slide.canvas);
-            item.load_data ();
             current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.IMAGE) {
             var file = Spice.Services.FileManager.open_image ();
-
             item = new ImageItem.from_file (current_slide.canvas, file);
             item = current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.SHAPE) {
             item = new ColorItem (current_slide.canvas);
-            item.load_data ();
             item = current_slide.canvas.add_item (item);
         }
 

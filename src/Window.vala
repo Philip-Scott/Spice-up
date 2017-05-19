@@ -176,7 +176,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
             var item = slide_manager.request_new_item (button);
 
             if (item != null) {
-                toolbar.item_selected (item);
+                toolbar.item_selected (item, true);
             }
         });
 

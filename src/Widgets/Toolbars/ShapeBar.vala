@@ -36,7 +36,12 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
         add (background_color_button);
     }
 
-    protected override void item_selected (Spice.CanvasItem? item) {
+    protected override void item_selected (Spice.CanvasItem? item, bool new_item = false) {
+        if (new_item) {
+            update_properties ();
+            return;
+        }
+
         background_color_button.color = ((ColorItem) item).background_color;
     }
 

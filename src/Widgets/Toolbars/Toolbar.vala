@@ -20,6 +20,7 @@
 */
 
 public abstract class Spice.Widgets.Toolbar : Gtk.Box {
+    protected bool init = false;
     protected bool selecting = false;
     protected Spice.CanvasItem? item;
 
@@ -29,14 +30,15 @@ public abstract class Spice.Widgets.Toolbar : Gtk.Box {
         border_width = 6;
     }
 
-    public void select_item (Spice.CanvasItem? item_) {
+    public void select_item (Spice.CanvasItem? item_, bool new_item = false) {
         selecting = true;
         item = item_;
-        item_selected (item_);
+        item_selected (item_, new_item && init);
         selecting = false;
+        init = true;
     }
 
-    protected abstract void item_selected (Spice.CanvasItem? item);
+    protected abstract void item_selected (Spice.CanvasItem? item, bool new_item = false);
 
     public abstract void update_properties ();
 }

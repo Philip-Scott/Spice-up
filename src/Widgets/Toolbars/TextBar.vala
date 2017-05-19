@@ -123,7 +123,12 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
 
     }
 
-    protected override void item_selected (Spice.CanvasItem? item) {
+    protected override void item_selected (Spice.CanvasItem? item, bool new_item = false) {
+        if (new_item) {
+            update_properties ();
+            return;
+        }
+
         font_button.text = ((TextItem) item).font;
         font_size.text = ((TextItem) item).font_size.to_string ();
 

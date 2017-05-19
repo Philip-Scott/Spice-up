@@ -64,21 +64,21 @@ public class Spice.DynamicToolbar : Gtk.Box {
         });
     }
 
-    public void item_selected (Spice.CanvasItem? item) {
+    public void item_selected (Spice.CanvasItem? item, bool new_item = false) {
         if (item == null) {
             stack.set_visible_child_name (CANVAS);
-            canvas_bar.select_item (item);
+            canvas_bar.select_item (item, manager.making_new_slide);
         } else if (item is TextItem) {
             stack.set_visible_child_name (TEXT);
-            text_bar.select_item (item);
+            text_bar.select_item (item, new_item);
         } else if (item is ColorItem) {
             stack.set_visible_child_name (SHAPE);
-            shape_bar.select_item (item);
+            shape_bar.select_item (item, new_item);
         } else if (item is ImageItem) {
             stack.set_visible_child_name (IMAGE);
-            image_bar.select_item (item);
+            image_bar.select_item (item, new_item);
         }
 
-        common_bar.select_item (item);
+        common_bar.select_item (item, new_item);
     }
 }

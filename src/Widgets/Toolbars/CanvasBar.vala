@@ -70,7 +70,12 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         add (canvas_pattern);
     }
 
-    protected override void item_selected (Spice.CanvasItem? item) {
+    protected override void item_selected (Spice.CanvasItem? item, bool new_item = false) {
+        if (new_item) {
+            update_properties ();
+            return;
+        }
+
         canvas_gradient_background.color = manager.current_slide.canvas.background_color;
         canvas_pattern.text = manager.current_slide.canvas.background_pattern;
     }

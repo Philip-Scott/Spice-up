@@ -70,7 +70,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
                 }
             }
         });
-        
+
         manager.reseted.connect (() => {
             foreach (var row in slides_list.get_children ()) {
                 row.destroy ();
@@ -97,7 +97,9 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
             Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
             slide.visible = true;
 
+            manager.making_new_slide = true;
             manager.current_slide = slide;
+            manager.making_new_slide = false;
         });
 
         foreach (var slide in manager.slides) {
