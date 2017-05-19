@@ -225,7 +225,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
-        // stderr.printf ("Key: %s %u\n", key.str, key.keyval);
+        debug ("Key: %s %u", key.str, key.keyval);
 
         switch (key.keyval) {
             // Next Slide
@@ -235,12 +235,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
             case 65293: // Enter
                 return next_slide ();
             // Previous Slide
-            case 65361: //Left Arrow
+            case 65361: // Left Arrow
             case 65362: // Up Arrow
-            case 65288: // Backspace
                 return previous_slide ();
 
             case 65535: // Delete Key
+            case 65288: // Backspace
                 return delete_object (key);
         }
 
