@@ -129,8 +129,8 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         button.get_style_context ().add_class ("slide");
         button.get_style_context ().add_class ("new");
         button.add (plus_icon);
-        button.set_size_request (WIDTH - 24, HEIGHT - 24);
-        button.margin = 6;
+        button.set_size_request (WIDTH, HEIGHT);
+        button.margin = 9;
 
         return button;
     }
@@ -140,11 +140,15 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
 
         public SlideListRow (Slide slide) {
             this.slide = slide;
-            this.add (slide.preview);
+            var image = slide.preview;
 
-            margin = 6;
-            margin_top = 3;
-            margin_bottom = 3;
+            this.add (image);
+
+            image.get_style_context ().add_class ("view");
+            image.get_style_context ().add_class ("canvas");
+            image.get_style_context ().add_class ("preview");
+            image.margin = 9;
+
 
             set_size_request (SlideList.WIDTH - 24, SlideList.HEIGHT - 24);
 

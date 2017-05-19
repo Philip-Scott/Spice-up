@@ -54,15 +54,18 @@ public class Spice.Window : Gtk.ApplicationWindow {
     @define-color colorPrimary #2C2D2E;
     .slide-list {
         background-color: #2A2B2C;
+        border-right: solid 1px rgba(0,0,0,0.75)
     }
 
-    .new {
+    .list-row:selected {
+        box-shadow: inset 0px 24px 10px -6px rgba(0,0,0, 0.53);
+        background-color: #222324;
+    }
+
+    .new.slide {
         background-color: #363738;
-    }
-
-    .slide {
+        border-radius: 4px;
         border-color: black;
-        border-radius: 0;
     }
 
     .canvas {
@@ -99,8 +102,13 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     .view.canvas {
         border-width: 1px;
-        border-style: outset;
+        border-style: solid;
         border-color: rgba(0,0,0,0.75);
+    }
+
+    .view.canvas.preview {
+        border-color: black;
+        border-radius: 4px;
     }
 
     GtkTextView {
@@ -108,8 +116,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     GtkTextView:selected {
-        background-color: black;
-	    color: white;
+        background-color: rgba(0,0,0,0.75);
+        color: white;
     }
     ";
 
