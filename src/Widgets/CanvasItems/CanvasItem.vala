@@ -20,6 +20,8 @@
 */
 
 public abstract class  Spice.CanvasItem : Gtk.EventBox {
+    private const int MIN_SIZE = 40;
+
     public signal void clicked ();
     protected signal void un_select ();
 
@@ -287,24 +289,24 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
             switch (holding_id) {
                 case 0:
                     Utils.set_cursor (Gdk.CursorType.FLEUR);
-                    delta_x = x;
-                    delta_y = y;
+                    delta_x = fix_position (x, real_width, start_w);
+                    delta_y = fix_position (y, real_height, start_h);
                     break;
                 case 1:
                     Utils.set_cursor (Gdk.CursorType.TOP_LEFT_CORNER);
-                    delta_x = x;
-                    delta_y = y;
+                    delta_x = fix_position (x, real_width, start_w);
+                    delta_y = fix_position (y, real_height, start_h);
                     real_height = fix_size ((int)(start_h - 1/canvas.current_ratio * y));
                     real_width = fix_size ((int)(start_w - 1/canvas.current_ratio * x));
                     break;
                 case 2:
                     Utils.set_cursor (Gdk.CursorType.TOP_SIDE);
-                    delta_y = y;
+                    delta_y = fix_position (y, real_height, start_h);
                     real_height = fix_size ((int)(start_h - 1/canvas.current_ratio * y));
                     break;
                 case 3:
                     Utils.set_cursor (Gdk.CursorType.TOP_RIGHT_CORNER);
-                    delta_y = y;
+                    delta_y = fix_position (y, real_height, start_h);
                     real_height = fix_size ((int)(start_h - 1/canvas.current_ratio * y));
                     real_width = fix_size ((int)(start_w + 1/canvas.current_ratio * x));
                     break;
@@ -325,12 +327,12 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
                     Utils.set_cursor (Gdk.CursorType.BOTTOM_LEFT_CORNER);
                     real_height = fix_size ((int)(start_h + 1/canvas.current_ratio * y));
                     real_width = fix_size ((int)(start_w - 1/canvas.current_ratio * x));
-                    delta_x = x;
+                    delta_x = fix_position (x, real_width, start_w);;
                     break;
                 case 8:
                     Utils.set_cursor (Gdk.CursorType.LEFT_SIDE);
-                    real_width = fix_size ((int)(start_w - 1/canvas.current_ratio * x));
-                    delta_x = x;
+                    real_width = fix_size ((int) (start_w - 1/canvas.current_ratio * x));
+                    delta_x = fix_position (x, real_width, start_w);
                     break;
             }
 
@@ -340,7 +342,16 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
         return false;
     }
 
+    private int fix_position (int delta, int length, int initial_length) {
+        var max_delta = (initial_length - MIN_SIZE) * canvas.current_ratio;
+        if (delta < max_delta) {
+            return delta;
+        } else {
+            return (int) max_delta;
+        }
+    }
+
     private int fix_size (int size) {
-        return size > 30 ? size : 30;
+        return size > MIN_SIZE ? size : MIN_SIZE;
     }
 }

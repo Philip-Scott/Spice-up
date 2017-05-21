@@ -57,7 +57,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         border-right: solid 1px rgba(0,0,0,0.75)
     }
 
-    .list-row:selected {
+    .slide-list .list-row:selected {
         box-shadow: inset 0px 24px 10px -6px rgba(0,0,0, 0.53);
         background-color: #222324;
     }
