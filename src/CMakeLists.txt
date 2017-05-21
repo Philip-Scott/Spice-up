@@ -63,6 +63,6 @@ include (GResource)
 glib_compile_resources (GLIB_RESOURCES_ICONS SOURCE ../data/icons/icons.gresource.xml)
 
 
-add_executable(spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS})
+add_executable(com.github.philip-scott.spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS})
 
-install(TARGETS spice-up RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+install(TARGETS com.github.philip-scott.spice-up RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

@@ -1,4 +1,4 @@
-project(spice-up)
+project(com.github.philip-scott.spice-up)
 cmake_minimum_required(VERSION 2.6)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
