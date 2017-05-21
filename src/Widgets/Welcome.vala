@@ -29,7 +29,7 @@ public class Spice.Welcome : Granite.Widgets.Welcome {
 
         if (settings.last_file != "") {
             var file = File.new_for_path (settings.last_file);
-            append ("x-office-presentation", _("Open Last File"), file.get_basename ());
+            append ("x-office-presentation", _("Open Last File"), file.get_basename ().replace (Spice.Services.FileManager.FILE_EXTENSION, ""));
         }
 
         this.activated.connect ((index) => {

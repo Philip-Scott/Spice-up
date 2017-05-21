@@ -20,6 +20,8 @@
 */
 
 public class Spice.Services.FileManager {
+    public const string FILE_EXTENSION = ".spice";
+
     public static File? current_file = null;
 
     private static File? get_file_from_user (string title, string accept_button_label, Gtk.FileChooserAction chooser_action, List<Gtk.FileFilter> filters) {
@@ -44,6 +46,10 @@ public class Spice.Services.FileManager {
 
         if (dialog.run () == Gtk.ResponseType.ACCEPT) {
             result = dialog.get_file ();
+            var path = result.get_path ();
+            if (!path.has_suffix (FILE_EXTENSION)) {
+                result = File.new_for_path (path + FILE_EXTENSION);
+            }
         }
 
         dialog.close ();
