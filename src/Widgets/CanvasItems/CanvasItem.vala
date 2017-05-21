@@ -19,7 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public abstract class  Spice.CanvasItem : Gtk.EventBox {
+public abstract class Spice.CanvasItem : Gtk.EventBox {
     private const int MIN_SIZE = 40;
 
     public signal void clicked ();
@@ -289,8 +289,8 @@ public abstract class  Spice.CanvasItem : Gtk.EventBox {
             switch (holding_id) {
                 case 0:
                     Utils.set_cursor (Gdk.CursorType.FLEUR);
-                    delta_x = fix_position (x, real_width, start_w);
-                    delta_y = fix_position (y, real_height, start_h);
+                    delta_x = x;
+                    delta_y = y;
                     break;
                 case 1:
                     Utils.set_cursor (Gdk.CursorType.TOP_LEFT_CORNER);
