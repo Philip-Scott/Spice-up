@@ -21,6 +21,9 @@
 
 public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
     private SlideManager manager;
+    private Gtk.Button to_top;
+    private Gtk.Button to_bottom;
+    private Gtk.Button delete_button;
 
     public CommonToolbar (SlideManager slide_manager) {
         this.manager = slide_manager;
@@ -30,7 +33,7 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         hexpand = true;
         halign = Gtk.Align.END;
 
-        var delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.MENU);
+        delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.MENU);
         delete_button.set_tooltip_text (_("Delete"));
         delete_button.get_style_context ().add_class ("spice");
 
@@ -44,13 +47,13 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
             item_selected (null);
         });
 
-        var to_top = new Gtk.Button.from_icon_name ("go-up-symbolic", Gtk.IconSize.MENU);
+        to_top = new Gtk.Button.from_icon_name ("go-up-symbolic", Gtk.IconSize.MENU);
         to_top.get_style_context ().add_class ("spice");
-        to_top.set_tooltip_text (_("Move up"));
+        to_top.set_tooltip_text (_("Bring forward"));
 
-        var to_bottom = new Gtk.Button.from_icon_name ("go-down-symbolic", Gtk.IconSize.MENU);
+        to_bottom = new Gtk.Button.from_icon_name ("go-down-symbolic", Gtk.IconSize.MENU);
         to_bottom.get_style_context ().add_class ("spice");
-        to_bottom.set_tooltip_text (_("Move down"));
+        to_bottom.set_tooltip_text (_("Send backward"));
 
         var position_grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         position_grid.get_style_context ().add_class ("linked");
