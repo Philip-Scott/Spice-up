@@ -26,9 +26,9 @@ Liked Spice-up? Would like to support its development of this app and more? Feel
 
 
 ## Installation
-If you are using elementary OS **Loki**, in order to add a PPA you might need to first run
+If you are using **elementary OS Loki**, Spice-Up is <a href="appstream://com.github.philip-scott.spice-up">available directly from AppCenter</a>
 
-	sudo apt-get install software-properties-common
+
 
 PPA: philip.scott/spice-up-daily
 
