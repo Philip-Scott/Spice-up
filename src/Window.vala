@@ -258,9 +258,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
                     slide_manager.current_slide.delete ();
                 }
             }
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private bool next_slide () {
