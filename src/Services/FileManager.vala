@@ -46,10 +46,6 @@ public class Spice.Services.FileManager {
 
         if (dialog.run () == Gtk.ResponseType.ACCEPT) {
             result = dialog.get_file ();
-            var path = result.get_path ();
-            if (!path.has_suffix (FILE_EXTENSION)) {
-                result = File.new_for_path (path + FILE_EXTENSION);
-            }
         }
 
         dialog.close ();
@@ -97,6 +93,11 @@ public class Spice.Services.FileManager {
         filters.append (filter);
 
         result = get_file_from_user (_("Save file"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
+
+        var path = result.get_path ();
+        if (!path.has_suffix (FILE_EXTENSION)) {
+            result = File.new_for_path (path + FILE_EXTENSION);
+        }
 
         if (result != null) {
             settings.last_file = result.get_path ();
