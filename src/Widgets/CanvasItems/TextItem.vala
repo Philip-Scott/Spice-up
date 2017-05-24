@@ -21,6 +21,8 @@
 
 public class Spice.TextItem : Spice.CanvasItem {
     private Gtk.TextView entry;
+    private Gtk.Label label;
+    private Gtk.Stack stack;
 
     public int justification {get; set; default = 1; }
     public int font_size {get; set; default = 16; }
@@ -34,10 +36,12 @@ public class Spice.TextItem : Spice.CanvasItem {
             return entry.buffer.text;
         } set {
             setting_text = true;
+            entry.buffer.text = value;
+
             if (value == "") {
-                entry.buffer.text = _("Click to add text...");
+                label.label = _("Click to add text...");
             } else {
-                entry.buffer.text = value;
+                label.label = value;
             }
 
             setting_text = false;
@@ -75,7 +79,6 @@ public class Spice.TextItem : Spice.CanvasItem {
         this.save_data = save_data;
 
         entry = new Gtk.TextView ();
-        entry.buffer.text = (_("Click to add text..."));
         entry.justification = Gtk.Justification.CENTER;
         entry.set_wrap_mode (Gtk.WrapMode.WORD);
         entry.valign = Gtk.Align.CENTER;
@@ -83,13 +86,32 @@ public class Spice.TextItem : Spice.CanvasItem {
         entry.can_focus = true;
         entry.expand = true;
 
-        grid.attach (entry, 0, 0, 3, 2);
+        label = new Gtk.Label (_("Click to add text..."));
+        label.expand = true;
+        label.wrap = true;
+
+        stack = new Gtk.Stack ();
+        stack.homogeneous = false;
+
+        stack.add_named (label, "label");
+        stack.add_named (entry, "entry");
+        stack.set_visible_child_name ("label");
+        stack.expand = true;
+
+        grid.attach (stack, 0, 0, 1, 1);
 
         this.clicked.connect (() => {
             if (!editing) {
                 if (entry.buffer.text == _("Click to add text...")) {
                     entry.buffer.text = "";
                 }
+
+                stack.set_visible_child_name ("entry");
+
+                Timeout.add (50, () => {
+                    entry.queue_resize_no_redraw ();
+                    return false;
+                });
 
                 editing = true;
             }
@@ -98,9 +120,10 @@ public class Spice.TextItem : Spice.CanvasItem {
         un_select.connect (() => {
             editing = false;
             entry.select_all (false);
-            if (entry.buffer.text == "") {
-                entry.buffer.text = _("Click to add text...");
-            }
+
+            text = entry.buffer.text;
+
+            stack.set_visible_child_name ("label");
         });
 
         canvas.ratio_changed.connect ((ratio) => {
@@ -123,10 +146,7 @@ public class Spice.TextItem : Spice.CanvasItem {
 
     // Needed to fix GTK glitches
     public void resize_entry () {
-        Timeout.add (300, () => {
-            entry.queue_resize_no_redraw ();
-            return false;
-        });
+        entry.queue_resize_no_redraw ();
     }
 
     protected override void load_item_data () {
@@ -165,15 +185,27 @@ public class Spice.TextItem : Spice.CanvasItem {
         switch (justification) {
             case 0:
                 entry.justification = Gtk.Justification.LEFT;
+                label.justify = Gtk.Justification.LEFT;
+                label.halign = Gtk.Align.START;
+                label.xalign = 0.0f;
                 break;
             case 1:
                 entry.justification = Gtk.Justification.CENTER;
+                label.justify = Gtk.Justification.CENTER;
+                label.halign = Gtk.Align.CENTER;
+                label.xalign = 0.5f;
                 break;
             case 2:
                 entry.justification = Gtk.Justification.RIGHT;
+                label.justify = Gtk.Justification.RIGHT;
+                label.halign = Gtk.Align.END;
+                label.xalign = 1.0f;
                 break;
             case 3:
                 entry.justification = Gtk.Justification.FILL;
+                label.justify = Gtk.Justification.FILL;
+                label.halign = Gtk.Align.FILL;
+                label.xalign = 0.5f;
                 break;
         }
 

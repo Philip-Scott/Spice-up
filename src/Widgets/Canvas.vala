@@ -28,7 +28,22 @@ public class Spice.Canvas : Gtk.Overlay {
     public signal void previous_slide ();
 
     public signal void configuration_changed ();
-    public double current_ratio = 1.0f;
+
+    private double _current_ratio;
+    public double current_ratio {
+        get {
+            return _current_ratio;
+        }
+
+        set {
+            if (value != _current_ratio) {
+                _current_ratio = value;
+                ratio_changed (current_ratio);
+            }
+        }
+
+        default = 1.0f;
+    }
 
     public int current_allocated_width = 0;
     public int current_allocated_height = 0;
@@ -104,8 +119,6 @@ public class Spice.Canvas : Gtk.Overlay {
         current_ratio = double.min ((double)(get_allocated_width () -24) / (double) added_width, (double)(get_allocated_height ()-24) / (double) added_height);
         default_x_margin = (int) ((get_allocated_width () - max_width*current_ratio)/2);
         default_y_margin = (int) ((get_allocated_height () - max_height*current_ratio)/2);
-
-        ratio_changed (current_ratio);
     }
 
     public CanvasItem add_item (CanvasItem item, bool loading = false) {
@@ -168,12 +181,12 @@ public class Spice.Canvas : Gtk.Overlay {
             if (item == item_) break;
             index++;
         }
-        
+
         if (add_undo_action) {
             var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.depth_changed (item_, this, true);
             Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
         }
-        
+
         reorder_overlay (item_, index + 1);
     }
 
@@ -187,7 +200,7 @@ public class Spice.Canvas : Gtk.Overlay {
         if (index - 2 > -1) {
             reorder_overlay (item_, index - 2);
         }
-        
+
         if (add_undo_action) {
             var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.depth_changed (item_, this, false);
             Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);

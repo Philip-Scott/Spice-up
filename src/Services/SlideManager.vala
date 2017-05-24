@@ -64,8 +64,9 @@ public class Spice.SlideManager : Object {
     }
 
     public SlideManager () {
-        slideshow = new Gtk.Stack ();
         slides = new Gee.ArrayList<Slide> ();
+        slideshow = new Gtk.Stack ();
+        slideshow.homogeneous = false;
     }
 
     public void reset () {
@@ -210,6 +211,7 @@ public class Spice.SlideManager : Object {
         return previous_slide;
     }
 
+    private bool propagating_ratio = false;
     public Slide new_slide (Json.Object? save_data = null) {
         Slide slide = new Slide (save_data);
 
@@ -223,6 +225,25 @@ public class Spice.SlideManager : Object {
 
         slide.canvas.previous_slide.connect (() => {
             previous_slide ();
+        });
+
+        slide.canvas.ratio_changed.connect ((new_ratio) => {
+            if (this.propagating_ratio) return;
+            this.propagating_ratio = true;
+
+            foreach (var s in slides) {
+                if (s.visible) {
+                    s.canvas.current_ratio = new_ratio;
+                    var w = slide.canvas.get_allocated_width ();
+                    var h = slide.canvas.get_allocated_height ();
+
+                    // Force size
+                    s.canvas.set_size_request (w, h);
+                    s.canvas.set_size_request (500, 380);
+                }
+            }
+
+            this.propagating_ratio = false;
         });
 
         slides.add (slide);
