@@ -312,7 +312,12 @@ public class Spice.Canvas : Gtk.Overlay {
 
         public new void style (string pattern) {
             if (pattern != "") {
-                Utils.set_style (grid, PATTERN_CSS.printf (pattern));
+                var file = File.new_for_path (pattern);
+                if (file.query_exists ()) {
+                    Utils.set_style (grid, PATTERN_CSS.printf (pattern));
+                } else {
+                    Utils.set_style (grid, NO_PATTERN_CSS);
+                }
             } else {
                 Utils.set_style (grid, NO_PATTERN_CSS);
             }

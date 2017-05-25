@@ -20,6 +20,8 @@
 */
 
 public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
+    private const string PATTERNS_DIR = "/usr/share/com.github.philip-scott.spice-up/assets/patterns/";
+
     private Spice.ColorPicker canvas_gradient_background;
     private Spice.EntryCombo canvas_pattern;
     private SlideManager manager;
@@ -42,22 +44,22 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         canvas_pattern.set_tooltip_text (_("Background pattern"));
         canvas_pattern.editable = false;
 
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/3px-tile.png", _("3px tile"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/45-degree-fabric-dark.png", _("Fabric dark"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/45-degree-fabric-light.png", _("Fabric light"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/beige-paper.png", _("Beige paper"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/black-linen.png", _("Black linen"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/bright-squares.png", _("Bright squares"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/flowers.png", _("Flowers"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/hexellence.png", _("Hexellence"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/gplay.png", _("Gplay"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/inspiration-geometry.png", _("Geometry"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/dark-geometric.png", _("Dark geometric"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/light-wool.png", _("Light wool"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/silver-scales.png", _("Silver scales"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/subtle-freckles.png", _("Subtle grid"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/subtle-grey.png", _("Subtle squares"));
-        canvas_pattern.add_entry ("/usr/share/spice-up/assets/patterns/xv.png", _("XV"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "3px-tile.png", _("3px tile"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "45-degree-fabric-dark.png", _("Fabric dark"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "45-degree-fabric-light.png", _("Fabric light"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "beige-paper.png", _("Beige paper"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "black-linen.png", _("Black linen"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "bright-squares.png", _("Bright squares"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "flowers.png", _("Flowers"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "hexellence.png", _("Hexellence"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "gplay.png", _("Gplay"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "inspiration-geometry.png", _("Geometry"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "dark-geometric.png", _("Dark geometric"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "light-wool.png", _("Light wool"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "silver-scales.png", _("Silver scales"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "subtle-freckles.png", _("Subtle grid"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "subtle-grey.png", _("Subtle squares"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "xv.png", _("XV"));
         canvas_pattern.add_entry ("", _(" None"));
 
         canvas_pattern.activated.connect (() => {
@@ -67,7 +69,10 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         });
 
         add (canvas_gradient_background);
-        add (canvas_pattern);
+
+        if (File.new_for_path (PATTERNS_DIR).query_exists ()) {
+            add (canvas_pattern);
+        }
     }
 
     protected override void item_selected (Spice.CanvasItem? item, bool new_item = false) {

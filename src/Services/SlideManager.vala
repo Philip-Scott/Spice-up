@@ -267,8 +267,10 @@ public class Spice.SlideManager : Object {
             current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.IMAGE) {
             var file = Spice.Services.FileManager.open_image ();
-            item = new ImageItem.from_file (current_slide.canvas, file);
-            item = current_slide.canvas.add_item (item);
+            if (file != null && file.query_exists ()) {
+                item = new ImageItem.from_file (current_slide.canvas, file);
+                item = current_slide.canvas.add_item (item);
+            }
         } else if (type == HeaderButton.SHAPE) {
             item = new ColorItem (current_slide.canvas);
             item = current_slide.canvas.add_item (item);
