@@ -108,11 +108,17 @@ public class Spice.TextItem : Spice.CanvasItem {
 
                 stack.set_visible_child_name ("entry");
 
-                Timeout.add (50, () => {
-                    entry.queue_resize_no_redraw ();
+                var w = label.get_allocated_width ();
+                var h = label.get_allocated_height ();
+
+                entry.set_size_request (w, h);
+
+                Timeout.add (80, () => {
+                    entry.set_size_request (0, 0);
                     return false;
                 });
 
+                entry.queue_resize ();
                 editing = true;
             }
         });
@@ -205,7 +211,7 @@ public class Spice.TextItem : Spice.CanvasItem {
                 entry.justification = Gtk.Justification.FILL;
                 label.justify = Gtk.Justification.FILL;
                 label.halign = Gtk.Align.FILL;
-                label.xalign = 0.5f;
+                label.xalign = 0.0f;
                 break;
         }
 

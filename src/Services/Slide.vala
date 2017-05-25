@@ -49,7 +49,7 @@ public class Spice.Slide : Object {
 
         load_data (save_data);
 
-        canvas.item_clicked.connect ((item) => {reload_preview_data ();});
+        canvas.request_draw_preview.connect (reload_preview_data);
     }
 
     public void load_data (Json.Object? save_data) {

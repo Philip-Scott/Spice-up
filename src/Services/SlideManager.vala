@@ -50,7 +50,7 @@ public class Spice.SlideManager : Object {
                 slide_.canvas.unselect_all ();
             }
 
-            if (!window.is_fullscreen) {
+            if (!window.is_fullscreen && current_slide != null) {
                 current_slide.reload_preview_data ();
             }
 

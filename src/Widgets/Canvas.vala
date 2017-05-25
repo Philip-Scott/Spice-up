@@ -20,14 +20,13 @@
 */
 
 public class Spice.Canvas : Gtk.Overlay {
+    public signal void request_draw_preview ();
     public static bool drawing_preview = false;
 
     public signal void item_clicked (CanvasItem? item);
     public signal void ratio_changed (double ratio);
     public signal void next_slide ();
     public signal void previous_slide ();
-
-    public signal void configuration_changed ();
 
     private double _current_ratio;
     public double current_ratio {
@@ -98,10 +97,6 @@ public class Spice.Canvas : Gtk.Overlay {
         return false;
     }
 
-    private void check_configuration_changed () {
-        configuration_changed ();
-    }
-
     private void calculate_ratio () {
         int added_width = 0;
         int added_height = 0;
@@ -134,6 +129,7 @@ public class Spice.Canvas : Gtk.Overlay {
         canvas_item.clicked.connect (() => {
             unselect_all ();
             item_clicked (canvas_item);
+            request_draw_preview ();
         });
 
         canvas_item.move_item.connect ((delta_x, delta_y) => {
@@ -142,6 +138,7 @@ public class Spice.Canvas : Gtk.Overlay {
             var r = canvas_item.rectangle;
             canvas_item.rectangle = { (int)(delta_x / current_ratio) + r.x, (int)(delta_y / current_ratio) + r.y, r.width, r.height };
             canvas_item.queue_resize_no_redraw ();
+            request_draw_preview ();
         });
 
         if (!loading) {
@@ -161,7 +158,7 @@ public class Spice.Canvas : Gtk.Overlay {
             }
         }
 
-        configuration_changed ();
+        request_draw_preview ();
     }
 
     public void clear_all () {
@@ -171,8 +168,6 @@ public class Spice.Canvas : Gtk.Overlay {
                 ((CanvasItem) item).destroy ();
             }
         }
-
-        configuration_changed ();
     }
 
     public void move_up (CanvasItem item_, bool add_undo_action = true) {
@@ -258,7 +253,7 @@ public class Spice.Canvas : Gtk.Overlay {
         Utils.set_style (grid, CANVAS_CSS.printf (background_color));
 
         grid.style (background_pattern);
-        configuration_changed ();
+        request_draw_preview ();
     }
 
     public Granite.Drawing.BufferSurface? surface = null;
