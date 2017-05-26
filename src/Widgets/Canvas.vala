@@ -307,8 +307,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
         public new void style (string pattern) {
             if (pattern != "") {
-                var file = File.new_for_path (pattern);
-                if (file.query_exists ()) {
+                if (pattern.contains (Widgets.CanvasToolbar.PATTERNS_DIR) || File.new_for_path (pattern).query_exists ()) {
                     Utils.set_style (grid, PATTERN_CSS.printf (pattern));
                 } else {
                     Utils.set_style (grid, NO_PATTERN_CSS);

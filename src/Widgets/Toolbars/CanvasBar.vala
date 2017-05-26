@@ -20,7 +20,7 @@
 */
 
 public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
-    private const string PATTERNS_DIR = "/usr/share/com.github.philip-scott.spice-up/assets/patterns/";
+    public const string PATTERNS_DIR = "resource:///com/github/philip-scott/spice-up/patterns/";
 
     private Spice.ColorPicker canvas_gradient_background;
     private Spice.EntryCombo canvas_pattern;
@@ -69,10 +69,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         });
 
         add (canvas_gradient_background);
-
-        if (File.new_for_path (PATTERNS_DIR).query_exists ()) {
-            add (canvas_pattern);
-        }
+        add (canvas_pattern);
     }
 
     protected override void item_selected (Spice.CanvasItem? item, bool new_item = false) {

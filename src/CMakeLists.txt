@@ -60,7 +60,7 @@ OPTIONS
 )
 
 include (gresource)
-glib_compile_resources(GLIB_RESOURCES_ICONS SOURCE ../data/icons/icons.gresource.xml)
+glib_compile_resources(GLIB_RESOURCES_ICONS SOURCE ../data/assets.gresource.xml)
 
 
 add_executable(com.github.philip-scott.spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS})
