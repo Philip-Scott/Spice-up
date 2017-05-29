@@ -131,15 +131,20 @@ public class Spice.Services.FileManager {
 
     public static string open_file () {
         if (current_file != null && current_file.query_exists ()) {
-            try {
-                var dis = new DataInputStream (current_file.read ());
-                size_t size;
-                return dis.read_upto ("\0", -1, out size);
-            } catch (Error e) {
-                warning ("Error loading file: %s", e.message);
-            }
+            return get_contents (current_file);
         }
 
+        return "";
+    }
+
+    public static string get_contents (File file) {
+        try {
+            var dis = new DataInputStream (file.read ());
+            size_t size;
+            return dis.read_upto ("\0", -1, out size);
+        } catch (Error e) {
+            warning ("Error loading file: %s", e.message);
+        }
         return "";
     }
 

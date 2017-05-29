@@ -34,6 +34,7 @@ public class Spice.Application : Granite.Application {
 
     construct {
         flags |= ApplicationFlags.HANDLES_OPEN;
+        flags |= ApplicationFlags.HANDLES_COMMAND_LINE;
 
         application_id = "com.github.philip-scott.spice-up";
         program_name = PROGRAM_NAME;
@@ -79,4 +80,57 @@ public class Spice.Application : Granite.Application {
 
         window.show_app ();
     }
+
+    protected override int command_line (ApplicationCommandLine command_line) {
+        var context = new OptionContext ("File");
+        context.add_main_entries (entries, "com.github.philip-scott.spice-up");
+        context.add_group (Gtk.get_option_group (true));
+
+        string[] args = command_line.get_arguments ();
+        int unclaimed_args;
+
+        try {
+            unowned string[] tmp = args;
+            context.parse (ref tmp);
+            unclaimed_args = tmp.length - 1;
+        } catch(Error e) {
+            print (e.message + "\n");
+
+            return Posix.EXIT_FAILURE;
+        }
+
+        if (!start_thumbnailer) {
+            activate ();
+
+            if (unclaimed_args > 0) {
+                foreach (string arg in args[1:unclaimed_args + 1]) {
+                    var file = File.new_for_commandline_arg (arg);
+                    var files = new File[1];
+                    files[0] = file;
+
+                    open (files, "");
+                }
+            }
+        } else {
+            if (unclaimed_args > 1) {
+                var files = new List<File>();
+
+                foreach (string arg in args[1:unclaimed_args + 1]) {
+                    var file = File.new_for_commandline_arg (arg);
+                    files.append (file);
+                }
+
+                Spice.Services.Thumbnailer.run (files);
+            }
+        }
+
+        return Posix.EXIT_SUCCESS;
+    }
+
+    private static bool start_thumbnailer;
+
+    const OptionEntry[] entries = {
+        { "thumbnailer", 't', 0, OptionArg.NONE, out start_thumbnailer, N_("New Tab"), null },
+        { null }
+    };
 }
