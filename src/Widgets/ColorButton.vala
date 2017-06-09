@@ -80,6 +80,7 @@ public class Spice.ColorPicker : ColorButton {
         generate_colors ();
 
         custom_button = new Gtk.ToggleButton.with_label (_("Custom Color"));
+        custom_button.margin_top = 6;
         custom_button.toggled.connect (() => {
             if (custom_button.active) {
                 colors_grid_stack.set_visible_child_name ("custom");
@@ -111,7 +112,7 @@ public class Spice.ColorPicker : ColorButton {
         gradient_grid.row_spacing = 6;
 
         preview = new ColorSurface ("");
-        preview.set_size_request (100,100);
+        preview.set_size_request (100,120);
 
         gradient_type = new EntryCombo (true, false);
         gradient_type.vexpand = true;
@@ -130,12 +131,12 @@ public class Spice.ColorPicker : ColorButton {
             color_picked (this.color);
         });
 
-        gradient_grid.attach (preview,       1, 1, 2, 2);
-        gradient_grid.attach (color1_label,  0, 3, 2, 1);
-        gradient_grid.attach (color1,        2, 3, 2, 1);
-        gradient_grid.attach (color2_label,  0, 4, 2, 1);
-        gradient_grid.attach (color2,        2, 4, 1, 1);
-        gradient_grid.attach (gradient_type, 0, 5, 3, 1);
+        gradient_grid.attach (preview,       1, 1, 2, 3);
+        gradient_grid.attach (color1_label,  0, 4, 2, 1);
+        gradient_grid.attach (color1,        2, 4, 2, 1);
+        gradient_grid.attach (color2_label,  0, 5, 2, 1);
+        gradient_grid.attach (color2,        2, 5, 1, 1);
+        gradient_grid.attach (gradient_type, 0, 6, 3, 1);
 
         gradient_revealer.add (gradient_grid);
 
@@ -212,52 +213,61 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public void generate_colors () {
-        // Blues
-        attach_color ("#51A7FE", 0, 0);
-        attach_color ("#0364C2", 0, 1);
-        attach_color ("#164F86", 0, 2);
-        attach_color ("#022253", 0, 3);
+        // Red
+        attach_color ("#FF8C82", 0, 0);
+        attach_color ("#ED5353", 0, 1);
+        attach_color ("#C6262E", 0, 2);
+        attach_color ("#A10705", 0, 3);
+        attach_color ("#7A0000", 0, 4);
 
-        // Greens
-        attach_color ("#70BF40", 1, 0);
-        attach_color ("#01882A", 1, 1);
-        attach_color ("#0C5D18", 1, 2);
-        attach_color ("#043F07", 1, 3);
+        // ORANGE
+        attach_color ("#FFC27D", 1, 0);
+        attach_color ("#FFA154", 1, 1);
+        attach_color ("#F37329", 1, 2);
+        attach_color ("#CC3B02", 1, 3);
+        attach_color ("#A62100", 1, 4);
 
         // Yellow
-        attach_color ("#F8D229", 2, 0);
-        attach_color ("#DCBD24", 2, 1);
-        attach_color ("#C6961A", 2, 2);
-        attach_color ("#A27412", 2, 3);
+        attach_color ("#FFF394", 2, 0);
+        attach_color ("#FFE16B", 2, 1);
+        attach_color ("#F9C440", 2, 2);
+        attach_color ("#D48E15", 2, 3);
+        attach_color ("#AD5F00", 2, 4);
 
-        // Orange
-        attach_color ("#F68F19", 0, 4);
-        attach_color ("#E0690F", 0, 5);
-        attach_color ("#BE5A0C", 0, 6);
-        attach_color ("#944608", 0, 7);
+        // Green
+        attach_color ("#D1FF82", 0, 5);
+        attach_color ("#9BDB4D", 0, 6);
+        attach_color ("#68B723", 0, 7);
+        attach_color ("#3A9104", 0, 8);
+        attach_color ("#206B00", 0, 9);
 
-        // Reds
-        attach_color ("#EF5B5B", 1, 4);
-        attach_color ("#CB2306", 1, 5);
-        attach_color ("#861002", 1, 6);
-        attach_color ("#550504", 1, 7);
+        // Blue
+        attach_color ("#8CD5FF", 1, 5);
+        attach_color ("#64BAFF", 1, 6);
+        attach_color ("#3689E6", 1, 7);
+        attach_color ("#0D52BF", 1, 8);
+        attach_color ("#002E99", 1, 9);
 
         // Purple
-        attach_color ("#B569E5", 2, 4);
-        attach_color ("#773E9C", 2, 5);
-        attach_color ("#5E337B", 2, 6);
-        attach_color ("#3C1B50", 2, 7);
+        attach_color ("#E29FFC", 2, 5);
+        attach_color ("#AD65D6", 2, 6);
+        attach_color ("#7A36B1", 2, 7);
+        attach_color ("#4C158A", 2, 8);
+        attach_color ("#260063", 2, 9);
 
         // GrayScale
-        attach_color ("#FFF", 3, 0);
-        attach_color ("#CCC", 3, 1);
-        attach_color ("#AAA", 3, 2);
-        attach_color ("#888", 3, 3);
+        attach_color ("#DBE0F3", 3, 0);
+        attach_color ("#C0C6DE", 3, 1);
+        attach_color ("#919CAF", 3, 2);
+        attach_color ("#68758E", 3, 3);
+        attach_color ("#485A6C", 3, 4);
 
-        attach_color ("#666", 3, 4);
-        attach_color ("#444", 3, 5);
-        attach_color ("#222", 3, 6);
-        attach_color ("#000", 3, 7);
+        attach_color ("#F4F4F4", 3, 5);
+        attach_color ("#CBCBCB", 3, 6);
+        attach_color ("#89898B", 3, 7);
+        attach_color ("#505050", 3, 8);
+        attach_color ("#000000", 3, 9);
+
     }
 
     private void attach_color (string color, int x, int y) {
@@ -265,10 +275,10 @@ public class Spice.ColorPicker : ColorButton {
         color_button.set_size_request (48,24);
         color_button.get_style_context ().remove_class ("button");
         color_button.can_focus = false;
-        color_button.margin_right = 3;
+        color_button.margin_right = 0;
 
         if (y % 4 == 3) {
-            color_button.margin_bottom = 3;
+            //color_button.margin_bottom = 3;
         }
 
         colors_grid.attach (color_button, x, y, 1, 1);
