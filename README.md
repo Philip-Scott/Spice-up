@@ -1,4 +1,3 @@
-  
 <div>
   <h1 align="center">Spice-up</h1>
   <h3 align="center">Create Simple and Beautiful presentations</h3>
@@ -20,6 +19,11 @@
 
 
 ---
+
+<a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
+    <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
+</a>
+
 
 Spice-up is a modern and intuitive desktop presentation app based upon [SpiceOfDesign's presentation concept](http://spiceofdesign.deviantart.com/art/New-Presentation-Concept-401767854). Built from the ground up for elementary OS, it gives you everything you need to create simple and beautiful presentations.
 
@@ -63,8 +67,3 @@ mkdir build/ && cd build
 cmake ..
 make && sudo make install
 ```
-
-
-<a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
-    <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
-</a>
