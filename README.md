@@ -6,18 +6,18 @@
 </div>
 
 <p align="center">
+  <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
+    <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
+  </a>
+</p>
+
+<p align="center">
     <img src="Screenshot.png" alt="Screenshot">
 </p>
 
 <p align="center">
   <a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">
     <img src="get-on-appcenter.png" alt="AppCenter">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
-    <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
   </a>
 </p>
 
