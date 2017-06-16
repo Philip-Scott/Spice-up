@@ -1,15 +1,32 @@
-# Spice-up
-[![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=44752823)](https://www.bountysource.com/trackers/44752823-philip-scott-spice-up)
+<div>
+  <h1 align="center">Spice-up</h1>
+  <h3 align="center">Create Simple and Beautiful presentations</h3>
+</div>
 
+<br/>
 
-### Create Simple and Beautiful presentations
+<p align="center">
+  <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
+    <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
+  </a>
+</p>
 
+<br/>
+<br/>
+
+<p align="center">
+    <img src="Screenshot.png" alt="Screenshot">
+</p>
+
+<p align="center">
+  <a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">
+    <img src="get-on-appcenter.png" alt="AppCenter">
+  </a>
+</p>
+
+---
 
 Spice-up is a modern and intuitive desktop presentation app based upon [SpiceOfDesign's presentation concept](http://spiceofdesign.deviantart.com/art/New-Presentation-Concept-401767854). Built from the ground up for elementary OS, it gives you everything you need to create simple and beautiful presentations.
-
-
-![screenshot](Screenshot.png)
-
 
 ### Spice Presentations Look Amazing!
 Images, shapes, Text, as well as beautiful background patterns and easy to make custom gradients!
