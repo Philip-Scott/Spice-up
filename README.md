@@ -3,6 +3,8 @@
   <h3 align="center">Create Simple and Beautiful presentations</h3>
 </div>
 
+<br/>
+
 <p align="center">
   <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
     <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
