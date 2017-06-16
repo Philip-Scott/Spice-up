@@ -3,6 +3,12 @@
   <h3 align="center">Create Simple and Beautiful presentations</h3>
 </div>
 
+<p align="center">
+  <a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">
+    <img src="get-on-appcenter.png" alt="AppCenter">
+  </a>
+</p>
+
 <br/>
 
 <p align="center">
@@ -18,11 +24,6 @@
     <img src="Screenshot.png" alt="Screenshot">
 </p>
 
-<p align="center">
-  <a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">
-    <img src="get-on-appcenter.png" alt="AppCenter">
-  </a>
-</p>
 
 ---
 
