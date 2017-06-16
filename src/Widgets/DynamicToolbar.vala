@@ -43,7 +43,6 @@ public class Spice.DynamicToolbar : Gtk.Box {
         stack.set_transition_type (Gtk.StackTransitionType.SLIDE_DOWN);
 
         get_style_context ().add_class ("toolbar");
-        get_style_context ().add_class ("inline-toolbar");
 
         text_bar = new Spice.Widgets.TextToolbar ();
         shape_bar = new Spice.Widgets.ShapeToolbar ();

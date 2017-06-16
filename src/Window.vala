@@ -51,19 +51,22 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Spice.Welcome welcome;
 
     private static string ELEMENTARY_STYLESHEET = "
+    @define-color SpicePrimaryBackground #333435;
+    @define-color SpiceSlideBackground #2A2B2C;
+    @define-color SpiceSlideBackgroundSelected #222324;
     @define-color colorPrimary #2C2D2E;
     .slide-list {
-        background-color: #2A2B2C;
+        background-color: @SpiceSlideBackground;
         border-right: solid 1px rgba(0,0,0,0.75)
     }
 
     .slide-list .list-row:selected {
         box-shadow: inset 0px 24px 10px -6px rgba(0,0,0, 0.53);
-        background-color: #222324;
+        background-color: @SpiceSlideBackgroundSelected;
     }
 
     .new.slide {
-        background-color: #363738;
+        background-color: @SpicePrimaryBackground;
         border-radius: 4px;
         border-color: black;
     }
@@ -78,26 +81,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     .background {
-        background-color: #333435;
-    }
-
-    .button.spice {
-        color: #DEDEDE;
-        background-color: #343536;
-        padding: 1px 6px;
-    }
-
-    .button.spice:checked {
-        background-color: alpha (#000, 0.05);
-        background-image: none;
-        border-color: alpha (#000, 0.27);
-        box-shadow:
-            inset 0 0 0 1px alpha (#000, 0.05),
-            0 1px 0 0 alpha (@bg_highlight_color, 0.3);
-        }
-
-    .inline-toolbar.toolbar {
-        background-image: linear-gradient(to bottom, #222324, #292A2B);
+        background-color: @SpicePrimaryBackground;
     }
 
     .view.canvas {
@@ -118,6 +102,76 @@ public class Spice.Window : Gtk.ApplicationWindow {
     GtkTextView:selected {
         background-color: rgba(0,0,0,0.75);
         color: white;
+    }
+
+    SpiceDynamicToolbar {
+         background-image: linear-gradient(to bottom, #222324, #292A2B);
+    }
+
+    GtkToggleButton,
+    .spice,
+    SpiceDynamicToolbar .spice {
+        color: #DEDEDE;
+        background:
+        linear-gradient(
+            to bottom, shade (@SpicePrimaryBackground, 1.1), shade (@SpicePrimaryBackground, 1.1)
+        );
+        padding: 2px 8px;
+        border-radius: 4px;
+        border-width: 1px;
+        box-shadow: 0px 0px 1px 1px rgba (0,0,0, 0.1);
+    }
+
+    .spice:active,
+    .spice:selected {
+    background: none;
+        background-color: alpha (#000, 0.05);
+
+        border-color: alpha (#000, 0.27);
+        box-shadow:
+            inset 0 0 0 1px alpha (#000, 0.05),
+            0 1px 0 0 alpha (@bg_highlight_color, 0.3);
+    }
+
+    .spice.suggested-action {
+        background-image:
+        linear-gradient(to bottom,
+            shade (@selected_bg_color, 1.1),
+            shade (@selected_bg_color, 0.9)
+        );
+    }
+
+    .spice.suggested-action:active,
+    .spice.suggested-action:selected {
+        background: shade (@selected_bg_color, 0.8);
+        border-color: shade (@selected_bg_color, 0.8);
+    }
+
+    .spice:insensitive {
+        background-image: none;
+        background-color: transparent;
+        color: @insensitive_color;
+    }
+
+    .linked .spice {
+        border-left-width: 0;
+        border-radius: 0;
+    }
+
+    .linked .spice:first-child {
+        border-width: 1px;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+
+    .linked .spice:last-child {
+        border-left-width: 0;
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
     }
     ";
 
