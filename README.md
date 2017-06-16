@@ -1,8 +1,6 @@
 <div>
   <h1 align="center">Spice-up</h1>
   <h3 align="center">Create Simple and Beautiful presentations</h3>
-  <br>
-  <br>
 </div>
 
 <p align="center">
@@ -10,6 +8,9 @@
     <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
   </a>
 </p>
+
+<br/>
+<br/>
 
 <p align="center">
     <img src="Screenshot.png" alt="Screenshot">
