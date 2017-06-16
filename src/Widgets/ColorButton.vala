@@ -65,7 +65,7 @@ public class Spice.ColorPicker : ColorButton {
     private ColorButton color1;
     private ColorButton color2;
 
-    private EntryCombo gradient_type;
+    private Gtk.ComboBoxText gradient_type;
 
     public ColorPicker () {
         base ("white");
@@ -74,13 +74,16 @@ public class Spice.ColorPicker : ColorButton {
         colors_grid_stack.homogeneous = false;
 
         colors_grid = new Gtk.Grid ();
+        colors_grid.margin = 6;
+        colors_grid.get_style_context ().add_class ("card");
+
         var main_grid = new Gtk.Grid ();
         main_grid.margin = 6;
 
         generate_colors ();
 
         custom_button = new Gtk.ToggleButton.with_label (_("Custom Color"));
-        custom_button.margin_top = 6;
+        custom_button.margin = 3;
         custom_button.toggled.connect (() => {
             if (custom_button.active) {
                 colors_grid_stack.set_visible_child_name ("custom");
@@ -108,30 +111,37 @@ public class Spice.ColorPicker : ColorButton {
         color1 = new ColorButton ("red");
         color2 = new ColorButton ("orange");
 
+        color1.margin_right = 6;
+        color2.margin_right = 6;
+
         var gradient_grid = new Gtk.Grid ();
         gradient_grid.row_spacing = 6;
+        gradient_grid.margin_left = 6;
 
         preview = new ColorSurface ("");
         preview.set_size_request (100,120);
 
-        gradient_type = new EntryCombo (true, false);
+        var preview_box = new Gtk.Grid ();
+        preview_box.margin = 6;
+        preview_box.get_style_context ().add_class ("card");
+        preview_box.add (preview);
+
+        gradient_type = new Gtk.ComboBoxText ();
+        gradient_type.margin = 3;
         gradient_type.vexpand = true;
-        gradient_type.editable = false;
-        gradient_type.max_length = 10;
-        gradient_type.halign = Gtk.Align.END;
         gradient_type.valign = Gtk.Align.END;
 
-        gradient_type.add_entry ("to bottom", _("Vertical"));
-        gradient_type.add_entry ("to right", _("Horizontal"));
+        gradient_type.append ("to bottom", _("Vertical"));
+        gradient_type.append ("to right", _("Horizontal"));
         //gradient_type.add_entry ("radial", "Radial"); TODO: Gtk doesn't support radial gradients just yet
-        gradient_type.text = "to bottom";
+        gradient_type.active = 0;
 
-        gradient_type.activated.connect ((data) => {
+        gradient_type.changed.connect (() => {
             this.color = make_gradient ();
             color_picked (this.color);
         });
 
-        gradient_grid.attach (preview,       1, 1, 2, 3);
+        gradient_grid.attach (preview_box,   1, 1, 2, 3);
         gradient_grid.attach (color1_label,  0, 4, 2, 1);
         gradient_grid.attach (color1,        2, 4, 2, 1);
         gradient_grid.attach (color2_label,  0, 5, 2, 1);
@@ -191,9 +201,9 @@ public class Spice.ColorPicker : ColorButton {
             color2.color = parts[2].strip ().split (" ")[0];
 
             if (parts[0].contains ("to bottom")) {
-                gradient_type.text = "to bottom";
+                gradient_type.set_active_id ("to bottom");
             } else if (parts[0].contains ("to right")) {
-                gradient_type.text = "to right";
+                gradient_type.set_active_id ("to right");
             }
         } else {
             color1.color = color;
@@ -209,7 +219,7 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public string make_gradient () {
-        return "linear-gradient(%s, %s 0%, %s 100%)".printf (gradient_type.text, color1.color, color2.color);
+        return "linear-gradient(%s, %s 0%, %s 100%)".printf (gradient_type.active_id, color1.color, color2.color);
     }
 
     public void generate_colors () {
