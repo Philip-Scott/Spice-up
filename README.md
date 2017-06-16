@@ -18,9 +18,8 @@
 </p>
 
 
----
+<h2> </h2>
 
-<br/>
 
 <p>
 <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
