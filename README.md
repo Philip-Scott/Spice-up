@@ -1,3 +1,4 @@
+  
 <div>
   <h1 align="center">Spice-up</h1>
   <h3 align="center">Create Simple and Beautiful presentations</h3>
@@ -6,14 +7,6 @@
 <p align="center">
   <a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">
     <img src="get-on-appcenter.png" alt="AppCenter">
-  </a>
-</p>
-
-<br/>
-
-<p align="center">
-  <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
-    <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
   </a>
 </p>
 
@@ -69,3 +62,8 @@ mkdir build/ && cd build
 cmake ..
 make && sudo make install
 ```
+
+
+<a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
+    <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
+</a>
