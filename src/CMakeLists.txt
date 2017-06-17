@@ -13,7 +13,9 @@ vala_precompile(VALA_C
   Services/HistoryManager.vala
   Services/Utils.vala
   Services/Thumbnailer.vala
+  Services/DBusThumnailer.vala
   Services/GamepadSlideController.vala
+
   Widgets/Canvas.vala
   Widgets/ColorButton.vala
   Widgets/EntryCombo.vala

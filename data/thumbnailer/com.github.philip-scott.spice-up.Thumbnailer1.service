@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.freedesktop.thumbnails.Thumbnailer1.spiceup
+Exec=/usr/bin/com.github.philip-scott.spice-up -b

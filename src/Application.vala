@@ -31,6 +31,7 @@ public class Spice.Application : Granite.Application {
     public const string ABOUT_STOCK = N_("About Spice-Up");
 
     public bool running = false;
+    Spice.DbusThumbnailer? thumbnailer = null;
 
     construct {
         flags |= ApplicationFlags.HANDLES_OPEN;
@@ -67,7 +68,7 @@ public class Spice.Application : Granite.Application {
     }
 
     public override void activate () {
-        if (!running) {
+        if (window == null) {
             weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
             default_theme.add_resource_path ("/com/github/philip-scott/spice-up");
 
@@ -99,7 +100,26 @@ public class Spice.Application : Granite.Application {
             return Posix.EXIT_FAILURE;
         }
 
-        if (!start_thumbnailer) {
+        if (start_thumbnailer) {
+            start_thumbnailer = false;
+            if (unclaimed_args > 1) {
+                var files = new List<File>();
+
+                foreach (string arg in args[1:unclaimed_args + 1]) {
+                    var file = File.new_for_commandline_arg (arg);
+                    files.append (file);
+                }
+
+                Spice.Services.Thumbnailer.run (files);
+            }
+        } else if (start_dbus) {
+            start_dbus = false;
+            if (thumbnailer == null) {
+                thumbnailer = new Spice.DbusThumbnailer ();
+
+                new MainLoop ().run ();
+            }
+        } else {
             activate ();
 
             if (unclaimed_args > 0) {
@@ -111,26 +131,17 @@ public class Spice.Application : Granite.Application {
                     open (files, "");
                 }
             }
-        } else {
-            if (unclaimed_args > 1) {
-                var files = new List<File>();
-
-                foreach (string arg in args[1:unclaimed_args + 1]) {
-                    var file = File.new_for_commandline_arg (arg);
-                    files.append (file);
-                }
-
-                Spice.Services.Thumbnailer.run (files);
-            }
         }
 
         return Posix.EXIT_SUCCESS;
     }
 
     private static bool start_thumbnailer;
+    private static bool start_dbus;
 
     const OptionEntry[] entries = {
-        { "thumbnailer", 't', 0, OptionArg.NONE, out start_thumbnailer, N_("New Tab"), null },
+        { "thumbnailer", 't', 0, OptionArg.NONE, out start_thumbnailer, N_("Thumbnailer"), null },
+        { "dbus-thumbnailer", 'b', 0, OptionArg.NONE, out start_dbus, N_("Thumbnailer"), null },
         { null }
     };
 }
