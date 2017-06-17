@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">
-    <img src="get-on-appcenter.png" alt="AppCenter">
+    <img src="https://appcenter.elementary.io/download.png" alt="AppCenter">
   </a>
 </p>
 
@@ -41,7 +41,7 @@ Images, shapes, Text, as well as beautiful background patterns and easy to make 
 
 ## Installation
 
-<a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">![AppCenter](get-on-appcenter.png)</a>
+<a href="https://appcenter.elementary.io/com.github.philip-scott.spice-up">![AppCenter](https://appcenter.elementary.io/download.png)</a>
 
 On elementary OS? Hit the button to get Spice-Up!
 
