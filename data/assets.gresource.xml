@@ -10,15 +10,18 @@
     <file alias="3px-tile.png" compressed="false" preprocess="">assets/patterns/3px-tile.png</file>
     <file alias="45-degree-fabric-dark.png" compressed="false" preprocess="">assets/patterns/45-degree-fabric-dark.png</file>
     <file alias="45-degree-fabric-light.png" compressed="false" preprocess="">assets/patterns/45-degree-fabric-light.png</file>
+    <file alias="batthern.png" compressed="false" preprocess="">assets/patterns/batthern.png</file>
     <file alias="beige-paper.png" compressed="false" preprocess="">assets/patterns/beige-paper.png</file>
     <file alias="black-linen.png" compressed="false" preprocess="">assets/patterns/black-linen.png</file>
     <file alias="bright-squares.png" compressed="false" preprocess="">assets/patterns/bright-squares.png</file>
+    <file alias="diamond-upholstery.png" compressed="false" preprocess="">assets/patterns/diamond-upholstery.png</file>
     <file alias="flowers.png" compressed="false" preprocess="">assets/patterns/flowers.png</file>
     <file alias="hexellence.png" compressed="false" preprocess="">assets/patterns/hexellence.png</file>
     <file alias="gplay.png" compressed="false" preprocess="">assets/patterns/gplay.png</file>
     <file alias="inspiration-geometry.png" compressed="false" preprocess="">assets/patterns/inspiration-geometry.png</file>
     <file alias="dark-geometric.png" compressed="false" preprocess="">assets/patterns/dark-geometric.png</file>
     <file alias="light-wool.png" compressed="false" preprocess="">assets/patterns/light-wool.png</file>
+    <file alias="ps-neutral.png" compressed="false" preprocess="">assets/patterns/ps-neutral.png</file>
     <file alias="silver-scales.png" compressed="false" preprocess="">assets/patterns/silver-scales.png</file>
     <file alias="subtle-freckles.png" compressed="false" preprocess="">assets/patterns/subtle-freckles.png</file>
     <file alias="subtle-grey.png" compressed="false" preprocess="">assets/patterns/subtle-grey.png</file>

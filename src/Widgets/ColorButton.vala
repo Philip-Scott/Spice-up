@@ -272,7 +272,7 @@ public class Spice.ColorPicker : ColorButton {
         attach_color ("#68758E", 3, 3);
         attach_color ("#485A6C", 3, 4);
 
-        attach_color ("#F4F4F4", 3, 5);
+        attach_color ("#FFFFFF", 3, 5);
         attach_color ("#CBCBCB", 3, 6);
         attach_color ("#89898B", 3, 7);
         attach_color ("#505050", 3, 8);

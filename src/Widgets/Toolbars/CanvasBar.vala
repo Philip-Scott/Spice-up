@@ -47,15 +47,18 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         canvas_pattern.add_entry (PATTERNS_DIR + "3px-tile.png", _("3px tile"));
         canvas_pattern.add_entry (PATTERNS_DIR + "45-degree-fabric-dark.png", _("Fabric dark"));
         canvas_pattern.add_entry (PATTERNS_DIR + "45-degree-fabric-light.png", _("Fabric light"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "batthern.png", _("Batthern"));
         canvas_pattern.add_entry (PATTERNS_DIR + "beige-paper.png", _("Beige paper"));
         canvas_pattern.add_entry (PATTERNS_DIR + "black-linen.png", _("Black linen"));
         canvas_pattern.add_entry (PATTERNS_DIR + "bright-squares.png", _("Bright squares"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "diamond-upholstery.png", _("Diamond Upholstery"));
         canvas_pattern.add_entry (PATTERNS_DIR + "flowers.png", _("Flowers"));
         canvas_pattern.add_entry (PATTERNS_DIR + "hexellence.png", _("Hexellence"));
         canvas_pattern.add_entry (PATTERNS_DIR + "gplay.png", _("Gplay"));
         canvas_pattern.add_entry (PATTERNS_DIR + "inspiration-geometry.png", _("Geometry"));
         canvas_pattern.add_entry (PATTERNS_DIR + "dark-geometric.png", _("Dark geometric"));
         canvas_pattern.add_entry (PATTERNS_DIR + "light-wool.png", _("Light wool"));
+        canvas_pattern.add_entry (PATTERNS_DIR + "ps-neutral.png", _("Neutral squares"));
         canvas_pattern.add_entry (PATTERNS_DIR + "silver-scales.png", _("Silver scales"));
         canvas_pattern.add_entry (PATTERNS_DIR + "subtle-freckles.png", _("Subtle grid"));
         canvas_pattern.add_entry (PATTERNS_DIR + "subtle-grey.png", _("Subtle squares"));
