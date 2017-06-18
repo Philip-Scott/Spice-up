@@ -90,12 +90,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         slides_grid.add (new_slide_button);
 
         new_slide_button.clicked.connect (() => {
-            var slide = manager.new_slide ();
-
-            slide.visible = false;
-            var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (slide, "visible");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
-            slide.visible = true;
+            var slide = manager.new_slide (null, true);
 
             manager.making_new_slide = true;
             manager.current_slide = slide;

@@ -116,7 +116,7 @@ public class Spice.Canvas : Gtk.Overlay {
         default_y_margin = (int) ((get_allocated_height () - max_height*current_ratio)/2);
     }
 
-    public CanvasItem add_item (CanvasItem item, bool loading = false) {
+    public CanvasItem add_item (CanvasItem item, bool undoable_action = false) {
         var canvas_item = item;
 
         add_overlay (canvas_item);
@@ -141,7 +141,7 @@ public class Spice.Canvas : Gtk.Overlay {
             request_draw_preview ();
         });
 
-        if (!loading) {
+        if (undoable_action) {
             canvas_item.visible = false;
             var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (canvas_item, "visible");
             Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);

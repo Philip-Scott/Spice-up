@@ -61,19 +61,7 @@ public class Spice.Slide : Object {
         foreach (var raw in items.get_elements ()) {
             var item = raw.get_object ();
 
-            string type = item.get_string_member ("type");
-
-            switch (type) {
-                case "text":
-                    canvas.add_item (new TextItem (canvas, item), true);
-                break;
-                case "color":
-                    canvas.add_item (new ColorItem (canvas, item), true);
-                break;
-                case "image":
-                    canvas.add_item (new ImageItem (canvas, item), true);
-                break;
-            }
+            add_item_from_data (item);
         }
 
         preview_data = save_data.get_string_member ("preview");
@@ -81,6 +69,32 @@ public class Spice.Slide : Object {
             var pixbuf = Utils.base64_to_pixbuf (preview_data);
 
             preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
+        }
+    }
+
+    public void add_item_from_data (Json.Object data, bool select_item = false, bool save_history = false) {
+        string type = data.get_string_member ("type");
+        CanvasItem? item = null;
+
+        switch (type) {
+            case "text":
+                item = new TextItem (canvas, data);
+            break;
+            case "color":
+                item = new ColorItem (canvas, data);
+            break;
+            case "image":
+                item = new ImageItem (canvas, data);
+            break;
+        }
+
+        if (item != null) {
+            canvas.add_item (item, save_history);
+
+            if (select_item) {
+                canvas.item_clicked (item);
+                item.clicked ();
+            }
         }
     }
 

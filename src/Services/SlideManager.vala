@@ -212,7 +212,7 @@ public class Spice.SlideManager : Object {
     }
 
     private bool propagating_ratio = false;
-    public Slide new_slide (Json.Object? save_data = null) {
+    public Slide new_slide (Json.Object? save_data = null, bool undoable_action = false) {
         Slide slide = new Slide (save_data);
 
         slide.canvas.item_clicked.connect ((item) => {
@@ -246,6 +246,13 @@ public class Spice.SlideManager : Object {
             this.propagating_ratio = false;
         });
 
+        if (undoable_action) {
+            slide.visible = false;
+            var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (slide, "visible");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+            slide.visible = true;
+        }
+
         slides.add (slide);
         slideshow.add (slide.canvas);
         slideshow.show_all ();
@@ -264,16 +271,17 @@ public class Spice.SlideManager : Object {
 
         if (type == HeaderButton.TEXT) {
             item = new TextItem (current_slide.canvas);
-            current_slide.canvas.add_item (item);
         } else if (type == HeaderButton.IMAGE) {
             var file = Spice.Services.FileManager.open_image ();
             if (file != null && file.query_exists ()) {
                 item = new ImageItem.from_file (current_slide.canvas, file);
-                item = current_slide.canvas.add_item (item);
             }
         } else if (type == HeaderButton.SHAPE) {
             item = new ColorItem (current_slide.canvas);
-            item = current_slide.canvas.add_item (item);
+        }
+
+        if (item != null) {
+            current_slide.canvas.add_item (item, true);
         }
 
         return item;

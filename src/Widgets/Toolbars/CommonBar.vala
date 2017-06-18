@@ -24,6 +24,7 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
     private Gtk.Button to_top;
     private Gtk.Button to_bottom;
     private Gtk.Button delete_button;
+    private Gtk.Button clone_button;
 
     public CommonToolbar (SlideManager slide_manager) {
         this.manager = slide_manager;
@@ -45,6 +46,35 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
             }
 
             item_selected (null);
+        });
+
+        clone_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.MENU);
+        clone_button.get_style_context ().add_class ("spice");
+        clone_button.set_tooltip_text (_("Clone"));
+
+        clone_button.clicked.connect (() => {
+            string data;
+
+            if (this.item != null) {
+                data = this.item.serialise ();
+            } else {
+                data = this.manager.current_slide.serialise ();
+            }
+
+            try {
+                var parser = new Json.Parser ();
+                parser.load_from_data (data);
+
+                var root_object = parser.get_root ().get_object ();
+
+                if (this.item != null) {
+                    this.manager.current_slide.add_item_from_data (root_object, true, true);
+                } else {
+                    this.manager.new_slide (root_object, true);
+                }
+            } catch (Error e) {
+                warning ("Cloning didn't work: %s", e.message);
+            }
         });
 
         to_top = new Gtk.Button.from_icon_name ("go-up-symbolic", Gtk.IconSize.MENU);
@@ -77,6 +107,7 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         });
 
         add (position_grid);
+        add (clone_button);
         add (delete_button);
     }
 
