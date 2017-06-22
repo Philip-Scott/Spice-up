@@ -201,4 +201,16 @@ public class Spice.Services.FileManager {
             return false;
         });
     }
+
+    public static string file_to_base64 (string filename) {
+        uint8[] data;
+        FileUtils.get_data (filename, out data);
+
+        return Base64.encode (data);
+    }
+
+    public static void base64_to_file (string filename, string base64_data) {
+        var data = Base64.decode (base64_data);
+        FileUtils.set_data (filename, data);
+    }
 }

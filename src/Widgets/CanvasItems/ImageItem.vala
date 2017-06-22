@@ -20,6 +20,9 @@
 */
 
 public class Spice.ImageItem : Spice.CanvasItem {
+    private static uint file_id = 0;
+    const string FILENAME = "/spice-up-%s-img-%u";
+
     const string IMAGE_STYLE_CSS = """
         .colored {
             background-color: transparent;
@@ -29,21 +32,24 @@ public class Spice.ImageItem : Spice.CanvasItem {
             background-repeat: no-repeat;
         }
     """;
+
     const string IMAGE_MISSING_CSS = """
         .colored {
            border: 4px dashed #000000;
            border-color: #c92e34;
         }""";
 
+    private string? base64_image = null;
+
     private bool valid = false;
 
-    private string uri_ = "";
-    public string uri {
+    private string url_ = "";
+    public string url {
         get {
-            return uri_;
+            return url_;
         } set {
-            uri_ = value;
-            var file = File.new_for_uri (value);
+            url_ = value;
+            var file = File.new_for_path (value);
             valid = (file.query_exists () && Utils.is_valid_image (file));
         }
     }
@@ -58,24 +64,47 @@ public class Spice.ImageItem : Spice.CanvasItem {
 
     public ImageItem.from_file (Canvas canvas, File file) {
         base (canvas);
-        uri = file.get_uri ();
+
+        data_from_filename (file.get_path ());
 
         style ();
     }
 
     protected override void load_item_data () {
-        this.uri = save_data.get_string_member ("image");
+        if (save_data.has_member ("image-data")) {
+            base64_image = save_data.get_string_member ("image-data");
+        }
+
+        if (base64_image != null && base64_image != "") {
+            stderr.printf ("Loading uri data\n");
+            this.url = data_to_file (base64_image);
+        } else {
+            var tmp_uri = save_data.get_string_member ("image");
+            data_from_filename (File.new_for_uri (tmp_uri).get_path ());
+        }
     }
 
     protected override string serialise_item () {
-        return """"type":"image", "image":"%s" """.printf (uri);
+        return """"type":"image", "image":"", "image-data":"%s" """.printf (base64_image);
     }
 
     public override void style () {
         if (valid) {
-            Utils.set_style (this, IMAGE_STYLE_CSS.printf (uri));
+            Utils.set_style (this, IMAGE_STYLE_CSS.printf (url));
         } else {
             Utils.set_style (this, IMAGE_MISSING_CSS);
         }
+    }
+
+    private void data_from_filename (string path) {
+        base64_image = Spice.Services.FileManager.file_to_base64 (path);
+        this.url = data_to_file (base64_image);
+    }
+
+    private string data_to_file (string data) {
+        var filename = Environment.get_tmp_dir () + FILENAME.printf (Environment.get_user_name (), file_id++);
+        Spice.Services.FileManager.base64_to_file (filename, data);
+
+        return filename;
     }
 }
