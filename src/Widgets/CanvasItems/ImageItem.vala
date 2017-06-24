@@ -30,6 +30,7 @@ public class Spice.ImageItem : Spice.CanvasItem {
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
+            border: none;
         }
     """;
 
