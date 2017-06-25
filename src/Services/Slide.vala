@@ -127,4 +127,8 @@ public class Spice.Slide : Object {
 
         this.visible = false;
     }
+
+    public void destroy () {
+        canvas.destroy ();
+    }
 }

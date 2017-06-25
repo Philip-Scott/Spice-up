@@ -79,7 +79,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
 
         slides_list.set_sort_func ((row1, row2) => {
             var slide1 = manager.slides.index_of (((SlideListRow) row1).slide);
-            var slide2 = manager.slides.index_of (((SlideListRow) row2).slide );
+            var slide2 = manager.slides.index_of (((SlideListRow) row2).slide);
 
             if (slide1 < slide2) return -1;
             else if (slide2 < slide1) return 1;
@@ -131,7 +131,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
     }
 
     private class SlideListRow : Gtk.ListBoxRow {
-        public Spice.Slide slide;
+        public unowned Spice.Slide slide;
 
         public SlideListRow (Slide slide) {
             this.slide = slide;
@@ -143,7 +143,6 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
             image.get_style_context ().add_class ("canvas");
             image.get_style_context ().add_class ("preview");
             image.margin = 9;
-
 
             set_size_request (SlideList.WIDTH - 24, SlideList.HEIGHT - 24);
 

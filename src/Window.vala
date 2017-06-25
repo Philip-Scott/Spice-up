@@ -383,10 +383,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     protected override bool delete_event (Gdk.EventAny event) {
         Services.FileManager.write_file (slide_manager.serialise ());
 
-        int width;
-        int height;
-        int x;
-        int y;
+        int width, height, x, y;
 
         get_size (out width, out height);
         get_position (out x, out y);

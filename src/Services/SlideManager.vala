@@ -70,13 +70,15 @@ public class Spice.SlideManager : Object {
     }
 
     public void reset () {
+        slide_ = null;
+
         foreach (var slide in slides) {
             slideshow.remove (slide.canvas);
+            slide.destroy ();
         }
 
         slides.clear ();
 
-        slide_ = null;
         reseted ();
     }
 
