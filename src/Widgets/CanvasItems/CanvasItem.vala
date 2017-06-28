@@ -110,53 +110,19 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
         grabber_grid.row_homogeneous = true;
         grabber_grid.column_homogeneous = true;
 
-        var grabber_1 = new Grabber (1);
-        var grabber_2 = new Grabber (2);
-        var grabber_3 = new Grabber (3);
-        var grabber_4 = new Grabber (4);
-        var grabber_5 = new Grabber (5);
-        var grabber_6 = new Grabber (6);
-        var grabber_7 = new Grabber (7);
-        var grabber_8 = new Grabber (8);
-
-        grabber_1.halign = Gtk.Align.START;
-        grabber_1.valign = Gtk.Align.START;
-        grabber_2.halign = Gtk.Align.CENTER;
-        grabber_2.valign = Gtk.Align.START;
-        grabber_3.halign = Gtk.Align.END;
-        grabber_3.valign = Gtk.Align.START;
-        grabber_4.halign = Gtk.Align.END;
-        grabber_4.valign = Gtk.Align.CENTER;
-        grabber_5.halign = Gtk.Align.END;
-        grabber_5.valign = Gtk.Align.END;
-        grabber_6.halign = Gtk.Align.CENTER;
-        grabber_6.valign = Gtk.Align.END;
-        grabber_7.halign = Gtk.Align.START;
-        grabber_7.valign = Gtk.Align.END;
-        grabber_8.halign = Gtk.Align.START;
-        grabber_8.valign = Gtk.Align.CENTER;
-
-        connect_grabber (grabber_1);
-        connect_grabber (grabber_2);
-        connect_grabber (grabber_3);
-        connect_grabber (grabber_4);
-        connect_grabber (grabber_5);
-        connect_grabber (grabber_6);
-        connect_grabber (grabber_7);
-        connect_grabber (grabber_8);
-
         var overlay = new Gtk.Overlay ();
         overlay.add (grid);
-        overlay.add_overlay (grabber_1);
-        overlay.add_overlay (grabber_2);
-        overlay.add_overlay (grabber_3);
-        overlay.add_overlay (grabber_4);
-        overlay.add_overlay (grabber_5);
-        overlay.add_overlay (grabber_6);
-        overlay.add_overlay (grabber_7);
-        overlay.add_overlay (grabber_8);
 
-        this.clicked.connect (() => {
+        var grabber_1 = make_grabber (1, Gtk.Align.START, Gtk.Align.START, overlay);
+        var grabber_2 = make_grabber (2, Gtk.Align.CENTER, Gtk.Align.START, overlay);
+        var grabber_3 = make_grabber (3, Gtk.Align.END, Gtk.Align.START, overlay);
+        var grabber_4 = make_grabber (4, Gtk.Align.END, Gtk.Align.CENTER, overlay);
+        var grabber_5 = make_grabber (5, Gtk.Align.END, Gtk.Align.END, overlay);
+        var grabber_6 = make_grabber (6, Gtk.Align.CENTER, Gtk.Align.END, overlay);
+        var grabber_7 = make_grabber (7, Gtk.Align.START, Gtk.Align.END, overlay);
+        var grabber_8 = make_grabber (8, Gtk.Align.START, Gtk.Align.CENTER, overlay);
+
+        clicked.connect (() => {
             grabber_1.make_visible = true;
             grabber_2.make_visible = true;
             grabber_3.make_visible = true;
@@ -167,7 +133,7 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
             grabber_8.make_visible = true;
         });
 
-        this.un_select.connect (() => {
+        un_select.connect (() => {
             grabber_1.make_visible = false;
             grabber_2.make_visible = false;
             grabber_3.make_visible = false;
@@ -182,6 +148,18 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
         this.show_all ();
     }
 
+    private Grabber make_grabber (int _id, Gtk.Align _halign, Gtk.Align _valign, Gtk.Overlay overlay) {
+        var grabber = new Grabber (_id);
+        grabber.halign = _halign;
+        grabber.valign = _valign;
+
+        connect_grabber (grabber);
+
+        overlay.add_overlay (grabber);
+
+        return grabber;
+    }
+
     public void load_data () {
         if (save_data != null) {
             real_width = (int) save_data.get_int_member ("w");
@@ -192,8 +170,6 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
             load_item_data ();
 
             check_position ();
-        } else {
-            stderr.printf ("creating new item \n");
         }
     }
 
@@ -273,11 +249,9 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
 
         Spice.Services.HistoryManager.get_instance ().add_undoable_action (undo_move_action, true);
 
-        var old_delta_x = delta_x;
-        var old_delta_y = delta_y;
+        move_item (delta_x, delta_y);
         delta_x = 0;
         delta_y = 0;
-        move_item (old_delta_x, old_delta_y);
 
         return false;
     }

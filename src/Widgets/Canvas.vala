@@ -98,22 +98,14 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     private void calculate_ratio () {
-        int added_width = 0;
-        int added_height = 0;
-        int max_width = 0;
-        int max_height = 0;
-
-        int x = 20, y = 20, width = 1500, height = 1500;
-        added_width += width;
-        added_height += height;
-        max_width = int.max (max_width, x + width);
-        max_height = int.max (max_height, y + height);
+        int max_width = 1520, max_height = 1520;
 
         current_allocated_width = get_allocated_width ();
         current_allocated_height = get_allocated_height ();
-        current_ratio = double.min ((double)(get_allocated_width () -24) / (double) added_width, (double)(get_allocated_height ()-24) / (double) added_height);
-        default_x_margin = (int) ((get_allocated_width () - max_width*current_ratio)/2);
-        default_y_margin = (int) ((get_allocated_height () - max_height*current_ratio)/2);
+
+        current_ratio = double.min ((double)(current_allocated_width - 24) / 1500.0, (double)(current_allocated_height - 24) / 1500.0);
+        default_x_margin = (int) ((current_allocated_width - max_width * current_ratio) / 2);
+        default_y_margin = (int) ((current_allocated_height - max_height * current_ratio) / 2);
     }
 
     public CanvasItem add_item (CanvasItem item, bool undoable_action = false) {

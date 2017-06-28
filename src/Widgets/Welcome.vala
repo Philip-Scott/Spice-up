@@ -32,7 +32,7 @@ public class Spice.Welcome : Granite.Widgets.Welcome {
             append ("x-office-presentation", _("Open Last File"), file.get_basename ().replace (Spice.Services.FileManager.FILE_EXTENSION, ""));
         }
 
-        this.activated.connect ((index) => {
+        activated.connect ((index) => {
             switch (index) {
                 case 0:
                     var file = Spice.Services.FileManager.save_presentation ();
