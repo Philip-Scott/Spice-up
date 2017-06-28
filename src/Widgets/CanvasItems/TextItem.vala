@@ -31,9 +31,11 @@ public class Spice.TextItem : Spice.CanvasItem {
     public string font_style {get; set; default = "Regular"; }
 
     public bool setting_text = false;
+    public bool first_change_in_edit = false;
+    public string previous_text = "";
     public string text {
         owned get {
-            return entry.buffer.text;
+            return previous_text;
         } set {
             setting_text = true;
             entry.buffer.text = value;
@@ -44,6 +46,7 @@ public class Spice.TextItem : Spice.CanvasItem {
                 label.label = value;
             }
 
+            previous_text = label.label;
             setting_text = false;
         }
     }
@@ -102,6 +105,7 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         this.clicked.connect (() => {
             if (!editing) {
+                first_change_in_edit = true;
                 if (entry.buffer.text == _("Click to add text...")) {
                     entry.buffer.text = "";
                 }
@@ -143,7 +147,10 @@ public class Spice.TextItem : Spice.CanvasItem {
         entry.buffer.changed.connect (() => {
             if (!setting_text) {
                 var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this as TextItem, "text");
-                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, first_change_in_edit);
+                first_change_in_edit = false;
+
+                previous_text = entry.buffer.text;
             }
         });
 
