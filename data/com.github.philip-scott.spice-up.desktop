@@ -7,7 +7,7 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Categories=Office;Presentation;
-MimeType=application-x-spiceup;
+MimeType=application/x-spiceup;
 Actions=AboutDialog;
 
 [Desktop Action AboutDialog]
