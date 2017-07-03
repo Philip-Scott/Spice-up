@@ -163,9 +163,18 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     protected override void load_item_data () {
-        var text = save_data.get_string_member ("text");
-        if (text != null) {
-            this.text = text;
+        string? text_data = null;
+        if (save_data.has_member ("text-data")) {
+            text_data = save_data.get_string_member ("text-data");
+        }
+
+        if (text_data != null && text_data != "") {
+            this.text = (string) Base64.decode (text_data);
+        } else {
+            var text = save_data.get_string_member ("text");
+            if (text != null) {
+                this.text = text;
+            }
         }
 
         font_size = (int) save_data.get_int_member ("font-size");
@@ -185,7 +194,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     protected override string serialise_item () {
-        return """"type":"text","text": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d """.printf (entry.buffer.text, font, font_color, font_size, font_style, justification);
+        return """"type":"text","text": "","text-data": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d """.printf (Base64.encode (entry.buffer.text.data), font, font_color, font_size, font_style, justification);
     }
 
     public override void style () {
