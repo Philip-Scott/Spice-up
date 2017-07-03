@@ -30,21 +30,6 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
         open_with.get_style_context ().add_class ("image-button");
 
         add (open_with);
-
-        var menu = new Gtk.Menu ();
-        open_with.popup = menu;
-
-        var apps = AppInfo.get_all_for_type ("image/png");
-        foreach (var app in apps) {
-            var meun_item = new Gtk.MenuItem.with_label (app.get_name ());
-            menu.add (meun_item);
-
-            meun_item.activate.connect (() => {
-                launch_editor (app);
-            });
-        }
-
-        menu.show_all ();
     }
 
     private void launch_editor (AppInfo app) {
@@ -54,7 +39,30 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
         app.launch (list, null);
     }
 
-    protected override void item_selected (Spice.CanvasItem? _item, bool new_item = false) {}
+    protected override void item_selected (Spice.CanvasItem? _item, bool new_item = false) {
+        var item = _item as Spice.ImageItem;
+
+        if (item != null) {
+            var menu = new Gtk.Menu ();
+            open_with.popup = menu;
+
+            var file = File.new_for_path (item.url);
+            var file_info = file.query_info ("standard::*", 0);
+
+            var apps = AppInfo.get_all_for_type (file_info.get_content_type ());
+
+            foreach (var app in apps) {
+                var meun_item = new Gtk.MenuItem.with_label (app.get_name ());
+                menu.add (meun_item);
+
+                meun_item.activate.connect (() => {
+                    launch_editor (app);
+                });
+            }
+
+            menu.show_all ();
+        }
+    }
 
     public override void update_properties () {}
 }

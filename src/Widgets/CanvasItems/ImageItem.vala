@@ -20,8 +20,7 @@
 */
 
 public class Spice.ImageItem : Spice.CanvasItem {
-    private static uint file_id = 0;
-    const string FILENAME = "/spice-up-%s-img-%u.%s";
+    private ImageHandler image;
 
     const string IMAGE_STYLE_CSS = """
         .colored {
@@ -40,22 +39,15 @@ public class Spice.ImageItem : Spice.CanvasItem {
            border-color: #c92e34;
         }""";
 
-    private FileMonitor monitor;
-    private bool file_changing = false;
-    private string? base64_image = null;
+    public string extension {
+        get {
+            return image.image_extension;
+        }
+    }
 
-    private bool valid = false;
-
-    private string image_extension;
-    private string url_ = "";
     public string url {
         get {
-            return url_;
-        } set {
-            url_ = value;
-            var file = File.new_for_path (value);
-            monitor_file (file);
-            valid = (file.query_exists () && Utils.is_valid_image (file));
+            return image.url;
         }
     }
 
@@ -70,35 +62,36 @@ public class Spice.ImageItem : Spice.CanvasItem {
     public ImageItem.from_file (Canvas canvas, File file) {
         base (canvas);
 
-        image_extension = get_extension (file.get_basename ());
-        this.url = data_from_filename (file.get_path ());
-
+        this.image = new ImageHandler.from_file (file);
+        connect_image ();
         style ();
     }
 
     protected override void load_item_data () {
+        string? base64_image = null;
+
         if (save_data.has_member ("image-data")) {
             base64_image = save_data.get_string_member ("image-data");
         }
 
         if (base64_image != null && base64_image != "") {
-            image_extension = save_data.get_string_member ("image");
-            this.url = data_to_file (base64_image);
+            var extension = save_data.get_string_member ("image");
+            image = new ImageHandler.from_data (extension, base64_image);
         } else {
             var tmp_uri = save_data.get_string_member ("image");
-            image_extension = get_extension (tmp_uri);
-
-            this.url = data_from_filename (File.new_for_uri (tmp_uri).get_path ());
+            image = new ImageHandler.from_file (File.new_for_uri (tmp_uri));
         }
+
+        connect_image ();
     }
 
     protected override string serialise_item () {
-        return """"type":"image", "image":"%s", "image-data":"%s" """.printf (image_extension, base64_image);
+        return """"type":"image", %s""".printf (image.serialize ());
     }
 
     public override void style () {
-        if (valid) {
-            Utils.set_style (this, IMAGE_STYLE_CSS.printf (url));
+        if (image.valid) {
+            Utils.set_style (this, IMAGE_STYLE_CSS.printf (image.url));
         } else {
             unstyle ();
         }
@@ -108,39 +101,88 @@ public class Spice.ImageItem : Spice.CanvasItem {
          Utils.set_style (this, IMAGE_MISSING_CSS);
     }
 
-    private void monitor_file (File file) {
-        monitor = file.monitor (FileMonitorFlags.NONE, null);
-
-        monitor.changed.connect ((src, dest, event) => {
-            if (event == FileMonitorEvent.CHANGED) {
-                file_changing = true;
-            } else if (event == FileMonitorEvent.CHANGES_DONE_HINT && file_changing) {
-                data_from_filename (url);
-                unstyle ();
-                style ();
-                file_changing = false;
-            }
+    private void connect_image () {
+        image.file_changed.connect (() => {
+             unstyle ();
+             style ();
         });
     }
 
-    private string get_extension (string filename) {
-        var parts = filename.split (".");
-        if (parts.length > 1) {
-            return parts[parts.length - 1];
-        } else {
-            return "png";
+    private class ImageHandler : Object {
+        private static uint file_id = 0;
+        const string FILENAME = "/spice-up-%s-img-%u.%s";
+
+        public signal void file_changed ();
+
+        private FileMonitor monitor;
+        private bool file_changing = false;
+
+        public bool valid = false;
+        private string? base64_image = null;
+
+        public string image_extension { get; private set; }
+
+        private string url_ = "";
+        public string url {
+            get {
+                return url_;
+            } set {
+                url_ = value;
+                var file = File.new_for_path (value);
+                monitor_file (file);
+                valid = (file.query_exists () && Utils.is_valid_image (file));
+                file_changed ();
+            }
         }
-    }
 
-    private string data_from_filename (string path) {
-        base64_image = Spice.Services.FileManager.file_to_base64 (path);
-        return data_to_file (base64_image);
-    }
+        public ImageHandler.from_data (string _extension, string _base64_data) {
+            image_extension = _extension != "" ? _extension : "png";
+            url = data_to_file (_base64_data);
+        }
 
-    private string data_to_file (string data) {
-        var filename = Environment.get_tmp_dir () + FILENAME.printf (Environment.get_user_name (), file_id++, image_extension);
-        Spice.Services.FileManager.base64_to_file (filename, data);
+        public ImageHandler.from_file (File file) {
+            image_extension = get_extension (file.get_basename ());
+            url = data_from_filename (file.get_path ());
+        }
 
-        return filename;
+        public string serialize () {
+            return """"image":"%s", "image-data":"%s" """.printf (image_extension, base64_image);
+        }
+
+        private void monitor_file (File file) {
+            monitor = file.monitor (FileMonitorFlags.NONE, null);
+
+            monitor.changed.connect ((src, dest, event) => {
+                if (event == FileMonitorEvent.CHANGED) {
+                    file_changing = true;
+                } else if (event == FileMonitorEvent.CHANGES_DONE_HINT && file_changing) {
+                    data_from_filename (url);
+                    file_changed ();
+                    file_changing = false;
+                }
+            });
+        }
+
+        private string get_extension (string filename) {
+            var parts = filename.split (".");
+            if (parts.length > 1) {
+                return parts[parts.length - 1];
+            } else {
+                return "png";
+            }
+        }
+
+        private string data_from_filename (string path) {
+            base64_image = Spice.Services.FileManager.file_to_base64 (path);
+            return data_to_file (base64_image);
+        }
+
+        private string data_to_file (string data) {
+            var filename = Environment.get_tmp_dir () + FILENAME.printf (Environment.get_user_name (), file_id++, image_extension);
+            Spice.Services.FileManager.base64_to_file (filename, data);
+
+            this.base64_image = data;
+            return filename;
+        }
     }
 }
