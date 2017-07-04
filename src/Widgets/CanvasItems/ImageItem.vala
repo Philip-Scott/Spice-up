@@ -137,12 +137,14 @@ public class Spice.ImageItem : Spice.CanvasItem {
 
         public ImageHandler.from_data (string _extension, string _base64_data) {
             image_extension = _extension != "" ? _extension : "png";
+            base64_image = _base64_data;
             url = data_to_file (_base64_data);
         }
 
         public ImageHandler.from_file (File file) {
             image_extension = get_extension (file.get_basename ());
-            url = data_from_filename (file.get_path ());
+            data_from_filename (file.get_path ());
+            url = data_to_file (base64_image);
         }
 
         public string serialize () {
@@ -172,16 +174,14 @@ public class Spice.ImageItem : Spice.CanvasItem {
             }
         }
 
-        private string data_from_filename (string path) {
+        private void data_from_filename (string path) {
             base64_image = Spice.Services.FileManager.file_to_base64 (path);
-            return data_to_file (base64_image);
         }
 
         private string data_to_file (string data) {
             var filename = Environment.get_tmp_dir () + FILENAME.printf (Environment.get_user_name (), file_id++, image_extension);
             Spice.Services.FileManager.base64_to_file (filename, data);
 
-            this.base64_image = data;
             return filename;
         }
     }
