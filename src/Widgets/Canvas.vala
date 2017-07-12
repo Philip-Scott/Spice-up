@@ -121,7 +121,6 @@ public class Spice.Canvas : Gtk.Overlay {
         canvas_item.clicked.connect (() => {
             unselect_all ();
             item_clicked (canvas_item);
-            request_draw_preview ();
         });
 
         canvas_item.move_item.connect ((delta_x, delta_y) => {
@@ -140,6 +139,7 @@ public class Spice.Canvas : Gtk.Overlay {
             canvas_item.visible = true;
         }
 
+        request_draw_preview ();
         return canvas_item;
     }
 
@@ -149,7 +149,7 @@ public class Spice.Canvas : Gtk.Overlay {
                 ((CanvasItem) item).unselect ();
             }
         }
-
+        item_clicked (null);
         request_draw_preview ();
     }
 

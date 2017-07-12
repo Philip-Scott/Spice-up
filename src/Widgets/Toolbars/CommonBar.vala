@@ -41,6 +41,7 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         delete_button.clicked.connect (() => {
             if (this.item != null) {
                 this.item.delete ();
+                this.manager.current_slide.canvas.unselect_all ();
             } else {
                 this.manager.current_slide.delete ();
             }
