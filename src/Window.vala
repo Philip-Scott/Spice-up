@@ -296,6 +296,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
             case 65535: // Delete Key
             case 65288: // Backspace
                 return delete_object (key);
+
+            case 65307: // Esc
+                return esc_event ();
         }
 
         return false;
@@ -334,6 +337,19 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
 
         return false;
+    }
+
+    private bool esc_event () {
+        if (is_fullscreen) {
+            this.unfullscreen ();
+        } else {
+            var slide = slide_manager.current_slide;
+            if (slide != null) {
+                slide.canvas.unselect_all ();
+            }
+        }
+
+        return true;
     }
 
     public void add_toast_notification (Granite.Widgets.Toast toast) {
