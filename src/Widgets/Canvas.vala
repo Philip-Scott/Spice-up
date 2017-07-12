@@ -245,7 +245,6 @@ public class Spice.Canvas : Gtk.Overlay {
         Utils.set_style (grid, CANVAS_CSS.printf (background_color));
 
         grid.style (background_pattern);
-        request_draw_preview ();
     }
 
     public Granite.Drawing.BufferSurface? surface = null;

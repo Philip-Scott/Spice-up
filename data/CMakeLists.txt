@@ -20,3 +20,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.appda
 # install the mimefile
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.mime.xml
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/mime/packages/)
+
+# install thumbnailer file
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.thumbnailer
+        DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/thumbnailers/)

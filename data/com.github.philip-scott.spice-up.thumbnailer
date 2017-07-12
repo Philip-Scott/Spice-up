@@ -1,0 +1,4 @@
+[Thumbnailer Entry]
+TryExec=com.github.philip-scott.spice-up
+Exec=com.github.philip-scott.spice-up -t %i %o
+MimeType=application/x-spiceup;

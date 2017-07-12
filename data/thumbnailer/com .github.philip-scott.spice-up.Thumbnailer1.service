@@ -1,0 +1,5 @@
+[Specialized Thumbnailer]
+Name=org.freedesktop.thumbnails.Thumbnailer1.spiceup
+ObjectPath=/org/freedesktop/thumbnails/Thumbnailer1/spiceup
+MimeTypes=application/x-spiceup
+Comment=free comment
