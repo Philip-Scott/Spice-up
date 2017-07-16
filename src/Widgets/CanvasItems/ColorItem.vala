@@ -21,10 +21,12 @@
 
 public class Spice.ColorItem : Spice.CanvasItem {
     public string background_color {get; set; default = "linear-gradient(to bottom, #e00 0%, #e00 100%);"; }
+    public int border_radius {get; set; default = 0; }
 
     const string TEXT_STYLE_CSS = """
         .colored {
             background: %s;
+            border-radius: %d%;
         }
     """;
 
@@ -38,20 +40,20 @@ public class Spice.ColorItem : Spice.CanvasItem {
     }
 
     protected override string serialise_item () {
-        string data = """
-            "type": "color",
-            "background_color": "%s"
-         """.printf (background_color);
-
+        string data = """ "type": "color", "background_color": "%s", "border-radius": %d """.printf (background_color, border_radius);
 
         return data;
     }
 
     protected override void load_item_data () {
         background_color = save_data.get_string_member ("background_color");
+
+        if (save_data.has_member ("border-radius")) {
+            border_radius = (int) save_data.get_int_member ("border-radius");
+        }
     }
 
     public override void style () {
-        Utils.set_style (this, TEXT_STYLE_CSS.printf (background_color));
+        Utils.set_style (this, TEXT_STYLE_CSS.printf (background_color, border_radius));
     }
 }
