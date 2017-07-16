@@ -33,6 +33,7 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
 
         var border_radius_button = new Gtk.Button.from_icon_name ("applications-engineering-symbolic", Gtk.IconSize.MENU);
         border_radius_button.get_style_context ().add_class ("spice");
+        border_radius_button.set_tooltip_text (_("Roundness"));
 
         var border_radius_popover = new Gtk.Popover (border_radius_button);
         border_radius_popover.position = Gtk.PositionType.BOTTOM;
