@@ -76,10 +76,6 @@ public class Spice.Services.FileManager {
 
         result = get_file_from_user (_("Open file"), _("Open"), Gtk.FileChooserAction.OPEN, filters);
 
-        if (result != null) {
-            settings.last_file = result.get_path ();
-        }
-
         return result;
     }
 
@@ -131,9 +127,12 @@ public class Spice.Services.FileManager {
 
     public static string open_file () {
         if (current_file != null && current_file.query_exists ()) {
+            settings.last_file = current_file.get_path ();
+
             try {
                 var dis = new DataInputStream (current_file.read ());
                 size_t size;
+
                 return dis.read_upto ("\0", -1, out size);
             } catch (Error e) {
                 warning ("Error loading file: %s", e.message);
