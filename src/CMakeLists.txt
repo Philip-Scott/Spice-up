@@ -5,6 +5,7 @@ include(ValaPrecompile)
 vala_precompile(VALA_C
   Main.vala
   Application.vala
+  StyleSheet.vala
   Window.vala
   Services/Settings.vala
   Services/Slide.vala
