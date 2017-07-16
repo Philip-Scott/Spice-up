@@ -168,32 +168,89 @@ public class Spice.Window : Gtk.ApplicationWindow {
             case 65362: // Up Arrow
                 return previous_slide ();
 
-            case 65535: // Delete Key
-            case 65288: // Backspace
-                return delete_object (key);
-
             case 65307: // Esc
                 return esc_event ();
+        }
+
+        // Ctrl + ? Events
+        if ((key.state & Gdk.ModifierType.CONTROL_MASK) != 0) {
+            switch (key.keyval) {
+                case 99: // C
+                    return copy ();
+
+                case 118: // V
+                    return paste ();
+
+                case 120: // X
+                    return cut ();
+
+                case 65535: // Delete Key
+                case 65288: // Backspace
+                    return delete_object ();
+            }
         }
 
         return false;
     }
 
-    private bool delete_object (Gdk.EventKey key) {
-        if ((key.state & Gdk.ModifierType.CONTROL_MASK) != 0) {
-            var current_item = slide_manager.current_item;
+    private bool cut () {
+        copy ();
+        delete_object ();
+        return true;
+    }
 
-            if (current_item != null) {
-                current_item.delete ();
-            } else {
-                if (slide_manager.current_slide != null) {
-                    slide_manager.current_slide.delete ();
-                }
+    private bool copy () {
+        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
+
+        var current_item = slide_manager.current_item;
+
+        if (current_item != null) {
+            clipboard.set_text (current_item.serialise (), -1);
+        } else {
+            if (slide_manager.current_slide != null) {
+                clipboard.set_text (slide_manager.current_slide.serialise (), -1);
             }
-            return true;
         }
 
-        return false;
+        return true;
+    }
+
+    private bool paste () {
+        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
+        var data = clipboard.wait_for_text ();
+
+        if (data == null) return false;
+
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (data);
+
+            var root_object = parser.get_root ().get_object ();
+
+            if (root_object.has_member ("preview")) {
+                slide_manager.new_slide (root_object, true);
+            } else {
+                slide_manager.current_slide.add_item_from_data (root_object, true, true);
+            }
+        } catch (Error e) {
+            warning ("Cloning didn't work: %s", e.message);
+        }
+
+        return true;
+    }
+
+    private bool delete_object () {
+        var current_item = slide_manager.current_item;
+
+        if (current_item != null) {
+            current_item.delete ();
+        } else {
+            if (slide_manager.current_slide != null) {
+                slide_manager.current_slide.delete ();
+            }
+        }
+
+        return true;
     }
 
     private bool next_slide () {

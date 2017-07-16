@@ -214,6 +214,7 @@ public class Spice.SlideManager : Object {
     }
 
     private bool propagating_ratio = false;
+
     public Slide new_slide (Json.Object? save_data = null, bool undoable_action = false) {
         Slide slide = new Slide (save_data);
 
@@ -261,9 +262,25 @@ public class Spice.SlideManager : Object {
 
         new_slide_created (slide);
 
-        if (current_slide == null) {
+        if (current_slide == null || undoable_action) {
             current_slide = slide;
         }
+
+        slide.visible_changed.connect ((visible) => {
+            if (visible) {
+                this.current_slide = slide;
+            } else {
+                var next_slide = get_next_slide (slide);
+
+                if (next_slide == null) {
+                    next_slide = get_previous_slide (slide);
+                }
+
+                if (next_slide != null) {
+                    this.current_slide = next_slide;
+                }
+            }
+        });
 
         return slide;
     }

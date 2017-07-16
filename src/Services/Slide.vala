@@ -34,9 +34,9 @@ public class Spice.Slide : Object {
         get {
             return visible_;
         } set {
-            visible_changed (value);
             this.visible_ = value;
             canvas.visible = value;
+            visible_changed (value);
         }
 
         default = true;
