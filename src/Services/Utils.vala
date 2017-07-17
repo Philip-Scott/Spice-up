@@ -29,6 +29,30 @@ public class Spice.Utils {
         "image/gif"
     };
 
+    public static string get_thumbnail_data (string raw_json) {
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (raw_json);
+
+            var root_object = parser.get_root ().get_object ();
+            var slides_array = root_object.get_array_member ("slides");
+
+            var ratio = (int) root_object.get_int_member ("aspect-ratio");
+            var width = Spice.AspectRatio.get_width_value (Spice.AspectRatio.get_mode (ratio));
+
+            var slides = slides_array.get_elements ();
+            if (slides.length () > 0) {
+                var preview_data = slides.nth_data (0).get_object ().get_string_member ("preview");
+
+                if (preview_data != null) return preview_data;
+            }
+        } catch (Error e) {
+            error ("Error loading file: %s", e.message);
+        }
+
+        return "";
+    }
+
     public static Gdk.Pixbuf base64_to_pixbuf (string base64) {
         var raw_data = GLib.Base64.decode (base64);
         var loader = new Gdk.PixbufLoader ();

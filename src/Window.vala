@@ -44,72 +44,109 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private Gtk.Revealer sidebar_revealer;
     private Gtk.Revealer toolbar_revealer;
-    private Gtk.AspectFrame aspect_frame;
+    private Gtk.AspectFrame? aspect_frame = null;
     private Gtk.Overlay app_overlay;
 
     private Gtk.Stack app_stack;
-    private Spice.Welcome welcome;
+    private Spice.Welcome? welcome = null;
 
     public Window (Gtk.Application app) {
         Object (application: app);
 
         build_ui ();
-        connect_signals (app);
-        load_settings ();
+
+        show_welcome ();
+
+        move (settings.pos_x, settings.pos_y);
+        resize (settings.window_width, settings.window_height);
         show_app ();
-        app_stack.set_visible_child_name  ("welcome");
     }
 
     private void build_ui () {
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
         Granite.Widgets.Utils.set_theming_for_screen (this.get_screen (), ELEMENTARY_STYLESHEET,
                                                       Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-        app_overlay = new Gtk.Overlay ();
-        app_stack = new Gtk.Stack ();
 
         slide_manager = new Spice.SlideManager ();
-        headerbar = new Spice.Headerbar (slide_manager);
-        headerbar.sensitive = false;
-
-        toolbar = new Spice.DynamicToolbar (slide_manager);
-
-        slide_list = new Spice.SlideList (slide_manager);
-        set_titlebar (headerbar);
-
-        sidebar_revealer = new Gtk.Revealer ();
-        toolbar_revealer = new Gtk.Revealer ();
-
-        sidebar_revealer.add (slide_list);
-        sidebar_revealer.reveal_child = true;
-
-        toolbar_revealer.add (toolbar);
-        toolbar_revealer.reveal_child = true;
-        toolbar_revealer.transition_duration = 0;
-
-        aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.7777, false);
-        aspect_frame.get_style_context ().remove_class ("frame");
-        aspect_frame.add (slide_manager.slideshow);
-        aspect_frame.margin = 24;
-
-        var grid = new Gtk.Grid ();
-        grid.get_style_context ().add_class ("app-back");
-        grid.attach (toolbar_revealer, 1, 0, 2, 1);
-        grid.attach (sidebar_revealer, 0, 0, 1, 2);
-        grid.attach (aspect_frame,     1, 1, 1, 1);
-
-        welcome = new Spice.Welcome ();
-
-        app_stack.add_named (grid, "application");
-        app_stack.add_named (welcome, "welcome");
+        app_overlay = new Gtk.Overlay ();
+        app_stack = new Gtk.Stack ();
+        app_stack.homogeneous = false;
 
         app_overlay.add (app_stack);
         this.add (app_overlay);
 
+
         GamepadSlideController.startup (slide_manager, this);
+    }
+
+    private void show_editor () {
+        if (aspect_frame == null) {
+            headerbar = new Spice.Headerbar (slide_manager);
+            set_titlebar (headerbar);
+
+            toolbar = new Spice.DynamicToolbar (slide_manager);
+
+            slide_list = new Spice.SlideList (slide_manager);
+
+            sidebar_revealer = new Gtk.Revealer ();
+            toolbar_revealer = new Gtk.Revealer ();
+
+            sidebar_revealer.add (slide_list);
+            sidebar_revealer.reveal_child = true;
+
+            toolbar_revealer.add (toolbar);
+            toolbar_revealer.reveal_child = true;
+            toolbar_revealer.transition_duration = 0;
+
+            aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.7777, false);
+            aspect_frame.get_style_context ().remove_class ("frame");
+            aspect_frame.add (slide_manager.slideshow);
+            aspect_frame.margin = 24;
+
+            var grid = new Gtk.Grid ();
+            grid.get_style_context ().add_class ("app-back");
+            grid.attach (toolbar_revealer, 1, 0, 2, 1);
+            grid.attach (sidebar_revealer, 0, 0, 1, 2);
+            grid.attach (aspect_frame,     1, 1, 1, 1);
+
+            app_stack.add_named (grid, "application");
+
+            this.show_all ();
+
+            connect_signals (this.application);
+        }
+
+
+        app_stack.set_visible_child_name  ("application");
+    }
+
+    private void show_welcome () {
+        if (welcome == null) {
+            welcome = new Spice.Welcome ();
+
+            welcome.open_file.connect ((file) => {
+                open_file (file);
+            });
+
+            app_stack.add_named (welcome, "welcome");
+        }
+
+        if (headerbar != null) {
+            headerbar.sensitive = false;
+        }
+
+        welcome.reload ();
+        app_stack.set_visible_child_name  ("welcome");
     }
 
     private void connect_signals (Gtk.Application app) {
         headerbar.button_clicked.connect ((button) => {
+            if (button == Spice.HeaderButton.RETURN) {
+                save_current_file ();
+                show_welcome ();
+                return;
+            }
+
             var item = slide_manager.request_new_item (button);
 
             if (item != null) {
@@ -144,10 +181,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
             }
 
             return false;
-        });
-
-        welcome.open_file.connect ((file) => {
-            open_file (file);
         });
 
         this.key_press_event.connect (on_key_pressed);
@@ -305,6 +338,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     public void open_file (File file) {
         save_current_file ();
+        show_editor ();
 
         slide_manager.reset ();
         Services.FileManager.current_file = file;
@@ -325,6 +359,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     public void save_current_file () {
         if (Services.FileManager.current_file != null) {
             Services.FileManager.write_file (slide_manager.serialise ());
+            Services.FileManager.current_file = null;
         }
     }
 
@@ -342,11 +377,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
         settings.window_height = height;
 
         return false;
-    }
-
-    private void load_settings () {
-        resize (settings.window_width, settings.window_height);
-        move (settings.pos_x, settings.pos_y);
     }
 
     public void show_app () {

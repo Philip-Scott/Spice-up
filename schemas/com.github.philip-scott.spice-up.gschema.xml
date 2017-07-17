@@ -29,6 +29,13 @@
             <summary>The last opened file</summary>
             <description>The last file you opened is here</description>
         </key>
+
+        <key name="last-files" type="as">
+            <default>[]</default>
+            <summary>The last opened files</summary>
+            <description>The last 10 files you openeded are here</description>
+        </key>
+
         <key name="controler-config" type="s">
             <default>""</default>
             <summary>Controler configuration for presentation mode</summary>

@@ -84,7 +84,7 @@ public class Spice.Services.FileManager {
         List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
         Gtk.FileFilter filter = new Gtk.FileFilter ();
         filter.set_filter_name ("Presentation");
-        filter.add_mime_type ("application/x-spice");
+        filter.add_mime_type ("application/x-spiceup");
 
         filters.append (filter);
 
@@ -96,7 +96,7 @@ public class Spice.Services.FileManager {
         }
 
         if (result != null) {
-            settings.last_file = result.get_path ();
+            settings.add_file (result.get_path ());
         }
 
         return result;
@@ -127,7 +127,7 @@ public class Spice.Services.FileManager {
 
     public static string open_file () {
         if (current_file != null && current_file.query_exists ()) {
-            settings.last_file = current_file.get_path ();
+            settings.add_file (current_file.get_path ());
 
             try {
                 var dis = new DataInputStream (current_file.read ());

@@ -24,7 +24,8 @@ public enum Spice.HeaderButton {
     REDO,
     TEXT,
     IMAGE,
-    SHAPE;
+    SHAPE,
+    RETURN;
 }
 
 public class Spice.Headerbar : Gtk.HeaderBar {
@@ -36,6 +37,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     private HeaderbarButton image;
     private HeaderbarButton shape;
     private HeaderbarButton export;
+    private HeaderbarButton show_welcome;
 
     private HeaderbarButton present;
 
@@ -47,10 +49,13 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         }
         set {
             text.sensitive = value;
-            image.sensitive = value;
+            undo.sensitive = false;
+            redo.sensitive = false;
             shape.sensitive = value;
+            image.sensitive = value;
             export.sensitive = value;
             present.sensitive = value;
+            show_welcome.sensitive = value;
         }
     }
 
@@ -71,6 +76,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         text = new HeaderbarButton ("/com/github/philip-scott/spice-up/text.svg", _("Text Box"), HeaderButton.TEXT);
         image = new HeaderbarButton ("/com/github/philip-scott/spice-up/photo.svg", _("Image"), HeaderButton.IMAGE);
         shape = new HeaderbarButton ("/com/github/philip-scott/spice-up/shape.svg", _("Shape"), HeaderButton.SHAPE);
+        show_welcome = new HeaderbarButton ("document-open-symbolic", _("Return to files"), HeaderButton.RETURN);
 
         undo.sensitive = false;
         redo.sensitive = false;
@@ -97,6 +103,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         pack_end (present);
         pack_end (export);
+        pack_end (show_welcome);
     }
 
     private void connect_signals () {

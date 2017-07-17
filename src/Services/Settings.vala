@@ -26,7 +26,7 @@ public class Spice.Services.Settings : Granite.Services.Settings {
     public int pos_y { get; set; }
     public int window_width { get; set; }
     public int window_height { get; set; }
-    public string last_file { get; set; }
+    public string[] last_files { get; set; }
     public string controler_config { get; set; }
 
     public static Settings get_instance () {
@@ -39,5 +39,23 @@ public class Spice.Services.Settings : Granite.Services.Settings {
 
     private Settings () {
         base ("com.github.philip-scott.spice-up");
+    }
+
+    public void add_file (string file) {
+        var current_files = last_files;
+
+        Gee.List<string> existing_files = new Gee.ArrayList<string> ();
+        existing_files.add_all_array (current_files);
+
+        if (file in current_files) {
+            existing_files.remove (file);
+        }
+
+        existing_files.insert (0, file);
+        if (existing_files.size > 10) {
+            existing_files = existing_files.slice (0, 10);
+        }
+
+        last_files = existing_files.to_array ();
     }
 }

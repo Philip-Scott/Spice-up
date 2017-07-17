@@ -19,20 +19,32 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class Spice.Welcome : Granite.Widgets.Welcome {
+public class Spice.Welcome : Gtk.Box {
     public signal void open_file (File file);
 
+    private Granite.Widgets.Welcome welcome;
+    private Spice.Widgets.Library.Library? library = null;
+    private Gtk.Separator separator;
+
     public Welcome () {
-        base ("Spice up", _("Make a Simple Presentation"));
-        append ("document-new", _("New Presentation"), _("Create a new presentation"));
-        append ("folder-open", _("Open File"), _("Open a saved presentation"));
+        orientation = Gtk.Orientation.HORIZONTAL;
+        get_style_context ().add_class ("view");
 
-        if (settings.last_file != "") {
-            var file = File.new_for_path (settings.last_file);
-            append ("x-office-presentation", _("Open Last File"), file.get_basename ().replace (Spice.Services.FileManager.FILE_EXTENSION, ""));
-        }
+        width_request = 950;
+        height_request = 500;
 
-        activated.connect ((index) => {
+        welcome = new Granite.Widgets.Welcome ("Spice-Up", _("Make a Simple Presentation"));
+        welcome.hexpand = true;
+
+        welcome.append ("document-new", _("New Presentation"), _("Create a new presentation"));
+        welcome.append ("folder-open", _("Open File"), _("Open a saved presentation"));
+
+        separator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
+
+        add (welcome);
+        add (separator);
+
+        welcome.activated.connect ((index) => {
             switch (index) {
                 case 0:
                     var file = Spice.Services.FileManager.save_presentation ();
@@ -42,11 +54,46 @@ public class Spice.Welcome : Granite.Widgets.Welcome {
                     var file = Spice.Services.FileManager.open_presentation ();
                     if (file != null) open_file (file);
                     break;
-
-                case 2:
-                    open_file (File.new_for_path (settings.last_file));
-                    break;
              }
         });
+    }
+
+    public void reload () {
+        var files = settings.last_files;
+
+        if (library != null) {
+            remove (library);
+            library.destroy ();
+            library = null;
+        }
+
+        if (files.length > 0 ) {
+            library = new Spice.Widgets.Library.Library ();
+            add (library);
+
+            var existing_files = new Array<string> ();
+            foreach (var path in files) {
+                var file = File.new_for_path (path);
+                if (file.query_exists ()) {
+                    library.add_file (file);
+                }
+
+                existing_files.append_val (path);
+            }
+
+            library.item_selected.connect ((file) => {
+                open_file (file);
+            });
+
+            settings.last_files = existing_files.data;
+
+            separator.visible = true;
+            separator.no_show_all = false;
+
+            this.show_all ();
+        } else {
+            separator.visible = false;
+            separator.no_show_all = true;
+        }
     }
 }

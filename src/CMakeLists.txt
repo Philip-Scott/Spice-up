@@ -14,6 +14,7 @@ vala_precompile(VALA_C
   Services/HistoryManager.vala
   Services/Utils.vala
   Services/GamepadSlideController.vala
+
   Widgets/Canvas.vala
   Widgets/ColorButton.vala
   Widgets/EntryCombo.vala
@@ -34,8 +35,12 @@ vala_precompile(VALA_C
   Widgets/Toolbars/ShapeBar.vala
   Widgets/Toolbars/TextBar.vala
   Widgets/Toolbars/Toolbar.vala
+
+  Widgets/Library/LibraryItem.vala
+  Widgets/Library/Library.vala
+
   #${CMAKE_CURRENT_BINARY_DIR}/config.vala
-  
+
   # LibGamepad
   Services/libgamepad/libgamepad.vala
   Services/libgamepad/gamepad-monitor.vala
