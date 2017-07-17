@@ -23,6 +23,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     public File file { get; construct set; }
 
     private Gtk.Image image;
+    private Gtk.Popover? popover = null;
 
     public LibraryItem (File file) {
         this.file = file;
@@ -47,10 +48,55 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
         event_box.button_release_event.connect ((event) => {
             if (event.button != 3) return false;
-
+            show_popover ();
 
             return true;
         });
+    }
+
+    private void show_popover () {
+        if (popover == null) {
+            var name_label = new Gtk.Label (_("Name: "));
+            name_label.halign = Gtk.Align.END;
+
+            var name_entry = new Gtk.Entry ();
+            name_entry.text = file.get_basename ().replace (".spice", "");
+
+            var ratio_label = new Gtk.Label (_("Aspect Ratio: "));
+            ratio_label.halign = Gtk.Align.END;
+
+            var aspect_ratio = new Gtk.ComboBoxText ();
+            aspect_ratio.append ("1", _("4:3"));
+            aspect_ratio.append ("2", _("16:9"));
+            aspect_ratio.append ("3", _("16:10"));
+            aspect_ratio.append ("4", _("3:2"));
+            aspect_ratio.append ("5", _("5:4"));
+
+            var grid = new Gtk.Grid ();
+            grid.row_spacing = 6;
+            grid.column_spacing = 6;
+            grid.margin = 6;
+
+            grid.attach (name_label, 0, 0, 1, 1);
+            grid.attach (name_entry, 1, 0, 1, 1);
+            grid.attach (ratio_label, 0, 1, 1, 1);
+            grid.attach (aspect_ratio, 1, 1, 1, 1);
+
+            grid.show_all ();
+
+            popover = new Gtk.Popover (image);
+            popover.position = Gtk.PositionType.LEFT;
+            popover.add (grid);
+
+            popover.closed.connect (() => {
+                var new_name = name_entry.get_text () + ".spice";
+                if (new_name != file.get_basename ()) {
+                    stderr.printf ("Rename\n");
+                }
+            });
+        }
+
+        popover.show ();
     }
 
     private void get_thumbnail () {
