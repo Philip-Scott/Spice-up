@@ -27,18 +27,30 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     public LibraryItem (File file) {
         this.file = file;
 
+        var event_box = new Gtk.EventBox ();
+        event_box.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
+
         set_tooltip_text (_("Open: %s".printf (file.get_path ())));
         halign = Gtk.Align.START;
 
         image = new Gtk.Image ();
+        image.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
         image.margin = 12;
 
         image.get_style_context ().add_class ("card");
 
-        add (image);
+        event_box.add (image);
+        add (event_box);
 
         get_thumbnail ();
         show_all ();
+
+        event_box.button_release_event.connect ((event) => {
+            if (event.button != 3) return false;
+
+
+            return true;
+        });
     }
 
     private void get_thumbnail () {
