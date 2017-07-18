@@ -20,6 +20,8 @@
 */
 
 public class Spice.SlideManager : Object {
+    public static int aspect_ratio_override = -1;
+
     public signal void aspect_ratio_changed (Spice.AspectRatio ratio);
     public signal void reseted ();
     public signal void current_slide_changed (Slide slide);
@@ -103,6 +105,11 @@ public class Spice.SlideManager : Object {
             var slides_array = root_object.get_array_member ("slides");
 
             var ratio = (int) root_object.get_int_member ("aspect-ratio");
+
+            if (aspect_ratio_override != -1) {
+                ratio = aspect_ratio_override;
+                aspect_ratio_override = -1;
+            }
 
             current_ratio = Spice.AspectRatio.get_mode (ratio);
             aspect_ratio_changed (current_ratio);

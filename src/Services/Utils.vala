@@ -53,6 +53,22 @@ public class Spice.Utils {
         return "";
     }
 
+    public static int get_aspect_ratio (string raw_json) {
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (raw_json);
+
+            var root_object = parser.get_root ().get_object ();
+            var slides_array = root_object.get_array_member ("slides");
+
+            return (int) root_object.get_int_member ("aspect-ratio");
+        } catch (Error e) {
+            error ("Error loading file: %s", e.message);
+        }
+
+        return 0;
+    }
+
     public static Gdk.Pixbuf base64_to_pixbuf (string base64) {
         var raw_data = GLib.Base64.decode (base64);
         var loader = new Gdk.PixbufLoader ();

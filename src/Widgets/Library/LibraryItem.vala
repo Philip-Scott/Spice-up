@@ -25,6 +25,9 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     private Gtk.Image image;
     private Gtk.Popover? popover = null;
 
+    private string last_aspect_ratio;
+    private string data;
+
     public LibraryItem (File file) {
         this.file = file;
 
@@ -32,7 +35,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         event_box.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
 
         set_tooltip_text (_("Open: %s".printf (file.get_path ())));
-        halign = Gtk.Align.START;
+        halign = Gtk.Align.CENTER;
 
         image = new Gtk.Image ();
         image.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
@@ -72,6 +75,9 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             aspect_ratio.append ("4", _("3:2"));
             aspect_ratio.append ("5", _("5:4"));
 
+            last_aspect_ratio = "%d".printf (Utils.get_aspect_ratio (data));
+            aspect_ratio.set_active_id (last_aspect_ratio);
+
             var grid = new Gtk.Grid ();
             grid.row_spacing = 6;
             grid.column_spacing = 6;
@@ -90,8 +96,24 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
             popover.closed.connect (() => {
                 var new_name = name_entry.get_text () + ".spice";
-                if (new_name != file.get_basename ()) {
-                    stderr.printf ("Rename\n");
+                if (new_name != this.file.get_basename ()) {
+                    var path = this.file.get_parent ().get_path ();
+                    var new_file = File.new_for_path ("%s/%s".printf (path, new_name));
+
+                    if (new_file.query_exists ()) {
+                        window.add_toast_notification (new Granite.Widgets.Toast (_("Could not rename: File already exists...")));
+                        return;
+                    }
+
+                    FileUtils.rename (this.file.get_path (), new_file.get_path ());
+                    Spice.Services.Settings.get_instance ().add_file (new_file.get_path ());
+
+                    this.file = new_file;
+                }
+
+                if (aspect_ratio.get_active_id () != last_aspect_ratio) {
+                    Spice.SlideManager.aspect_ratio_override = int.parse (aspect_ratio.get_active_id ());
+                    activate ();
                 }
             });
         }
@@ -101,7 +123,6 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
     private void get_thumbnail () {
         if (file.query_exists ()) {
-            string data;
             FileUtils.get_contents (file.get_path (), out data);
 
             var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
