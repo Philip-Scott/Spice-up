@@ -78,11 +78,27 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             last_aspect_ratio = "%d".printf (Utils.get_aspect_ratio (data));
             aspect_ratio.set_active_id (last_aspect_ratio);
 
+            var location_button = new Gtk.Button.from_icon_name ("document-open-symbolic");
+            location_button.get_style_context ().add_class ("flat");
+            location_button.set_tooltip_text (_("Open file location…"));
+            location_button.halign = Gtk.Align.START;
+
+            location_button.clicked.connect (() => {
+                popover.hide ();
+
+                try {
+                    AppInfo.launch_default_for_uri (file.get_parent ().get_uri (), null);
+                } catch (Error e) {
+                    warning ("No default app to open folders: %s", e.message);
+                }
+            });
+
             var grid = new Gtk.Grid ();
             grid.row_spacing = 6;
             grid.column_spacing = 6;
             grid.margin = 6;
 
+            grid.attach (location_button, 0, 2, 1, 1);
             grid.attach (name_label, 0, 0, 1, 1);
             grid.attach (name_entry, 1, 0, 1, 1);
             grid.attach (ratio_label, 0, 1, 1, 1);
@@ -95,13 +111,14 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             popover.add (grid);
 
             popover.closed.connect (() => {
-                var new_name = name_entry.get_text () + ".spice";
+                var new_name = name_entry.get_text ().replace ("/", "") + ".spice";
+
                 if (new_name != this.file.get_basename ()) {
                     var path = this.file.get_parent ().get_path ();
                     var new_file = File.new_for_path ("%s/%s".printf (path, new_name));
 
                     if (new_file.query_exists ()) {
-                        window.add_toast_notification (new Granite.Widgets.Toast (_("Could not rename: File already exists...")));
+                        window.add_toast_notification (new Granite.Widgets.Toast (_("Could not rename: File already exists…")));
                         return;
                     }
 
@@ -123,7 +140,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
     private void get_thumbnail () {
         if (file.query_exists ()) {
-            FileUtils.get_contents (file.get_path (), out data);
+            data = Services.FileManager.get_data (file);
 
             var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
             image.set_from_pixbuf (pixbuf);

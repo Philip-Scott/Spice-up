@@ -135,6 +135,17 @@ public class Spice.Services.FileManager {
         return "";
     }
 
+    public static string get_data (File file) {
+        string data = "";
+
+        try {
+            FileUtils.get_contents (file.get_path (), out data);
+        } catch (Error e) {
+            warning ("Error reading file: %s", e.message);
+        }
+        return data;
+    }
+
     public static void create_file_if_not_exists (File file) {
         if (!file.query_exists ()) {
             try {
