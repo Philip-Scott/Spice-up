@@ -47,7 +47,7 @@ public class Spice.Welcome : Gtk.Box {
         welcome.activated.connect ((index) => {
             switch (index) {
                 case 0:
-                    var file = Spice.Services.FileManager.save_presentation ();
+                    var file = Spice.Services.FileManager.new_presentation ();
                     if (file != null) open_file (file);
                     break;
                 case 1:

@@ -79,25 +79,18 @@ public class Spice.Services.FileManager {
         return result;
     }
 
-    public static File? save_presentation () {
+    public static File? new_presentation () {
         File? result = null;
-        List<Gtk.FileFilter> filters = new List<Gtk.FileFilter> ();
-        Gtk.FileFilter filter = new Gtk.FileFilter ();
-        filter.set_filter_name ("Presentation");
-        filter.add_mime_type ("application/x-spiceup");
 
-        filters.append (filter);
+        var documents = Environment.get_user_special_dir (UserDirectory.DOCUMENTS) + "/%s".printf (_("Presentations"));
+        DirUtils.create_with_parents (documents, 0775);
 
-        result = get_file_from_user (_("Save file"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
+        int id = 1;
+        do {
+            result = File.new_for_path ("%s/%s %d%s".printf (documents, _("Untitled Presentation"), id++, FILE_EXTENSION));
+        } while (result.query_exists ());
 
-        var path = result.get_path ();
-        if (!path.has_suffix (FILE_EXTENSION)) {
-            result = File.new_for_path (path + FILE_EXTENSION);
-        }
-
-        if (result != null) {
-            settings.add_file (result.get_path ());
-        }
+        settings.add_file (result.get_path ());
 
         return result;
     }
