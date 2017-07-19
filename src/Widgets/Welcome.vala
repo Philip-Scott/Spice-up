@@ -68,24 +68,12 @@ public class Spice.Welcome : Gtk.Box {
         }
 
         if (files.length > 0 ) {
-            library = new Spice.Widgets.Library.Library ();
+            library = new Spice.Widgets.Library.Library (files);
             add (library);
-
-            var existing_files = new Array<string> ();
-            foreach (var path in files) {
-                var file = File.new_for_path (path);
-                if (file.query_exists ()) {
-                    library.add_file (file);
-                }
-
-                existing_files.append_val (path);
-            }
 
             library.item_selected.connect ((file) => {
                 open_file (file);
             });
-
-            settings.last_files = existing_files.data;
 
             separator.visible = true;
             separator.no_show_all = false;
