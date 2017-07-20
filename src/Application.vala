@@ -41,7 +41,7 @@ public class Spice.Application : Granite.Application {
         exec_name = "spice-up";
         app_launcher = "com.github.philip-scott.spice-up";
 
-        build_version = "0.6";
+        build_version = "0.8";
         app_icon = "com.github.philip-scott.spice-up";
         main_url = "https://github.com/Philip-Scott/Spice-up/";
         bug_url = "https://github.com/Philip-Scott/Spice-up/issues";
