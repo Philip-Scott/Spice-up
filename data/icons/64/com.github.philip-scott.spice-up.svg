@@ -28,9 +28,9 @@
      inkscape:window-height="1017"
      id="namedview59"
      showgrid="true"
-     inkscape:zoom="16"
-     inkscape:cx="25.659715"
-     inkscape:cy="31.412406"
+     inkscape:zoom="8"
+     inkscape:cx="-2.1551089"
+     inkscape:cy="43.015611"
      inkscape:window-x="0"
      inkscape:window-y="30"
      inkscape:window-maximized="1"
@@ -57,6 +57,10 @@
        position="11,35"
        orientation="1,0"
        id="guide4326" />
+    <sodipodi:guide
+       position="32,60.22561"
+       orientation="1,0"
+       id="guide4246" />
   </sodipodi:namedview>
   <metadata
      id="metadata35">
@@ -705,38 +709,6 @@
      style="opacity:1;fill:none;stroke:#808080;stroke-width:0.99661827;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
      inkscape:transform-center-x="0.10040647"
      inkscape:transform-center-y="1.7513863" />
-  <g
-     transform="matrix(1.4999994,0,0,0.60606098,-4.0656413,31.173052)"
-     id="g2036"
-     style="display:inline;stroke-width:1.04880869;stroke-miterlimit:4;stroke-dasharray:none">
-    <g
-       transform="matrix(1.052632,0,0,1.285713,-1.263158,-13.42854)"
-       id="g3712"
-       style="opacity:0.4;stroke-width:0.90154207;stroke-miterlimit:4;stroke-dasharray:none">
-      <rect
-         width="5"
-         height="7"
-         x="38"
-         y="40"
-         id="rect2801"
-         style="fill:url(#radialGradient2873-966-168);fill-opacity:1;stroke:none" />
-      <rect
-         width="5"
-         height="7"
-         x="-10"
-         y="-47"
-         transform="scale(-1,-1)"
-         id="rect3696"
-         style="fill:url(#radialGradient2875-742-326);fill-opacity:1;stroke:none" />
-      <rect
-         width="28"
-         height="7.0000005"
-         x="10"
-         y="40"
-         id="rect3700"
-         style="fill:url(#linearGradient2877-634-617);fill-opacity:1;stroke:none" />
-    </g>
-  </g>
   <g
      transform="matrix(1.3279251,0,0,1.2891913,-7.7453785,-4.266561)"
      id="g4384"
