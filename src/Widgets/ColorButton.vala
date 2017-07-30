@@ -52,6 +52,7 @@ public class Spice.ColorPicker : ColorButton {
 
     // 0 == main, N = Gradient Color
     private int color_selector = 0;
+    private ulong color_chooser_signal;
 
     private Gtk.Stack colors_grid_stack;
 
@@ -155,22 +156,18 @@ public class Spice.ColorPicker : ColorButton {
         color_chooser = new Gtk.ColorChooserWidget ();
         color_chooser.show_editor = true;
 
-        color_chooser.notify["rgba"].connect (() => {
-            set_color_smart (rgb_to_hex (color_chooser.rgba.to_string ()), true);
+        color_chooser_signal = color_chooser.notify["rgba"].connect (() => {
+            set_color_smart (rgb_to_hex (color_chooser.rgba.to_string ()), false);
         });
 
         color1.clicked.connect (() => {
             color_selector = 1;
-            var rgba = Gdk.RGBA ();
-            rgba.parse (color1.color);
-            color_chooser.set_rgba (rgba);
+            set_color_chooser_color (color1.color);
         });
 
         color2.clicked.connect (() => {
             color_selector = 2;
-            var rgba = Gdk.RGBA ();
-            rgba.parse (color2.color);
-            color_chooser.set_rgba (rgba);
+            set_color_chooser_color (color2.color);
         });
 
         color1.grab_focus ();
@@ -223,58 +220,58 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public void generate_colors () {
-        // Red
-        attach_color ("#FF8C82", 0, 0);
-        attach_color ("#ED5353", 0, 1);
-        attach_color ("#C6262E", 0, 2);
-        attach_color ("#A10705", 0, 3);
-        attach_color ("#7A0000", 0, 4);
+        // red
+        attach_color ("#ff8c82", 0, 0);
+        attach_color ("#ed5353", 0, 1);
+        attach_color ("#c6262e", 0, 2);
+        attach_color ("#a10705", 0, 3);
+        attach_color ("#7a0000", 0, 4);
 
-        // ORANGE
-        attach_color ("#FFC27D", 1, 0);
-        attach_color ("#FFA154", 1, 1);
-        attach_color ("#F37329", 1, 2);
-        attach_color ("#CC3B02", 1, 3);
-        attach_color ("#A62100", 1, 4);
+        // orange
+        attach_color ("#ffc27d", 1, 0);
+        attach_color ("#ffa154", 1, 1);
+        attach_color ("#f37329", 1, 2);
+        attach_color ("#cc3b02", 1, 3);
+        attach_color ("#a62100", 1, 4);
 
-        // Yellow
-        attach_color ("#FFF394", 2, 0);
-        attach_color ("#FFE16B", 2, 1);
-        attach_color ("#F9C440", 2, 2);
-        attach_color ("#D48E15", 2, 3);
-        attach_color ("#AD5F00", 2, 4);
+        // yellow
+        attach_color ("#fff394", 2, 0);
+        attach_color ("#ffe16b", 2, 1);
+        attach_color ("#f9c440", 2, 2);
+        attach_color ("#d48e15", 2, 3);
+        attach_color ("#ad5f00", 2, 4);
 
-        // Green
-        attach_color ("#D1FF82", 0, 5);
-        attach_color ("#9BDB4D", 0, 6);
-        attach_color ("#68B723", 0, 7);
-        attach_color ("#3A9104", 0, 8);
-        attach_color ("#206B00", 0, 9);
+        // green
+        attach_color ("#d1ff82", 0, 5);
+        attach_color ("#9bdb4d", 0, 6);
+        attach_color ("#68b723", 0, 7);
+        attach_color ("#3a9104", 0, 8);
+        attach_color ("#206b00", 0, 9);
 
-        // Blue
-        attach_color ("#8CD5FF", 1, 5);
-        attach_color ("#64BAFF", 1, 6);
-        attach_color ("#3689E6", 1, 7);
-        attach_color ("#0D52BF", 1, 8);
-        attach_color ("#002E99", 1, 9);
+        // blue
+        attach_color ("#8cd5ff", 1, 5);
+        attach_color ("#64baff", 1, 6);
+        attach_color ("#3689e6", 1, 7);
+        attach_color ("#0d52bf", 1, 8);
+        attach_color ("#002e99", 1, 9);
 
-        // Purple
-        attach_color ("#E29FFC", 2, 5);
-        attach_color ("#AD65D6", 2, 6);
-        attach_color ("#7A36B1", 2, 7);
-        attach_color ("#4C158A", 2, 8);
+        // purple
+        attach_color ("#e29ffc", 2, 5);
+        attach_color ("#ad65d6", 2, 6);
+        attach_color ("#7a36b1", 2, 7);
+        attach_color ("#4c158a", 2, 8);
         attach_color ("#260063", 2, 9);
 
-        // GrayScale
-        attach_color ("#DBE0F3", 3, 0);
-        attach_color ("#C0C6DE", 3, 1);
-        attach_color ("#919CAF", 3, 2);
-        attach_color ("#68758E", 3, 3);
-        attach_color ("#485A6C", 3, 4);
+        // grayscale
+        attach_color ("#dbe0f3", 3, 0);
+        attach_color ("#c0c6de", 3, 1);
+        attach_color ("#919caf", 3, 2);
+        attach_color ("#68758e", 3, 3);
+        attach_color ("#485a6c", 3, 4);
 
-        attach_color ("#FFFFFF", 3, 5);
-        attach_color ("#CBCBCB", 3, 6);
-        attach_color ("#89898B", 3, 7);
+        attach_color ("#ffffff", 3, 5);
+        attach_color ("#cbcbcb", 3, 6);
+        attach_color ("#89898b", 3, 7);
         attach_color ("#505050", 3, 8);
         attach_color ("#000000", 3, 9);
 
@@ -286,10 +283,6 @@ public class Spice.ColorPicker : ColorButton {
         color_button.get_style_context ().remove_class ("button");
         color_button.can_focus = false;
         color_button.margin_right = 0;
-
-        if (y % 4 == 3) {
-            //color_button.margin_bottom = 3;
-        }
 
         colors_grid.attach (color_button, x, y, 1, 1);
 
@@ -310,13 +303,20 @@ public class Spice.ColorPicker : ColorButton {
         }
 
         if (from_button) {
-            Gdk.RGBA rgba = Gdk.RGBA ();
-            rgba.parse (color);
-            color_chooser.rgba = rgba;
-            color_picked (this.color);
+            set_color_chooser_color (color);
         }
 
-        //color_picked (this.color);
+        color_picked (this.color);
+    }
+
+    private void set_color_chooser_color (string color) {
+        SignalHandler.block (color_chooser, color_chooser_signal);
+
+        Gdk.RGBA rgba = Gdk.RGBA ();
+        rgba.parse (color);
+        color_chooser.rgba = rgba;
+
+        SignalHandler.unblock (color_chooser, color_chooser_signal);
     }
 
     protected class ColorButton : Gtk.Button {

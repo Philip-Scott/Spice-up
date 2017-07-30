@@ -100,7 +100,7 @@ public class Spice.Slide : Object {
 
     public void reload_preview_data () {
         if (canvas.surface != null) {
-            Timeout.add (20, () => {
+            Timeout.add (110, () => {
                 var pixbuf = canvas.surface.load_to_pixbuf ().scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR);
                 preview.set_from_pixbuf (pixbuf);
                 preview_data = Utils.pixbuf_to_base64 (pixbuf);
