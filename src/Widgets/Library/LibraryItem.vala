@@ -140,10 +140,18 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
     private void get_thumbnail () {
         if (file.query_exists ()) {
-            data = Services.FileManager.get_data (file);
+            new Thread<void*> ("content-loading", () => {
+                data = Services.FileManager.get_data (file);
 
-            var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
-            image.set_from_pixbuf (pixbuf);
+                var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
+
+                Idle.add (() => {
+                    image.set_from_pixbuf (pixbuf);
+                    return GLib.Source.REMOVE;
+                });
+
+                return null;
+            });
         }
     }
 }

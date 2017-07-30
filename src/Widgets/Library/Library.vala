@@ -24,7 +24,7 @@ public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
 
     private Gtk.FlowBox item_box;
 
-    public Library () {
+    public Library (string[] files) {
         hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         item_box = new Gtk.FlowBox ();
@@ -40,6 +40,17 @@ public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
         item_box.child_activated.connect ((child) => {
             item_selected ((child as LibraryItem).file);
         });
+
+        var existing_files = new Array<string> ();
+        foreach (var path in files) {
+            var file = File.new_for_path (path);
+            if (file.query_exists ()) {
+                add_file (file);
+                existing_files.append_val (path);
+            }
+        }
+
+        settings.last_files = existing_files.data;
     }
 
     public void add_file (File file) {

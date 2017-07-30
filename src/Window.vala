@@ -64,8 +64,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private void build_ui () {
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
-        Granite.Widgets.Utils.set_theming_for_screen (this.get_screen (), ELEMENTARY_STYLESHEET,
-                                                      Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+        var provider = new Gtk.CssProvider ();
+        provider.load_from_resource ("/com/github/philip-scott/spice-up/stylesheet.css");
+        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
         slide_manager = new Spice.SlideManager ();
         app_overlay = new Gtk.Overlay ();

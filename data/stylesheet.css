@@ -1,5 +1,3 @@
-const string ELEMENTARY_STYLESHEET = 
-"
 @define-color SpicePrimaryBackground #333435;
 @define-color SpiceSlideBackground #2A2B2C;
 @define-color SpiceSlideBackgroundSelected #222324;
@@ -122,5 +120,4 @@ background: none;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }
-";
 
