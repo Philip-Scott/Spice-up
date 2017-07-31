@@ -365,7 +365,7 @@ public class Spice.ColorPicker : ColorButton {
             add (surface);
         }
 
-        public void style () {
+        public new void style () {
             Utils.set_style (surface, STYLE_CSS.printf (_color));
         }
 

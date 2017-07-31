@@ -37,17 +37,16 @@ public class Spice.Utils {
             var root_object = parser.get_root ().get_object ();
             var slides_array = root_object.get_array_member ("slides");
 
-            var ratio = (int) root_object.get_int_member ("aspect-ratio");
-            var width = Spice.AspectRatio.get_width_value (Spice.AspectRatio.get_mode (ratio));
-
             var slides = slides_array.get_elements ();
             if (slides.length () > 0) {
                 var preview_data = slides.nth_data (0).get_object ().get_string_member ("preview");
 
-                if (preview_data != null) return preview_data;
+                if (preview_data != null) {
+                   return preview_data;
+                }
             }
         } catch (Error e) {
-            error ("Error loading file: %s", e.message);
+            warning ("Error loading file: %s", e.message);
         }
 
         return "";
@@ -59,11 +58,10 @@ public class Spice.Utils {
             parser.load_from_data (raw_json);
 
             var root_object = parser.get_root ().get_object ();
-            var slides_array = root_object.get_array_member ("slides");
 
             return (int) root_object.get_int_member ("aspect-ratio");
         } catch (Error e) {
-            error ("Error loading file: %s", e.message);
+            warning ("Error loading file: %s", e.message);
         }
 
         return 0;
@@ -106,17 +104,21 @@ public class Spice.Utils {
 
     // Check if the filename has a picture file extension.
     public static bool is_valid_image (GLib.File file) {
-        var file_info = file.query_info ("standard::*", 0);
+        try {
+            var file_info = file.query_info ("standard::*", 0);
 
-        // Check for correct file type, don't try to load directories and such
-        if (file_info.get_file_type () != GLib.FileType.REGULAR) {
-            return false;
-        }
-
-        foreach (var type in ACCEPTED_TYPES) {
-            if (GLib.ContentType.equals (file_info.get_content_type (), type)) {
-                return true;
+            // Check for correct file type, don't try to load directories and such
+            if (file_info.get_file_type () != GLib.FileType.REGULAR) {
+                return false;
             }
+
+            foreach (var type in ACCEPTED_TYPES) {
+                if (GLib.ContentType.equals (file_info.get_content_type (), type)) {
+                    return true;
+                }
+            }
+        } catch (Error e) {
+            warning ("Could not get file info: %s", e.message);
         }
 
         return false;
