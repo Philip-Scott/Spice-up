@@ -32,17 +32,16 @@ public class Spice.ColorPicker : ColorButton {
             gradient_revealer.visible = value;
             gradient_revealer.no_show_all = !value;
 
-            color_selector = value ? 1 : 0;
+            color_selector = value ? 3 : 0;
         }
     }
 
     public new string color {
         get {
-            return surface.color_;
+            return _color;
         } set {
+            ((ColorButton) this).color = (value);
             preview.color = value;
-            surface.color_ = value;
-            surface.style ();
 
             if (gradient) {
                 parse_gradient (value);
@@ -62,15 +61,17 @@ public class Spice.ColorPicker : ColorButton {
     private Gtk.ToggleButton custom_button;
     private Gtk.ColorChooserWidget color_chooser;
 
-    private ColorSurface preview;
+    private ColorButton preview;
     private ColorButton color1;
     private ColorButton color2;
 
     private Gtk.ComboBoxText gradient_type;
 
     public ColorPicker () {
-        base ("white");
+        Object (color: "white");
+    }
 
+    construct {
         colors_grid_stack = new Gtk.Stack ();
         colors_grid_stack.homogeneous = false;
 
@@ -119,7 +120,8 @@ public class Spice.ColorPicker : ColorButton {
         gradient_grid.row_spacing = 6;
         gradient_grid.margin_left = 6;
 
-        preview = new ColorSurface ("");
+        preview = new ColorButton ("");
+        preview.get_style_context ().remove_class ("button");
         preview.set_size_request (100,120);
 
         var preview_box = new Gtk.Grid ();
@@ -168,6 +170,11 @@ public class Spice.ColorPicker : ColorButton {
         color2.clicked.connect (() => {
             color_selector = 2;
             set_color_chooser_color (color2.color);
+        });
+
+        preview.clicked.connect (() => {
+            color_selector = 3;
+            set_color_chooser_color (preview.color);
         });
 
         color1.grab_focus ();
@@ -274,7 +281,6 @@ public class Spice.ColorPicker : ColorButton {
         attach_color ("#89898b", 3, 7);
         attach_color ("#505050", 3, 8);
         attach_color ("#000000", 3, 9);
-
     }
 
     private void attach_color (string color, int x, int y) {
@@ -292,14 +298,26 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     private void set_color_smart (string color, bool from_button = false) {
-        if (this.color_selector == 0) {
-            this.color = color;
-        } else if (this.color_selector == 1) {
-            color1.color = color;
-            this.color = make_gradient ();
-        } else {
-            color2.color = color;
-            this.color = make_gradient ();
+        switch (this.color_selector) {
+            case 0: // Single color
+                this.color = color;
+                break;
+
+            case 1: // Color 1
+                color1.color = color;
+                this.color = make_gradient ();
+                break;
+
+            case 2: // Color 2
+                color2.color = color;
+                this.color = make_gradient ();
+                break;
+
+            case 3: // Both colors
+                color1.color = color;
+                color2.color = color;
+                this.color = make_gradient ();
+                break;
         }
 
         if (from_button) {
@@ -320,50 +338,44 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     protected class ColorButton : Gtk.Button {
-        protected ColorSurface surface;
+        private Gtk.EventBox surface;
 
+        public string _color = "none";
         public string color {
             get {
-                return surface.color;
-            } set {
-                surface.color = value;
-            }
-        }
-
-        public ColorButton (string color) {
-            surface = new ColorSurface (color);
-            this.add (surface);
-        }
-    }
-
-    protected class ColorSurface : Gtk.EventBox {
-        public string color_ = "none";
-
-        public string color {
-            get {
-                return color_;
+                return _color;
             } set {
                 if (value != "") {
-                    color_ = value;
+                    _color = value;
                     style ();
                 }
             }
         }
 
-        public ColorSurface (string color) {
-            Object (color:color);
-            get_style_context ().add_class ("colored");
-            set_size_request (24,24);
-            style ();
+        public ColorButton (string color) {
+            Object (color: color);
         }
 
-        public new void style () {
-            Utils.set_style (this, STYLE_CSS.printf (color_));
+        construct {
+            surface = new Gtk.EventBox ();
+            surface.set_size_request (24, 24);
+            surface.get_style_context ().add_class ("colored");
+
+            can_focus = false;
+            add (surface);
+        }
+
+        public void style () {
+            Utils.set_style (surface, STYLE_CSS.printf (_color));
         }
 
         private const string STYLE_CSS = """
             .colored {
                 background: %s;
+            }
+
+            GtkButton:active .colored {
+                opacity: 0.9;
             }
         """;
     }
