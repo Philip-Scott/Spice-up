@@ -50,7 +50,7 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     // 0 == main, N = Gradient Color
-    private int color_selector = 0;
+    protected int color_selector = 0;
     private ulong color_chooser_signal;
 
     private Gtk.Stack colors_grid_stack;
@@ -61,9 +61,9 @@ public class Spice.ColorPicker : ColorButton {
     private Gtk.ToggleButton custom_button;
     private Gtk.ColorChooserWidget color_chooser;
 
-    private ColorButton preview;
-    private ColorButton color1;
-    private ColorButton color2;
+    protected ColorButton preview;
+    protected ColorButton color1;
+    protected ColorButton color2;
 
     private Gtk.ComboBoxText gradient_type;
 
@@ -297,7 +297,7 @@ public class Spice.ColorPicker : ColorButton {
         });
     }
 
-    private void set_color_smart (string color, bool from_button = false) {
+    protected void set_color_smart (string color, bool from_button = false) {
         switch (this.color_selector) {
             case 0: // Single color
                 this.color = color;
@@ -316,7 +316,7 @@ public class Spice.ColorPicker : ColorButton {
             case 3: // Both colors
                 color1.color = color;
                 color2.color = color;
-                this.color = make_gradient ();
+                this.color = color;
                 break;
         }
 
@@ -365,7 +365,7 @@ public class Spice.ColorPicker : ColorButton {
             add (surface);
         }
 
-        public void style () {
+        public new void style () {
             Utils.set_style (surface, STYLE_CSS.printf (_color));
         }
 
