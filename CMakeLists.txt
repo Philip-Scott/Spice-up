@@ -1,5 +1,6 @@
 project(com.github.philip-scott.spice-up)
 cmake_minimum_required(VERSION 2.6)
+enable_testing(true)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 

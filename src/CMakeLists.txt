@@ -1,4 +1,3 @@
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.vala.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.vala)
 
 include(ValaPrecompile)
 

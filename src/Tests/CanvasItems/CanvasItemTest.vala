@@ -20,15 +20,17 @@
 */
 
 void add_tests () {
-    Test.add_func ("/init", () => {
-        assert (true);
+    Test.add_func ("/ColorItem/Initial", () => {
+        var color_item = new Spice.ColorItem (new Spice.Canvas (), null);
+        assert (color_item.background_color == "red");
     });
 }
 
+
 int main (string[] args) {
+    Gtk.init (ref args);
     Test.init (ref args);
-        
+
     add_tests ();
     return Test.run ();
 }
-
