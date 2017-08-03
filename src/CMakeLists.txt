@@ -11,6 +11,7 @@ vala_precompile(VALA_C
   Services/SlideManager.vala
   Services/FileManager.vala
   Services/HistoryManager.vala
+  Services/ImageHandler.vala
   Services/Utils.vala
   Services/GamepadSlideController.vala
 
