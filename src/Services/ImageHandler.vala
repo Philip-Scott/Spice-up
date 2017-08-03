@@ -19,7 +19,6 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-
 private class Spice.ImageHandler : Object {
     private static uint file_id = 0;
     const string FILENAME = "/spice-up-%s-img-%u.%s";
@@ -55,7 +54,7 @@ private class Spice.ImageHandler : Object {
 
     public ImageHandler.from_file (File file) {
         image_extension = get_extension (file.get_basename ());
-        data_from_filename (file.get_path ());
+        data_from_file (file);
         url = data_to_file (base64_image);
     }
 
@@ -64,17 +63,21 @@ private class Spice.ImageHandler : Object {
     }
 
     private void monitor_file (File file) {
-        monitor = file.monitor (FileMonitorFlags.NONE, null);
+        try {
+            monitor = file.monitor (FileMonitorFlags.NONE, null);
 
-        monitor.changed.connect ((src, dest, event) => {
-            if (event == FileMonitorEvent.CHANGED) {
-                file_changing = true;
-            } else if (event == FileMonitorEvent.CHANGES_DONE_HINT && file_changing) {
-                data_from_filename (url);
-                file_changed ();
-                file_changing = false;
-            }
-        });
+            monitor.changed.connect ((src, dest, event) => {
+                if (event == FileMonitorEvent.CHANGED) {
+                    file_changing = true;
+                } else if (event == FileMonitorEvent.CHANGES_DONE_HINT && file_changing) {
+                    data_from_file (file);
+                    file_changed ();
+                    file_changing = false;
+                }
+            });
+        } catch (Error e) {
+            warning ("Could not monitor file: %s", e.message);
+        }
     }
 
     private string get_extension (string filename) {
@@ -86,8 +89,8 @@ private class Spice.ImageHandler : Object {
         }
     }
 
-    private void data_from_filename (string path) {
-        base64_image = Spice.Services.FileManager.file_to_base64 (path);
+    private void data_from_file (File file) {
+        base64_image = Spice.Services.FileManager.file_to_base64 (file);
     }
 
     private string data_to_file (string data) {

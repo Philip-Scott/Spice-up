@@ -115,21 +115,13 @@ public class Spice.Services.FileManager {
         } catch (Error e) {
             warning ("Could not write file \"%s\": %s", current_file.get_basename (), e.message);
         }
-
     }
 
     public static string open_file () {
         if (current_file != null && current_file.query_exists ()) {
             settings.add_file (current_file.get_path ());
 
-            try {
-                var dis = new DataInputStream (current_file.read ());
-                size_t size;
-
-                return dis.read_upto ("\0", -1, out size);
-            } catch (Error e) {
-                warning ("Error loading file: %s", e.message);
-            }
+            return get_data (current_file);
         }
 
         return "";
@@ -205,9 +197,10 @@ public class Spice.Services.FileManager {
         });
     }
 
-    public static string file_to_base64 (string filename) {
+    public static string file_to_base64 (File file) {
         uint8[] data;
-        FileUtils.get_data (filename, out data);
+        
+        FileUtils.get_data (file.get_path (), out data);
 
         return Base64.encode (data);
     }
