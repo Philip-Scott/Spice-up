@@ -72,3 +72,5 @@ glib_compile_resources(GLIB_RESOURCES_ICONS SOURCE ../data/assets.gresource.xml)
 add_executable(com.github.philip-scott.spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS})
 
 install(TARGETS com.github.philip-scott.spice-up RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+
+add_subdirectory (Tests)
