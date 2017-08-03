@@ -61,11 +61,12 @@ These dependencies must be present before building
  - `granite>=0.3`
  - `json-glib-1.0`
  - `gee-0.8`
-
+ - `gudev-1.0`
+ - `libevdev`
 
 ## Building
 ```
 mkdir build/ && cd build
 cmake ..
-make && sudo make install
+make && sudo make all test install
 ```
