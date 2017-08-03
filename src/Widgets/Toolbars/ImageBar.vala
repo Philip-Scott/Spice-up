@@ -36,7 +36,11 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
         var list = new List<File>();
         list.append (File.new_for_path (((ImageItem) this.item).url));
 
-        app.launch (list, null);
+        try {
+            app.launch (list, null);
+        } catch (Error e) {
+            warning ("Could launch application: %s", e.message);
+        }
     }
 
     protected override void item_selected (Spice.CanvasItem? _item, bool new_item = false) {
@@ -47,20 +51,26 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
             open_with.popup = menu;
 
             var file = File.new_for_path (item.url);
-            var file_info = file.query_info ("standard::*", 0);
 
-            var apps = AppInfo.get_all_for_type (file_info.get_content_type ());
+            try {
+                var file_info = file.query_info ("standard::*", 0);
 
-            foreach (var app in apps) {
-                var meun_item = new Gtk.MenuItem.with_label (app.get_name ());
-                menu.add (meun_item);
+                var apps = AppInfo.get_all_for_type (file_info.get_content_type ());
 
-                meun_item.activate.connect (() => {
-                    launch_editor (app);
-                });
+                foreach (var app in apps) {
+                    var meun_item = new Gtk.MenuItem.with_label (app.get_name ());
+                    menu.add (meun_item);
+
+                    meun_item.activate.connect (() => {
+                        launch_editor (app);
+                    });
+                }
+
+                menu.show_all ();
+            } catch (Error e) {
+                warning ("Could not get file info %s", e.message);
+                return;
             }
-
-            menu.show_all ();
         }
     }
 

@@ -199,14 +199,22 @@ public class Spice.Services.FileManager {
 
     public static string file_to_base64 (File file) {
         uint8[] data;
-        
-        FileUtils.get_data (file.get_path (), out data);
+
+        try {
+            FileUtils.get_data (file.get_path (), out data);
+        } catch (Error e) {
+            warning ("Could not get file data: %s", e.message);
+        }
 
         return Base64.encode (data);
     }
 
     public static void base64_to_file (string filename, string base64_data) {
         var data = Base64.decode (base64_data);
-        FileUtils.set_data (filename, data);
+        try {
+           FileUtils.set_data (filename, data);
+        } catch (Error e) {
+            warning ("Could not save data to file: %s", e.message);
+        }
     }
 }

@@ -78,6 +78,7 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     public override bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation) {
+        allocation = Gdk.Rectangle ();
         if (current_allocated_width != get_allocated_width () || current_allocated_height != get_allocated_height ()) {
             calculate_ratio ();
         }
@@ -86,7 +87,6 @@ public class Spice.Canvas : Gtk.Overlay {
             var display_widget = (CanvasItem) widget;
 
             var r = display_widget.rectangle;
-            allocation = Gdk.Rectangle ();
             allocation.width = (int)(r.width * current_ratio);
             allocation.height = (int)(r.height * current_ratio);
             allocation.x = default_x_margin + (int)(r.x * current_ratio) + display_widget.delta_x;
