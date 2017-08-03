@@ -51,16 +51,15 @@ public class Spice.ImageItem : Spice.CanvasItem {
         }
     }
 
-    public ImageItem (Canvas canvas, Json.Object? save_data = null) {
-        base (canvas);
-        this.save_data = save_data;
+    public ImageItem (Canvas _canvas, Json.Object? _save_data = null) {
+        Object (canvas: _canvas, save_data: _save_data);
 
         load_data ();
         style ();
     }
 
-    public ImageItem.from_file (Canvas canvas, File file) {
-        base (canvas);
+    public ImageItem.from_file (Canvas _canvas, File file) {
+        Object (canvas: _canvas, save_data: null);
 
         this.image = new ImageHandler.from_file (file);
         connect_image ();

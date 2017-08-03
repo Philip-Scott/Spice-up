@@ -62,7 +62,7 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
     protected int start_w = 0;
     protected int start_h = 0;
 
-    protected Json.Object? save_data = null;
+    public Json.Object? save_data { protected get; construct; }
     protected bool holding = false;
     protected int holding_id = 0;
 
@@ -78,10 +78,10 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
                                      border: 2px dotted white;
                                   }""";
 
-    protected Canvas canvas;
+    public unowned Canvas canvas { protected get; construct; }
 
-    public CanvasItem (Spice.Canvas canvas) {
-        this.canvas = canvas;
+    public CanvasItem (Spice.Canvas _canvas, Json.Object _save_data) {
+        Object (canvas: _canvas, save_data: _save_data);
     }
 
     construct {

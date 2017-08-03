@@ -1,13 +1,13 @@
-enable_testing(true)
+enable_testing (true)
 
-set (TEST_NAME
-    canvas-items
-)
+# Color Item Test
+set (TEST_NAME text-item )
 
 vala_precompile (VALA_TEST_C
-  CanvasItemTest.vala
+  TextItemTest.vala
   TestCommon.vala
-  ../../Widgets/CanvasItems/ColorItem.vala
+  MockedCanvasItem.vala
+  ../../Widgets/CanvasItems/TextItem.vala
   PACKAGES
   ${VALA_DEPS}
   OPTIONS
@@ -16,8 +16,5 @@ vala_precompile (VALA_TEST_C
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
 )
 
-add_executable (${TEST_NAME}
-    ${VALA_TEST_C}
-)
-
+add_executable (${TEST_NAME} ${VALA_TEST_C})
 add_test (core-${TEST_NAME} ${TEST_NAME})

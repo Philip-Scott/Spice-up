@@ -76,10 +76,8 @@ public class Spice.TextItem : Spice.CanvasItem {
         }
     """;
 
-    public TextItem (Canvas canvas, Json.Object? save_data = null) {
-        base (canvas);
-
-        this.save_data = save_data;
+    public TextItem (Canvas _canvas, Json.Object? _save_data = null) {
+        Object (canvas: _canvas, save_data: _save_data);
 
         entry = new Gtk.TextView ();
         entry.justification = Gtk.Justification.CENTER;
@@ -101,7 +99,9 @@ public class Spice.TextItem : Spice.CanvasItem {
         stack.set_visible_child_name ("label");
         stack.expand = true;
 
-        grid.attach (stack, 0, 0, 1, 1);
+        if (grid != null) {
+            grid.attach (stack, 0, 0, 1, 1);
+        }
 
         this.clicked.connect (() => {
             if (!editing) {
@@ -180,13 +180,14 @@ public class Spice.TextItem : Spice.CanvasItem {
         font_size = (int) save_data.get_int_member ("font-size");
         font = save_data.get_string_member ("font");
 
-        var style = save_data.get_string_member ("font-style");
-        if (style != null) {
-            font_style = style;
+        if (save_data.has_member ("font-style")) {
+            var _font_style = save_data.get_string_member ("font-style");
+            font_style = _font_style;
         }
 
-        int64? justify = save_data.get_int_member ("justification");
-        if (justify != null) {
+        
+        if (save_data.has_member ("justification")) {
+            int64? justify = save_data.get_int_member ("justification");
             justification = (int) justify;
         }
 
