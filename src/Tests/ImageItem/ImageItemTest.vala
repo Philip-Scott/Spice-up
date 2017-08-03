@@ -23,11 +23,15 @@ void add_tests () {
     Test.add_func ("/ImageItem/InitialVersion", () => {
         var item = load_test ("""{ "type":"image", "image":"file:///home/test/OldImage.jpg" } """);
         saving_test (item);
+
+        Spice.ImageHandler.cleanup ();
     });
 
     Test.add_func ("/ImageItem/V2", () => {
         var item = load_test ("""{ "type":"image", "image":"jpg", "image-data":"Base64Data:/home/test/OldImage.jpg" } """);
         saving_test (item);
+
+        Spice.ImageHandler.cleanup ();
     });
 }
 
