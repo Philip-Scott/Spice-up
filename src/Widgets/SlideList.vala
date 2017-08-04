@@ -152,6 +152,18 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
 
                 this.show_all ();
             });
+
+            style ();
         }
+
+        public void style () {
+            Utils.set_style (this, STYLE_CSS);
+        }
+
+        private const string STYLE_CSS = """
+            .list-row:active {
+                opacity: 0.90;
+            }
+        """;
     }
 }
