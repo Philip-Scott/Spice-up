@@ -41,6 +41,7 @@ public class Spice.Grabber : Gtk.Button {
         events |= Gdk.EventMask.POINTER_MOTION_MASK;
 
         get_style_context ().remove_class ("button");
+        get_style_context ().add_class ("flat");
 
         var image = new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/drag.svg");
         this.add (image);

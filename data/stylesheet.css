@@ -42,21 +42,21 @@
     border-radius: 4px;
 }
 
-GtkTextView {
+GtkTextView, textview {
     background-color: transparent;
 }
 
-GtkTextView:selected {
+GtkTextView:selected, textview {
     background-color: rgba(0,0,0,0.75);
     color: white;
 }
 
-SpiceDynamicToolbar {
+.spice-dynamic-toolbar {
      background-image: linear-gradient(to bottom, #222324, #292A2B);
 }
 
 GtkToggleButton,.spice,
-SpiceDynamicToolbar .spice {
+.spice-dynamic-toolbar .spice {
     color: #DEDEDE;
     background:
     linear-gradient(
