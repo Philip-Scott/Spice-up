@@ -1,6 +1,12 @@
 
 include(ValaPrecompile)
 
+SET(gtk_3_22 false CACHE BOOL "Beta Gtk 3.22 support")
+if (gtk_3_22)
+  set (GLOBAL_VALAC_OPTIONS ${GLOBAL_VALAC_OPTIONS} --define=GTK_3_22)
+  message ("-- Gtk 3.22 support enabled")
+endif (gtk_3_22)
+
 vala_precompile(VALA_C
   Main.vala
   Application.vala

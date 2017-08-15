@@ -69,9 +69,8 @@ public class Spice.TextItem : Spice.CanvasItem {
     const string TEXT_STYLE_CSS = """
         .colored {
             color: %s;
+            font: %s;
             padding: 0px;
-            font: %s %s;
-            font-size: %spx;
             background: 0;
         }
     """;
@@ -185,7 +184,7 @@ public class Spice.TextItem : Spice.CanvasItem {
             font_style = _font_style;
         }
 
-        
+
         if (save_data.has_member ("justification")) {
             int64? justify = save_data.get_int_member ("justification");
             justification = (int) justify;
@@ -202,7 +201,9 @@ public class Spice.TextItem : Spice.CanvasItem {
         var converted_font_size = (4.0 * canvas.current_ratio * font_size);
 
         if (converted_font_size > 0) {
-            Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font, font_style, converted_font_size.to_string ().replace (",", ".")));
+            var font_css = get_font_css (font, font_style.down (), converted_font_size);
+            Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font_css));
+            stderr.printf (TEXT_STYLE_CSS.printf (font_color, font_css));
         }
 
         switch (justification) {
@@ -233,5 +234,25 @@ public class Spice.TextItem : Spice.CanvasItem {
         }
 
         resize_entry ();
+    }
+
+    private string get_font_css (string font, string _font_style, double font_size) {
+        var font_size_text = font_size.to_string ().replace (",", ".");
+
+    #if GTK_3_22
+        var font_style = _font_style.replace ("black", "900");
+        font_style = font_style.replace ("extrabold", "800");
+        font_style = font_style.replace ("semibold", "600");
+        font_style = font_style.replace ("bold", "700");
+        font_style = font_style.replace ("medium", "500");
+        font_style = font_style.replace ("regular", "400");
+        font_style = font_style.replace ("extralight", "300");
+        font_style = font_style.replace ("light", "200");
+        font_style = font_style.replace ("thin", "100");
+
+        return "%s %spx %s".printf (font_style, font_size_text, font);
+    #else
+        return "%s %s;\n font-size: %spx;".printf (font, _font_style, font_size_text);
+    #endif
     }
 }
