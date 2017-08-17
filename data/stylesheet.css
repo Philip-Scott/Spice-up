@@ -82,10 +82,6 @@ background: none;
         0 1px 0 0 alpha (@bg_highlight_color, 0.3);
 }
 
-.spice.suggested-action {
-    background-color: rgba(0,255,0, 0.3);
-}
-
 .spice.suggested-action:active,
 .spice.suggested-action:selected {
     background: shade (@selected_bg_color, 0.8);
