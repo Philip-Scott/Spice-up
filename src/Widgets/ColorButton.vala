@@ -121,7 +121,7 @@ public class Spice.ColorPicker : ColorButton {
         gradient_grid.margin_left = 6;
 
         preview = new ColorButton ("");
-        preview.get_style_context ().remove_class ("button");
+        preview.get_style_context ().add_class ("flat");
         preview.set_size_request (100,120);
 
         var preview_box = new Gtk.Grid ();
