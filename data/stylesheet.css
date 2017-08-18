@@ -41,7 +41,7 @@ GtkTextView, textview {
     background-color: transparent;
 }
 
-GtkTextView:selected, textview {
+GtkTextView:selected, textview:selected {
     background-color: rgba(0,0,0,0.75);
     color: white;
 }

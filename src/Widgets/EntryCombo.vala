@@ -107,13 +107,12 @@ public class Spice.EntryCombo : Gtk.Box {
         substitute_label.halign = Gtk.Align.START;
 
         var entry_substitute = new Gtk.Button ();
-        entry_substitute.get_style_context ().remove_class ("button");
         entry_substitute.get_style_context ().add_class ("entry");
         entry_substitute.add (substitute_label);
         entry_substitute.can_focus = false;
 
         button = new Gtk.Button.from_icon_name ("pan-down-symbolic", Gtk.IconSize.MENU);
-        button.get_style_context ().remove_class ("button");
+        button.get_style_context ().add_class ("flat");
         button.get_child ().margin = 4;
         button.can_focus = false;
 

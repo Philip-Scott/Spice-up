@@ -70,6 +70,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
     private void build_ui () {
         HeaderbarButton.headerbar = this;
+        has_subtitle = false;
 
         undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO);
         redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO);

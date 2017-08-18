@@ -20,16 +20,17 @@
 */
 
 public class Spice.Window : Gtk.ApplicationWindow {
-    public bool is_fullscreen { public get {
-        return is_full_;
-    } private set {
-        is_full_ = value;
-        if (is_full_) {
-            aspect_frame.margin = 0;
-        } else {
-            aspect_frame.margin = 24;
-        }
-    } default = false;
+    public bool is_fullscreen {
+        public get {
+            return is_full_;
+        } private set {
+            is_full_ = value;
+            if (value) {
+                aspect_frame.margin = 0;
+            } else {
+                aspect_frame.margin = 24;
+            }
+        } default = false;
     }
 
     private bool notification_shown = false;
@@ -77,7 +78,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_overlay.add (app_stack);
         this.add (app_overlay);
 
-
         GamepadSlideController.startup (slide_manager, this);
     }
 
@@ -101,7 +101,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
             toolbar_revealer.transition_duration = 0;
 
             aspect_frame = new Gtk.AspectFrame (null, (float ) 0.5, (float ) 0.5, (float ) 1.7777, false);
-            aspect_frame.get_style_context ().remove_class ("frame");
+            aspect_frame.get_style_context ().add_class ("flat");
             aspect_frame.add (slide_manager.slideshow);
             aspect_frame.margin = 24;
 
@@ -117,7 +117,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
             connect_signals (this.application);
         }
-
 
         app_stack.set_visible_child_name  ("application");
     }
