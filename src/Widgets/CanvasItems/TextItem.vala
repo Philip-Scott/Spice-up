@@ -203,7 +203,6 @@ public class Spice.TextItem : Spice.CanvasItem {
         if (converted_font_size > 0) {
             var font_css = get_font_css (font, font_style.down (), converted_font_size);
             Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font_css));
-            stderr.printf (TEXT_STYLE_CSS.printf (font_color, font_css));
         }
 
         switch (justification) {
