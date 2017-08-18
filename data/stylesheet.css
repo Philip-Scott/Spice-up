@@ -5,7 +5,7 @@
     border-right: solid 1px rgba(0,0,0,0.75);
 }
 
-.slide-list row:selected {
+.slide-list .list-row:selected, .slide-list row:selected {
     box-shadow: inset 0px 24px 10px -6px rgba(0,0,0, 0.53);
     background-color: shade(@bg_color, 0.5);
 }
@@ -50,7 +50,7 @@ GtkTextView:selected, textview {
      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3));
 }
 
-GtkToggleButton,.spice,
+GtkToggleButton, .spice,
 .spice-dynamic-toolbar .spice {
     color: #DEDEDE;
     background-color: rgba(255,255,255,0.05);
@@ -63,7 +63,7 @@ GtkToggleButton,.spice,
 .spice:active,
 .spice:checked,
 .spice:selected {
-background: none;
+    background: none;
     background-color: alpha (#000, 0.05);
 
     border-color: alpha (#000, 0.27);
