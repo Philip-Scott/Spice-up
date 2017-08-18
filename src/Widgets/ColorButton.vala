@@ -286,7 +286,7 @@ public class Spice.ColorPicker : ColorButton {
     private void attach_color (string color, int x, int y) {
         var color_button = new ColorButton (color);
         color_button.set_size_request (48,24);
-        color_button.get_style_context ().remove_class ("button");
+        color_button.get_style_context ().add_class ("flat");
         color_button.can_focus = false;
         color_button.margin_right = 0;
 
@@ -360,21 +360,30 @@ public class Spice.ColorPicker : ColorButton {
             surface = new Gtk.EventBox ();
             surface.set_size_request (24, 24);
             surface.get_style_context ().add_class ("colored");
+            get_style_context ().add_class ("color-button");
+            Utils.set_style (this, STYLE_CSS);
 
             can_focus = false;
             add (surface);
         }
 
         public new void style () {
-            Utils.set_style (surface, STYLE_CSS.printf (_color));
+            Utils.set_style (surface, SURFACE_STYLE_CSS.printf (_color));
         }
 
         private const string STYLE_CSS = """
+            .color-button.flat {
+                border: none;
+                padding: 0;
+            }
+        """;
+
+        private const string SURFACE_STYLE_CSS = """
             .colored {
                 background: %s;
             }
 
-            GtkButton:active .colored {
+            .color-button:active .colored {
                 opacity: 0.9;
             }
         """;
