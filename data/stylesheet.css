@@ -1,19 +1,18 @@
-@define-color SpicePrimaryBackground #333435;
-@define-color SpiceSlideBackground #2A2B2C;
-@define-color SpiceSlideBackgroundSelected #222324;
 @define-color colorPrimary #2C2D2E;
+
 .slide-list {
-    background-color: @SpiceSlideBackground;
-    border-right: solid 1px rgba(0,0,0,0.75)
+    background-color: shade(@bg_color, 0.75);
+    border-right: solid 1px rgba(0,0,0,0.75);
 }
 
-.slide-list .list-row:selected {
+.slide-list row:selected {
     box-shadow: inset 0px 24px 10px -6px rgba(0,0,0, 0.53);
-    background-color: @SpiceSlideBackgroundSelected;
+    background-color: shade(@bg_color, 0.5);
 }
+
 
 .new.slide {
-    background-color: @SpicePrimaryBackground;
+    background-color: rgba(0,0,0,0.2);
     border-radius: 4px;
     border-color: black;
 }
@@ -25,10 +24,6 @@
 
 .canvas, frame {
     border-radius: 6px;
-}
-
-.background {
-    background-color: @SpicePrimaryBackground;
 }
 
 .view.canvas {
@@ -52,16 +47,13 @@ GtkTextView:selected, textview {
 }
 
 .spice-dynamic-toolbar {
-     background-image: linear-gradient(to bottom, #222324, #292A2B);
+     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3));
 }
 
 GtkToggleButton,.spice,
 .spice-dynamic-toolbar .spice {
     color: #DEDEDE;
-    background:
-    linear-gradient(
-        to bottom, shade (@SpicePrimaryBackground, 1.1), shade (@SpicePrimaryBackground, 1.1)
-    );
+    background-color: rgba(255,255,255,0.05);
     padding: 2px 8px;
     border-radius: 4px;
     border-width: 1px;
@@ -78,14 +70,6 @@ background: none;
     box-shadow:
         inset 0 0 0 1px alpha (#000, 0.05),
         0 1px 0 0 alpha (@bg_highlight_color, 0.3);
-}
-
-.spice.suggested-action {
-    background-image:
-    linear-gradient(to bottom,
-        shade (@selected_bg_color, 1.1),
-        shade (@selected_bg_color, 0.9)
-    );
 }
 
 .spice.suggested-action:active,
