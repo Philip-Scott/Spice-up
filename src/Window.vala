@@ -184,6 +184,20 @@ public class Spice.Window : Gtk.ApplicationWindow {
             return false;
         });
 
+        var undo_action = new SimpleAction ("undo-action", null);
+        add_action (undo_action);
+        app.set_accels_for_action ("win.undo-action", {"<Ctrl>Z"});
+        undo_action.activate.connect (() => {
+            Spice.Services.HistoryManager.get_instance ().undo ();
+        });
+
+        var redo_action = new SimpleAction ("redo-action", null);
+        add_action (redo_action);
+        app.set_accels_for_action ("win.redo-action", {"<Ctrl><Shift>Z"});
+        redo_action.activate.connect (() => {
+            Spice.Services.HistoryManager.get_instance ().redo ();
+        });
+
         this.key_press_event.connect (on_key_pressed);
     }
 
@@ -207,7 +221,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
 
         // Ctrl + ? Events
-        if ((key.state & Gdk.ModifierType.CONTROL_MASK) != 0) {
+        if (Gdk.ModifierType.CONTROL_MASK in key.state) {
             switch (key.keyval) {
                 case 99: // C
                     return copy ();
