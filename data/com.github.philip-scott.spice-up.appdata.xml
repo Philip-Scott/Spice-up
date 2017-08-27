@@ -15,6 +15,28 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="0.8.2" date="2017-08-27">
+      <description>
+        <p>Now with 100% better feedback!</p>
+        <ul>
+          <li>Selecting slides, and colors on the color picker now feels like you actually press something.</li>
+          <li>ColorPicker: Click on the preview to be able to set both colors at once.</li>
+          <li>A better high resolution icon</li>
+          <li>Fixed: Spice-Up should now work a lot better with other themes</li>
+          <li>Fixed: Sometimes, the default blue color would get selected</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.8.0" date="2017-07-20">
+      <description>
+        <p>Clipboard, Circles and a Browser</p>
+        <ul>
+          <li>Shapes: You can now set the roundness of the square, and finally make circles!</li>
+          <li>Cut, copy, and paste slides, and canvas items!</li>
+          <li>The presentations you make will appear on the welcome screen for easy access to them!</li>
+        </ul>
+      </description>
+    </release>
   </releases>
   <screenshots>
     <screenshot type="default">
