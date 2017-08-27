@@ -1,8 +1,8 @@
 project(com.github.philip-scott.spice-up)
 cmake_minimum_required(VERSION 2.6)
 
-if ($ENV{USER} STREQUAL "root")
-else ($ENV{USER} STREQUAL "root")
+if ($ENV{USER} STREQUAL "pbuilder")
+else ($ENV{USER} STREQUAL "pbuilder")
     enable_testing(true)
 endif ($ENV{USER} STREQUAL "root")
 

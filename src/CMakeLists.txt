@@ -81,10 +81,10 @@ add_executable(com.github.philip-scott.spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS
 
 install(TARGETS com.github.philip-scott.spice-up RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
-
-if ($ENV{USER} STREQUAL "root")
+# pbuilder is the Houston Builder
+if ($ENV{USER} STREQUAL "pbuilder")
     message ("-- Running as root: Skipping tests")
-else ($ENV{USER} STREQUAL "root")
+else ($ENV{USER} STREQUAL "pbuilder")
     add_subdirectory (Tests)
     message ("-- Adding tests for $ENV{USER}")
-endif ($ENV{USER} STREQUAL "root")
+endif ($ENV{USER} STREQUAL "pbuilder")
