@@ -81,4 +81,10 @@ add_executable(com.github.philip-scott.spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS
 
 install(TARGETS com.github.philip-scott.spice-up RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
-add_subdirectory (Tests)
+
+if ($ENV{USER} STREQUAL "root")
+    message ("-- Running as root: Skipping tests")
+else ($ENV{USER} STREQUAL "root")
+    add_subdirectory (Tests)
+    message ("-- Adding tests")
+endif ($ENV{USER} STREQUAL "root")
