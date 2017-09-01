@@ -7,6 +7,12 @@
     <file alias="shape.svg" compressed="false" preprocess="">icons/shape-symbolic.svg</file>
     <file alias="stylesheet.css" compressed="false" preprocess="">stylesheet.css</file>
   </gresource>
+  <gresource prefix="/com/github/philip-scott/spice-up/templates">
+    <file alias="Black.spice" compressed="false" preprocess="">assets/templates/Black.spice</file>
+    <file alias="Green.spice" compressed="false" preprocess="">assets/templates/Green.spice</file>
+    <file alias="Spice-Up.spice" compressed="false" preprocess="">assets/templates/Spice-Up.spice</file>
+    <file alias="White.spice" compressed="false" preprocess="">assets/templates/White.spice</file>
+  </gresource>
   <gresource prefix="/com/github/philip-scott/spice-up/patterns/">
     <file alias="3px-tile.png" compressed="false" preprocess="">assets/patterns/3px-tile.png</file>
     <file alias="45-degree-fabric-dark.png" compressed="false" preprocess="">assets/patterns/45-degree-fabric-dark.png</file>

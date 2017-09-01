@@ -79,7 +79,7 @@ public class Spice.Services.FileManager {
         return result;
     }
 
-    public static File? new_presentation () {
+    public static File? new_presentation (string data) {
         File? result = null;
 
         var documents = Environment.get_user_special_dir (UserDirectory.DOCUMENTS) + "/%s".printf (_("Presentations"));
@@ -91,6 +91,11 @@ public class Spice.Services.FileManager {
         } while (result.query_exists ());
 
         settings.add_file (result.get_path ());
+
+        var title = GLib.Base64.encode(_("My Presentation").data);
+        var name = GLib.Base64.encode(Environment.get_real_name ().data);
+
+        GLib.FileUtils.set_data (result.get_path (), data.printf (title, name).data);
 
         return result;
     }
@@ -111,7 +116,7 @@ public class Spice.Services.FileManager {
         create_file_if_not_exists (current_file);
 
         try {
-            GLib.FileUtils.set_data (current_file. get_path (), contents.data);
+            GLib.FileUtils.set_data (current_file.get_path (), contents.data);
         } catch (Error e) {
             warning ("Could not write file \"%s\": %s", current_file.get_basename (), e.message);
         }

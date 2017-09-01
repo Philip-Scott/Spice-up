@@ -99,14 +99,15 @@ public class Spice.Slide : Object {
     }
 
     public void reload_preview_data () {
-        if (canvas.surface != null) {
-            Timeout.add (110, () => {
+        Timeout.add (110, () => {
+            if (canvas.surface != null) {
                 var pixbuf = canvas.surface.load_to_pixbuf ().scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR);
                 preview.set_from_pixbuf (pixbuf);
                 preview_data = Utils.pixbuf_to_base64 (pixbuf);
-                return false;
-            });
-        }
+            }
+
+            return false;
+        });
     }
 
     public string serialise () {

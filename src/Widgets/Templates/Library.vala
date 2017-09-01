@@ -19,44 +19,39 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
-    public signal void item_selected (File file);
+public class Spice.Widgets.Templates.TemplateLibrary : Gtk.ScrolledWindow {
+    private const string RESOURCE_PATH = "resource:///com/github/philip-scott/spice-up/templates/%s";
+    private const string FILES[] = {"Black.spice", "White.spice", "Green.spice", "Spice-Up.spice"};
+
+    public signal void item_selected (string data);
 
     private Gtk.FlowBox item_box;
 
-    public Library (string[] files) {
+    public TemplateLibrary () {
         hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         item_box = new Gtk.FlowBox ();
 
         item_box.valign = Gtk.Align.START;
         item_box.min_children_per_line = 2;
-        item_box.max_children_per_line = 2;
         item_box.margin = 12;
         item_box.expand = false;
 
         add (item_box);
 
         item_box.child_activated.connect ((child) => {
-            item_selected ((child as LibraryItem).file);
+            item_selected ((child as TemplateItem).data);
         });
 
-        var existing_files = new Array<string> ();
-        foreach (var path in files) {
-            var file = File.new_for_path (path);
-            if (file.query_exists ()) {
-                add_file (file);
-                existing_files.append_val (path);
-            }
-        }
+        foreach (var file_path in FILES) {
+            var file = File.new_for_uri (RESOURCE_PATH.printf (file_path));
 
-        settings.last_files = existing_files.data;
+            add_file (file);
+        }
     }
 
     public void add_file (File file) {
-        if (!file.query_exists ()) return;
-
-        var item = new LibraryItem (file);
+        var item = new TemplateItem (file);
         item_box.add (item);
     }
 }

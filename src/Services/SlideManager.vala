@@ -121,12 +121,11 @@ public class Spice.SlideManager : Object {
             var position = (int) root_object.get_int_member ("current-slide");
             if (slides.size > position) {
                 current_slide = slides[position];
+                current_slide.reload_preview_data ();
             }
         } catch (Error e) {
             error ("Error loading file: %s", e.message);
         }
-
-        if (slides.size == 0) new_slide ();
     }
 
     public void move_down (Slide slide) {
