@@ -52,7 +52,7 @@ public class Spice.Services.Settings : Granite.Services.Settings {
         }
 
         existing_files.insert (0, file);
-        if (existing_files.size > 10) {
+        if (existing_files.size > 50) {
             existing_files = existing_files.slice (0, 10);
         }
 

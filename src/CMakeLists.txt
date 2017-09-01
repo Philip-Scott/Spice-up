@@ -47,6 +47,9 @@ vala_precompile(VALA_C
   Widgets/Library/LibraryItem.vala
   Widgets/Library/Library.vala
 
+  Widgets/Templates/TemplateItem.vala
+  Widgets/Templates/Library.vala
+
   #${CMAKE_CURRENT_BINARY_DIR}/config.vala
 
   # LibGamepad

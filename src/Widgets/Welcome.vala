@@ -24,7 +24,10 @@ public class Spice.Welcome : Gtk.Box {
 
     private Granite.Widgets.Welcome welcome;
     private Spice.Widgets.Library.Library? library = null;
+
+    private Spice.Widgets.Templates.TemplateLibrary? templates = null;
     private Gtk.Separator separator;
+    private Gtk.Stack welcome_stack;
 
     public Welcome () {
         orientation = Gtk.Orientation.HORIZONTAL;
@@ -41,14 +44,17 @@ public class Spice.Welcome : Gtk.Box {
 
         separator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
 
-        add (welcome);
+        welcome_stack = new Gtk.Stack ();
+        welcome_stack.add_named (welcome, "welcome");
+        welcome_stack.set_visible_child (welcome);
+
+        add (welcome_stack);
         add (separator);
 
         welcome.activated.connect ((index) => {
             switch (index) {
                 case 0:
-                    var file = Spice.Services.FileManager.new_presentation ();
-                    if (file != null) open_file (file);
+                    show_templates ();
                     break;
                 case 1:
                     var file = Spice.Services.FileManager.open_presentation ();
@@ -58,8 +64,26 @@ public class Spice.Welcome : Gtk.Box {
         });
     }
 
+    public void show_templates () {
+        if (templates == null) {
+            templates = new Spice.Widgets.Templates.TemplateLibrary ();
+            welcome_stack.add_named (templates, "templates");
+            welcome_stack.show_all ();
+
+            templates.item_selected.connect ((data) => {
+                var file = Spice.Services.FileManager.new_presentation (data);
+                if (file != null) {
+                    open_file (file);
+                }
+            });
+        }
+
+        welcome_stack.set_visible_child_full ("templates", Gtk.StackTransitionType.SLIDE_RIGHT);
+    }
+
     public void reload () {
         var files = settings.last_files;
+        welcome_stack.set_visible_child_full ("welcome", Gtk.StackTransitionType.NONE);
 
         if (library != null) {
             remove (library);
