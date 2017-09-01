@@ -128,6 +128,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         button.add (plus_icon);
         button.set_size_request (WIDTH, HEIGHT);
         button.margin = 9;
+        button.can_focus = false;
 
         return button;
     }
