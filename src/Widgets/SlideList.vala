@@ -90,10 +90,12 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         slides_grid.add (new_slide_button);
 
         new_slide_button.clicked.connect (() => {
-            var slide = manager.new_slide (null, true);
-
             manager.making_new_slide = true;
+
+            var slide = manager.new_slide (null, true);
+            slide.reload_preview_data ();
             manager.current_slide = slide;
+
             manager.making_new_slide = false;
         });
 
