@@ -1,10 +1,10 @@
 project(com.github.philip-scott.spice-up)
 cmake_minimum_required(VERSION 2.6)
 
-if ($ENV{USER} STREQUAL "pbuilder")
-else ($ENV{USER} STREQUAL "pbuilder")
+if ($ENV{USER} STREQUAL "pbuilder" OR $ENV{USER} STREQUAL "buildd")
+else ($ENV{USER} STREQUAL "pbuilder" OR $ENV{USER} STREQUAL "buildd")
     enable_testing(true)
-endif ($ENV{USER} STREQUAL "root")
+endif ($ENV{USER} STREQUAL "pbuilder" OR $ENV{USER} STREQUAL "buildd")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
