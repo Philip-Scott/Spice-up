@@ -93,9 +93,11 @@ public class Spice.Services.FileManager {
         settings.add_file (result.get_path ());
 
         var title = GLib.Base64.encode(_("My Presentation").data);
-        var name = GLib.Base64.encode(Environment.get_real_name ().data);
+        var name = GLib.Base64.encode(_("By: %s").printf (Environment.get_real_name ()).data);
 
-        GLib.FileUtils.set_data (result.get_path (), data.printf (title, name).data);
+        var formatted_data = data.replace ("{title}", title).replace ("{subtitle}", name);
+
+        GLib.FileUtils.set_data (result.get_path (), formatted_data.data);
 
         return result;
     }
