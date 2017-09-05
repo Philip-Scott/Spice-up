@@ -21,6 +21,7 @@
 
 public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
     private Gtk.MenuButton open_with;
+    private Gtk.Button replace_image;
 
     construct {
         open_with = new Gtk.MenuButton ();
@@ -29,7 +30,23 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
         open_with.get_style_context ().add_class ("spice");
         open_with.get_style_context ().add_class ("image-button");
 
+        replace_image = new Gtk.Button ();
+        replace_image.add (new Gtk.Image.from_icon_name ("document-new-symbolic", Gtk.IconSize.MENU));
+        replace_image.set_tooltip_text (_("Replace Image…"));
+        replace_image.get_style_context ().add_class ("spice");
+        replace_image.get_style_context ().add_class ("image-button");
+
+        replace_image.clicked.connect (() => {
+            var file = Spice.Services.FileManager.open_image ();
+
+            if (file != null) {
+                var image_item = (ImageItem) item;
+                image_item.image.replace (file);
+            }
+        });
+
         add (open_with);
+        add (replace_image);
     }
 
     private void launch_editor (AppInfo app) {

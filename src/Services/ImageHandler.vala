@@ -19,13 +19,15 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-private class Spice.ImageHandler : Object {
-    private static uint file_id = 0;
-    const string FILENAME = "/spice-up-%s-img-%u.%s";
-
+public class Spice.ImageHandler : Object {
     public signal void file_changed ();
 
-    private FileMonitor monitor;
+    private static uint FILE_ID = 0;
+    private uint file_id;
+
+    const string FILENAME = "/spice-up-%s-img-%u.%s";
+
+    private FileMonitor? monitor = null;
     private bool file_changing = false;
 
     public bool valid = false;
@@ -47,12 +49,22 @@ private class Spice.ImageHandler : Object {
     }
 
     public ImageHandler.from_data (string _extension, string _base64_data) {
+        file_id = FILE_ID++;
         image_extension = _extension != "" ? _extension : "png";
         base64_image = _base64_data;
         url = data_to_file (_base64_data);
     }
 
     public ImageHandler.from_file (File file) {
+        file_id = FILE_ID++;
+        replace (file);
+    }
+
+    public void replace (File file) {
+        if (monitor != null) {
+            monitor.cancel ();
+        }
+
         image_extension = get_extension (file.get_basename ());
         data_from_file (file);
         url = data_to_file (base64_image);
@@ -94,7 +106,7 @@ private class Spice.ImageHandler : Object {
     }
 
     private string data_to_file (string data) {
-        var filename = Environment.get_tmp_dir () + FILENAME.printf (Environment.get_user_name (), file_id++, image_extension);
+        var filename = Environment.get_tmp_dir () + FILENAME.printf (Environment.get_user_name (), file_id, image_extension);
         Spice.Services.FileManager.base64_to_file (filename, data);
 
         return filename;

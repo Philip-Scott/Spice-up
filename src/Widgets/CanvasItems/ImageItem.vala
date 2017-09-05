@@ -20,7 +20,7 @@
 */
 
 public class Spice.ImageItem : Spice.CanvasItem {
-    private ImageHandler image;
+    public ImageHandler image { get; private set; }
 
     const string IMAGE_STYLE_CSS = """
         .colored {

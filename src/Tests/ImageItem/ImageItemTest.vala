@@ -60,7 +60,7 @@ int main (string[] args) {
     return Test.run ();
 }
 
-private class Spice.ImageHandler : Object {
+public class Spice.ImageHandler : Object {
     const string FILENAME = "/spice-up-%s-img-%u.%s";
 
     public signal void file_changed ();
