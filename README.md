@@ -50,7 +50,7 @@ You can install Spice-Up from a PPA. But be aware that your results may vary
 
     sudo add-apt-repository ppa:philip.scott/spice-up-daily
     sudo apt-get update
-    sudo apt-get install spice-up
+    sudo apt-get install com.github.philip-scott.spice-up
 
 ### Donations
 Liked Spice-up? Would like to support its development of this app and more? Feel free to [leave a little tip :)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYD9ZJK6ZFUDQ) or support my work torwards a new feature over at [Bountysource](https://www.bountysource.com/trackers/44752823-philip-scott-spice-up). I'd really appreciate it :) 
