@@ -217,8 +217,12 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
-        if (holding || window.is_fullscreen) {
+        if (window.is_fullscreen) {
             return false;
+        }
+
+        if (holding) {
+            return true;
         }
 
         undo_move_action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, Gdk.Rectangle?>.item_moved (this);

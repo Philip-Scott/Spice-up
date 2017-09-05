@@ -119,7 +119,7 @@ public class Spice.Canvas : Gtk.Overlay {
         });
 
         canvas_item.clicked.connect (() => {
-            unselect_all ();
+            unselect_all (false);
             item_clicked (canvas_item);
         });
 
@@ -143,13 +143,17 @@ public class Spice.Canvas : Gtk.Overlay {
         return canvas_item;
     }
 
-    public void unselect_all () {
+    public void unselect_all (bool reset_item = true) {
         foreach (var item in get_children ()) {
             if (item is CanvasItem) {
                 ((CanvasItem) item).unselect ();
             }
         }
-        item_clicked (null);
+
+        if (reset_item) {
+            item_clicked (null);
+        }
+
         request_draw_preview ();
     }
 
@@ -217,7 +221,6 @@ public class Spice.Canvas : Gtk.Overlay {
             }
         } else {
             unselect_all ();
-            item_clicked (null);
         }
 
         return true;
