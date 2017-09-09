@@ -20,9 +20,11 @@
 */
 
 public class ColorButtonTest : Spice.ColorPicker {
-    const string RED = "#FF0000";
+    const string RED = "#F00";
     const string BLUE = "#0000FF";
     const string DEFAULT = "white";
+    const string RGBA = "rgba(255,0,25,0.65432)";
+    const string RGB = "rgb(255,0,25)";
 
     construct {
         gradient = true;
@@ -41,6 +43,90 @@ public class ColorButtonTest : Spice.ColorPicker {
     }
 
     public static void add_tests () {
+        Test.add_func ("/ColorPicker/SetGradient-first-opacity", () => {
+            var test = new ColorButtonTest ();
+
+            var color = "linear-gradient(to bottom, %s 0%, %s 100%)".printf (RGBA, BLUE);
+
+            test.color = color;
+            assert (test.get_1 () == ColorButtonTest.RGBA);
+            assert (test.get_2 () == ColorButtonTest.BLUE);
+            assert (test.get_preview () == color);
+        });
+
+        Test.add_func ("/ColorPicker/SetGradient-second-opacity", () => {
+            var test = new ColorButtonTest ();
+
+            var color = "linear-gradient(to bottom, %s 0%, %s 100%)".printf (RED, RGBA);
+
+            test.color = color;
+            assert (test.get_1 () == ColorButtonTest.RED);
+            assert (test.get_2 () == ColorButtonTest.RGBA);
+            assert (test.get_preview () == color);
+        });
+
+        Test.add_func ("/ColorPicker/SetGradient-both-with-opacity", () => {
+            var test = new ColorButtonTest ();
+
+            var color = "linear-gradient(to bottom, %s 0%, %s 100%)".printf (RGBA, RGBA);
+
+            test.color = color;
+            assert (test.get_1 () == ColorButtonTest.RGBA);
+            assert (test.get_2 () == ColorButtonTest.RGBA);
+            assert (test.get_preview () == color);
+        });
+
+        Test.add_func ("/ColorPicker/SetGradient-rgb-rgba1", () => {
+            var test = new ColorButtonTest ();
+
+            var color = "linear-gradient(to bottom, %s 0%, %s 100%)".printf (RGB, RGBA);
+
+            test.color = color;
+            assert (test.get_1 () == ColorButtonTest.RGB);
+            assert (test.get_2 () == ColorButtonTest.RGBA);
+            assert (test.get_preview () == color);
+        });
+
+        Test.add_func ("/ColorPicker/SetGradient-rgb-rgba2", () => {
+            var test = new ColorButtonTest ();
+
+            var color = "linear-gradient(to bottom, %s 0%, %s 100%)".printf (RGBA, RGB);
+
+            test.color = color;
+            assert (test.get_1 () == ColorButtonTest.RGBA);
+            assert (test.get_2 () == ColorButtonTest.RGB);
+            assert (test.get_preview () == color);
+        });
+
+        Test.add_func ("/ColorPicker/SetGradient-rgb", () => {
+            var test = new ColorButtonTest ();
+
+            var color = "linear-gradient(to bottom, %s 0%, %s 100%)".printf (RGB, RGB);
+
+            test.color = color;
+            assert (test.get_1 () == ColorButtonTest.RGB);
+            assert (test.get_2 () == ColorButtonTest.RGB);
+            assert (test.get_preview () == color);
+        });
+
+        Test.add_func ("/ColorPicker/opacity-test", () => {
+            var test = new ColorButtonTest ();
+
+            test.color = RGBA;
+            assert (test.get_1 () == RGBA);
+            assert (test.get_2 () == RGBA);
+            assert (test.get_preview () == RGBA);
+        });
+
+        Test.add_func ("/ColorPicker/rgb", () => {
+            var test = new ColorButtonTest ();
+
+            test.color = RGB;
+            assert (test.get_1 () == RGB);
+            assert (test.get_2 () == RGB);
+            assert (test.get_preview () == RGB);
+        });
+
         Test.add_func ("/ColorPicker/SetAll", () => {
             var test = new ColorButtonTest ();
 
@@ -69,7 +155,7 @@ public class ColorButtonTest : Spice.ColorPicker {
             assert (test.get_preview () == DEFAULT);
 
             var result = "linear-gradient(to bottom, %s 0%, %s 100%)";
-            
+
             // Setting first color
             test.color_selector = 1;
             test.set_color_smart (RED, true);
@@ -77,7 +163,7 @@ public class ColorButtonTest : Spice.ColorPicker {
             assert (test.get_1 () == RED);
             assert (test.get_2 () == DEFAULT);
             assert (test.get_preview () == result.printf (RED, DEFAULT));
-            
+
             // Setting second color
             test.color_selector = 2;
             test.set_color_smart (BLUE, true);
@@ -85,7 +171,7 @@ public class ColorButtonTest : Spice.ColorPicker {
             assert (test.get_1 () == RED);
             assert (test.get_2 () == BLUE);
             assert (test.get_preview () == result.printf (RED, BLUE));
-            
+
             // Setting both color
             test.color_selector = 3;
             test.set_color_smart (DEFAULT, true);

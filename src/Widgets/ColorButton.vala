@@ -20,6 +20,7 @@
 */
 
 public class Spice.ColorPicker : ColorButton {
+    public static Regex color_regex;
     public signal void color_picked (string color);
 
     public bool gradient {
@@ -40,7 +41,7 @@ public class Spice.ColorPicker : ColorButton {
         get {
             return _color;
         } set {
-            ((ColorButton) this).color = (value);
+            ((ColorButton) this).color = value;
             preview.color = value;
 
             if (gradient) {
@@ -67,8 +68,18 @@ public class Spice.ColorPicker : ColorButton {
 
     private Gtk.ComboBoxText gradient_type;
 
-    public ColorPicker () {
+    public ColorPicker (bool use_alpha = true) {
         Object (color: "white");
+
+        color_chooser.use_alpha = use_alpha;
+    }
+
+    static construct {
+        try {
+            color_regex = new Regex ("""(#.{3,6} )|rgba?\([0-9]{1,},[0-9]{1,},[0-9]{1,}(\)|,(0|1).?[0-9]{0,}\))""", 0);
+        } catch (Error e) {
+            error ("Regex failed: %s", e.message);
+        }
     }
 
     construct {
@@ -157,9 +168,10 @@ public class Spice.ColorPicker : ColorButton {
 
         color_chooser = new Gtk.ColorChooserWidget ();
         color_chooser.show_editor = true;
+        color_chooser.margin = 6;
 
         color_chooser_signal = color_chooser.notify["rgba"].connect (() => {
-            set_color_smart (rgb_to_hex (color_chooser.rgba.to_string ()), false);
+            set_color_smart (color_chooser.rgba.to_string (), false);
         });
 
         color1.clicked.connect (() => {
@@ -197,29 +209,42 @@ public class Spice.ColorPicker : ColorButton {
         gradient = false;
     }
 
-    public void parse_gradient (string color) {
-        string[] parts = color.split(","); //linear-gradient(to bottom | #CCC 0% | #666 100%)
-
+    private void parse_gradient (string color) {
         if (color.contains ("gradient")) {
-            color1.color = parts[1].strip ().split (" ")[0];
-            color2.color = parts[2].strip ().split (" ")[0];
+            MatchInfo mi;
+            string colors[2] = {"", ""};
 
-            if (parts[0].contains ("to bottom")) {
+            if (color_regex.match (color, 0 , out mi)) {
+                int count = 0, pos_start = 0, pos_end = 0;
+
+                try {
+                    do {
+                        mi.fetch_pos (0, out pos_start, out pos_end);
+                        string found_color = mi.fetch (0);
+                        if (pos_start == pos_end) {
+                            break;
+                        }
+
+                        colors[count++] = found_color;
+                    } while (mi.next () || count < 2);
+                } catch (Error e) {
+                    warning ("Could not find gradient parts: %s", e.message);
+                    return;
+                }
+            }
+
+            color1.color = colors[0].strip ();
+            color2.color = colors[1].strip ();
+
+            if (color.contains ("to bottom")) {
                 gradient_type.set_active_id ("to bottom");
-            } else if (parts[0].contains ("to right")) {
+            } else if (color.contains ("to right")) {
                 gradient_type.set_active_id ("to right");
             }
         } else {
             color1.color = color;
             color2.color = color;
         }
-    }
-
-    public string rgb_to_hex (string rgb) {
-        Gdk.RGBA rgba = Gdk.RGBA ();
-        rgba.parse (rgb);
-
-        return "#%02x%02x%02x".printf ((int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255));
     }
 
     public string make_gradient () {
@@ -363,8 +388,13 @@ public class Spice.ColorPicker : ColorButton {
             get_style_context ().add_class ("color-button");
             Utils.set_style (this, STYLE_CSS);
 
+            var background = new Gtk.EventBox ();
+            background.get_style_context ().add_class ("checkered");
+            Utils.set_style (background, CHECKERED_CSS);
+
             can_focus = false;
-            add (surface);
+            add (background);
+            background.add (surface);
         }
 
         public new void style () {
@@ -375,6 +405,12 @@ public class Spice.ColorPicker : ColorButton {
             .color-button.flat {
                 border: none;
                 padding: 0;
+            }
+        """;
+
+        private const string CHECKERED_CSS = """
+            .checkered {
+                background-image: url('resource:///com/github/philip-scott/spice-up/patterns/ps-neutral.png');
             }
         """;
 

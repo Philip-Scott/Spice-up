@@ -19,9 +19,12 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
+const string RGBA = "rgba(255,0,25,0.65432)";
+
 void add_tests () {
+
     Test.add_func ("/TextItem/initial", () => {
-        var item = 
+        var item =
         load_test ("""{"type":"text",
                        "text": "The Title",
                        "font": "raleway",
@@ -32,7 +35,7 @@ void add_tests () {
     });
 
     Test.add_func ("/TextItem/With-FontStyle", () => {
-        var item = 
+        var item =
         load_test ("""{"type":"text",
                        "text": "The Title",
                        "font": "raleway",
@@ -44,7 +47,7 @@ void add_tests () {
     });
 
     Test.add_func ("/TextItem/WithJustification", () => {
-        var item = 
+        var item =
         load_test ("""{"type":"text",
                        "text": "The Title",
                        "font": "raleway",
@@ -57,7 +60,7 @@ void add_tests () {
     });
 
     Test.add_func ("/TextItem/WithBase64Text", () => {
-        var item = 
+        var item =
         load_test ("""{"type":"text",
                        "text": "",
                        "text-data" : "VGhlIFRpdGxl",
@@ -69,14 +72,29 @@ void add_tests () {
                    """);
         saving_test (item);
     });
+
+    Test.add_func ("/TextItem/RGBAColor", () => {
+        var item =
+        load_test ("""{"type":"text",
+                       "text": "",
+                       "text-data" : "VGhlIFRpdGxl",
+                       "font": "raleway",
+                       "color": "rgba(255,0,25,0.65432)",
+                       "font-size": 50,
+                       "font-style":"Regular",
+                       "justification": 1 }
+                   """, RGBA);
+
+        saving_test (item, RGBA);
+    });
 }
 
-Spice.TextItem load_test (string raw) {
+Spice.TextItem load_test (string raw, string color = "#fff") {
     var json = Spice.Utils.get_json (raw);
     var color_item = new Spice.TextItem (new Spice.Canvas (), json);
 
     assert (color_item.text == "The Title");
-    assert (color_item.font_color == "#fff");
+    assert (color_item.font_color == color);
     assert (color_item.font_size == 50);
     assert (color_item.font_style == "Regular");
     assert (color_item.justification == 1);
@@ -84,12 +102,12 @@ Spice.TextItem load_test (string raw) {
     return color_item;
 }
 
-void saving_test (Spice.TextItem item) {
+void saving_test (Spice.TextItem item, string color = "#fff") {
     var json = Spice.Utils.get_json (item.serialise ());
     assert (json.get_string_member ("text") == "");
     assert (json.get_string_member ("text-data") == "VGhlIFRpdGxl");
     assert (json.get_string_member ("font") == "raleway");
-    assert (json.get_string_member ("color") == "#fff");
+    assert (json.get_string_member ("color") ==  color);
     assert (json.get_int_member ("font-size") == 50);
     assert (json.get_string_member ("font-style") == "Regular");
     assert (json.get_int_member ("justification") == 1);
