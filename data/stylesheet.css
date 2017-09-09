@@ -105,3 +105,7 @@ GtkToggleButton, .spice,
     border-top-left-radius: 0;
 }
 
+.spice-scale {
+  color: @text_color;
+}
+

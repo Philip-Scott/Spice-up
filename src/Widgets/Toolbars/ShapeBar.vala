@@ -25,6 +25,7 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
 
     construct {
         border_radius = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0.0, 50.0, 1);
+        border_radius.get_style_context ().add_class ("spice-scale");
         border_radius.add_mark (0.0, Gtk.PositionType.BOTTOM, _("Square"));
         border_radius.add_mark (50.0, Gtk.PositionType.BOTTOM, _("Circle"));
         border_radius.width_request = 200;
