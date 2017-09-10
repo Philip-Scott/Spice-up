@@ -30,14 +30,24 @@
 Spice-up is a modern and intuitive desktop presentation app based upon [SpiceOfDesign's presentation concept](http://spiceofdesign.deviantart.com/art/New-Presentation-Concept-401767854). Built from the ground up for elementary OS, it gives you everything you need to create simple and beautiful presentations.
 
 ### Spice Presentations Look Amazing!
-Images, shapes, Text, as well as beautiful background patterns and easy to make custom gradients!
+Images, Shapes, Text, as well as beautiful background patterns and easy to make custom gradients!
 
+<p align="center">
+    <img src="Screenshot1.png" alt="Screenshot">
+</p>
 
-### Coming Soon
-- Animations and transitions
-- Pre-defined layouts and themes
+It's features include:
+
+- **Exporting to PDF!**
+- **Presentation Browser**: Scroll though the presentations you have made and jump right into them with one click!.
+- **Controller Support**: If you have a USB or Bluetooth controller, plug it in and control your slides!
+- **Templates**, so you can whip up a presentation in a blink of an eye.
+- **Edit images** in your favorite editor, and it will automatically update when saved
 - And much more!
 
+<p align="center">
+    <img src="Screenshot2.png" alt="Screenshot">
+</p>
 
 ## Installation
 
