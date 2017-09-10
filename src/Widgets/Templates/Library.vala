@@ -21,7 +21,7 @@
 
 public class Spice.Widgets.Templates.TemplateLibrary : Gtk.ScrolledWindow {
     private const string RESOURCE_PATH = "resource:///com/github/philip-scott/spice-up/templates/%s";
-    private const string FILES[] = {"Black.spice", "White.spice", "Green.spice", "Spice-Up.spice"};
+    private const string FILES[] = {"Black.spice", "White.spice", "Green.spice", "Spice-Up.spice", "Paper.spice", "BigCity.spice", "Colorful.spice", "Landscape.spice"};
 
     public signal void item_selected (string data);
 

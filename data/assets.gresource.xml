@@ -8,8 +8,12 @@
     <file alias="stylesheet.css" compressed="false" preprocess="">stylesheet.css</file>
   </gresource>
   <gresource prefix="/com/github/philip-scott/spice-up/templates">
+    <file alias="BigCity.spice" compressed="false" preprocess="">assets/templates/BigCity.spice</file>
     <file alias="Black.spice" compressed="false" preprocess="">assets/templates/Black.spice</file>
+    <file alias="Colorful.spice" compressed="false" preprocess="">assets/templates/Colorful.spice</file>
     <file alias="Green.spice" compressed="false" preprocess="">assets/templates/Green.spice</file>
+    <file alias="Landscape.spice" compressed="false" preprocess="">assets/templates/Landscape.spice</file>
+    <file alias="Paper.spice" compressed="false" preprocess="">assets/templates/Paper.spice</file>
     <file alias="Spice-Up.spice" compressed="false" preprocess="">assets/templates/Spice-Up.spice</file>
     <file alias="White.spice" compressed="false" preprocess="">assets/templates/White.spice</file>
   </gresource>
