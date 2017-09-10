@@ -10,11 +10,35 @@
     <p>
       Everything you need to create simple and beautiful presentations with text, images, and shapes. Add some spice to your presentations with a wide variety of background patterns and beautiful color palette.
     </p>
+    <p>
+      Features Include:
+    </p>
+    <ul>
+      <li>Exporting to PDF!</li>
+      <li>Presentation Browser: Scroll though the presentations you have made and jump right into them with one click!.</li>
+      <li>Controller Support: If you have a USB or Bluetooth controller, plug it in and control your slides!</li>
+      <li>Templates, so you can whip up a presentation in a blink of an eye.</li>
+      <li>You can edit images in your favorite editor, and it will automatically update when saved</li>
+    </ul>
   </description>
   <provides>
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.0.0" date="2017-09-14">
+      <description>
+        <p>This was a triumph!</p>
+        <ul>
+          <li>Creating a new presentation now brings up templates you can choose from.</li>
+          <li>You can now replace images right from Spice-Up.</li>
+          <li>Making a new slide now picks up the style from your last one.</li>
+          <li>You can now make Text and Shapes transparent, right from the custom color picker!</li>
+          <li>Fixed: Double clicking would sometimes unselect the item.</li>
+          <li>Fixed: The text on the roundness slider was hard to read.</li>
+          <li>Spice-Up is also now available in Spanish!</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.8.2" date="2017-08-27">
       <description>
         <p>Now with 100% better feedback!</p>
@@ -44,6 +68,9 @@
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot2.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot3.png</image>
     </screenshot>
   </screenshots>
   <developer_name>Felipe Escoto</developer_name>
