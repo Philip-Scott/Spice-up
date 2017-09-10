@@ -24,9 +24,9 @@ public const string TERMINAL_NAME = "spice-up";
 
 public static int main (string[] args) {
     /* Initiliaze gettext support */
-    Intl.setlocale (LocaleCategory.MESSAGES, Intl.get_language_names ()[0]);
-    Intl.setlocale (LocaleCategory.NUMERIC, "en_US");
-    //Intl.textdomain (Config.GETTEXT_PACKAGE);
+    Intl.setlocale (LocaleCategory.ALL, Intl.get_language_names ()[0]);
+    //Intl.setlocale (LocaleCategory.NUMERIC, "en_US");
+    //Intl.textdomain (TERMINAL_NAME);
 
     Environment.set_application_name (APP_NAME);
     Environment.set_prgname (APP_NAME);

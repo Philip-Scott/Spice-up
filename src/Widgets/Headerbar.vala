@@ -74,10 +74,10 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO);
         redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO);
-        text = new HeaderbarButton ("/com/github/philip-scott/spice-up/text.svg", _("Text Box"), HeaderButton.TEXT);
-        image = new HeaderbarButton ("/com/github/philip-scott/spice-up/photo.svg", _("Image"), HeaderButton.IMAGE);
-        shape = new HeaderbarButton ("/com/github/philip-scott/spice-up/shape.svg", _("Shape"), HeaderButton.SHAPE);
-        show_welcome = new HeaderbarButton ("document-open-symbolic", _("Return to files"), HeaderButton.RETURN);
+        text = new HeaderbarButton ("/com/github/philip-scott/spice-up/text.svg", _("Insert Text Box"), HeaderButton.TEXT);
+        image = new HeaderbarButton ("/com/github/philip-scott/spice-up/photo.svg", _("Insert Image"), HeaderButton.IMAGE);
+        shape = new HeaderbarButton ("/com/github/philip-scott/spice-up/shape.svg", _("Insert Shape"), HeaderButton.SHAPE);
+        show_welcome = new HeaderbarButton ("document-open-symbolic", _("Return to Welcome Screen"), HeaderButton.RETURN);
 
         undo.sensitive = false;
         redo.sensitive = false;

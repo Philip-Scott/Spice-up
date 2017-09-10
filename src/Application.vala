@@ -27,7 +27,6 @@ namespace Spice {
 
 public class Spice.Application : Granite.Application {
     public const string PROGRAM_NAME = N_("Spice-Up");
-    public const string COMMENT = N_("");
     public const string ABOUT_STOCK = N_("About Spice-Up");
 
     public bool running = false;
