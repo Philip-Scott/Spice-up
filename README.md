@@ -17,9 +17,7 @@
     <img src="Screenshot.png" alt="Screenshot">
 </p>
 
-
 <h2> </h2>
-
 
 <p>
 <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
@@ -38,7 +36,7 @@ Images, Shapes, Text, as well as beautiful background patterns and easy to make 
 
 It's features include:
 
-- **Exporting to PDF!**
+- **Exporting to PDF:** Share your presentation with anyone, no matter the platform they're at 
 - **Presentation Browser**: Scroll though the presentations you have made and jump right into them with one click!.
 - **Controller Support**: If you have a USB or Bluetooth controller, plug it in and control your slides!
 - **Templates**, so you can whip up a presentation in a blink of an eye.
