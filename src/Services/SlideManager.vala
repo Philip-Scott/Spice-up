@@ -93,7 +93,8 @@ public class Spice.SlideManager : Object {
             }
         }
 
-        return """{"current-slide":%d, "aspect-ratio":%d, "slides": [%s]}""".printf (slides.index_of (current_slide), current_ratio, data);
+        var current_slide_index = current_slide != null ? slides.index_of (current_slide) : 0;
+        return """{"current-slide":%d, "aspect-ratio":%d, "slides": [%s]}""".printf (current_slide_index, current_ratio, data);
     }
 
     public void load_data (string data) {
