@@ -34,7 +34,7 @@ Images, Shapes, Text, as well as beautiful background patterns and easy to make 
     <img src="Screenshot1.png" alt="Screenshot">
 </p>
 
-It's features include:
+Its features include:
 
 - **Exporting to PDF:** Share your presentation with anyone, no matter the platform they're at 
 - **Presentation Browser**: Scroll though the presentations you have made and jump right into them with one click!.
