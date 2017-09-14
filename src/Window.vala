@@ -373,7 +373,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     public void save_current_file () {
         if (Services.FileManager.current_file != null) {
-            Services.FileManager.write_file (slide_manager.serialise ());
+            if (slide_manager.slide_count () == 0) {
+                Services.FileManager.delete_file ();
+            } else {
+                Services.FileManager.write_file (slide_manager.serialise ());
+            }
+
             Services.FileManager.current_file = null;
         }
     }

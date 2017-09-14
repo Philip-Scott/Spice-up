@@ -84,6 +84,18 @@ public class Spice.SlideManager : Object {
         reseted ();
     }
 
+    public uint slide_count () {
+        uint slide_count = 0;
+
+        foreach (var slide in slides) {
+            if (slide.visible) {
+                slide_count++;
+            }
+        }
+
+        return slide_count;
+    }
+
     public string serialise () {
         string data = "";
 
@@ -119,7 +131,7 @@ public class Spice.SlideManager : Object {
             }
 
             var position = (int) root_object.get_int_member ("current-slide");
-            if (slides.size > position) {
+            if (slides.size > position && position >= 0) {
                 current_slide = slides[position];
                 current_slide.reload_preview_data ();
             }

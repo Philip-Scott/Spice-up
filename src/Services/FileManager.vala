@@ -134,6 +134,14 @@ public class Spice.Services.FileManager {
         return "";
     }
 
+    public static void delete_file (File file = current_file) {
+        if (file != null
+        && file.query_exists ()
+        && file.get_basename ().contains (FILE_EXTENSION)) {
+            FileUtils.remove (file.get_path ());
+        }
+    }
+
     public static string get_data (File file) {
         string data = "";
 
