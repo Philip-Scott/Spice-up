@@ -66,7 +66,7 @@ Liked Spice-up? Would like to support its development of this app and more? Feel
 ## Dependencies
 These dependencies must be present before building
  - `gtk+-3.0>=3.9.10`
- - `granite>=0.3`
+ - `granite>=0.4.1`
  - `json-glib-1.0`
  - `gee-0.8`
  - `gudev-1.0`
