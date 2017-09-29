@@ -31,6 +31,8 @@ void add_tests () {
                        "color": "#fff",
                        "font-size": 50 }
                    """);
+
+        assert (item.align == 1);
         saving_test (item);
     });
 
@@ -87,22 +89,40 @@ void add_tests () {
 
         saving_test (item, RGBA);
     });
+
+    Test.add_func ("/TextItem/VerticalAlignment", () => {
+        var item =
+        load_test ("""{"type":"text",
+                       "text": "",
+                       "text-data" : "VGhlIFRpdGxl",
+                       "font": "raleway",
+                       "color": "rgba(255,0,25,0.65432)",
+                       "font-size": 50,
+                       "font-style":"Regular",
+                       "justification": 1,
+                       "align": 2}
+                   """, RGBA);
+
+        assert (item.align == 2);
+
+        saving_test (item, RGBA, 2);
+    });
 }
 
 Spice.TextItem load_test (string raw, string color = "#fff") {
     var json = Spice.Utils.get_json (raw);
-    var color_item = new Spice.TextItem (new Spice.Canvas (), json);
+    var item = new Spice.TextItem (new Spice.Canvas (), json);
 
-    assert (color_item.text == "The Title");
-    assert (color_item.font_color == color);
-    assert (color_item.font_size == 50);
-    assert (color_item.font_style == "Regular");
-    assert (color_item.justification == 1);
+    assert (item.text == "The Title");
+    assert (item.font_color == color);
+    assert (item.font_size == 50);
+    assert (item.font_style == "Regular");
+    assert (item.justification == 1);
 
-    return color_item;
+    return item;
 }
 
-void saving_test (Spice.TextItem item, string color = "#fff") {
+void saving_test (Spice.TextItem item, string color = "#fff", int align = 1) {
     var json = Spice.Utils.get_json (item.serialise ());
     assert (json.get_string_member ("text") == "");
     assert (json.get_string_member ("text-data") == "VGhlIFRpdGxl");
@@ -111,6 +131,7 @@ void saving_test (Spice.TextItem item, string color = "#fff") {
     assert (json.get_int_member ("font-size") == 50);
     assert (json.get_string_member ("font-style") == "Regular");
     assert (json.get_int_member ("justification") == 1);
+    assert (json.get_int_member ("align") == align);
 }
 
 int main (string[] args) {

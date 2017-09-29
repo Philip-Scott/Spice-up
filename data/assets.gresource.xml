@@ -5,6 +5,9 @@
     <file alias="text.svg" compressed="true" preprocess="xml-stripblanks">icons/text-symbolic.svg</file>
     <file alias="photo.svg" compressed="true" preprocess="xml-stripblanks">icons/photos-symbolic.svg</file>
     <file alias="shape.svg" compressed="false" preprocess="">icons/shape-symbolic.svg</file>
+    <file alias="align-top-symbolic" compressed="false" preprocess="xml-stripblanks">icons/align-top-symbolic.svg</file>
+    <file alias="align-middle-symbolic" compressed="false" preprocess="xml-stripblanks">icons/align-middle-symbolic.svg</file>
+    <file alias="align-bottom-symbolic" compressed="false" preprocess="xml-stripblanks">icons/align-bottom-symbolic.svg</file>
     <file alias="stylesheet.css" compressed="false" preprocess="">stylesheet.css</file>
   </gresource>
   <gresource prefix="/com/github/philip-scott/spice-up/templates">

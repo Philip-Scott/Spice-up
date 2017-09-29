@@ -24,6 +24,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     private Gee.HashMap<string, Pango.FontFamily> family_cache;
     private Gee.HashMap<string, Array<Pango.FontFace>> face_cache;
     private Granite.Widgets.ModeButton justification;
+    private Granite.Widgets.ModeButton align;
     private Spice.EntryCombo font_button;
     private Spice.ColorPicker text_color_button;
     private Spice.EntryCombo font_size;
@@ -32,6 +33,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     private Gtk.Image align_button_image;
 
     private string[] JUSTIFICATION_TRANSLATIONS = {_("Left"), _("Center"), _("Right"), _("Justify")};
+    private string[] ALIGN_TRANSLATIONS = {_("Top"), _("Middle"), _("Bottom")};
 
     const string TEXT_STYLE_CSS = """
         .label {
@@ -78,6 +80,8 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         align_button.add (align_button_image);
 
         var align_grid = new Gtk.Grid ();
+        align_grid.orientation = Gtk.Orientation.VERTICAL;
+        align_grid.row_spacing = 6;
         align_grid.margin = 6;
 
         var align_popover = new Gtk.Popover (align_button);
@@ -103,6 +107,20 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             child.get_style_context ().add_class ("spice");
         }
 
+        align = new Granite.Widgets.ModeButton ();
+        align.mode_added.connect ((index, widget) => {
+            widget.set_tooltip_text (ALIGN_TRANSLATIONS[index]);
+            widget.margin = 3;
+        });
+
+        align.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/align-top-symbolic"));
+        align.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/align-middle-symbolic"));
+        align.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/align-bottom-symbolic"));
+
+        foreach (var child in align.get_children ()) {
+            child.get_style_context ().add_class ("spice");
+        }
+
         add (text_color_button);
         add (font_button);
         add (font_size);
@@ -110,6 +128,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         add (align_button);
 
         align_grid.add (justification);
+        align_grid.add (align);
 
         connect_signals ();
     }
@@ -132,6 +151,14 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
 
             if (!selecting) {
                 var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "justification");
+                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+                update_properties ();
+            }
+        });
+
+        align.mode_changed.connect ((widget) => {
+            if (!selecting) {
+                var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "align");
                 Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
                 update_properties ();
             }
@@ -168,6 +195,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
 
         text_color_button.color = ((TextItem) item).font_color;
         justification.set_active (((TextItem) item).justification);
+        align.set_active (((TextItem) item).align);
     }
 
     public override void update_properties () {
@@ -177,6 +205,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         text.font_style = font_type.text;
         text.font_size = int.parse (font_size.text);
         text.justification = justification.selected;
+        text.align = align.selected;
 
         item.style ();
     }
