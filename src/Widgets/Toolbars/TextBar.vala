@@ -113,9 +113,9 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             widget.margin = 3;
         });
 
-        align.append_icon ("format-justify-left-symbolic", Gtk.IconSize.MENU);
-        align.append_icon ("format-justify-center-symbolic", Gtk.IconSize.MENU);
-        align.append_icon ("format-justify-right-symbolic", Gtk.IconSize.MENU);
+        align.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/align-top-symbolic"));
+        align.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/align-middle-symbolic"));
+        align.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/align-bottom-symbolic"));
 
         foreach (var child in align.get_children ()) {
             child.get_style_context ().add_class ("spice");
