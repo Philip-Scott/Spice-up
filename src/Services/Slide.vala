@@ -47,12 +47,11 @@ public class Spice.Slide : Object {
         canvas = new Spice.Canvas (save_data);
         preview = new Gtk.Image ();
 
-        load_data (save_data);
-
         canvas.request_draw_preview.connect (reload_preview_data);
+        load_data ();
     }
 
-    public void load_data (Json.Object? save_data) {
+    public void load_slide () {
         if (save_data == null) return;
         canvas.clear_all ();
 
@@ -63,6 +62,12 @@ public class Spice.Slide : Object {
 
             add_item_from_data (item);
         }
+
+        this.save_data = null;
+    }
+
+    private void load_data () {
+        if (save_data == null) return;
 
         preview_data = save_data.get_string_member ("preview");
         if (preview_data != null && preview_data != "") {
@@ -111,6 +116,16 @@ public class Spice.Slide : Object {
     }
 
     public string serialise () {
+        if (this.save_data != null) {
+            var root = new Json.Node (Json.NodeType.OBJECT);
+            root.set_object (save_data);
+
+            var gen = new Json.Generator ();
+            gen.set_root (root);
+
+            return gen.to_data (null);
+        }
+
         string data = "";
 
         foreach (var widget in canvas.get_children ()) {

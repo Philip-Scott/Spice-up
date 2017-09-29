@@ -61,6 +61,7 @@ public class Spice.SlideManager : Object {
                 current_item = null;
                 slideshow.set_visible_child (value.canvas);
                 current_slide_changed (value);
+                value.load_slide ();
             }
         }
     }
@@ -135,6 +136,8 @@ public class Spice.SlideManager : Object {
             if (slides.size > position && position >= 0) {
                 current_slide = slides[position];
                 current_slide.reload_preview_data ();
+            } else {
+                current_slide = slides[0];
             }
         } catch (Error e) {
             error ("Error loading file: %s", e.message);
@@ -281,7 +284,7 @@ public class Spice.SlideManager : Object {
 
         new_slide_created (slide);
 
-        if (current_slide == null || undoable_action) {
+        if (undoable_action) {
             current_slide = slide;
         }
 
