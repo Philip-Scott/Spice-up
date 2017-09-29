@@ -40,7 +40,8 @@ public class Spice.DynamicToolbar : Gtk.Box {
         valign = Gtk.Align.START;
 
         stack = new Gtk.Stack ();
-        stack.set_transition_type (Gtk.StackTransitionType.SLIDE_DOWN);
+        stack.transition_type = Gtk.StackTransitionType.SLIDE_DOWN;
+        stack.transition_duration = 300;
 
         get_style_context ().add_class ("toolbar");
         get_style_context ().add_class ("spice-dynamic-toolbar");

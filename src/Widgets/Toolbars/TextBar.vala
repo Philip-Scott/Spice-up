@@ -103,11 +103,11 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             child.get_style_context ().add_class ("spice");
         }
 
+        add (text_color_button);
         add (font_button);
         add (font_size);
         add (font_type);
         add (align_button);
-        add (text_color_button);
 
         align_grid.add (justification);
 
