@@ -73,6 +73,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         slide_manager = new Spice.SlideManager ();
         app_overlay = new Gtk.Overlay ();
         app_stack = new Gtk.Stack ();
+        app_stack.transition_duration = 450;
         app_stack.homogeneous = false;
 
         app_overlay.add (app_stack);
@@ -137,7 +138,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
 
         welcome.reload ();
-        app_stack.set_visible_child_name  ("welcome");
+        app_stack.set_visible_child_full ("welcome", Gtk.StackTransitionType.OVER_LEFT_RIGHT);
     }
 
     private void connect_signals (Gtk.Application app) {
