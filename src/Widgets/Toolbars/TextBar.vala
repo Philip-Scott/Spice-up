@@ -29,6 +29,10 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     private Spice.EntryCombo font_size;
     private Spice.EntryCombo font_type;
 
+    private Gtk.Image align_button_image;
+
+    private string[] JUSTIFICATION_TRANSLATIONS = {_("Left"), _("Center"), _("Right"), _("Justify")};
+
     const string TEXT_STYLE_CSS = """
         .label {
             font: %s;
@@ -66,7 +70,30 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             font_size.add_entry (size.to_string ());
         }
 
+        align_button_image = new Gtk.Image.from_icon_name ("format-justify-fill-symbolic", Gtk.IconSize.MENU);
+
+        var align_button = new Gtk.Button ();
+        align_button.get_style_context ().add_class ("spice");
+        align_button.set_tooltip_text (_("Align"));
+        align_button.add (align_button_image);
+
+        var align_grid = new Gtk.Grid ();
+        align_grid.margin = 6;
+
+        var align_popover = new Gtk.Popover (align_button);
+        align_popover.position = Gtk.PositionType.BOTTOM;
+        align_popover.add (align_grid);
+
+        align_button.clicked.connect (() => {
+            align_popover.show_all ();
+        });
+
         justification = new Granite.Widgets.ModeButton ();
+        justification.mode_added.connect ((index, widget) => {
+            widget.set_tooltip_text (JUSTIFICATION_TRANSLATIONS[index]);
+            widget.margin = 3;
+        });
+
         justification.append_icon ("format-justify-left-symbolic", Gtk.IconSize.MENU);
         justification.append_icon ("format-justify-center-symbolic", Gtk.IconSize.MENU);
         justification.append_icon ("format-justify-right-symbolic", Gtk.IconSize.MENU);
@@ -79,8 +106,10 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         add (font_button);
         add (font_size);
         add (font_type);
+        add (align_button);
         add (text_color_button);
-        add (justification);
+
+        align_grid.add (justification);
 
         connect_signals ();
     }
@@ -99,6 +128,8 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         });
 
         justification.mode_changed.connect ((widget) => {
+            align_button_image.icon_name = (widget as Gtk.Image).icon_name;
+
             if (!selecting) {
                 var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "justification");
                 Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
