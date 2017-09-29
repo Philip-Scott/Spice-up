@@ -25,6 +25,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     private Gtk.Stack stack;
 
     public int justification {get; set; default = 1; }
+    public int align { get; set; default = 1; }
     public int font_size {get; set; default = 16; }
     public string font {get; set; default = "Open Sans"; }
     public string font_color {get; set; default = "#fff"; }
@@ -184,17 +185,20 @@ public class Spice.TextItem : Spice.CanvasItem {
             font_style = _font_style;
         }
 
-
         if (save_data.has_member ("justification")) {
             int64? justify = save_data.get_int_member ("justification");
             justification = (int) justify;
+        }
+
+        if (save_data.has_member ("align")) {
+            align = (int) save_data.get_int_member ("align");
         }
 
         font_color = save_data.get_string_member ("color");
     }
 
     protected override string serialise_item () {
-        return """"type":"text","text": "","text-data": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d """.printf (Base64.encode (entry.buffer.text.data), font, font_color, font_size, font_style, justification);
+        return """"type":"text","text": "","text-data": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d, "align": %d """.printf (Base64.encode (entry.buffer.text.data), font, font_color, font_size, font_style, justification, align);
     }
 
     public override void style () {
@@ -229,6 +233,21 @@ public class Spice.TextItem : Spice.CanvasItem {
                 label.justify = Gtk.Justification.FILL;
                 label.halign = Gtk.Align.FILL;
                 label.xalign = 0.0f;
+                break;
+        }
+
+        switch (align) {
+            case 0:
+                entry.valign = Gtk.Align.START;
+                label.valign = Gtk.Align.START;
+                break;
+            case 1:
+                entry.valign = Gtk.Align.CENTER;
+                label.valign = Gtk.Align.FILL;
+                break;
+            case 2:
+                entry.valign = Gtk.Align.END;
+                label.valign = Gtk.Align.END;
                 break;
         }
 
