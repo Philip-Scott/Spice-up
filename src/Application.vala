@@ -30,6 +30,7 @@ public class Spice.Application : Granite.Application {
     public const string ABOUT_STOCK = N_("About Spice-Up");
 
     public bool running = false;
+    public bool opening_file = false;
 
     construct {
         flags |= ApplicationFlags.HANDLES_OPEN;
@@ -58,6 +59,7 @@ public class Spice.Application : Granite.Application {
             uris += file.get_uri ();
         }
 
+        opening_file = true;
         activate ();
         if (window != null) {
             window.open_file (File.new_for_uri (uris[0]));
@@ -74,6 +76,10 @@ public class Spice.Application : Granite.Application {
             this.add_window (window);
 
             running = true;
+        }
+
+        if (!opening_file) {
+            window.show_welcome ();
         }
 
         window.show_app ();
