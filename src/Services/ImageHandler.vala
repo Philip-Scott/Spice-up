@@ -20,9 +20,10 @@
 */
 
 public class Spice.ImageHandler : Object {
+    public static uint FILE_ID = 0;
+
     public signal void file_changed ();
 
-    private static uint FILE_ID = 0;
     private uint file_id;
 
     const string FILENAME = "/spice-up-%s-img-%u.%s";

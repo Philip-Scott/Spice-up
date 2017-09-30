@@ -81,6 +81,7 @@ public class Spice.SlideManager : Object {
         }
 
         slides.clear ();
+        ImageHandler.FILE_ID = 0;
 
         reseted ();
     }
