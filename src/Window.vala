@@ -56,8 +56,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         build_ui ();
 
-        show_welcome ();
-
         move (settings.pos_x, settings.pos_y);
         resize (settings.window_width, settings.window_height);
         show_app ();
@@ -73,13 +71,21 @@ public class Spice.Window : Gtk.ApplicationWindow {
         slide_manager = new Spice.SlideManager ();
         app_overlay = new Gtk.Overlay ();
         app_stack = new Gtk.Stack ();
-        app_stack.transition_duration = 450;
+        app_stack.transition_duration = 500;
         app_stack.homogeneous = false;
 
         app_overlay.add (app_stack);
         this.add (app_overlay);
 
         GamepadSlideController.startup (slide_manager, this);
+
+        welcome = new Spice.Welcome ();
+
+        welcome.open_file.connect ((file) => {
+            open_file (file);
+        });
+
+        app_stack.add_named (welcome, "welcome");
     }
 
     private void show_editor () {
@@ -122,23 +128,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_stack.set_visible_child_name  ("application");
     }
 
-    private void show_welcome () {
-        if (welcome == null) {
-            welcome = new Spice.Welcome ();
-
-            welcome.open_file.connect ((file) => {
-                open_file (file);
-            });
-
-            app_stack.add_named (welcome, "welcome");
-        }
-
+    public void show_welcome () {
         if (headerbar != null) {
             headerbar.sensitive = false;
         }
 
         welcome.reload ();
-        app_stack.set_visible_child_full ("welcome", Gtk.StackTransitionType.OVER_LEFT_RIGHT);
+        app_stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
+        app_stack.set_visible_child_name ("welcome");
     }
 
     private void connect_signals (Gtk.Application app) {

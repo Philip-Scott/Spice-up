@@ -109,3 +109,7 @@ GtkToggleButton, .spice,
   color: @text_color;
 }
 
+.app-back {
+    background-color: @bg_color;
+}
+
