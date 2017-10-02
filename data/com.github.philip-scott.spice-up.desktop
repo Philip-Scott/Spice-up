@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Spice-Up
 Comment=Spice up your slides
+Comment[pt_BR]=Tempere os seus slides
 Exec=com.github.philip-scott.spice-up %u
 Icon=com.github.philip-scott.spice-up
 Terminal=false
@@ -13,3 +14,4 @@ Actions=AboutDialog;
 [Desktop Action AboutDialog]
 Exec=com.github.philip-scott.spice-up --about
 Name=About Spice-Up
+Name[pt_BR]=Sobre o Spice-Up
