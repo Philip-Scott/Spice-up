@@ -9,6 +9,8 @@
     <file alias="align-middle-symbolic" compressed="false" preprocess="xml-stripblanks">icons/align-middle-symbolic.svg</file>
     <file alias="align-bottom-symbolic" compressed="false" preprocess="xml-stripblanks">icons/align-bottom-symbolic.svg</file>
     <file alias="stylesheet.css" compressed="false" preprocess="">stylesheet.css</file>
+    <file alias="save-header" compressed="false" preprocess="">SaveHeader.txt</file>
+    <file alias="save-footer" compressed="false" preprocess="">SaveFooter.txt</file>
   </gresource>
   <gresource prefix="/com/github/philip-scott/spice-up/templates">
     <file alias="BigCity.spice" compressed="false" preprocess="">assets/templates/BigCity.spice</file>

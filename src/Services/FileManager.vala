@@ -102,6 +102,10 @@ public class Spice.Services.FileManager {
         return result;
     }
 
+    private static string? header = null;
+    private static string? footer = null;
+    private const string RESOURCE_PATH = "resource:///com/github/philip-scott/spice-up/%s";
+
     public static void write_file (string contents) {
         if (current_file == null) {
             return;
@@ -115,23 +119,34 @@ public class Spice.Services.FileManager {
             }
         }
 
+        if (header == null) {
+            var file = File.new_for_uri (RESOURCE_PATH.printf ("save-header"));
+            var dis = new DataInputStream (file.read ());
+            size_t size;
+
+            header = dis.read_upto ("\0", -1, out size);
+        }
+
+        if (footer == null) {
+            var file = File.new_for_uri (RESOURCE_PATH.printf ("save-footer"));
+            var dis = new DataInputStream (file.read ());
+            size_t size;
+
+            footer = dis.read_upto ("\0", -1, out size);
+        }
+
         create_file_if_not_exists (current_file);
 
         try {
-            GLib.FileUtils.set_data (current_file.get_path (), contents.data);
+            GLib.FileUtils.set_data (current_file.get_path (), (header + contents + footer).data);
         } catch (Error e) {
             warning ("Could not write file \"%s\": %s", current_file.get_basename (), e.message);
         }
     }
 
     public static string open_file () {
-        if (current_file != null && current_file.query_exists ()) {
-            settings.add_file (current_file.get_path ());
-
-            return get_data (current_file);
-        }
-
-        return "";
+        settings.add_file (current_file.get_path ());
+        return get_presentation_data (current_file);
     }
 
     public static void delete_file (File file = current_file) {
@@ -140,6 +155,19 @@ public class Spice.Services.FileManager {
         && file.get_basename ().contains (FILE_EXTENSION)) {
             FileUtils.remove (file.get_path ());
         }
+    }
+
+    public static string get_presentation_data (File file) {
+        if (file != null && file.query_exists ()) {
+            var data = get_data (file);
+            if (data.get_char (0) == '<') {
+                data = data.split ("""<content id="content">""")[1].split ("</content>")[0];
+            }
+
+            return data;
+        }
+
+        return "";
     }
 
     public static string get_data (File file) {
