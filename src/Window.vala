@@ -213,7 +213,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
             case 65361: // Left Arrow
             case 65362: // Up Arrow
                 return previous_slide ();
-
+            case 65365: // Page Up
+                return previous_slide (true);
+            case 65366: // Page Down
+                return next_slide (true);
             case 65307: // Esc
                 return esc_event ();
         }
@@ -299,8 +302,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
         return true;
     }
 
-    private bool next_slide () {
-        if (is_fullscreen) {
+    private bool next_slide (bool override = false) {
+        if (is_fullscreen || override) {
             this.slide_manager.next_slide ();
             return true;
         }
@@ -308,8 +311,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
         return false;
     }
 
-    private bool previous_slide () {
-        if (is_fullscreen) {
+    private bool previous_slide (bool override = false) {
+        if (is_fullscreen || override) {
             this.slide_manager.previous_slide ();
             return true;
         }
