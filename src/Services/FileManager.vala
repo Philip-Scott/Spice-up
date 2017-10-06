@@ -125,13 +125,8 @@ public class Spice.Services.FileManager {
     }
 
     public static string open_file () {
-        if (current_file != null && current_file.query_exists ()) {
-            settings.add_file (current_file.get_path ());
-
-            return get_data (current_file);
-        }
-
-        return "";
+        settings.add_file (current_file.get_path ());
+        return get_presentation_data (current_file);
     }
 
     public static void delete_file (File file = current_file) {
@@ -140,6 +135,19 @@ public class Spice.Services.FileManager {
         && file.get_basename ().contains (FILE_EXTENSION)) {
             FileUtils.remove (file.get_path ());
         }
+    }
+
+    public static string get_presentation_data (File file) {
+        if (file != null && file.query_exists ()) {
+            var data = get_data (file);
+            if (data.get_char (0) == '<') {
+                data = data.split ("""<content id="content">""")[1].split ("</content>")[0];
+            }
+
+            return data;
+        }
+
+        return "";
     }
 
     public static string get_data (File file) {
