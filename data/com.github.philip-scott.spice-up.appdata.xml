@@ -25,6 +25,18 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.0.1" date="2017-10-13">
+      <description>
+        <p>I'm making a note here...</p>
+        <ul>
+          <li>Lots of optimizations have happened, now it loads presentations crazy fast!</li>
+          <li>The Text Toolbar has been cleaned up to better match the other bars</li>
+          <li>You can now align text vertically!</li>
+          <li>Going to and from the Welcome Screen is now animated</li>
+          <li>Spice-Up is now translated to French and Portuguese!</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2017-09-14">
       <description>
         <p>This was a triumph!</p>

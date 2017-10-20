@@ -83,7 +83,15 @@ public class Spice.Services.FileManager {
         File? result = null;
 
         var documents = Environment.get_user_special_dir (UserDirectory.DOCUMENTS) + "/%s".printf (_("Presentations"));
-        DirUtils.create_with_parents (documents, 0775);
+
+        if (documents != null) {
+            DirUtils.create_with_parents (documents, 0775);
+        } else {
+            documents = Environment.get_home_dir ();
+            if (documents == null) {
+                documents = ".";
+            }
+        }
 
         int id = 1;
         do {
