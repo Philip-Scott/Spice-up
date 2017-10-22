@@ -136,7 +136,7 @@ public class Spice.Slide : Object {
             }
         }
 
-        return """{%s, "items": [%s], "preview": "%s"}""".printf (canvas.serialise (), data, preview_data);
+        return "{%s, \"items\": [%s], \"preview\": \"%s\"}\n".printf (canvas.serialise (), data, preview_data);
     }
 
     public void delete () {

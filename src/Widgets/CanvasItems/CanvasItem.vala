@@ -176,7 +176,7 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
     protected abstract string serialise_item ();
 
     public string serialise () {
-        return """ {"x": %d,"y": %d,"w": %d,"h": %d,%s}""".printf (real_x, real_y, real_width, real_height, serialise_item ());
+        return "{\"x\": %d,\"y\": %d,\"w\": %d,\"h\": %d,%s}\n".printf (real_x, real_y, real_width, real_height, serialise_item ());
     }
 
     protected virtual void load_item_data () {}

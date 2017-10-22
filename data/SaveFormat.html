@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Spice-Up - WebViewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<style>
+  .slides {
+    background-color: #363B3E;
+  }
+
+  html, body {
+    background-color: #363B3E;
+  }
+
+  #content {
+    display: none;
+  }
+
+  .slide {
+    background-color: lightgray;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid 1px #0E0F10;
+    border-radius: 12px;
+  }
+
+  .slide-16-9 {
+    min-width: 1920px;
+    max-width: 1920px;
+    min-height: 1080px;
+    max-height: 1080px;
+  }
+
+  .slide-16-10 {
+    min-width: 1920px;
+    max-width: 1920px;
+    min-height: 1200px;
+    max-height: 1200px;
+  }
+
+  .slide-4-3 {
+    min-width: 1920px;
+    max-width: 1920px;
+    min-height: 1440px;
+    max-height: 1440px;
+  }
+
+  .slide-3-2 {
+    min-width: 1920px;
+    max-width: 1920px;
+    min-height: 1280px;
+    max-height: 1280px;
+  }
+
+  .slide-5-4 {
+    min-width: 1920px;
+    max-width: 1920px;
+    min-height: 1536px;
+    max-height: 1536px;
+  }
+
+  .canvas-item {
+    position: absolute;
+    display: flex;
+  }
+
+  text-item {
+    white-space: pre-wrap;
+  }
+
+  text-item span {
+    align-self: center;
+  }
+</style>
+<script>
+  if (!String.build) {
+      String.build = function (format) {
+          var args = Array.prototype.slice.call (arguments, 1);
+          return format.replace (/{(\d+)}/g, function (match, number) {
+          return typeof args[number] != 'undefined'
+            ? args[number]
+            : match;
+          });
+      };
+  }
+
+  function base64Decode(str) {
+      return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+  }
+
+  function makeIdEditable (id) {
+    get (id).contentEditable = "true";
+  }
+
+  function get (id) {
+    return document.getElementById(id);
+  }
+
+  function downloadString (element, fileName, mime) {
+    var dlAnchorElem = document.getElementById ('download-anchor');
+
+    if (dlAnchorElem === null) {
+      document.getElementById ("body").innerHTML += '<a id="download-anchor" style="display:none"></a>';
+      dlAnchorElem = document.getElementById ('download-anchor');
+    }
+
+    var dataStr = "data:" + mime + ";charset=utf-8," + encodeURIComponent(element);
+    var dlAnchorElem = document.getElementById ('download-anchor');
+    dlAnchorElem.setAttribute ("href", dataStr);
+    dlAnchorElem.setAttribute ("download", fileName);
+    dlAnchorElem.click ();
+  }
+</script>
+<body id="body">
+  <h1 style="color: #dfdfdf; font-family: sans-serif; text-align: center; width: 100%; margin-top: 200px; font-size: 3em"> Loading presentation... </h1>
+  <content id="content">
+
+  </content>
+</body>
+</html>
+<script>
+var SLIDES = '<div class="slides">{0}</div>';
+
+var SLIDE_STYLE = "background: {1}, {0};";
+var SLIDE = '<div class="slide slide-{2}" style=\'{1}\'>{0}</div>';
+
+var TEXT_STYLE = "color: {0}; font-family: {1}; font-size: {2}px; {3}; justify-content: {4}; text-align: {5}; font-weight: {6}";
+var TEXT_ITEM = '<text-item class="canvas-item" style="{1}"><span>{0}</span></text-item>';
+
+var COLOR_STYLE = "background: {0}; {1}";
+var COLOR_ITEM = '<color-item class="canvas-item" style="{0}"></color-item>';
+
+var IMAGE_STYLE = "background: url(data:image/{1};base64,{0}) no-repeat center; background-size: contain; {2}";
+var IMAGE_ITEM = '<image-item class="canvas-item" style="{0}"></image-item>';
+
+var POSITION_STYLE = "left: {0}px; top: {1}px; min-width: {2}px; max-width: {2}px; min-height: {3}px; max-height: {3}px;";
+
+function setAspectRatio (aspectRatio) {
+  switch (aspectRatio) {
+    case 1: /* ASPECT_4_3 */
+      SCREEN_W = 1920;
+      SCREEN_H = 1440;
+      X_OFFSET = 280;
+      Y_OFFSET = 20;
+      MAX_WIDTH = 1800 + X_OFFSET;
+      MAX_HEIGHT = 1532 + Y_OFFSET;
+      SLIDE_RATIO = "4-3"
+      FONT_SCALE = 4.8;
+      break;
+    case 2: /* ASPECT_16_9 */
+      SCREEN_W = 1920;
+      SCREEN_H = 1080;
+      X_OFFSET = 631;
+      Y_OFFSET = 20;
+      MAX_WIDTH = 2150 + X_OFFSET;
+      MAX_HEIGHT = 1532 + Y_OFFSET;
+      SLIDE_RATIO = "16-9"
+      FONT_SCALE = 3.8;
+      break;
+    case 3: /* ASPECT_16_10 */
+      SCREEN_W = 1920;
+      SCREEN_H = 1200;
+      X_OFFSET = 540;
+      Y_OFFSET = 12;
+      MAX_WIDTH = 2065 + X_OFFSET;
+      MAX_HEIGHT = 1532 + Y_OFFSET
+      SLIDE_RATIO = "16-10"
+      FONT_SCALE = 3.9;
+      break;
+    case 4: /* ASPECT_3_2 */
+      SCREEN_W = 1920;
+      SCREEN_H = 1280;
+      X_OFFSET = 400;
+      Y_OFFSET = 20;
+      MAX_WIDTH = 1920 + X_OFFSET;
+      MAX_HEIGHT = 1350 + Y_OFFSET;
+      SLIDE_RATIO = "4-3"
+      FONT_SCALE = 4.4;
+      break;
+    case 5: /* ASPECT_5_4 */
+      SCREEN_W = 2100;
+      SCREEN_H = 1280;
+      X_OFFSET = 210;
+      Y_OFFSET = 20;
+      MAX_WIDTH = 1920 + X_OFFSET;
+      MAX_HEIGHT = 1350 + Y_OFFSET;
+      SLIDE_RATIO = "4-3"
+      FONT_SCALE = 5.2;
+      break;
+  }
+}
+
+function getPosition (item) {
+  var w_scale = SCREEN_W / MAX_WIDTH;
+  var h_scale = SCREEN_H / MAX_HEIGHT;
+
+  var x = (item["x"] + X_OFFSET) * w_scale;
+  var y = (item["y"] + Y_OFFSET) * h_scale;
+  var w = item["w"] * w_scale;
+  var h = item["h"] * h_scale;
+
+  return String.build (POSITION_STYLE, x, y, w, h);
+}
+
+function renderSlides (file) {
+  let root_object = JSON.parse (file);
+
+  let content = "";
+  for (var id in root_object.slides) {
+    setAspectRatio (root_object["aspect-ratio"]);
+    let slide = root_object.slides[id];
+    let slide_content = "";
+
+    for (var object_id in slide.items) {
+      let item = slide.items[object_id];
+      var pos = getPosition(item);
+      let style = "";
+      switch (item["type"]) {
+        case "text":
+          let text = base64Decode (item['text-data']);
+          let justification;
+          let text_align = "";
+
+          switch (item['justification']) {
+            case 0: justification = "flex-start"; text_align = "left"; break;
+            case 1: justification = "center"; text_align = "center"; break;
+            case 2: justification = "flex-end"; text_align = "right"; break;
+            case 3: justification = "center"; text_align = "justify"; break;
+          }
+
+          let font_style = item["font-style"];
+          if (font_style.indexOf("italic") != -1) {
+            font_style = font_style.replace(" italic", "");
+          }
+
+          switch (font_style) {
+            case "black": font_style = "900"; break;
+            case "extrabold": font_style = "800"; break;
+            case "semibold": font_style = "600"; break;
+            case "bold": font_style = "700"; break;
+            case "medium": font_style = "500"; break;
+            case "regular": font_style = "400"; break;
+            case "extralight": font_style = "300"; break;
+            case "light": font_style = "200"; break;
+            case "thin": font_style = "100"; break;
+          }
+
+          style = String.build (TEXT_STYLE, item["color"], item["font"], item["font-size"] * FONT_SCALE, pos, justification, text_align, font_style);
+          slide_content += String.build (TEXT_ITEM, text, style);
+          break;
+        case "color":
+          style = String.build (COLOR_STYLE, item["background_color"], pos);
+          slide_content += String.build (COLOR_ITEM, style);
+          break
+        case "image":
+          style = String.build (IMAGE_STYLE, item["image-data"], item["image"], pos);
+          slide_content += String.build (IMAGE_ITEM, style);
+          break;
+      }
+    }
+
+    let background_pattern = slide["background-pattern"];
+    if (background_pattern !== "") {
+      let pattern = background_pattern.split ("/");
+      background_pattern = "url(https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/data/assets/patterns/" + pattern[pattern.length - 1] + ")";
+    } else {
+      background_pattern = "none";
+    }
+
+    let style = String.build (SLIDE_STYLE, slide["background-color"], background_pattern);
+    content += String.build (SLIDE, slide_content, style, SLIDE_RATIO);
+
+    get ('body').innerHTML = String.build (SLIDES, content);
+  }
+}
+
+renderSlides (get('content').innerHTML);
+
+</script>
