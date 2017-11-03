@@ -131,10 +131,10 @@ public class Spice.Utils {
 
             provider.load_from_data (css, css.length);
 
-            context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+            context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION); 
         } catch (Error e) {
             warning ("Style error: %s", e.message);
-            stderr.printf ("%s %s\n", widget.name, css);
+            stderr.printf ("%s %s\n", widget.name, css); 
         }
     }
 

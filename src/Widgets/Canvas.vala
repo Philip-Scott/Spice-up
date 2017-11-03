@@ -152,7 +152,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
         if (reset_item) {
             item_clicked (null);
-        }
+        } 
 
         request_draw_preview ();
     }

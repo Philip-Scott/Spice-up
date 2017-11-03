@@ -20,6 +20,8 @@
 */
 
 public class Spice.Window : Gtk.ApplicationWindow {
+    const Gtk.TargetEntry[] DRAG_TARGETS = {{ "text/uri-list", 0, 0 }};
+
     public bool is_fullscreen {
         public get {
             return is_full_;
@@ -196,7 +198,23 @@ public class Spice.Window : Gtk.ApplicationWindow {
             Spice.Services.HistoryManager.get_instance ().redo ();
         });
 
+        Gtk.drag_dest_set (aspect_frame, Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY);
+        aspect_frame.drag_data_received.connect (on_drag_data_received);
+
         this.key_press_event.connect (on_key_pressed);
+    }
+
+    private void on_drag_data_received (Gdk.DragContext drag_context, int x, int y, Gtk.SelectionData data, uint info, uint time) {
+        Gtk.drag_finish (drag_context, true, false, time);
+
+        foreach (var uri in data.get_uris ()) {
+            var file = File.new_for_uri (uri);
+
+            if (Utils.is_valid_image (file) && slide_manager.current_slide != null) {
+                var item = new ImageItem.from_file (slide_manager.current_slide.canvas, file);
+                slide_manager.current_slide.canvas.add_item (item, true);
+            }
+        }
     }
 
     private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
