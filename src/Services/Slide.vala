@@ -27,7 +27,7 @@ public class Spice.Slide : Object {
     public Canvas canvas;
     public Gtk.Image preview;
 
-    private string preview_data = "";
+    public string preview_data { get; private set; default = ""; }
 
     private bool visible_ = true;
     public bool visible {

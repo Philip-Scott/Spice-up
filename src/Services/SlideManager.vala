@@ -188,11 +188,11 @@ public class Spice.SlideManager : Object {
             current_slide = next_slide;
         } else {
             // TODO: Show end of presentation slide
-            window.unfullscreen ();
+            window.end_presentation ();
         }
     }
 
-    private Slide? get_next_slide (Slide current) {
+    public Slide? get_next_slide (Slide current) {
         Slide? next_slide = null;
         bool found = false;
         int n = 1;
