@@ -71,4 +71,3 @@ public class Spice.Grabber : Gtk.Button {
         return true;
     }
 }
-

@@ -4,7 +4,7 @@ public class Spice.Utils {
         last_style = str;
     }
 
-    public static void set_cursor (Gdk.CursorType type) {}
+    public static void set_cursor (string type) {}
 
     public static Json.Object get_json (string data) {
         try {

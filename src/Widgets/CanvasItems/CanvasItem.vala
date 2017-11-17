@@ -207,6 +207,7 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
     private void resize (int id) {
         holding = true;
         this.holding_id = id;
+        set_cursor (holding_id);
     }
 
     public void delete () {
@@ -235,14 +236,47 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
         holding = true;
 
         clicked ();
+        set_cursor (holding_id);
 
         return true;
+    }
+
+    private void set_cursor (int holding_id) {
+        switch (holding_id) {
+            case 0:
+                Utils.set_cursor ("grabbing");
+                break;
+            case 1:
+                Utils.set_cursor ("nw-resize");
+                break;
+            case 2:
+                Utils.set_cursor ("n-resize");
+                break;
+            case 3:
+                Utils.set_cursor ("ne-resize");
+                break;
+            case 4:
+                Utils.set_cursor ("e-resize");
+                break;
+            case 5:
+                Utils.set_cursor ("se-resize");
+                break;
+            case 6:
+                Utils.set_cursor ("s-resize");
+                break;
+            case 7:
+                Utils.set_cursor ("sw-resize");
+                break;
+            case 8:
+                Utils.set_cursor ("w-resize");
+                break;
+        }
     }
 
     public override bool button_release_event (Gdk.EventButton event) {
         if (!holding) return false;
 
-        Utils.set_cursor (Gdk.CursorType.ARROW);
+        Utils.set_cursor ("default");
 
         holding = false;
         holding_id = 0;
@@ -265,50 +299,41 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
             int x = (int) (event.x_root - start_x);
             int y = (int) (event.y_root - start_y);
             switch (holding_id) {
-                case 0:
-                    Utils.set_cursor (Gdk.CursorType.FLEUR);
+                case 0: // Moving
                     delta_x = x;
                     delta_y = y;
                     break;
-                case 1:
-                    Utils.set_cursor (Gdk.CursorType.TOP_LEFT_CORNER);
+                case 1: // Top left
                     delta_x = fix_position (x, real_width, start_w);
                     delta_y = fix_position (y, real_height, start_h);
                     real_height = fix_size ((int)(start_h - 1/canvas.current_ratio * y));
                     real_width = fix_size ((int)(start_w - 1/canvas.current_ratio * x));
                     break;
-                case 2:
-                    Utils.set_cursor (Gdk.CursorType.TOP_SIDE);
+                case 2: // Top
                     delta_y = fix_position (y, real_height, start_h);
                     real_height = fix_size ((int)(start_h - 1/canvas.current_ratio * y));
                     break;
-                case 3:
-                    Utils.set_cursor (Gdk.CursorType.TOP_RIGHT_CORNER);
+                case 3: // Top right
                     delta_y = fix_position (y, real_height, start_h);
                     real_height = fix_size ((int)(start_h - 1/canvas.current_ratio * y));
                     real_width = fix_size ((int)(start_w + 1/canvas.current_ratio * x));
                     break;
-                case 4:
-                    Utils.set_cursor (Gdk.CursorType.RIGHT_SIDE);
+                case 4: // Right
                     real_width = fix_size ((int)(start_w + 1/canvas.current_ratio * x));
                     break;
-                case 5:
-                    Utils.set_cursor (Gdk.CursorType.BOTTOM_RIGHT_CORNER);
+                case 5: // Bottom Right
                     real_width = fix_size ((int)(start_w + 1/canvas.current_ratio * x));
                     real_height = fix_size ((int)(start_h + 1/canvas.current_ratio * y));
                     break;
-                case 6:
-                    Utils.set_cursor (Gdk.CursorType.BOTTOM_SIDE);
+                case 6: // Bottom
                     real_height = fix_size ((int)(start_h + 1/canvas.current_ratio * y));
                     break;
-                case 7:
-                    Utils.set_cursor (Gdk.CursorType.BOTTOM_LEFT_CORNER);
+                case 7: // Bottom left
                     real_height = fix_size ((int)(start_h + 1/canvas.current_ratio * y));
                     real_width = fix_size ((int)(start_w - 1/canvas.current_ratio * x));
                     delta_x = fix_position (x, real_width, start_w);;
                     break;
-                case 8:
-                    Utils.set_cursor (Gdk.CursorType.LEFT_SIDE);
+                case 8: // Left
                     real_width = fix_size ((int) (start_w - 1/canvas.current_ratio * x));
                     delta_x = fix_position (x, real_width, start_w);
                     break;
