@@ -41,6 +41,7 @@ Its features include:
 - **Controller Support**: If you have a USB or Bluetooth controller, plug it in and control your slides!
 - **Templates**, so you can whip up a presentation in a blink of an eye.
 - **Edit images** in your favorite editor, and it will automatically update when saved
+- **Web Viewer**: Presentations can now be viewed from a web browser if Spice-Up is not installed, even if you're not using Linux
 - And much more!
 
 <p align="center">

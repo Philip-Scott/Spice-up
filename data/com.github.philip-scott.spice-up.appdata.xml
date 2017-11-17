@@ -15,16 +15,25 @@
     </p>
     <ul>
       <li>Exporting to PDF!</li>
-      <li>Presentation Browser: Scroll though the presentations you have made and jump right into them with one click!.</li>
+      <li>Presentation Browser: Scroll through the presentations you have made and jump right into them with one click!.</li>
       <li>Controller Support: If you have a USB or Bluetooth controller, plug it in and control your slides!</li>
       <li>Templates, so you can whip up a presentation in a blink of an eye.</li>
       <li>You can edit images in your favorite editor, and it will automatically update when saved</li>
+      <li>Open Spice-Up files from a web browser by drag and drop if the app is not installed!</li>
     </ul>
   </description>
   <provides>
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.1.0" date="2017-11-2">
+      <description>
+        <p>Huge Success!</p>
+        <ul>
+          <li>Presentations saved can now be viewed from a web browser by drag and drop if Spice-Up is not installed, and even if you're not using elementary OS or Linux</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.1" date="2017-10-13">
       <description>
         <p>I'm making a note here...</p>
