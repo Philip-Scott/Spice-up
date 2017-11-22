@@ -75,7 +75,9 @@ public class Spice.PresenterWindow : Gtk.Window {
     private void load_previews (Slide slide) {
         var next_slide = slide_manager.get_next_slide (slide);
 
-        next_preview.set_from_pixbuf (next_slide.preview.pixbuf);
+        if (next_slide != null) {
+            next_preview.set_from_pixbuf (next_slide.preview.pixbuf);
+        }
 
         Timeout.add (100, () => {
             var pixbuf = slide.canvas.surface.load_to_pixbuf ().scale_simple (SlideList.WIDTH * 2, SlideList.HEIGHT * 2, Gdk.InterpType.BILINEAR);
