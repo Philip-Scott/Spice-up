@@ -21,16 +21,20 @@
 
 public class Spice.PresenterWindow : Gtk.Window {
     public unowned Spice.SlideManager slide_manager { get; construct set; }
+    public unowned Spice.Window window { get; construct set; }
 
     private Gtk.Image preview;
     private Gtk.Image next_preview;
     private Gtk.TextView notes;
 
-    public PresenterWindow (SlideManager slide_manager) {
-        Object (slide_manager: slide_manager);
+    public PresenterWindow (SlideManager slide_manager, Window window) {
+        Object (slide_manager: slide_manager, window: window);
     }
 
     construct {
+        resizable = false;
+        stick ();
+
         preview = new Gtk.Image ();
         preview.valign = Gtk.Align.START;
 
@@ -51,7 +55,6 @@ public class Spice.PresenterWindow : Gtk.Window {
         grid.column_spacing = 6;
 
         var separator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
-        separator.vexpand = true;
 
         grid.attach (preview,      0, 0, 1, 2);
         grid.attach (next_preview, 2, 0, 1, 1);
@@ -63,7 +66,11 @@ public class Spice.PresenterWindow : Gtk.Window {
 
         connect_signals ();
 
-        load_previews (slide_manager.current_slide);
+        Timeout.add (300, () => {
+            load_previews (slide_manager.current_slide);
+            stderr.printf ("Starting \n");
+            return false;
+        });
     }
 
     private void connect_signals () {
@@ -72,18 +79,23 @@ public class Spice.PresenterWindow : Gtk.Window {
         slide_manager.current_slide_changed.connect (load_previews);
     }
 
-    private void load_previews (Slide slide) {
-        var next_slide = slide_manager.get_next_slide (slide);
+    private void load_previews (Slide current_slide) {
+        var next_slide = slide_manager.get_next_slide (current_slide);
 
         if (next_slide != null) {
             next_preview.set_from_pixbuf (next_slide.preview.pixbuf);
         }
 
-        Timeout.add (100, () => {
-            var pixbuf = slide.canvas.surface.load_to_pixbuf ().scale_simple (SlideList.WIDTH * 2, SlideList.HEIGHT * 2, Gdk.InterpType.BILINEAR);
-            preview.set_from_pixbuf (pixbuf);
+        Timeout.add (30, () => {
+            if (current_slide.canvas.surface != null) {
+                var pixbuf = current_slide.canvas.surface.load_to_pixbuf ();
+                pixbuf = pixbuf.scale_simple (SlideList.WIDTH * 2, SlideList.HEIGHT * 2, Gdk.InterpType.BILINEAR);
+                preview.set_from_pixbuf (pixbuf);
+                return false;
+            }
 
-            return false;
+            // Retry if not loaded...
+            return true;
         });
     }
 
@@ -116,6 +128,6 @@ public class Spice.PresenterWindow : Gtk.Window {
     }
 
     public void end_presentation () {
-        this.destroy ();
+        window.end_presentation ();
     }
 }

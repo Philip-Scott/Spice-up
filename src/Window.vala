@@ -52,6 +52,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private Gtk.Stack app_stack;
     private Spice.Welcome? welcome = null;
+    private PresenterWindow? presenter_window = null;
 
     public Window (Gtk.Application app) {
         Object (application: app);
@@ -388,8 +389,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
         var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
 
         title = launcher_base;
-        var present = new PresenterWindow (slide_manager);
-        present.show ();
     }
 
     public void save_current_file () {
@@ -433,7 +432,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
         var monitor_count = screen.get_n_monitors ();
         get_position (out old_x, out old_y);
 
-        if (monitor_count > 1) {
+        // TODO: Remove true set for testing
+        if (monitor_count > 1 || true) {
+            presenter_window = new PresenterWindow (slide_manager, this);
+            presenter_window.show ();
+
             var primary_monitor = screen.get_primary_monitor ();
 
             Gdk.Rectangle rec;
@@ -448,5 +451,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
     public void end_presentation () {
         unfullscreen ();
         move (old_x, old_y);
+
+        if (presenter_window != null) {
+            presenter_window.destroy ();
+            presenter_window = null;
+        }
     }
 }
