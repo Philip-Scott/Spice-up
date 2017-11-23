@@ -45,10 +45,21 @@ public class Spice.Slide : Object {
     public Slide (Json.Object? save_data = null) {
         this.save_data = save_data;
         canvas = new Spice.Canvas (save_data);
-        preview = new Gtk.Image ();
 
         canvas.request_draw_preview.connect (reload_preview_data);
         load_data ();
+    }
+
+    public Slide.empty () {
+        this.save_data = Utils.get_json_object (EMPTY_SLIDE);
+        canvas = new Spice.Canvas (save_data);
+
+        load_data ();
+        visible = false;
+    }
+
+    construct {
+        preview = new Gtk.Image ();
     }
 
     public void load_slide () {
@@ -149,4 +160,6 @@ public class Spice.Slide : Object {
     public void destroy () {
         canvas.destroy ();
     }
+
+    private const string EMPTY_SLIDE = """{"background-color":"#000000", "background-pattern":"" , "items": [{"x": 0,"y": 0,"w": 720,"h": 510, "type": "color", "background_color": "#000000", "border-radius": 0 }], "preview": "iVBORw0KGgoAAAANSUhEUgAAAQsAAACWCAYAAADJ2q17AAAABmJLR0QA/wD/AP+gvaeTAAACM0lEQVR4nO3UMWpbURQAUd3Hlwpt1qndxztOVOjDcx8ITCcZzlnBVDNrrY/jOL5m5n4B+Mfe+3Ge5+fcbrc/z+fzvvd+dRPwhmbmcr1e/66ZMQrgv/bel5m5r1eHAD+DWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQCJWQDJ2ns/ZubVHcCbmpnL3vsxa61fx3H8npn7q6OA97P3fpzn+fkNRKooH6vPau0AAAAASUVORK5CYII="}""";
 }

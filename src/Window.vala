@@ -456,5 +456,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
             presenter_window.destroy ();
             presenter_window = null;
         }
+
+        slide_manager.end_presentation ();
     }
 }
