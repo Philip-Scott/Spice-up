@@ -28,6 +28,7 @@ public class Spice.Slide : Object {
     public Gtk.Image preview;
 
     public string preview_data { get; private set; default = ""; }
+    public string notes { get; set; default = ""; }
 
     private bool visible_ = true;
     public bool visible {
@@ -74,6 +75,11 @@ public class Spice.Slide : Object {
             var pixbuf = Utils.base64_to_pixbuf (preview_data);
 
             preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
+        }
+
+        var raw_notes = save_data.get_string_member ("notes");
+        if (raw_notes != null && raw_notes != "") {
+            notes = (string) GLib.Base64.decode (raw_notes);
         }
     }
 
@@ -136,7 +142,8 @@ public class Spice.Slide : Object {
             }
         }
 
-        return "{%s, \"items\": [%s], \"preview\": \"%s\"}\n".printf (canvas.serialise (), data, preview_data);
+        var raw_notes = (string) GLib.Base64.encode (notes.data);
+        return "{%s, \"items\": [%s], \"notes\": \"%s\", \"preview\": \"%s\"}\n".printf (canvas.serialise (), data, raw_notes, preview_data);
     }
 
     public void delete () {

@@ -27,27 +27,41 @@ public class Spice.PresenterWindow : Gtk.Window {
     private Gtk.Image next_preview;
     private Gtk.TextView notes;
 
+    private bool changing = false;
+
     public PresenterWindow (SlideManager slide_manager, Window window) {
         Object (slide_manager: slide_manager, window: window);
     }
 
     construct {
+        type_hint = Gdk.WindowTypeHint.DIALOG;
         resizable = false;
         stick ();
 
         preview = new Gtk.Image ();
         preview.valign = Gtk.Align.START;
 
+        var preview_button = new Gtk.Button ();
+        preview_button.get_style_context ().remove_class ("button");
+        preview_button.get_style_context ().add_class ("flat");
+        preview_button.add (preview);
+
         next_preview = new Gtk.Image ();
         next_preview.valign = Gtk.Align.START;
 
         notes = new Gtk.TextView ();
-        notes.wrap_mode = Gtk.WrapMode.WORD;
+        notes.get_style_context ().add_class ("h3");
+        notes.wrap_mode = Gtk.WrapMode.WORD_CHAR;
         notes.halign = Gtk.Align.FILL;
-        notes.cursor_visible = false;
-        notes.editable = false;
+        notes.indent = 6;
 
-        notes.buffer.text = "Lorem ipsum dolor sit amet, no iisque efficiendi sed, imperdiet quaerendum qui ne. Epicuri percipitur ad sit, et nec eleifend necessitatibus. Pri eius fugit sanctus eu, luptatum legendos efficiendi quo at. Eos at quis iusto, per ut graeco iriure scaevola. Sumo doctus omittam eu sit, aperiam ullamcorper pri ad, at rebum dolores officiis per.";
+        var notes_scrolled = new Gtk.ScrolledWindow (null, null);
+        notes_scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+        notes_scrolled.height_request = 130;
+        notes_scrolled.add (notes);
+
+        var frame = new Gtk.Frame (null);
+        frame.add (notes_scrolled);
 
         var grid = new Gtk.Grid ();
         grid.margin = 6;
@@ -56,19 +70,19 @@ public class Spice.PresenterWindow : Gtk.Window {
 
         var separator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
 
-        grid.attach (preview,      0, 0, 1, 2);
-        grid.attach (next_preview, 2, 0, 1, 1);
-        grid.attach (separator,    1, 0, 1, 3);
-        grid.attach (notes,        0, 2, 1, 1);
+        grid.attach (preview_button, 0, 0, 1, 2);
+        grid.attach (next_preview,   2, 0, 1, 1);
+        grid.attach (separator,      1, 0, 1, 3);
+        grid.attach (frame         , 0, 2, 1, 1);
 
         add (grid);
         show_all ();
 
         connect_signals ();
 
+        load_previews (slide_manager.current_slide);
         Timeout.add (300, () => {
             load_previews (slide_manager.current_slide);
-            stderr.printf ("Starting \n");
             return false;
         });
     }
@@ -77,9 +91,18 @@ public class Spice.PresenterWindow : Gtk.Window {
         this.key_press_event.connect (on_key_pressed);
 
         slide_manager.current_slide_changed.connect (load_previews);
+
+        notes.buffer.changed.connect (() => {
+            if (!changing) {
+                slide_manager.current_slide.notes = notes.buffer.text;
+            }
+        });
     }
 
     private void load_previews (Slide current_slide) {
+        changing = true;
+        notes.buffer.text = current_slide.notes;
+
         var next_slide = slide_manager.get_next_slide (current_slide);
 
         if (next_slide != null) {
@@ -97,11 +120,13 @@ public class Spice.PresenterWindow : Gtk.Window {
             // Retry if not loaded...
             return true;
         });
+
+        changing = false;
     }
 
     private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
         debug ("Key on presenter view: %s %u", key.str, key.keyval);
-
+        if (notes.has_focus) return false;
         switch (key.keyval) {
             // Next Slide
             case 32:    // Spaceeeeeeee
