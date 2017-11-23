@@ -36,6 +36,7 @@ public class Spice.SlideManager : Object {
     private Slide? slide_ = null;
     private Spice.CanvasItem? current_item_ = null;
     private Spice.AspectRatio current_ratio;
+    public Slide end_presentation_slide;
 
     public CanvasItem? current_item {
         get { return current_item_; }
@@ -62,6 +63,11 @@ public class Spice.SlideManager : Object {
                 slideshow.set_visible_child (value.canvas);
                 current_slide_changed (value);
                 value.load_slide ();
+            } else if (value == end_presentation_slide) {
+                slideshow.set_visible_child (value.canvas);
+                current_slide_changed (value);
+                value.load_slide ();
+                slide_ = value;
             }
         }
     }
@@ -70,6 +76,9 @@ public class Spice.SlideManager : Object {
         slides = new Gee.ArrayList<Slide> ();
         slideshow = new Gtk.Stack ();
         slideshow.homogeneous = false;
+
+        end_presentation_slide = new Slide.empty ();
+        slideshow.add (end_presentation_slide.canvas);
     }
 
     public void reset () {
@@ -184,11 +193,13 @@ public class Spice.SlideManager : Object {
     public void next_slide () {
         var next_slide = get_next_slide (current_slide);
 
+        if (slideshow.visible_child == end_presentation_slide.canvas){
+            window.end_presentation ();
+            return;
+        }
+
         if (next_slide != null) {
             current_slide = next_slide;
-        } else {
-            // TODO: Show end of presentation slide
-            window.end_presentation ();
         }
     }
 
@@ -197,8 +208,13 @@ public class Spice.SlideManager : Object {
         bool found = false;
         int n = 1;
 
+        int current_slide_index = slides.index_of (current);
+        if (current_slide_index == -1) {
+            current_slide_index = slides.size;
+        }
+
         do {
-            var next_index = slides.index_of (current) + n++;
+            var next_index = current_slide_index + n++;
             if (next_index < slides.size) {
                 var slide = slides.get (next_index);
                 if (slide.visible) {
@@ -206,6 +222,7 @@ public class Spice.SlideManager : Object {
                     found = true;
                 }
             } else {
+                next_slide = end_presentation_slide;
                 found = true;
             }
         } while (!found);
@@ -218,8 +235,13 @@ public class Spice.SlideManager : Object {
         bool found = false;
         int n = 1;
 
+        int current_slide_index = slides.index_of (current);
+        if (current_slide_index == -1) {
+            current_slide_index = slides.size;
+        }
+
         do {
-            var previous_index = slides.index_of (current) - n++;
+            var previous_index = current_slide_index - n++;
             if (previous_index >= 0 && previous_index < slides.size) {
                 var slide = slides.get (previous_index);
                 if (slide.visible) {
@@ -344,6 +366,12 @@ public class Spice.SlideManager : Object {
         if (!window.is_fullscreen) return;
 
         checkpoint = current_slide;
+    }
+
+    public void end_presentation () {
+        if (current_slide == end_presentation_slide) {
+            current_slide = get_previous_slide (current_slide);
+        }
     }
 }
 
