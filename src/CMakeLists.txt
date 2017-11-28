@@ -30,6 +30,7 @@ vala_precompile(VALA_C
   Widgets/SlideList.vala
   Widgets/DynamicToolbar.vala
   Widgets/Welcome.vala
+  Widgets/SlideWidget.vala
   Widgets/PresenterView.vala
 
   Widgets/CanvasItems/CanvasItem.vala
