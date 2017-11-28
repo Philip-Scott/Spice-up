@@ -258,6 +258,31 @@ public class Spice.SlideManager : Object {
         return previous_slide;
     }
 
+    public int get_slide_ammount () {
+        int slide_count = 0;
+
+        foreach (var slide in slides) {
+            if (slide.visible) {
+                slide_count++;
+            }
+        }
+
+        return slide_count;
+    }
+
+    public int get_slide_pos (Slide current) {
+        int slide_count = 0;
+
+        foreach (var slide in slides) {
+            slide_count++;
+            if (slide == current) {
+                return slide_count;
+            }
+        }
+
+        return -1;
+    }
+
     private bool propagating_ratio = false;
 
     public Slide new_slide (Json.Object? save_data = null, bool undoable_action = false) {
