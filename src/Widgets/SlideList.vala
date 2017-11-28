@@ -135,17 +135,20 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
 
     private class SlideListRow : Gtk.ListBoxRow {
         public unowned Spice.Slide slide;
+        private SlideWidget slide_widget;
 
         public SlideListRow (Slide slide) {
             this.slide = slide;
-            var image = slide.preview;
 
-            this.add (image);
+            slide_widget = new SlideWidget.from_slide (slide);
+            slide_widget.settings_requested.connect (() => {
+                var popover = SlideSettingsPopover.get_instance ();
+                popover.set_relative_to (slide_widget.settings_revealer);
+                popover.slide = this.slide;
+                popover.show_all ();
+            });
 
-            image.get_style_context ().add_class ("view");
-            image.get_style_context ().add_class ("canvas");
-            image.get_style_context ().add_class ("preview");
-            image.margin = 9;
+            add (slide_widget);
 
             set_size_request (SlideList.WIDTH - 24, SlideList.HEIGHT - 24);
 
@@ -168,5 +171,68 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
                 opacity: 0.90;
             }
         """;
+
+        private class SlideSettingsPopover : Gtk.Popover {
+            private static SlideSettingsPopover? instance = null;
+
+            private unowned Slide _slide;
+            public Slide slide {
+                get {
+                    return _slide;
+                } set {
+                    changing = true;
+                    _slide = value;
+                    notes.buffer.text = slide.notes;
+                    changing = false;
+                }
+            }
+
+            private bool changing = false;
+            private Gtk.TextView notes;
+
+            public static SlideSettingsPopover get_instance () {
+                if (instance == null) {
+                    instance = new SlideSettingsPopover ();
+                }
+
+                return instance;
+            }
+
+            construct {
+                position = Gtk.PositionType.RIGHT;
+
+                notes = new Gtk.TextView ();
+                notes.get_style_context ().add_class ("h3");
+                notes.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+                notes.halign = Gtk.Align.FILL;
+                notes.indent = 6;
+
+                notes.buffer.changed.connect (() => {
+                    if (!this.changing) {
+                        this.slide.notes = notes.buffer.text;
+                    }
+                });
+
+                var notes_scrolled = new Gtk.ScrolledWindow (null, null);
+                notes_scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+                notes_scrolled.height_request = 150;
+                notes_scrolled.width_request = 290;
+                notes_scrolled.add (notes);
+
+                var frame = new Gtk.Frame (null);
+                frame.add (notes_scrolled);
+
+                var notes_label = new Granite.HeaderLabel (_("Presenter Notes:"));
+                notes_label.margin_start = 1;
+
+                var grid = new Gtk.Grid ();
+                grid.orientation = Gtk.Orientation.VERTICAL;
+                grid.add (notes_label);
+                grid.add (frame);
+                grid.margin = 6;
+
+                add (grid);
+            }
+        }
     }
 }

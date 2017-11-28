@@ -22,7 +22,7 @@
 public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     public File file { get; construct set; }
 
-    private Gtk.Image image;
+    private SlideWidget slide_widget;
     private Gtk.Popover? popover = null;
 
     private string last_aspect_ratio;
@@ -37,13 +37,12 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         set_tooltip_text (_("Open: %s".printf (file.get_path ())));
         halign = Gtk.Align.CENTER;
 
-        image = new Gtk.Image ();
-        image.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
-        image.margin = 12;
+        slide_widget = new SlideWidget ();
+        slide_widget.settings_requested.connect (() => {
+            show_popover ();
+        });
 
-        image.get_style_context ().add_class ("card");
-
-        event_box.add (image);
+        event_box.add (slide_widget);
         add (event_box);
 
         get_thumbnail ();
@@ -106,7 +105,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
             grid.show_all ();
 
-            popover = new Gtk.Popover (image);
+            popover = new Gtk.Popover (slide_widget);
             popover.position = Gtk.PositionType.LEFT;
             popover.add (grid);
 
@@ -146,7 +145,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
                 var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
 
                 Idle.add (() => {
-                    image.set_from_pixbuf (pixbuf);
+                    slide_widget.pixbuf = pixbuf;
                     return GLib.Source.REMOVE;
                 });
 

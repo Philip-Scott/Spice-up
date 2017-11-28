@@ -125,7 +125,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         });
 
         present.clicked.connect (() => {
-            window.fullscreen ();
+            window.start_presentation ();
         });
 
         export.clicked.connect (() => {

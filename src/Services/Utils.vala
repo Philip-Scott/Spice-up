@@ -31,10 +31,7 @@ public class Spice.Utils {
 
     public static string get_thumbnail_data (string raw_json) {
         try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (raw_json);
-
-            var root_object = parser.get_root ().get_object ();
+            var root_object = get_json_object (raw_json);
             var slides_array = root_object.get_array_member ("slides");
 
             var slides = slides_array.get_elements ();
@@ -54,17 +51,26 @@ public class Spice.Utils {
 
     public static int get_aspect_ratio (string raw_json) {
         try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (raw_json);
-
-            var root_object = parser.get_root ().get_object ();
-
+            var root_object = get_json_object (raw_json);
             return (int) root_object.get_int_member ("aspect-ratio");
         } catch (Error e) {
             warning ("Error loading file: %s", e.message);
         }
 
         return 0;
+    }
+
+    public static Json.Object? get_json_object (string raw_json) {
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (raw_json);
+
+            var root_object = parser.get_root ().get_object ();
+
+            return root_object;
+        } catch (Error e) {
+            return null;
+        }
     }
 
     public static Gdk.Pixbuf base64_to_pixbuf (string base64) {
@@ -131,10 +137,10 @@ public class Spice.Utils {
 
             provider.load_from_data (css, css.length);
 
-            context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION); 
+            context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         } catch (Error e) {
             warning ("Style error: %s", e.message);
-            stderr.printf ("%s %s\n", widget.name, css); 
+            stderr.printf ("%s %s\n", widget.name, css);
         }
     }
 

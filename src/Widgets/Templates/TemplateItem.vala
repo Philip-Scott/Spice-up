@@ -23,7 +23,7 @@ public class Spice.Widgets.Templates.TemplateItem : Gtk.FlowBoxChild {
     public File file { get; construct set; }
     public string data { get; private set; }
 
-    private Gtk.Image image;
+    private Spice.SlideWidget image;
     private Gtk.Popover? popover = null;
 
     private string last_aspect_ratio;
@@ -34,11 +34,8 @@ public class Spice.Widgets.Templates.TemplateItem : Gtk.FlowBoxChild {
         set_tooltip_text (_("Create new presentation"));
         halign = Gtk.Align.CENTER;
 
-        image = new Gtk.Image ();
-        image.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
-        image.margin = 12;
-
-        image.get_style_context ().add_class ("card");
+        image = new Spice.SlideWidget ();
+        image.show_button = false;
 
         add (image);
 
@@ -57,7 +54,7 @@ public class Spice.Widgets.Templates.TemplateItem : Gtk.FlowBoxChild {
                 var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
 
                 Idle.add (() => {
-                    image.set_from_pixbuf (pixbuf);
+                    image.pixbuf = pixbuf;
                     return GLib.Source.REMOVE;
                 });
 
