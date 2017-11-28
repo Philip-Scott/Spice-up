@@ -52,6 +52,7 @@ public class Spice.SlideWidget : Gtk.EventBox {
         var settings_button = new Gtk.Button.from_icon_name ("document-properties-symbolic", Gtk.IconSize.BUTTON);
         settings_button.events |= Gdk.EventMask.ENTER_NOTIFY_MASK & Gdk.EventMask.LEAVE_NOTIFY_MASK;
         settings_button.get_style_context ().add_class ("flat");
+        settings_button.can_focus = false;
 
         settings_revealer = new Gtk.Revealer ();
         settings_revealer.set_transition_duration (500);
