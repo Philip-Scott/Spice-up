@@ -78,6 +78,9 @@ public class Spice.SlideManager : Object {
         slideshow.homogeneous = false;
 
         end_presentation_slide = new Slide.empty ();
+        end_presentation_slide.canvas.next_slide.connect (next_slide);
+        end_presentation_slide.canvas.previous_slide.connect (previous_slide);
+
         slideshow.add (end_presentation_slide.canvas);
     }
 
@@ -304,11 +307,12 @@ public class Spice.SlideManager : Object {
             if (this.propagating_ratio) return;
             this.propagating_ratio = true;
 
+            var w = slide.canvas.get_allocated_width ();
+            var h = slide.canvas.get_allocated_height ();
+
             foreach (var s in slides) {
                 if (s.visible) {
                     s.canvas.current_ratio = new_ratio;
-                    var w = slide.canvas.get_allocated_width ();
-                    var h = slide.canvas.get_allocated_height ();
 
                     // Force size
                     s.canvas.set_size_request (w, h);
