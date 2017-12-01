@@ -22,7 +22,10 @@
 public const string APP_NAME = "Spice-Up";
 public const string TERMINAL_NAME = "spice-up";
 
+public static bool DEBUG = false;
+
 public static int main (string[] args) {
+    DEBUG = "-d" in args;
     /* Initiliaze gettext support */
     Intl.setlocale (LocaleCategory.ALL, Intl.get_language_names ()[0]);
     //Intl.setlocale (LocaleCategory.NUMERIC, "en_US");

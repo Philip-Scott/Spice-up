@@ -432,7 +432,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         var monitor_count = screen.get_n_monitors ();
         get_position (out old_x, out old_y);
 
-        if (monitor_count > 1) {
+        if (monitor_count > 1 || DEBUG) {
             presenter_window = new PresenterWindow (slide_manager, this);
             presenter_window.show ();
 
