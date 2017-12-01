@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
+* Copyright (c) 2017 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,6 +26,7 @@ public static bool DEBUG = false;
 
 public static int main (string[] args) {
     DEBUG = "-d" in args;
+
     /* Initiliaze gettext support */
     Intl.setlocale (LocaleCategory.ALL, Intl.get_language_names ()[0]);
     //Intl.setlocale (LocaleCategory.NUMERIC, "en_US");

@@ -30,34 +30,24 @@ public class Spice.Utils {
     };
 
     public static string get_thumbnail_data (string raw_json) {
-        try {
-            var root_object = get_json_object (raw_json);
-            var slides_array = root_object.get_array_member ("slides");
+        var root_object = get_json_object (raw_json);
+        var slides_array = root_object.get_array_member ("slides");
 
-            var slides = slides_array.get_elements ();
-            if (slides.length () > 0) {
-                var preview_data = slides.nth_data (0).get_object ().get_string_member ("preview");
+        var slides = slides_array.get_elements ();
+        if (slides.length () > 0) {
+            var preview_data = slides.nth_data (0).get_object ().get_string_member ("preview");
 
-                if (preview_data != null) {
-                   return preview_data;
-                }
+            if (preview_data != null) {
+                return preview_data;
             }
-        } catch (Error e) {
-            warning ("Error loading file: %s", e.message);
         }
 
         return "";
     }
 
     public static int get_aspect_ratio (string raw_json) {
-        try {
-            var root_object = get_json_object (raw_json);
-            return (int) root_object.get_int_member ("aspect-ratio");
-        } catch (Error e) {
-            warning ("Error loading file: %s", e.message);
-        }
-
-        return 0;
+        var root_object = get_json_object (raw_json);
+        return (int) root_object.get_int_member ("aspect-ratio");
     }
 
     public static Json.Object? get_json_object (string raw_json) {

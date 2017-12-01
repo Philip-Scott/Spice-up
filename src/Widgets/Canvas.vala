@@ -114,9 +114,7 @@ public class Spice.Canvas : Gtk.Overlay {
         add_overlay (canvas_item);
         canvas_item.show_all ();
 
-        canvas_item.check_position.connect (() => {
-            check_intersects (canvas_item);
-        });
+        canvas_item.check_position.connect (canvas_item.queue_resize_no_redraw);
 
         canvas_item.clicked.connect (() => {
             unselect_all (false);
@@ -152,7 +150,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
         if (reset_item) {
             item_clicked (null);
-        } 
+        }
 
         request_draw_preview ();
     }
@@ -207,10 +205,6 @@ public class Spice.Canvas : Gtk.Overlay {
         reorder_overlay (item, 0);
     }
     */
-
-    public void check_intersects (CanvasItem source_display_widget) {
-        source_display_widget.queue_resize_no_redraw ();
-    }
 
     public override bool button_press_event (Gdk.EventButton event) {
         if (window.is_fullscreen) {

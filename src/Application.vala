@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
+* Copyright (c) 2017 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,6 +28,8 @@ namespace Spice {
 public class Spice.Application : Granite.Application {
     public const string PROGRAM_NAME = N_("Spice-Up");
     public const string ABOUT_STOCK = N_("About Spice-Up");
+    public const string APP_ID = "com.github.philip-scott.spice-up";
+    public const string RESOURCE_PATH = "/com/github/philip-scott/spice-up/";
 
     public bool running = false;
     public bool opening_file = false;
@@ -35,22 +37,12 @@ public class Spice.Application : Granite.Application {
     construct {
         flags |= ApplicationFlags.HANDLES_OPEN;
 
-        application_id = "com.github.philip-scott.spice-up";
+        application_id = APP_ID;
         program_name = PROGRAM_NAME;
-        app_years = "2016-2017";
-        exec_name = "spice-up";
-        app_launcher = "com.github.philip-scott.spice-up";
+        exec_name = APP_ID;
+        app_launcher = APP_ID;
 
-        build_version = "0.8";
-        app_icon = "com.github.philip-scott.spice-up";
-        main_url = "https://github.com/Philip-Scott/Spice-up/";
-        bug_url = "https://github.com/Philip-Scott/Spice-up/issues";
-        help_url = "https://github.com/Philip-Scott/Spice-up/";
-        translate_url = "https://github.com/Philip-Scott/Spice-up/tree/master/po";
-        about_authors = {"Felipe Escoto <felescoto95@hotmail.com>", null};
-        about_translators = _("translator-credits");
-
-        about_license_type = Gtk.License.GPL_3_0;
+        build_version = "1.2";
     }
 
     public override void open (File[] files, string hint) {
@@ -69,7 +61,7 @@ public class Spice.Application : Granite.Application {
     public override void activate () {
         if (!running) {
             weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
-            default_theme.add_resource_path ("/com/github/philip-scott/spice-up");
+            default_theme.add_resource_path (RESOURCE_PATH);
 
             settings = Spice.Services.Settings.get_instance ();
             window = new Spice.Window (this);
