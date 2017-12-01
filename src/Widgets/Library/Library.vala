@@ -20,43 +20,63 @@
 */
 
 public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
-    public signal void item_selected (File file);
+    private const string RESOURCE_PATH = "resource:///com/github/philip-scott/spice-up/templates/%s";
+    private const string TEMPLATES[] = {"Black.spice", "White.spice", "Green.spice", "Spice-Up.spice", "Paper.spice", "BigCity.spice", "Colorful.spice", "Landscape.spice"};
+
+    public signal void item_selected (string data);
+    public signal void file_selected (File file);
 
     private Gtk.FlowBox item_box;
 
     public Library (string[] files) {
+        var existing_files = new Array<string> ();
+        foreach (var path in files) {
+            var file = File.new_for_path (path);
+            if (file.query_exists ()) {
+                add_file (file, true);
+                existing_files.append_val (path);
+            }
+        }
+
+        item_box.max_children_per_line = 2;
+        item_box.min_children_per_line = 2;
+        settings.last_files = existing_files.data;
+
+        item_box.child_activated.connect ((child) => {
+            file_selected ((child as LibraryItem).file);
+        });
+    }
+
+    public Library.for_templates () {
+        foreach (var file_path in TEMPLATES) {
+            var file = File.new_for_uri (RESOURCE_PATH.printf (file_path));
+
+            add_file (file, false);
+        }
+
+        item_box.min_children_per_line = 2;
+
+        item_box.child_activated.connect ((child) => {
+            item_selected ((child as LibraryItem).data);
+        });
+    }
+
+    construct {
         hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         item_box = new Gtk.FlowBox ();
 
         item_box.valign = Gtk.Align.START;
-        item_box.min_children_per_line = 2;
-        item_box.max_children_per_line = 2;
         item_box.margin = 12;
         item_box.expand = false;
 
         add (item_box);
-
-        item_box.child_activated.connect ((child) => {
-            item_selected ((child as LibraryItem).file);
-        });
-
-        var existing_files = new Array<string> ();
-        foreach (var path in files) {
-            var file = File.new_for_path (path);
-            if (file.query_exists ()) {
-                add_file (file);
-                existing_files.append_val (path);
-            }
-        }
-
-        settings.last_files = existing_files.data;
     }
 
-    public void add_file (File file) {
+    public void add_file (File file, bool real_file) {
         if (!file.query_exists ()) return;
 
-        var item = new LibraryItem (file);
+        var item = new LibraryItem (file, real_file);
         item_box.add (item);
     }
 }

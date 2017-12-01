@@ -24,8 +24,7 @@ public class Spice.Welcome : Gtk.Box {
 
     private Granite.Widgets.Welcome welcome;
     private Spice.Widgets.Library.Library? library = null;
-
-    private Spice.Widgets.Templates.TemplateLibrary? templates = null;
+    private Spice.Widgets.Library.Library? templates = null;
     private Gtk.Separator separator;
     private Gtk.Stack welcome_stack;
 
@@ -66,7 +65,7 @@ public class Spice.Welcome : Gtk.Box {
 
     public void show_templates () {
         if (templates == null) {
-            templates = new Spice.Widgets.Templates.TemplateLibrary ();
+            templates = new Spice.Widgets.Library.Library.for_templates ();
             welcome_stack.add_named (templates, "templates");
             welcome_stack.show_all ();
 
@@ -95,7 +94,7 @@ public class Spice.Welcome : Gtk.Box {
             library = new Spice.Widgets.Library.Library (files);
             add (library);
 
-            library.item_selected.connect ((file) => {
+            library.file_selected.connect ((file) => {
                 open_file (file);
             });
 

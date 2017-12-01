@@ -21,15 +21,17 @@
 
 public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     public File file { get; construct set; }
+    public string data { get; construct set; }
 
     private SlideWidget slide_widget;
     private Gtk.Popover? popover = null;
 
     private string last_aspect_ratio;
-    private string data;
 
-    public LibraryItem (File file) {
-        this.file = file;
+    public bool real_file { get; construct set; }
+
+    public LibraryItem (File file, bool real_file) {
+        Object (file: file, real_file: real_file);
 
         var event_box = new Gtk.EventBox ();
         event_box.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
@@ -38,6 +40,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         halign = Gtk.Align.CENTER;
 
         slide_widget = new SlideWidget ();
+        slide_widget.show_button = real_file;
         slide_widget.settings_requested.connect (() => {
             show_popover ();
         });
@@ -137,10 +140,25 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         popover.show ();
     }
 
+    private void get_file_data () {
+        data = Services.FileManager.get_presentation_data (file);
+    }
+
+    private void get_template_data () {
+        var dis = new DataInputStream (file.read ());
+        size_t size;
+
+        data = dis.read_upto ("\0", -1, out size);
+    }
+
     private void get_thumbnail () {
         if (file.query_exists ()) {
             new Thread<void*> ("content-loading", () => {
-                data = Services.FileManager.get_presentation_data (file);
+                if (real_file) {
+                    get_file_data ();
+                } else {
+                    get_template_data ();
+                }
 
                 var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
 
