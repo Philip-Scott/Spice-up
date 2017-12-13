@@ -1,0 +1,380 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-09 17:37-0500\n"
+"PO-Revision-Date: 2017-12-13 19:47+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.5\n"
+"Last-Translator: Слободан Терзић  <slobodan.terzic@zoho.eu>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: sr\n"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:66
+msgid "Controller found"
+msgstr "Нађен контролер"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:67
+msgid "Set up…"
+msgstr "Подеси…"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:150
+msgid "Controller Configuration"
+msgstr "Подешавања контролера"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:159
+msgid "Next Slide:"
+msgstr "Следећи слајд:"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:160
+msgid "Previous Slide:"
+msgstr "Претходни слајд:"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:161
+msgid "Set Jump:"
+msgstr "Подеси скок:"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:162
+msgid "Jump to slide:"
+msgstr "Скочи на слајд:"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:163
+msgid "Toggle Presentation:"
+msgstr "Покрени/заустави презентацију:"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:166
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:34
+msgid "Cancel"
+msgstr "Откажи"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:167
+msgid "Apply"
+msgstr "Примени"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:188
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:200
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:203
+#, c-format
+msgid "Button %d"
+msgstr "Дугме %d"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:210
+msgid "..."
+msgstr "..."
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:64
+msgid "Open Image"
+msgstr "Отвори слику"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:64
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:77
+msgid "Open"
+msgstr "Отвори"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:77
+msgid "Open file"
+msgstr "Отвори фајл"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:85
+msgid "Presentations"
+msgstr "Презентације"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:90
+msgid "Untitled Presentation"
+msgstr "Неименована презентација"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:95
+msgid "My Presentation"
+msgstr "Моја презентација"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:96
+#, c-format
+msgid "By: %s"
+msgstr "Аутор: %s"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:166
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:85
+msgid "Export to PDF"
+msgstr "Извези у ПДФ"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:166
+msgid "Save"
+msgstr "Сачувај"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:37
+#, c-format
+msgid "Open: %s"
+msgstr "Отвори: %s"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:62
+msgid "Name: "
+msgstr "Име: "
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:68
+msgid "Aspect Ratio: "
+msgstr "Однос страна: "
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:72
+msgid "4:3"
+msgstr "4:3"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:73
+msgid "16:9"
+msgstr "16:9"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:74
+msgid "16:10"
+msgstr "16:10"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:75
+msgid "3:2"
+msgstr "3:2"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:76
+msgid "5:4"
+msgstr "5:4"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:83
+msgid "Open file location…"
+msgstr "Отвори локацију фајла…"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:121
+msgid "Could not rename: File already exists…"
+msgstr "Не могу да преименујем: фајл већ постоји…"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:39
+msgid "Make a Simple Presentation"
+msgstr "Направи једноставну презентацију"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:42
+msgid "New Presentation"
+msgstr "Нова презентација"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:42
+msgid "Create a new presentation"
+msgstr "Направи нову презентацију"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:43
+msgid "Open File"
+msgstr "Отвори фајл"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:43
+msgid "Open a saved presentation"
+msgstr "Отвори сачувану презентацију"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:75
+msgid "Undo"
+msgstr "Опозови"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:76
+msgid "Redo"
+msgstr "Понови"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:77
+msgid "Insert Text Box"
+msgstr "Убаци поље са текстом"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:78
+msgid "Insert Image"
+msgstr "Убаци слику"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:79
+msgid "Insert Shape"
+msgstr "Убаци облик"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:80
+msgid "Return to Welcome Screen"
+msgstr "Назад на екран добродошлице"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:86
+msgid "Start Presentation"
+msgstr "Покрени презентацију"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Templates/TemplateItem.vala:34
+msgid "Create new presentation"
+msgstr "Направи нову презентацију"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:98
+msgid "Custom Color"
+msgstr "Прилагођена боја"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:112
+msgid "Color 1:"
+msgstr "Боја 1:"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:113
+msgid "Color 2:"
+msgstr "Боја 2:"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:148
+msgid "Vertical"
+msgstr "Усправно"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:149
+msgid "Horizontal"
+msgstr "Водоравно"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:44
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:89
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:108
+msgid "Click to add text..."
+msgstr "Кликните за додавање текста..."
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:35
+msgid "Background color"
+msgstr "Боја позадине"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:44
+msgid "Background pattern"
+msgstr "Шара позадине"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:47
+msgid "3px tile"
+msgstr "Наслов од 3тач"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:48
+msgid "Fabric dark"
+msgstr "Тамна тканина"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:49
+msgid "Fabric light"
+msgstr "Светла тканина"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:50
+msgid "Batthern"
+msgstr "Батхерн"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:51
+msgid "Beige paper"
+msgstr "Беж папир"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:52
+msgid "Black linen"
+msgstr "Црни лан"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:53
+msgid "Bright squares"
+msgstr "Светли кваратићи"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:54
+msgid "Diamond Upholstery"
+msgstr "Дијамантски тапацирунг"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:55
+msgid "Flowers"
+msgstr "Цвеће"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:56
+msgid "Hexellence"
+msgstr "Хекселенце"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:57
+msgid "Gplay"
+msgstr "Гплеј"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:58
+msgid "Geometry"
+msgstr "Геометрија"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:59
+msgid "Dark geometric"
+msgstr "Тамна геометрија"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:60
+msgid "Light wool"
+msgstr "Лака вуна"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:61
+msgid "Neutral squares"
+msgstr "Неутрални квадаратићи"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:62
+msgid "Silver scales"
+msgstr "Сребрне крљушти"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:63
+msgid "Subtle grid"
+msgstr "Фина мрежа"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:64
+msgid "Subtle squares"
+msgstr "Суптилни квадратићи"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:65
+msgid "XV"
+msgstr "XV"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:66
+msgid " None"
+msgstr "Ништа"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:41
+msgid "Font color"
+msgstr "Боја фонта"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:44
+msgid "Font Style"
+msgstr "Стил фонта"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:51
+msgid "Font"
+msgstr "Фонт"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:62
+msgid "Font size"
+msgstr "Величина фонта"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CommonBar.vala:38
+msgid "Delete"
+msgstr "Обриши"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CommonBar.vala:54
+msgid "Clone"
+msgstr "Клонирај"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CommonBar.vala:83
+msgid "Bring forward"
+msgstr "Постави испред"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CommonBar.vala:87
+msgid "Send backward"
+msgstr "Постави позади"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ImageBar.vala:29
+msgid "Edit image with…"
+msgstr "Уреди слику помоћу…"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ImageBar.vala:35
+msgid "Replace Image…"
+msgstr "Замени слику…"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ShapeBar.vala:29
+msgid "Square"
+msgstr "Правоугаоник"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ShapeBar.vala:30
+msgid "Circle"
+msgstr "Круг"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ShapeBar.vala:37
+msgid "Roundness"
+msgstr "Заобљење"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ShapeBar.vala:56
+msgid "Shape color"
+msgstr "Боја шаре"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:29
+msgid "Spice-Up"
+msgstr "Спајс Ап"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:30
+msgid "About Spice-Up"
+msgstr "О Спајс Апу"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:50
+msgid "translator-credits"
+msgstr "Слободан Терзић (xabre@archlinux.info)"
