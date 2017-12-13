@@ -1,14 +1,9 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-09 17:37-0500\n"
-"PO-Revision-Date: 2017-12-13 19:34+0100\n"
+"PO-Revision-Date: 2017-12-13 19:52+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +19,7 @@ msgstr "Nađen kontroler"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:67
 msgid "Set up…"
-msgstr "Podesi ..."
+msgstr "Podesi…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:150
 msgid "Controller Configuration"
@@ -144,11 +139,11 @@ msgstr "5:4"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:83
 msgid "Open file location…"
-msgstr "Otvori lokaciju fajla ..."
+msgstr "Otvori lokaciju fajla…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:121
 msgid "Could not rename: File already exists…"
-msgstr "Ne mogu da preimenujem: fajl već postoji ..."
+msgstr "Ne mogu da preimenujem: fajl već postoji…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:39
 msgid "Make a Simple Presentation"
@@ -204,7 +199,7 @@ msgstr "Napravi novu prezentaciju"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:98
 msgid "Custom Color"
-msgstr "Proizvoljna boja"
+msgstr "Prilagođena boja"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:112
 msgid "Color 1:"
@@ -246,7 +241,7 @@ msgstr "Tamna tkanina"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:49
 msgid "Fabric light"
-msgstr "Sveltla tkanina"
+msgstr "Svetla tkanina"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:50
 msgid "Batthern"
@@ -350,11 +345,11 @@ msgstr "Postavi pozadi"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ImageBar.vala:29
 msgid "Edit image with…"
-msgstr "Uredi sliku pomoću ..."
+msgstr "Uredi sliku pomoću…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ImageBar.vala:35
 msgid "Replace Image…"
-msgstr "Zameni sliku ..."
+msgstr "Zameni sliku…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ShapeBar.vala:29
 msgid "Square"
@@ -382,4 +377,4 @@ msgstr "O Spice-Upu"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:50
 msgid "translator-credits"
-msgstr "Slobodan Terzić"
+msgstr "Slobodan Terzić (xabre@archlinux.info)"
