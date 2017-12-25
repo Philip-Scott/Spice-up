@@ -37,8 +37,8 @@ public class Spice.PresenterWindow : Gtk.Window {
 
     construct {
         title = "Spice-Up - Presenter View";
-        type_hint = Gdk.WindowTypeHint.DIALOG;
         resizable = false;
+        set_keep_above (true);
         stick ();
 
         clock = new Clock ();
@@ -55,6 +55,14 @@ public class Spice.PresenterWindow : Gtk.Window {
         next_preview = new Spice.SlideWidget ();
         next_preview.valign = Gtk.Align.START;
         next_preview.show_button = false;
+
+        var next_preview_button = new Gtk.Button ();
+        next_preview_button.get_style_context ().add_class ("padding-none");
+        next_preview_button.get_style_context ().add_class ("flat");
+        next_preview_button.valign = Gtk.Align.START;
+        next_preview_button.halign = Gtk.Align.CENTER;
+
+        next_preview_button.add (next_preview);
 
         notes = new Gtk.TextView ();
         notes.get_style_context ().add_class ("h3");
@@ -82,26 +90,22 @@ public class Spice.PresenterWindow : Gtk.Window {
 
         var controller = new SlideshowController (slide_manager);
 
-        grid.attach (preview_button, 0, 0, 1, 2);
-        grid.attach (next_preview,   2, 0, 1, 1);
-        grid.attach (separator,      1, 0, 1, 3);
-        grid.attach (frame         , 0, 2, 1, 1);
-        grid.attach (timer         , 2, 1, 1, 1);
-        grid.attach (controller    , 2, 2, 1, 1);
+        grid.attach (preview_button     , 0, 0, 1, 2);
+        grid.attach (next_preview_button, 2, 0, 1, 1);
+        grid.attach (separator          , 1, 0, 1, 3);
+        grid.attach (frame              , 0, 2, 1, 1);
+        grid.attach (timer              , 2, 1, 1, 1);
+        grid.attach (controller         , 2, 2, 1, 1);
 
         add (grid);
         show_all ();
-
-        connect_signals ();
 
         load_previews (slide_manager.current_slide);
         Timeout.add (300, () => {
             load_previews (slide_manager.current_slide);
             return false;
         });
-    }
 
-    private void connect_signals () {
         this.key_press_event.connect (on_key_pressed);
 
         slide_manager.current_slide_changed.connect (load_previews);
@@ -111,6 +115,8 @@ public class Spice.PresenterWindow : Gtk.Window {
                 slide_manager.current_slide.notes = notes.buffer.text;
             }
         });
+
+        next_preview_button.clicked.connect (slide_manager.next_slide);
     }
 
     private void load_previews (Slide current_slide) {
@@ -241,6 +247,7 @@ public class Spice.PresenterWindow : Gtk.Window {
         construct {
             halign = Gtk.Align.CENTER;
             valign = Gtk.Align.CENTER;
+            column_spacing = 6;
 
             label = new Gtk.Label ("00:00:00");
             label.get_style_context ().add_class ("h1");

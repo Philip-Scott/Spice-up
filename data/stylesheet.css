@@ -1,5 +1,9 @@
 @define-color colorPrimary #2C2D2E;
 
+.padding-none {
+    padding: 0px;
+}
+
 .slide-list {
     background-color: shade(@bg_color, 0.75);
     border-right: solid 1px rgba(0,0,0,0.75);
