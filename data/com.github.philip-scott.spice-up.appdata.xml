@@ -26,11 +26,24 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.2.0" date="2017-12-25">
+      <description>
+        <p></p>
+        <ul>
+          <li>Presentations saved can now be viewed from a web browser by drag and drop if Spice-Up is not installed, and even if you're not using elementary OS or Linux</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1.0" date="2017-11-2">
       <description>
         <p>Huge Success!</p>
         <ul>
-          <li>Presentations saved can now be viewed from a web browser by drag and drop if Spice-Up is not installed, and even if you're not using elementary OS or Linux</li>
+          <li>Presentation View! Starting a presentation with two monitors will open the presentation on the secondary monitor, and a presentation viewer on your main screen.</li>
+          <li>You can now type presenter notes, and see them while presenting!</li>
+          <li>Your presentations now end with an all-black slide</li>
+          <li>Images can now be added by Drag & Drop</li>
+          <li>Spice-Up is now available in Serbian!</li>
+          <li>Some other fixes and cleanups</li>
         </ul>
       </description>
     </release>
