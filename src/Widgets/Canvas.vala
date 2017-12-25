@@ -87,6 +87,10 @@ public class Spice.Canvas : Gtk.Overlay {
             var display_widget = (CanvasItem) widget;
 
             var r = display_widget.rectangle;
+            int i = 0;
+            widget.get_preferred_width (out i, null);
+            widget.get_preferred_height (out i, null);
+
             allocation.width = (int)(r.width * current_ratio);
             allocation.height = (int)(r.height * current_ratio);
             allocation.x = default_x_margin + (int)(r.x * current_ratio) + display_widget.delta_x;

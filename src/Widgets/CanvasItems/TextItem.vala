@@ -81,15 +81,17 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         entry = new Gtk.TextView ();
         entry.justification = Gtk.Justification.CENTER;
-        entry.set_wrap_mode (Gtk.WrapMode.WORD);
+        entry.set_wrap_mode (Gtk.WrapMode.WORD_CHAR);
         entry.valign = Gtk.Align.CENTER;
         entry.halign = Gtk.Align.FILL;
         entry.can_focus = true;
         entry.expand = true;
 
         label = new Gtk.Label (_("Click to add text..."));
+        label.wrap_mode = Pango.WrapMode.WORD_CHAR;
         label.expand = true;
         label.wrap = true;
+
 
         stack = new Gtk.Stack ();
         stack.homogeneous = false;
@@ -159,7 +161,7 @@ public class Spice.TextItem : Spice.CanvasItem {
 
     // Needed to fix GTK glitches
     public void resize_entry () {
-        entry.queue_resize_no_redraw ();
+        entry.queue_resize ();
     }
 
     protected override void load_item_data () {
@@ -202,7 +204,11 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     public override void style () {
+        #if GTK_3_22
+        var converted_font_size = (5.3 * canvas.current_ratio * font_size);
+        #else
         var converted_font_size = (4.0 * canvas.current_ratio * font_size);
+        #endif
 
         if (converted_font_size > 0) {
             var font_css = get_font_css (font, font_style.down (), converted_font_size);
@@ -243,7 +249,7 @@ public class Spice.TextItem : Spice.CanvasItem {
                 break;
             case 1:
                 entry.valign = Gtk.Align.CENTER;
-                label.valign = Gtk.Align.FILL;
+                label.valign = Gtk.Align.CENTER;
                 break;
             case 2:
                 entry.valign = Gtk.Align.END;
