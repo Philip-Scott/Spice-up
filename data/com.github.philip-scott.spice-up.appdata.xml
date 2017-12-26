@@ -26,6 +26,19 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.2.0" date="2017-12-25">
+      <description>
+        <p>Presents for Presenters!</p>
+        <ul>
+          <li>Presentation View! Starting a presentation with two monitors will open the presentation on the secondary monitor, and a presentation viewer on your main screen.</li>
+          <li>You can now type presenter notes, and see them while presenting!</li>
+          <li>Your presentations now end with an all-black slide</li>
+          <li>Images can now be added by Drag & Drop</li>
+          <li>Spice-Up is now available in Serbian!</li>
+          <li>Some other fixes and cleanups</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1.0" date="2017-11-2">
       <description>
         <p>Huge Success!</p>
@@ -95,6 +108,9 @@
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot3.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot4.png</image>
     </screenshot>
   </screenshots>
   <developer_name>Felipe Escoto</developer_name>
