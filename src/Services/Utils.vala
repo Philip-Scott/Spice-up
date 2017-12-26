@@ -107,6 +107,16 @@ public class Spice.Utils {
             if (file_info.get_file_type () != GLib.FileType.REGULAR) {
                 return false;
             }
+            try {
+                var pixbuf = new Gdk.Pixbuf.from_file (file.get_path ());
+                var width = pixbuf.get_width ();
+                var height = pixbuf.get_height ();
+
+                if (width < 1 || height < 1) return false;
+            } catch (Error e) {
+                warning ("Invalid image loaded: %s", e.message);
+                return false;
+            }
 
             foreach (var type in ACCEPTED_TYPES) {
                 if (GLib.ContentType.equals (file_info.get_content_type (), type)) {
