@@ -15,7 +15,6 @@ set (GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
 set (RELEASE_NAME "TARS")
 set (VERSION "0.7")
 set (VERSION_INFO "Release")
-set (CMAKE_C_FLAGS "-ggdb")
 
 add_definitions (-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 # disable C compiler warnings
