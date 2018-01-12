@@ -94,23 +94,25 @@ public class Spice.ColorPicker : ColorButton {
         var button_toolbar = new Gtk.Grid ();
         button_toolbar.orientation = Gtk.Orientation.HORIZONTAL;
 
-        var pallete_button = new Gtk.ToggleButton.with_label (_("Palette"));
-        var custom_button = new Gtk.ToggleButton.with_label (_("Custom"));
+        var mode_button = new Granite.Widgets.ModeButton ();
+        mode_button.append_text (_("Palette"));
+        mode_button.append_text (_("Custom"));
+        mode_button.selected = 0;
+
+        mode_button.mode_changed.connect ((w) => {
+            switch (mode_button.selected) {
+                case 0:
+                    colors_grid_stack.set_visible_child_name ("palete");
+                    break;
+                case 1:
+                    colors_grid_stack.set_visible_child_name ("custom");
+                    break;
+            }
+        });
+
+        var pane = new Gtk.ColorPlane ();
+
         gradient_button = new Gtk.ToggleButton.with_label (_("Grad"));
-
-        pallete_button.toggled.connect (() => {
-            if (pallete_button.active) {
-                colors_grid_stack.set_visible_child_name ("palete");
-                custom_button.active = false;
-            }
-        });
-
-        custom_button.toggled.connect (() => {
-            if (custom_button.active) {
-                colors_grid_stack.set_visible_child_name ("custom");
-                pallete_button.active = false;
-            }
-        });
 
         gradient_button.hexpand = true;
         gradient_button.halign = Gtk.Align.END;
@@ -122,8 +124,7 @@ public class Spice.ColorPicker : ColorButton {
             }
         });
 
-        button_toolbar.add (pallete_button);
-        button_toolbar.add (custom_button);
+        button_toolbar.add (mode_button);
         button_toolbar.add (gradient_button);
 
         colors_grid_stack = new Gtk.Stack ();
@@ -141,10 +142,8 @@ public class Spice.ColorPicker : ColorButton {
         popover.position = Gtk.PositionType.BOTTOM;
         popover.add (main_grid);
 
-
         this.clicked.connect (() => {
             colors_grid_stack.set_visible_child_name ("palete");
-            custom_button.active = false;
             popover.show_all ();
         });
 

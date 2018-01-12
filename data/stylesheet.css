@@ -54,7 +54,7 @@ GtkTextView:selected, textview:selected {
      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3));
 }
 
-GtkToggleButton, .spice,
+GtkToggleButton.spice, .spice,
 .spice-dynamic-toolbar .spice {
     color: #DEDEDE;
     background-color: rgba(255,255,255,0.05);
