@@ -33,6 +33,8 @@ vala_precompile(VALA_C
   Widgets/PresenterView.vala
 
   Widgets/ColorPicker/ColorButton.vala
+  Widgets/ColorPicker/ColorPicker.vala
+
 
   Widgets/CanvasItems/CanvasItem.vala
   Widgets/CanvasItems/TextItem.vala
