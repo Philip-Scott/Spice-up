@@ -183,6 +183,8 @@ public class Spice.ColorPicker : ColorButton {
                 foreach (var picker_part in grid.get_children ()) {
                     switch (picker_part.name) {
                         case "GtkColorPlane":
+                            picker_part.height_request = 255;
+                            picker_part.width_request = 255;
                             grid.remove (picker_part);
                             color_chooser_grid.attach (picker_part, 0, 0, 3, 1);
                         break;
