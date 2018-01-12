@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
+* Copyright (c) 2018 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -29,6 +29,10 @@ public class Spice.ColorPicker : ColorButton {
         }
 
         set {
+            gradient_button.active = value;
+            gradient_button.visible = value;
+            gradient_button.no_show_all = !value;
+
             gradient_revealer.reveal_child = value;
             gradient_revealer.visible = value;
             gradient_revealer.no_show_all = !value;
@@ -59,8 +63,8 @@ public class Spice.ColorPicker : ColorButton {
     private Gtk.Popover popover;
     private Gtk.Grid colors_grid;
     private Gtk.Revealer gradient_revealer;
-    private Gtk.ToggleButton custom_button;
     private Gtk.ColorChooserWidget color_chooser;
+    private Gtk.ToggleButton gradient_button;
 
     protected ColorButton preview;
     protected ColorButton color1;
@@ -83,31 +87,99 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     construct {
+        var main_grid = new Gtk.Grid ();
+        main_grid.margin = 6;
+
+        // Toolbar creation
+        var button_toolbar = new Gtk.Grid ();
+        button_toolbar.orientation = Gtk.Orientation.HORIZONTAL;
+
+        var pallete_button = new Gtk.ToggleButton.with_label (_("Palette"));
+        var custom_button = new Gtk.ToggleButton.with_label (_("Custom"));
+        gradient_button = new Gtk.ToggleButton.with_label (_("Grad"));
+
+        pallete_button.toggled.connect (() => {
+            if (pallete_button.active) {
+                colors_grid_stack.set_visible_child_name ("palete");
+                custom_button.active = false;
+            }
+        });
+
+        custom_button.toggled.connect (() => {
+            if (custom_button.active) {
+                colors_grid_stack.set_visible_child_name ("custom");
+                pallete_button.active = false;
+            }
+        });
+
+        gradient_button.hexpand = true;
+        gradient_button.halign = Gtk.Align.END;
+        gradient_button.toggled.connect (() => {
+            this.gradient_revealer.reveal_child = gradient_button.active;
+
+            if (!gradient_button.active) {
+                color_selector = 3;
+            }
+        });
+
+        button_toolbar.add (pallete_button);
+        button_toolbar.add (custom_button);
+        button_toolbar.add (gradient_button);
+
         colors_grid_stack = new Gtk.Stack ();
         colors_grid_stack.homogeneous = false;
 
+        make_palette_view ();
+        make_gradient_view ();
+        make_custom_view ();
+
+        main_grid.attach (button_toolbar, 0, 0, 5, 1);
+        main_grid.attach (colors_grid_stack, 0, 1, 4, 8);
+        main_grid.attach (gradient_revealer, 4, 1, 1, 8);
+
+        popover = new Gtk.Popover (this);
+        popover.position = Gtk.PositionType.BOTTOM;
+        popover.add (main_grid);
+
+
+        this.clicked.connect (() => {
+            colors_grid_stack.set_visible_child_name ("palete");
+            custom_button.active = false;
+            popover.show_all ();
+        });
+
+        gradient = false;
+    }
+
+    private void make_palette_view () {
         colors_grid = new Gtk.Grid ();
         colors_grid.margin = 6;
         colors_grid.get_style_context ().add_class ("card");
 
-        var main_grid = new Gtk.Grid ();
-        main_grid.margin = 6;
-
         generate_colors ();
+        colors_grid_stack.add_named (colors_grid, "palete");
+    }
 
-        custom_button = new Gtk.ToggleButton.with_label (_("Custom Color"));
-        custom_button.margin = 3;
-        custom_button.toggled.connect (() => {
-            if (custom_button.active) {
-                colors_grid_stack.set_visible_child_name ("custom");
-            } else {
-                colors_grid_stack.set_visible_child_name ("palete");
-            }
+    private void make_custom_view () {
+        color_chooser = new Gtk.ColorChooserWidget ();
+        color_chooser.show_editor = true;
+        color_chooser.margin = 6;
+
+        color_chooser_signal = color_chooser.notify["rgba"].connect (() => {
+            set_color_smart (color_chooser.rgba.to_string (), false);
         });
 
-        main_grid.attach (custom_button, 0, 8, 4, 1);
+        colors_grid_stack.add_named (color_chooser, "custom");
+    }
+
+    private void make_gradient_view () {
+        var gradient_grid = new Gtk.Grid ();
+        gradient_grid.row_spacing = 6;
+        gradient_grid.margin_left = 6;
 
         gradient_revealer = new Gtk.Revealer ();
+        gradient_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
+        gradient_revealer.expand = true;
 
         var color1_label = new Gtk.Label (_("Color 1:"));
         var color2_label = new Gtk.Label (_("Color 2:"));
@@ -127,13 +199,26 @@ public class Spice.ColorPicker : ColorButton {
         color1.margin_right = 6;
         color2.margin_right = 6;
 
-        var gradient_grid = new Gtk.Grid ();
-        gradient_grid.row_spacing = 6;
-        gradient_grid.margin_left = 6;
-
         preview = new ColorButton ("");
         preview.get_style_context ().add_class ("flat");
         preview.set_size_request (100,120);
+
+        color1.clicked.connect (() => {
+            color_selector = 1;
+            set_color_chooser_color (color1.color);
+        });
+
+        color2.clicked.connect (() => {
+            color_selector = 2;
+            set_color_chooser_color (color2.color);
+        });
+
+        preview.clicked.connect (() => {
+            color_selector = 3;
+            set_color_chooser_color (preview.color);
+        });
+
+        color1.grab_focus ();
 
         var preview_box = new Gtk.Grid ();
         preview_box.margin = 6;
@@ -163,50 +248,6 @@ public class Spice.ColorPicker : ColorButton {
         gradient_grid.attach (gradient_type, 0, 6, 3, 1);
 
         gradient_revealer.add (gradient_grid);
-
-        main_grid.attach (gradient_revealer, 4, 0, 1, 9);
-
-        color_chooser = new Gtk.ColorChooserWidget ();
-        color_chooser.show_editor = true;
-        color_chooser.margin = 6;
-
-        color_chooser_signal = color_chooser.notify["rgba"].connect (() => {
-            set_color_smart (color_chooser.rgba.to_string (), false);
-        });
-
-        color1.clicked.connect (() => {
-            color_selector = 1;
-            set_color_chooser_color (color1.color);
-        });
-
-        color2.clicked.connect (() => {
-            color_selector = 2;
-            set_color_chooser_color (color2.color);
-        });
-
-        preview.clicked.connect (() => {
-            color_selector = 3;
-            set_color_chooser_color (preview.color);
-        });
-
-        color1.grab_focus ();
-
-        main_grid.attach (colors_grid_stack, 0, 0, 4, 8);
-
-        popover = new Gtk.Popover (this);
-        popover.position = Gtk.PositionType.BOTTOM;
-        popover.add (main_grid);
-
-        colors_grid_stack.add_named (colors_grid, "palete");
-        colors_grid_stack.add_named (color_chooser, "custom");
-
-        this.clicked.connect (() => {
-            colors_grid_stack.set_visible_child_name ("palete");
-            custom_button.active = false;
-            popover.show_all ();
-        });
-
-        gradient = false;
     }
 
     private void parse_gradient (string color) {
@@ -327,7 +368,6 @@ public class Spice.ColorPicker : ColorButton {
             case 0: // Single color
                 this.color = color;
                 break;
-
             case 1: // Color 1
                 color1.color = color;
                 this.color = make_gradient ();
