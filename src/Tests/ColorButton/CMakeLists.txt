@@ -6,7 +6,8 @@ set (TEST_NAME color-button)
 vala_precompile (VALA_TEST_C
   ColorButtonTest.vala
   TestCommon.vala
-  ../../Widgets/ColorButton.vala
+  ../../Widgets/ColorPicker/ColorButton.vala
+  ../../Widgets/ColorPicker/ColorPicker.vala
   PACKAGES
   ${VALA_DEPS}
   OPTIONS
