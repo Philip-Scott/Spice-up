@@ -120,7 +120,7 @@ public class Spice.EntryCombo : Gtk.Box {
         scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
         scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
         scroll.add (listbox);
-        
+
         popover = new Gtk.Popover (button);
         popover.position = Gtk.PositionType.BOTTOM;
 
@@ -164,21 +164,21 @@ public class Spice.EntryCombo : Gtk.Box {
         }
 
         var popover_content = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
-        
+
         if (searchable) {
             var search_entry = new Gtk.SearchEntry ();
             search_entry.margin = 6;
-            
+
             listbox.set_filter_func ((row) => {
                 return (((Gtk.Label) row.get_child ()).label.down ().contains (search_entry.text.down ().strip ()));
             });
-            
+
             search_entry.search_changed.connect (() => {
                 listbox.invalidate_filter ();
             });
             popover_content.add (search_entry);
         }
-        
+
         popover_content.add (scroll);
         popover.add (popover_content);
 
