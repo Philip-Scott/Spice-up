@@ -20,24 +20,12 @@
 */
 
 public class Spice.GradientEditor : Gtk.Grid {
-    public static Regex color_regex;
-
-    static construct {
-        try {
-            color_regex = new Regex ("""(#.{3,6} )|rgba?\([0-9]{1,},[0-9]{1,},[0-9]{1,}(\)|,(0|1).?[0-9]{0,}\))""", 0);
-        } catch (Error e) {
-            error ("Regex failed: %s", e.message);
-        }
-    }
-
-    public signal void color_selected (string color);
+    public signal void color_selected (int index, string color);
     public Gtk.ComboBoxText gradient_type;
 
     public ColorButton preview;
-    public ColorButton color1;
-    public ColorButton color2;
-
-    public int selected_color = 0;
+    private ColorButton color1;
+    private ColorButton color2;
 
     public string gradient_color {
         get {
@@ -47,6 +35,8 @@ public class Spice.GradientEditor : Gtk.Grid {
             parse_gradient (value);
         }
     }
+
+    private Gradient gradient { get; set; }
 
     private string _gradient_color;
 
@@ -74,8 +64,8 @@ public class Spice.GradientEditor : Gtk.Grid {
         color1_label.margin_right = 6;
         color2_label.margin_right = 6;
 
-        color1 = new ColorButton ("red");
-        color2 = new ColorButton ("orange");
+        color1 = new ColorButton ("#fff");
+        color2 = new ColorButton ("#fbb");
 
         color1.margin_right = 6;
         color2.margin_right = 6;
@@ -85,18 +75,15 @@ public class Spice.GradientEditor : Gtk.Grid {
         preview.set_size_request (100, 120);
 
         color1.clicked.connect (() => {
-            selected_color = 1;
-            color_selected (color1.color);
+            color_selected (1, color1.color);
         });
 
         color2.clicked.connect (() => {
-            selected_color = 2;
-            color_selected (color2.color);
+            color_selected (2, color2.color);
         });
 
         preview.clicked.connect (() => {
-            selected_color = 3;
-            color_selected (preview.color);
+            color_selected (-1, preview.color);
         });
 
         color1.grab_focus ();
@@ -117,6 +104,7 @@ public class Spice.GradientEditor : Gtk.Grid {
         gradient_type.active = 0;
 
         gradient_type.changed.connect (() => {
+            this.gradient.direction = gradient_type.active_id;
             color_picker.color = make_gradient ();
             color_picker.color_picked (color_picker.color);
         });
@@ -131,32 +119,16 @@ public class Spice.GradientEditor : Gtk.Grid {
         add (gradient_grid);
     }
 
+    public void set_color (int step, string color) {
+        gradient.get_color (step).color = color;
+    }
+
     public void parse_gradient (string color) {
         if (color.contains ("gradient")) {
-            MatchInfo mi;
-            string colors[2] = {"", ""};
+            gradient = new Gradient (color);
 
-            if (color_regex.match (color, 0 , out mi)) {
-                int count = 0, pos_start = 0, pos_end = 0;
-
-                try {
-                    do {
-                        mi.fetch_pos (0, out pos_start, out pos_end);
-                        string found_color = mi.fetch (0);
-                        if (pos_start == pos_end) {
-                            break;
-                        }
-
-                        colors[count++] = found_color;
-                    } while (mi.next () || count < 2);
-                } catch (Error e) {
-                    warning ("Could not find gradient parts: %s", e.message);
-                    return;
-                }
-            }
-
-            color1.color = colors[0].strip ();
-            color2.color = colors[1].strip ();
+            color1.color = gradient.get_color (0).color;
+            color2.color = gradient.get_color (1).color;
 
             if (color.contains ("to bottom")) {
                 gradient_type.set_active_id ("to bottom");
@@ -170,6 +142,6 @@ public class Spice.GradientEditor : Gtk.Grid {
     }
 
     public string make_gradient () {
-        return "linear-gradient(%s, %s 0%, %s 100%)".printf (gradient_type.active_id, color1.color, color2.color);
+        return gradient.to_string ();
     }
 }

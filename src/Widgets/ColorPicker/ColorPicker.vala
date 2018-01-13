@@ -36,7 +36,7 @@ public class Spice.ColorPicker : ColorButton {
             gradient_revealer.visible = value;
             gradient_revealer.no_show_all = !value;
 
-            color_selector = value ? 3 : 0;
+            selected_color = value ? -1 : 0;
         }
     }
 
@@ -55,8 +55,6 @@ public class Spice.ColorPicker : ColorButton {
 
     public bool use_alpha { get; construct set; }
 
-    // 0 == main, N = Gradient Color
-    protected int color_selector = 0;
     private ulong color_chooser_signal;
 
     private Gtk.Stack colors_grid_stack;
@@ -68,6 +66,7 @@ public class Spice.ColorPicker : ColorButton {
     private Gtk.ToggleButton gradient_button;
 
     protected GradientEditor gradient_editor;
+    public int selected_color = 0;
 
     public ColorPicker (bool use_alpha = true) {
         Object (color: "white", use_alpha: use_alpha);
@@ -107,7 +106,7 @@ public class Spice.ColorPicker : ColorButton {
             this.gradient_revealer.reveal_child = gradient_button.active;
 
             if (!gradient_button.active) {
-                color_selector = 3;
+                selected_color = -1;
             }
         });
 
@@ -123,7 +122,10 @@ public class Spice.ColorPicker : ColorButton {
 
         gradient_editor = new GradientEditor (this);
         gradient_revealer.add (gradient_editor);
-        gradient_editor.color_selected.connect (set_color_chooser_color);
+        gradient_editor.color_selected.connect ((index, color ) => {
+            selected_color = index;
+            set_color_chooser_color (color);
+        });
 
         make_palette_view ();
         make_custom_view ();
@@ -191,9 +193,6 @@ public class Spice.ColorPicker : ColorButton {
                                 picker_part.expand = true;
                                 color_chooser_grid.attach (picker_part, 1, 2, 1, 1);
                             }
-                        break;
-                        default:
-                            print ("%s\n", picker_part.name);
                         break;
                     }
                 }
@@ -285,23 +284,25 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     protected void set_color_smart (string color, bool from_button = false) {
-        switch (gradient_editor.selected_color) {
+        switch (selected_color) {
             case 0: // Single color
                 this.color = color;
                 break;
             case 1: // Color 1
-                gradient_editor.color1.color = color;
+                //gradient_editor.color1.color = color;
+                gradient_editor.set_color (0, color);
                 this.color = gradient_editor.make_gradient ();
                 break;
 
             case 2: // Color 2
-                gradient_editor.color2.color = color;
+                //gradient_editor.color2.color = color;
+                gradient_editor.set_color (1, color);
                 this.color = gradient_editor.make_gradient ();
                 break;
 
-            case 3: // Both colors
-                gradient_editor.color1.color = color;
-                gradient_editor.color2.color = color;
+            case -1: // Both colors
+                gradient_editor.set_color (0, color);
+                gradient_editor.set_color (1, color);
                 this.color = color;
                 break;
         }
