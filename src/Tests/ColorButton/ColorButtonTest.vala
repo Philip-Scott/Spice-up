@@ -31,15 +31,15 @@ public class ColorButtonTest : Spice.ColorPicker {
     }
 
     public string get_1 () {
-        return color1.color;
+        return gradient_editor.color1.color;
     }
 
     public string get_2 () {
-        return color2.color;
+        return gradient_editor.color2.color;
     }
 
     public string get_preview () {
-        return preview.color;
+        return gradient_editor.preview.color;
     }
 
     public static void add_tests () {

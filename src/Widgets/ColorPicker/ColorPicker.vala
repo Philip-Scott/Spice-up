@@ -20,7 +20,6 @@
 */
 
 public class Spice.ColorPicker : ColorButton {
-    public static Regex color_regex;
     public signal void color_picked (string color);
 
     public bool gradient {
@@ -46,10 +45,10 @@ public class Spice.ColorPicker : ColorButton {
             return _color;
         } set {
             ((ColorButton) this).color = value;
-            preview.color = value;
+            gradient_editor.preview.color = value;
 
             if (gradient) {
-                parse_gradient (value);
+                gradient_editor.parse_gradient (value);
             }
         }
     }
@@ -68,24 +67,12 @@ public class Spice.ColorPicker : ColorButton {
     private Gtk.ColorChooserWidget color_chooser;
     private Gtk.ToggleButton gradient_button;
 
-    protected ColorButton preview;
-    protected ColorButton color1;
-    protected ColorButton color2;
-
-    private Gtk.ComboBoxText gradient_type;
+    protected GradientEditor gradient_editor;
 
     public ColorPicker (bool use_alpha = true) {
         Object (color: "white", use_alpha: use_alpha);
 
         color_chooser.use_alpha = use_alpha;
-    }
-
-    static construct {
-        try {
-            color_regex = new Regex ("""(#.{3,6} )|rgba?\([0-9]{1,},[0-9]{1,},[0-9]{1,}(\)|,(0|1).?[0-9]{0,}\))""", 0);
-        } catch (Error e) {
-            error ("Regex failed: %s", e.message);
-        }
     }
 
     construct {
@@ -130,8 +117,15 @@ public class Spice.ColorPicker : ColorButton {
         colors_grid_stack = new Gtk.Stack ();
         colors_grid_stack.homogeneous = false;
 
+        gradient_revealer = new Gtk.Revealer ();
+        gradient_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
+        gradient_revealer.expand = true;
+
+        gradient_editor = new GradientEditor (this);
+        gradient_revealer.add (gradient_editor);
+        gradient_editor.color_selected.connect (set_color_chooser_color);
+
         make_palette_view ();
-        make_gradient_view ();
         make_custom_view ();
 
         main_grid.attach (button_toolbar, 0, 0, 5, 1);
@@ -219,126 +213,6 @@ public class Spice.ColorPicker : ColorButton {
         colors_grid_stack.add_named (color_chooser_grid, "custom");
     }
 
-    private void make_gradient_view () {
-        var gradient_grid = new Gtk.Grid ();
-        gradient_grid.row_spacing = 6;
-        gradient_grid.margin_left = 6;
-
-        gradient_revealer = new Gtk.Revealer ();
-        gradient_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
-        gradient_revealer.expand = true;
-
-        var color1_label = new Gtk.Label (_("Color 1:"));
-        var color2_label = new Gtk.Label (_("Color 2:"));
-
-        color1_label.get_style_context ().add_class ("h4");
-        color2_label.get_style_context ().add_class ("h4");
-
-        color1_label.halign = Gtk.Align.END;
-        color2_label.halign = Gtk.Align.END;
-
-        color1_label.margin_right = 6;
-        color2_label.margin_right = 6;
-
-        color1 = new ColorButton ("red");
-        color2 = new ColorButton ("orange");
-
-        color1.margin_right = 6;
-        color2.margin_right = 6;
-
-        preview = new ColorButton ("");
-        preview.get_style_context ().add_class ("flat");
-        preview.set_size_request (100, 120);
-
-        color1.clicked.connect (() => {
-            color_selector = 1;
-            set_color_chooser_color (color1.color);
-        });
-
-        color2.clicked.connect (() => {
-            color_selector = 2;
-            set_color_chooser_color (color2.color);
-        });
-
-        preview.clicked.connect (() => {
-            color_selector = 3;
-            set_color_chooser_color (preview.color);
-        });
-
-        color1.grab_focus ();
-
-        var preview_box = new Gtk.Grid ();
-        preview_box.margin = 6;
-        preview_box.get_style_context ().add_class ("card");
-        preview_box.add (preview);
-
-        gradient_type = new Gtk.ComboBoxText ();
-        gradient_type.margin = 3;
-        gradient_type.vexpand = true;
-        gradient_type.valign = Gtk.Align.END;
-
-        gradient_type.append ("to bottom", _("Vertical"));
-        gradient_type.append ("to right", _("Horizontal"));
-        //gradient_type.add_entry ("radial", "Radial"); TODO: Gtk doesn't support radial gradients just yet
-        gradient_type.active = 0;
-
-        gradient_type.changed.connect (() => {
-            this.color = make_gradient ();
-            color_picked (this.color);
-        });
-
-        gradient_grid.attach (preview_box,   1, 1, 2, 3);
-        gradient_grid.attach (color1_label,  0, 4, 2, 1);
-        gradient_grid.attach (color1,        2, 4, 2, 1);
-        gradient_grid.attach (color2_label,  0, 5, 2, 1);
-        gradient_grid.attach (color2,        2, 5, 1, 1);
-        gradient_grid.attach (gradient_type, 0, 6, 3, 1);
-
-        gradient_revealer.add (gradient_grid);
-    }
-
-    private void parse_gradient (string color) {
-        if (color.contains ("gradient")) {
-            MatchInfo mi;
-            string colors[2] = {"", ""};
-
-            if (color_regex.match (color, 0 , out mi)) {
-                int count = 0, pos_start = 0, pos_end = 0;
-
-                try {
-                    do {
-                        mi.fetch_pos (0, out pos_start, out pos_end);
-                        string found_color = mi.fetch (0);
-                        if (pos_start == pos_end) {
-                            break;
-                        }
-
-                        colors[count++] = found_color;
-                    } while (mi.next () || count < 2);
-                } catch (Error e) {
-                    warning ("Could not find gradient parts: %s", e.message);
-                    return;
-                }
-            }
-
-            color1.color = colors[0].strip ();
-            color2.color = colors[1].strip ();
-
-            if (color.contains ("to bottom")) {
-                gradient_type.set_active_id ("to bottom");
-            } else if (color.contains ("to right")) {
-                gradient_type.set_active_id ("to right");
-            }
-        } else {
-            color1.color = color;
-            color2.color = color;
-        }
-    }
-
-    public string make_gradient () {
-        return "linear-gradient(%s, %s 0%, %s 100%)".printf (gradient_type.active_id, color1.color, color2.color);
-    }
-
     public void generate_colors () {
         // red
         attach_color ("#ff8c82", 0, 0);
@@ -411,23 +285,23 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     protected void set_color_smart (string color, bool from_button = false) {
-        switch (this.color_selector) {
+        switch (gradient_editor.selected_color) {
             case 0: // Single color
                 this.color = color;
                 break;
             case 1: // Color 1
-                color1.color = color;
-                this.color = make_gradient ();
+                gradient_editor.color1.color = color;
+                this.color = gradient_editor.make_gradient ();
                 break;
 
             case 2: // Color 2
-                color2.color = color;
-                this.color = make_gradient ();
+                gradient_editor.color2.color = color;
+                this.color = gradient_editor.make_gradient ();
                 break;
 
             case 3: // Both colors
-                color1.color = color;
-                color2.color = color;
+                gradient_editor.color1.color = color;
+                gradient_editor.color2.color = color;
                 this.color = color;
                 break;
         }
