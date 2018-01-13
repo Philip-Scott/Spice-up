@@ -88,7 +88,7 @@ public class Spice.EntryCombo : Gtk.Box {
     private bool strict_signal = false;
 
     // If strict_signal == true, it will only send activated if the entry is the same as a value on the list
-    public EntryCombo (bool strict_signal = false, bool alphabetize = false) {
+    public EntryCombo (bool strict_signal = false, bool alphabetize = false, bool searchable = false) {
         this.strict_signal = strict_signal;
 
         row_map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
@@ -119,6 +119,7 @@ public class Spice.EntryCombo : Gtk.Box {
         scroll = new Gtk.ScrolledWindow (null, null);
         scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
         scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
+        scroll.add (listbox);
 
         popover = new Gtk.Popover (button);
         popover.position = Gtk.PositionType.BOTTOM;
@@ -162,8 +163,24 @@ public class Spice.EntryCombo : Gtk.Box {
             });
         }
 
-        scroll.add (listbox);
-        popover.add (scroll);
+        var popover_content = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+
+        if (searchable) {
+            var search_entry = new Gtk.SearchEntry ();
+            search_entry.margin = 6;
+
+            listbox.set_filter_func ((row) => {
+                return (((Gtk.Label) row.get_child ()).label.down ().contains (search_entry.text.down ().strip ()));
+            });
+
+            search_entry.search_changed.connect (() => {
+                listbox.invalidate_filter ();
+            });
+            popover_content.add (search_entry);
+        }
+
+        popover_content.add (scroll);
+        popover.add (popover_content);
 
         entry_button_stack.add_named (entry, "entry");
         entry_button_stack.add_named (entry_substitute, "button");
