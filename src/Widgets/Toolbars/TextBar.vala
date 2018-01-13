@@ -35,12 +35,20 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     private string[] JUSTIFICATION_TRANSLATIONS = {_("Left"), _("Center"), _("Right"), _("Justify")};
     private string[] ALIGN_TRANSLATIONS = {_("Top"), _("Middle"), _("Bottom")};
 
+    #if GTK_3_22
+    const string TEXT_STYLE_CSS = """
+        label {
+            font: 16px '%s';
+        }
+    """;
+    #else
     const string TEXT_STYLE_CSS = """
         .label {
             font: %s;
             font-size: 14px;
         }
     """;
+    #endif
 
     construct {
         text_color_button = new Spice.ColorPicker ();
