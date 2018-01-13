@@ -20,12 +20,11 @@
 */
 
 public class Spice.Gradient : Object {
-    private List<GradientStep> steps;
+    public List<GradientStep> steps;
     public static Regex color_regex;
     public static Regex dir_regex;
 
-    private string color;
-    public string direction;
+    public string direction = "to bottom";
 
     static construct {
         try {
@@ -38,12 +37,18 @@ public class Spice.Gradient : Object {
         }
     }
 
-    public Gradient (string gradient) {
-        color = gradient;
+    public Gradient () {}
+
+    public void parse (string gradient) {
         steps = new List<GradientStep>();
 
-        MatchInfo mi;
+        if (!gradient.contains ("gradient")) {
+            steps.append (new GradientStep (gradient, "0%"));
+            steps.append (new GradientStep (gradient, "100%"));
+            return;
+        }
 
+        MatchInfo mi;
         if (color_regex.match (gradient, 0 , out mi)) {
             int pos_start = 0, pos_end = 0;
 
@@ -66,19 +71,14 @@ public class Spice.Gradient : Object {
         if (dir_regex.match (gradient, 0 , out mi)) {
             int pos_start = 0, pos_end = 0;
 
-            try {
-                mi.fetch_pos (0, out pos_start, out pos_end);
-                if (pos_start != pos_end) {
-                    direction = mi.fetch (1);
-                }
-            } catch (Error e) {
-                warning ("Could not find gradient direction: %s", e.message);
-                return;
+            mi.fetch_pos (0, out pos_start, out pos_end);
+            if (pos_start != pos_end) {
+                direction = mi.fetch (1);
             }
         }
     }
 
-    public string to_string () {
+    public string to_string (bool force_down) {
         string colors = "";
 
         steps.sort ((_a, _b) => {
@@ -86,11 +86,18 @@ public class Spice.Gradient : Object {
             var b = int.parse (_b.percent.replace ("%", ""));
             return (int) (a > b) - (int) (a < b);
         });
+
         steps.foreach ((step) => {
             colors += ", %s".printf (step.to_string ());
         });
 
-        string result = @"linear-gradient($direction$colors)";
+        string result;
+        if (force_down) {
+            result = @"linear-gradient(to bottom$colors)";
+        } else {
+            result = @"linear-gradient($direction$colors)";
+        }
+
         return result;
     }
 
@@ -98,14 +105,14 @@ public class Spice.Gradient : Object {
         return steps.nth_data (nth);
     }
 
-    public class GradientStep {
+    public class GradientStep : Object {
         public GradientStep (string _color, string _percent) {
             this.color = _color.strip ();
             this.percent = _percent.strip ();
         }
 
-        public string color;
-        public string percent;
+        public string color { get; set; }
+        public string percent { get; set; }
 
         public string to_string () {
             return @"$color $percent".strip ();

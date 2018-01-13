@@ -20,7 +20,7 @@
 */
 
 protected class Spice.ColorButton : Gtk.Button {
-    private Gtk.EventBox surface;
+    protected Gtk.EventBox surface;
 
     public string _color = "none";
     public string color {
@@ -52,6 +52,10 @@ protected class Spice.ColorButton : Gtk.Button {
         can_focus = false;
         add (background);
         background.add (surface);
+    }
+
+    public void set_size (int size) {
+        surface.set_size_request (size, size);
     }
 
     public new void style () {

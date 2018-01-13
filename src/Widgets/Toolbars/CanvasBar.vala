@@ -34,7 +34,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         canvas_gradient_background.gradient = true;
         canvas_gradient_background.set_tooltip_text (_("Background color"));
 
-        canvas_gradient_background.color_picked.connect (() => {
+        canvas_gradient_background.color_picked.connect ((s) => {
             var action = new Spice.Services.HistoryManager.HistoryAction<Canvas,string>.canvas_changed (this.manager.current_slide.canvas, "background-color");
             Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
             update_properties ();

@@ -24,19 +24,18 @@ public class Spice.ColorPicker : ColorButton {
 
     public bool gradient {
         get {
-            return gradient_revealer.reveal_child;
+            return gradient_revealer.visible;
         }
 
         set {
-            gradient_button.active = value;
             gradient_button.visible = value;
             gradient_button.no_show_all = !value;
 
-            gradient_revealer.reveal_child = value;
             gradient_revealer.visible = value;
             gradient_revealer.no_show_all = !value;
+            gradient_revealer.reveal_child = false;
 
-            selected_color = value ? -1 : 0;
+            selected_color = 0;
         }
     }
 
@@ -45,7 +44,6 @@ public class Spice.ColorPicker : ColorButton {
             return _color;
         } set {
             ((ColorButton) this).color = value;
-            gradient_editor.preview.color = value;
 
             if (gradient) {
                 gradient_editor.parse_gradient (value);
@@ -94,19 +92,22 @@ public class Spice.ColorPicker : ColorButton {
                     break;
                 case 1:
                     colors_grid_stack.set_visible_child_name ("custom");
+                    color_picked ("linear-gradient(to bottom, #9bdb4d 89%, #000000 89%)");
                     break;
             }
         });
 
         gradient_button = new Gtk.ToggleButton.with_label (_("Grad"));
-
+        gradient_button.active = false;
         gradient_button.hexpand = true;
         gradient_button.halign = Gtk.Align.END;
         gradient_button.toggled.connect (() => {
             this.gradient_revealer.reveal_child = gradient_button.active;
 
-            if (!gradient_button.active) {
-                selected_color = -1;
+            if (gradient_button.active) {
+                selected_color = 1;
+            } else {
+                selected_color = 0;
             }
         });
 
@@ -122,9 +123,15 @@ public class Spice.ColorPicker : ColorButton {
 
         gradient_editor = new GradientEditor (this);
         gradient_revealer.add (gradient_editor);
+
         gradient_editor.color_selected.connect ((index, color ) => {
             selected_color = index;
             set_color_chooser_color (color);
+        });
+
+        gradient_editor.updated.connect (() => {
+            color = gradient_editor.make_gradient ();
+            color_picked (gradient_editor.make_gradient ());
         });
 
         make_palette_view ();
@@ -274,7 +281,7 @@ public class Spice.ColorPicker : ColorButton {
         color_button.set_size_request (48,24);
         color_button.get_style_context ().add_class ("flat");
         color_button.can_focus = false;
-        color_button.margin_right = 0;
+        color_button.margin_end = 0;
 
         colors_grid.attach (color_button, x, y, 1, 1);
 
@@ -286,24 +293,18 @@ public class Spice.ColorPicker : ColorButton {
     protected void set_color_smart (string color, bool from_button = false) {
         switch (selected_color) {
             case 0: // Single color
-                this.color = color;
-                break;
-            case 1: // Color 1
-                //gradient_editor.color1.color = color;
-                gradient_editor.set_color (0, color);
-                this.color = gradient_editor.make_gradient ();
-                break;
-
-            case 2: // Color 2
-                //gradient_editor.color2.color = color;
-                gradient_editor.set_color (1, color);
-                this.color = gradient_editor.make_gradient ();
-                break;
-
             case -1: // Both colors
-                gradient_editor.set_color (0, color);
-                gradient_editor.set_color (1, color);
-                this.color = color;
+                if (gradient) {
+                    gradient_editor.parse_gradient (color);
+                    this.color = gradient_editor.make_gradient ();
+                } else {
+                    this.color = color;
+                }
+                break;
+            default: // Gradient color
+                //gradient_editor.color1.color = color;
+                gradient_editor.set_color (selected_color, color);
+                this.color = gradient_editor.make_gradient ();
                 break;
         }
 
