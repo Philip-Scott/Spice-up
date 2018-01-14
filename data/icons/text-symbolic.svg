@@ -11,8 +11,8 @@
    version="1.1"
    id="svg7384"
    height="16"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="spiceup-text-symbolic.svg">
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="text-symbolic.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -22,22 +22,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1141"
-     inkscape:window-height="655"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
      id="namedview9"
-     showgrid="false"
-     inkscape:zoom="14.75"
-     inkscape:cx="-1.6451271"
-     inkscape:cy="8"
-     inkscape:window-x="492"
-     inkscape:window-y="269"
-     inkscape:window-maximized="0"
+     showgrid="true"
+     inkscape:zoom="29.5"
+     inkscape:cx="-3.1756024"
+     inkscape:cy="6.3027466"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg7384"
      showguides="false">
     <sodipodi:guide
        position="-14.711864,16.610169"
        orientation="0,1"
-       id="guide4135" />
+       id="guide4135"
+       inkscape:locked="false" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid4145" />
   </sodipodi:namedview>
   <metadata
      id="metadata90">
@@ -49,10 +53,10 @@
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title>elementary Symbolic Icon Theme</dc:title>
         <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
       <cc:License
-         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
         <cc:permits
            rdf:resource="http://creativecommons.org/ns#Reproduction" />
         <cc:permits
@@ -74,11 +78,12 @@
      id="defs7386" />
   <g
      transform="matrix(1.1164844,0,0,1.0334638,-0.19433206,0)"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.05466652px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';letter-spacing:0px;word-spacing:0px;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.05466652px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      id="text4137">
     <path
        d="m 5.1728057,13.983251 0,0.531046 -4.10308,0 0,-0.531046 1.4142135,-0.270533 4.2519446,-12.74509772 1.7677669,0 4.4194173,12.74509772 1.581686,0.270533 0,0.531046 -5.2753884,0 0,-0.531046 1.6747264,-0.270533 -1.2374367,-3.8776353 -4.9125312,0 -1.2560449,3.8776353 1.6747265,0.270533 z M 7.1731735,2.4104616 5.0332452,8.9333064 l 4.344985,0 -2.2050567,-6.5228448 z"
        id="path4138"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       style="fill:#666666;fill-opacity:1" />
   </g>
 </svg>

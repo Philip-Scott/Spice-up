@@ -5,10 +5,34 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    height="16.0037"
    id="svg7384"
    version="1.1"
-   width="16.003796">
+   width="16.003796"
+   sodipodi:docname="photos-symbolic.svg"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="722"
+     inkscape:window-height="480"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="14.74659"
+     inkscape:cx="8.0018978"
+     inkscape:cy="8.0018501"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg7384" />
   <metadata
      id="metadata90">
     <rdf:RDF>
@@ -59,12 +83,12 @@
      transform="translate(-793.02488,397.97987)" />
   <g
      id="layer15"
-     style="display:inline"
+     style="display:inline;fill:#666666;fill-opacity:1"
      transform="translate(-793.02488,397.97987)">
     <path
        d="m 802.96617,-397.97612 c -0.0645,0.008 -0.12753,0.0279 -0.1875,0.0625 l -5.0625,2.9375 3.96875,0 0.8125,-0.46875 0.28125,0.46875 2.28125,0 -1.59375,-2.75 c -0.10388,-0.17992 -0.30663,-0.27423 -0.5,-0.25 z m -6.9375,3.96875 -2.75,1.59375 c -0.23989,0.1385 -0.326,0.44761 -0.1875,0.6875 l 2.9375,5.0625 0,-3.96875 -0.46875,-0.8125 0.46875,-0.28125 0,-2.28125 z m 1.5,0.0312 c -0.277,0 -0.5,0.223 -0.5,0.5 l 0,11 c 0,0.277 0.223,0.5 0.5,0.5 l 11,0 c 0.277,0 0.5,-0.223 0.5,-0.5 l 0,-11 c 0,-0.277 -0.223,-0.5 -0.5,-0.5 l -11,0 z m 1.5,2 8,0 0,7 -8,0 0,-7 z"
        id="path17153"
-       style="color:#000000;fill:#bebebe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+       style="color:#000000;fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
   </g>
   <g
      id="g71291"

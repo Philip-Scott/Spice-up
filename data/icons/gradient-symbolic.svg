@@ -28,7 +28,7 @@
      id="namedview19"
      showgrid="true"
      inkscape:zoom="20.854827"
-     inkscape:cx="11.548539"
+     inkscape:cx="4.1881327"
      inkscape:cy="4.2155518"
      inkscape:window-x="0"
      inkscape:window-y="30"
@@ -58,7 +58,7 @@
        inkscape:collect="always"
        id="linearGradient4532">
       <stop
-         style="stop-color:#bebebe;stop-opacity:1;"
+         style="stop-color:#a2a6a6;stop-opacity:1"
          offset="0"
          id="stop4528" />
       <stop
@@ -126,7 +126,7 @@
      style="display:inline"
      transform="translate(-793.02488,397.97617)" />
   <rect
-     style="opacity:1;fill:url(#linearGradient4534);fill-opacity:1;stroke:#bebebe;stroke-width:1.0025866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     style="opacity:1;fill:url(#linearGradient4534);fill-opacity:1;stroke:#a2a6a6;stroke-width:1.0025866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
      id="rect4516"
      width="12.960107"
      height="12.893634"

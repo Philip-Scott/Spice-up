@@ -11,8 +11,8 @@
    version="1.1"
    id="svg7384"
    height="16"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="spiceup-shape-symbolic.svg"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="shape-symbolic.svg"
    style="shape-rendering:crispEdges">
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -23,18 +23,22 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1140"
-     inkscape:window-height="655"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
      id="namedview9"
-     showgrid="false"
+     showgrid="true"
      inkscape:zoom="20.85965"
-     inkscape:cx="2.9409143"
+     inkscape:cx="-7.8694301"
      inkscape:cy="5.6668015"
-     inkscape:window-x="335"
-     inkscape:window-y="227"
-     inkscape:window-maximized="0"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg7384"
-     showborder="false" />
+     showborder="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid831" />
+  </sodipodi:namedview>
   <metadata
      id="metadata90">
     <rdf:RDF>
@@ -45,10 +49,10 @@
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title>elementary Symbolic Icon Theme</dc:title>
         <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
       <cc:License
-         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
         <cc:permits
            rdf:resource="http://creativecommons.org/ns#Reproduction" />
         <cc:permits
@@ -68,21 +72,15 @@
      id="title9167">elementary Symbolic Icon Theme</title>
   <defs
      id="defs7386" />
-  <circle
-     style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:3.67199993;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path4222"
-     cx="4.5"
-     cy="5.5"
-     r="4.5" />
   <rect
      y="5"
      x="13"
      height="10"
      width="2"
      id="rect4137"
-     style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+     style="opacity:1;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <rect
-     style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     style="opacity:1;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="rect4139"
      width="2"
      height="9"
@@ -94,12 +92,16 @@
      height="2"
      width="10"
      id="rect4141"
-     style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+     style="opacity:1;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <rect
-     style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     style="opacity:1;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1.04428875;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="rect4143"
      width="10"
      height="2"
      x="3"
      y="5" />
+  <path
+     style="opacity:1;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1.25543714;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     d="M 10.006728,7 A 5.0067282,5.0067282 0 0 1 5,12.006728 5.0067282,5.0067282 0 0 1 -0.00672817,7 5.0067282,5.0067282 0 0 1 5,1.9932718 5.0067282,5.0067282 0 0 1 10.006728,7 Z"
+     id="path818" />
 </svg>

@@ -74,9 +74,9 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO);
         redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO);
-        text = new HeaderbarButton ("/com/github/philip-scott/spice-up/text.svg", _("Insert Text Box"), HeaderButton.TEXT);
-        image = new HeaderbarButton ("/com/github/philip-scott/spice-up/photo.svg", _("Insert Image"), HeaderButton.IMAGE);
-        shape = new HeaderbarButton ("/com/github/philip-scott/spice-up/shape.svg", _("Insert Shape"), HeaderButton.SHAPE);
+        text = new HeaderbarButton ("text-symbolic", _("Insert Text Box"), HeaderButton.TEXT);
+        image = new HeaderbarButton ("photo-symbolic", _("Insert Image"), HeaderButton.IMAGE);
+        shape = new HeaderbarButton ("shape-symbolic", _("Insert Shape"), HeaderButton.SHAPE);
         show_welcome = new HeaderbarButton ("document-open-symbolic", _("Return to Welcome Screen"), HeaderButton.RETURN);
 
         undo.sensitive = false;
@@ -139,14 +139,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         public HeaderbarButton (string icon_name, string tooltip, HeaderButton? signal_mask) {
             can_focus = false;
 
-            Gtk.Image image;
-
-            if (icon_name.contains ("/")) {
-                image = new Gtk.Image.from_resource (icon_name);
-            } else {
-                image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
-            }
-
+            Gtk.Image image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
             image.margin = 3;
 
             get_style_context ().add_class ("spice");
@@ -161,5 +154,3 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         }
     }
 }
-
-

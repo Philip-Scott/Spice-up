@@ -107,7 +107,7 @@ public class Spice.ColorPicker : ColorButton {
         });
 
         gradient_button = new Gtk.ToggleButton ();
-        gradient_button.add (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/gradient.svg"));
+        gradient_button.add (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/gradient-symbolic.svg"));
         gradient_button.active = false;
         gradient_button.hexpand = true;
         gradient_button.halign = Gtk.Align.END;
