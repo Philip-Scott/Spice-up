@@ -63,6 +63,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         face_cache = new Gee.HashMap<string, Array<Pango.FontFace>> ();
         font_button = new Spice.EntryCombo (true, true, true);
         font_button.set_tooltip_text (_("Font"));
+        font_button.editable = false;
         create_pango_context ().list_families (out families);
 
         foreach (var family in families) {

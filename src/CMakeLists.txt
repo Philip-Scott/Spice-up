@@ -24,7 +24,6 @@ vala_precompile(VALA_C
   Services/GamepadSlideController.vala
 
   Widgets/Canvas.vala
-  Widgets/ColorButton.vala
   Widgets/EntryCombo.vala
   Widgets/Headerbar.vala
   Widgets/SlideList.vala
@@ -32,6 +31,12 @@ vala_precompile(VALA_C
   Widgets/Welcome.vala
   Widgets/SlideWidget.vala
   Widgets/PresenterView.vala
+
+  Widgets/ColorPicker/ColorButton.vala
+  Widgets/ColorPicker/ColorPicker.vala
+  Widgets/ColorPicker/Gradient.vala
+  Widgets/ColorPicker/GradientEditor.vala
+  Widgets/ColorPicker/PickerWindow.vala
 
   Widgets/CanvasItems/CanvasItem.vala
   Widgets/CanvasItems/TextItem.vala

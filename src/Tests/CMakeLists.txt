@@ -3,4 +3,3 @@ add_subdirectory (ColorButton)
 add_subdirectory (ColorItem)
 add_subdirectory (ImageItem)
 add_subdirectory (TextItem)
-
