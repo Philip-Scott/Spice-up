@@ -26,6 +26,20 @@
     border-radius: 6px;
 }
 
+.gradient.circular .checkered, .gradient.circular .colored {
+    border-radius: 50%
+}
+
+.gradient.circular .colored {
+    border: 2px solid rgba(0,0,0,0.5);
+}
+
+.gradient.circular {
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: none;
+    border: 1.4px solid rgba(0,0,0,0.7);
+}
+
 .canvas, frame {
     border-radius: 6px;
 }
@@ -54,7 +68,7 @@ GtkTextView:selected, textview:selected {
      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3));
 }
 
-GtkToggleButton, .spice,
+GtkToggleButton.spice, .spice,
 .spice-dynamic-toolbar .spice {
     color: #DEDEDE;
     background-color: rgba(255,255,255,0.05);
@@ -116,4 +130,3 @@ GtkToggleButton, .spice,
 .app-back {
     background-color: @bg_color;
 }
-
