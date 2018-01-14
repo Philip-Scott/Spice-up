@@ -24,7 +24,7 @@ public class Spice.ColorPicker : ColorButton {
 
     public bool gradient {
         get {
-            return gradient_revealer.visible;
+            return gradient_button.visible;
         }
 
         set {
@@ -207,9 +207,32 @@ public class Spice.ColorPicker : ColorButton {
             }
         }
 
-        var color_picker_button = new Gtk.Button.from_icon_name ("system-search-symbolic", Gtk.IconSize.MENU);
+        var color_picker_button = new Gtk.Button.from_icon_name ("color-select-symbolic", Gtk.IconSize.MENU);
         color_picker_button.margin_end = 6;
         color_picker_button.halign = Gtk.Align.START;
+
+        color_picker_button.clicked.connect (() => {
+            var mouse_position = new PickerWindow ();
+            mouse_position.show_all ();
+            var previous = this.color;
+            mouse_position.moved.connect ((t, color) => {
+                var ext_color = (ExtRGBA) color;
+                set_color_smart (ext_color.to_css_rgb_string (), false);
+            });
+
+            mouse_position.cancelled.connect (() => {
+                mouse_position.close ();
+                set_color_smart (previous, true);
+                mouse_position.destroy ();
+            });
+
+            mouse_position.picked.connect ((t, color) => {
+                var ext_color = (ExtRGBA) color;
+                set_color_smart (ext_color.to_css_rgb_string (), true);
+
+                mouse_position.close ();
+            });
+        });
 
         color_chooser_grid.attach (color_picker_button, 0, 1, 1, 2);
 

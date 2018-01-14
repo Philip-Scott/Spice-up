@@ -10,6 +10,7 @@ vala_precompile (VALA_TEST_C
   ../../Widgets/ColorPicker/ColorPicker.vala
   ../../Widgets/ColorPicker/Gradient.vala
   ../../Widgets/ColorPicker/GradientEditor.vala
+  ../../Widgets/ColorPicker/PickerWindow.vala
   PACKAGES
   ${VALA_DEPS}
   OPTIONS

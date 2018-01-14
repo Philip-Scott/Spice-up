@@ -26,15 +26,15 @@
     border-radius: 6px;
 }
 
-.circular .checkered, .circular .colored {
+.gradient.circular .checkered, .gradient.circular .colored {
     border-radius: 50%
 }
 
-.circular .colored {
+.gradient.circular .colored {
     border: 2px solid rgba(0,0,0,0.5);
 }
 
-.circular {
+.gradient.circular {
     background: rgba(255, 255, 255, 0.7);
     box-shadow: none;
     border: 1.4px solid rgba(0,0,0,0.7);

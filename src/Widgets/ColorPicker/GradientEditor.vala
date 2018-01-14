@@ -39,7 +39,7 @@ public class Spice.GradientEditor : Gtk.Grid {
     private unowned ColorPicker color_picker;
     private GradientMaker editor;
     private Gtk.Scale direction;
-    
+
     private Gtk.Button add_step;
     private Gtk.Button remove_step;
 
@@ -79,7 +79,7 @@ public class Spice.GradientEditor : Gtk.Grid {
 
         var steps_grid = new Gtk.Grid ();
         steps_grid.get_style_context ().add_class ("linked");
-        
+
         add_step = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.MENU);
         add_step.hexpand = true;
 
@@ -184,6 +184,7 @@ public class Spice.GradientEditor : Gtk.Grid {
             Object (color: step.color);
 
             get_style_context ().add_class ("circular");
+            get_style_context ().add_class ("gradient");
             halign = Gtk.Align.START;
             valign = Gtk.Align.START;
 
@@ -266,7 +267,7 @@ public class Spice.GradientEditor : Gtk.Grid {
         }
 
         public void css_style (string style) {
-            if (style.contains (",")) {
+            if (style.contains ("gradient") && style.contains (",")) {
                 Utils.set_style (grid, STYLE.printf (style));
             }
         }
