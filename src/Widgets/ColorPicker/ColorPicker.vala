@@ -35,6 +35,11 @@ public class Spice.ColorPicker : ColorButton {
             gradient_revealer.no_show_all = !value;
             gradient_revealer.reveal_child = false;
 
+            if (value && gradient_colors_grid == null) {
+                mode_button.append_icon ("view-list-symbolic", Gtk.IconSize.MENU);
+                make_gradient_palete ();
+            }
+
             selected_color = 0;
         }
     }
@@ -59,9 +64,11 @@ public class Spice.ColorPicker : ColorButton {
 
     private Gtk.Popover popover;
     private Gtk.Grid colors_grid;
+    private Gtk.Grid gradient_colors_grid;
     private Gtk.Revealer gradient_revealer;
     private Gtk.ColorChooserWidget color_chooser;
     private Gtk.ToggleButton gradient_button;
+    private Granite.Widgets.ModeButton mode_button;
 
     protected GradientEditor gradient_editor;
     public int selected_color = 0;
@@ -80,7 +87,7 @@ public class Spice.ColorPicker : ColorButton {
         var button_toolbar = new Gtk.Grid ();
         button_toolbar.orientation = Gtk.Orientation.HORIZONTAL;
 
-        var mode_button = new Granite.Widgets.ModeButton ();
+        mode_button = new Granite.Widgets.ModeButton ();
         mode_button.append_icon ("view-grid-symbolic", Gtk.IconSize.MENU);
         mode_button.append_icon ("applications-graphics-symbolic", Gtk.IconSize.MENU);
         mode_button.selected = 0;
@@ -92,7 +99,9 @@ public class Spice.ColorPicker : ColorButton {
                     break;
                 case 1:
                     colors_grid_stack.set_visible_child_name ("custom");
-                    color_picked ("linear-gradient(to bottom, #9bdb4d 89%, #000000 89%)");
+                    break;
+                case 2:
+                    colors_grid_stack.set_visible_child_name ("gradients");
                     break;
             }
         });
@@ -301,7 +310,7 @@ public class Spice.ColorPicker : ColorButton {
 
     private void attach_color (string color, int x, int y) {
         var color_button = new ColorButton (color);
-        color_button.set_size_request (48,24);
+        color_button.set_size_request (48, 24);
         color_button.get_style_context ().add_class ("flat");
         color_button.can_focus = false;
         color_button.margin_end = 0;
@@ -309,6 +318,44 @@ public class Spice.ColorPicker : ColorButton {
         colors_grid.attach (color_button, x, y, 1, 1);
 
         color_button.clicked.connect (() => {
+            set_color_smart (color, true);
+        });
+    }
+
+    private void make_gradient_palete () {
+        gradient_colors_grid = new Gtk.Grid ();
+        gradient_colors_grid.margin = 6;
+        gradient_colors_grid.get_style_context ().add_class ("card");
+
+        generate_gradient_colors ();
+        colors_grid_stack.add_named (gradient_colors_grid, "gradients");
+    }
+
+    public void generate_gradient_colors () {
+        attach_gradient ("linear-gradient(to right, #efefbb 0%, #d4d3dd 100%)", 0, 0);
+        attach_gradient ("linear-gradient(to right, #43c6ac 0%, #f8ffae 100%)", 0, 1);
+        attach_gradient ("linear-gradient(to right, #1fa2ff 0%, #12d8fa 50%, #a6ffcb 100%)", 0, 2);
+        attach_gradient ("linear-gradient(to right, #70e1f5 0%, #ffd194 100%)", 0, 3);
+        attach_gradient ("linear-gradient(to right, #ff0844 0%, #ffb199 100%)", 0, 4);
+
+        attach_gradient ("linear-gradient(to right, #f0f2f0 0%, #000c40 100%)", 1, 0);
+        attach_gradient ("linear-gradient(to right, #bbd2c5 0%, #536976 100%)", 1, 1);
+        attach_gradient ("linear-gradient(to right, #3ab5b0 0%, #3D99BE 31%, #56317a 100%)", 1, 2);
+        attach_gradient ("linear-gradient(to right, #f46b45 0%, #eea849 100%)", 1, 3);
+        attach_gradient ("linear-gradient(to right, #F05F57 10%, #360940 100%)", 1, 4);
+    }
+
+    private void attach_gradient (string color, int x, int y) {
+        var color_button = new ColorButton (color);
+        color_button.set_size_request (96, 48);
+        color_button.get_style_context ().add_class ("flat");
+        color_button.can_focus = false;
+        color_button.margin_end = 0;
+
+        gradient_colors_grid.attach (color_button, x, y, 1, 1);
+
+        color_button.clicked.connect (() => {
+            selected_color = 0;
             set_color_smart (color, true);
         });
     }
