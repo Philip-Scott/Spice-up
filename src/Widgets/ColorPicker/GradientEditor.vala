@@ -22,7 +22,6 @@
 public class Spice.GradientEditor : Gtk.Grid {
     public signal void updated ();
     public signal void color_selected (int index, string color);
-    public Gtk.ComboBoxText gradient_type;
 
     public string gradient_color {
         get {
@@ -33,12 +32,13 @@ public class Spice.GradientEditor : Gtk.Grid {
         }
     }
 
-    private Gradient gradient { get; set; }
+    public Gradient gradient { get; private set; }
 
     private string _gradient_color;
 
     private unowned ColorPicker color_picker;
     private GradientMaker editor;
+    private Gtk.Scale direction;
 
     public GradientEditor (ColorPicker _color_picker) {
         gradient = new Gradient ();
@@ -50,30 +50,32 @@ public class Spice.GradientEditor : Gtk.Grid {
         margin_top = 6;
 
         var gradient_grid = new Gtk.Grid ();
+        gradient_grid.column_homogeneous = false;
         gradient_grid.row_homogeneous = false;
+        gradient_grid.column_spacing = 16;
         gradient_grid.row_spacing = 6;
         gradient_grid.margin_start = 6;
 
         editor = new GradientMaker ();
 
-        gradient_type = new Gtk.ComboBoxText ();
-        gradient_type.margin = 3;
-        gradient_type.expand = false;
-        gradient_type.valign = Gtk.Align.END;
+        direction = new Gtk.Scale.with_range (Gtk.Orientation.VERTICAL, 180, 540, 1);
+        direction.set_tooltip_text (_("Gradient Direction"));
+        direction.draw_value = false;
 
-        gradient_type.append ("to bottom", _("Vertical"));
-        gradient_type.append ("to right", _("Horizontal"));
-        //gradient_type.add_entry ("radial", "Radial"); TODO: Gtk doesn't support radial gradients just yet
-        gradient_type.active = 0;
+        direction.add_mark (180, Gtk.PositionType.RIGHT, "");
+        direction.add_mark (270, Gtk.PositionType.RIGHT, "");
+        direction.add_mark (360, Gtk.PositionType.RIGHT, "");
+        direction.add_mark (450, Gtk.PositionType.RIGHT, "");
+        direction.add_mark (540, Gtk.PositionType.RIGHT, "");
 
-        gradient_type.changed.connect (() => {
-            this.gradient.direction = gradient_type.active_id;
-            color_picker.color = make_gradient ();
-            color_picker.color_picked (color_picker.color);
+        direction.value_changed.connect (() => {
+            gradient.direction = "%ddeg".printf ((int) direction.get_value ());
+            updated ();
         });
 
-        gradient_grid.attach (editor, 0, 0, 1, 1);
-        gradient_grid.attach (gradient_type, 0, 1, 2, 1);
+        gradient_grid.attach (new Gtk.Separator (Gtk.Orientation.VERTICAL), 0, 0, 1, 1);
+        gradient_grid.attach (editor, 1, 0, 1, 1);
+        gradient_grid.attach (direction, 2, 0, 1, 1);
 
         add (gradient_grid);
     }
@@ -102,9 +104,11 @@ public class Spice.GradientEditor : Gtk.Grid {
         editor.show_all ();
 
         if (color.contains ("to bottom")) {
-            gradient_type.set_active_id ("to bottom");
+            direction.set_value (180);
         } else if (color.contains ("to right")) {
-            gradient_type.set_active_id ("to right");
+            direction.set_value (450);
+        } else {
+            direction.set_value (double.parse (gradient.direction));
         }
     }
 
@@ -218,7 +222,7 @@ public class Spice.GradientEditor : Gtk.Grid {
             * {
                 background-image: %s;
                 border-radius: 20px;
-                border: 1.4px solid rgba(0,0,0,0.5);
+                border: 1.4px solid rgba(0,0,0,0.2);
             }
         """;
     }
