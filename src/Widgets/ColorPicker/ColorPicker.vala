@@ -212,15 +212,16 @@ public class Spice.ColorPicker : ColorButton {
         color_picker_button.clicked.connect (() => {
             var mouse_position = new PickerWindow ();
             mouse_position.show_all ();
-            var previous = this.color;
+            var previous = this.color_chooser.rgba;
+
             mouse_position.moved.connect ((t, color) => {
                 var ext_color = (ExtRGBA) color;
-                set_color_smart (ext_color.to_css_rgb_string (), false);
+                set_color_smart (ext_color.to_css_rgb_string (), true);
             });
 
             mouse_position.cancelled.connect (() => {
                 mouse_position.close ();
-                set_color_smart (previous, true);
+                set_color_smart (previous.to_string (), true);
                 mouse_position.destroy ();
             });
 
