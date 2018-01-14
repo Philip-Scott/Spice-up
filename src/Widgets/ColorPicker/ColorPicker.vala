@@ -162,8 +162,6 @@ public class Spice.ColorPicker : ColorButton {
         colors_grid_stack.add_named (colors_grid, "palete");
     }
 
-    //TODO:
-    // - import color picker icon & action
     private void make_custom_view () {
         color_chooser = new Gtk.ColorChooserWidget ();
         color_chooser.show_editor = true;
