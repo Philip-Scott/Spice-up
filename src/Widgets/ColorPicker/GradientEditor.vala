@@ -39,6 +39,9 @@ public class Spice.GradientEditor : Gtk.Grid {
     private unowned ColorPicker color_picker;
     private GradientMaker editor;
     private Gtk.Scale direction;
+    
+    private Gtk.Button add_step;
+    private Gtk.Button remove_step;
 
     public GradientEditor (ColorPicker _color_picker) {
         gradient = new Gradient ();
@@ -60,6 +63,7 @@ public class Spice.GradientEditor : Gtk.Grid {
 
         direction = new Gtk.Scale.with_range (Gtk.Orientation.VERTICAL, 180, 540, 1);
         direction.set_tooltip_text (_("Gradient Direction"));
+        direction.vexpand = true;
         direction.draw_value = false;
 
         direction.add_mark (180, Gtk.PositionType.RIGHT, "");
@@ -73,9 +77,50 @@ public class Spice.GradientEditor : Gtk.Grid {
             updated ();
         });
 
-        gradient_grid.attach (new Gtk.Separator (Gtk.Orientation.VERTICAL), 0, 0, 1, 1);
+        var steps_grid = new Gtk.Grid ();
+        steps_grid.get_style_context ().add_class ("linked");
+        
+        add_step = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.MENU);
+        add_step.hexpand = true;
+
+        remove_step = new Gtk.Button.from_icon_name ("list-remove-symbolic", Gtk.IconSize.MENU);
+        remove_step.hexpand = true;
+
+        add_step.clicked.connect (() => {
+            string color = "#df0000";
+            int percent = 50;
+
+            if (color_picker.selected_color > 0) {
+                var last = gradient.get_color (color_picker.selected_color - 1);
+                color = last.color;
+
+                var last_percent = int.parse (last.percent.replace ("%", ""));
+                percent = last_percent < 50 ? last_percent + 25 : last_percent - 25;
+                print (@"$percent");
+            }
+
+            gradient.steps.append (new Gradient.GradientStep (color, @"$percent%"));
+            parse_gradient (gradient.to_string (false), true);
+            updated ();
+        });
+
+        remove_step.clicked.connect (() => {
+            if (color_picker.selected_color > 0) {
+                var last = gradient.get_color (color_picker.selected_color - 1);
+                gradient.steps.remove (last);
+
+                parse_gradient (gradient.to_string (false), true);
+                updated ();
+            }
+        });
+
+        steps_grid.add (add_step);
+        steps_grid.add (remove_step);
+
+        gradient_grid.attach (new Gtk.Separator (Gtk.Orientation.VERTICAL), 0, 0, 1, 2);
         gradient_grid.attach (editor, 1, 0, 1, 1);
         gradient_grid.attach (direction, 2, 0, 1, 1);
+        gradient_grid.attach (steps_grid, 1, 1, 2, 1);
 
         add (gradient_grid);
     }
@@ -84,14 +129,16 @@ public class Spice.GradientEditor : Gtk.Grid {
         gradient.get_color (step - 1).color = color;
     }
 
-    public void parse_gradient (string color) {
-        if (make_gradient () == color) return;
+    public void parse_gradient (string color, bool force = false) {
+        if (!force && make_gradient () == color) return;
 
         gradient.parse (color);
         editor.css_style (color);
         editor.clear_all ();
 
+        int step_count = 0;
         gradient.steps.foreach ((item) => {
+            step_count++;
             var nub = new GradientNub (this, item, editor);
             nub.clicked.connect (() => {
                 var index = gradient.steps.index (nub.step);
@@ -100,6 +147,8 @@ public class Spice.GradientEditor : Gtk.Grid {
 
             editor.add_overlay (nub);
         });
+
+        remove_step.sensitive = step_count > 2;
 
         editor.show_all ();
 
@@ -110,11 +159,15 @@ public class Spice.GradientEditor : Gtk.Grid {
         } else {
             direction.set_value (double.parse (gradient.direction));
         }
+
+        if (step_count < color_picker.selected_color) {
+            color_picker.selected_color = 1;
+        }
     }
 
     public string make_gradient () {
         editor.css_style (gradient.to_string (true));
-        return gradient.to_string (false);;
+        return gradient.to_string (false);
     }
 
     private class GradientNub : ColorButton {
