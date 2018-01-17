@@ -41,6 +41,14 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             font: 16px '%s';
         }
     """;
+
+    const string FONT_STYLE_CSS = """
+        label {
+            font: 16px '%s';
+            font-style: %s;
+            font-weight: %i;
+        }
+    """;
     #else
     const string TEXT_STYLE_CSS = """
         .label {
@@ -48,15 +56,16 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             font-size: 14px;
         }
     """;
-    #endif
-    
+
     const string FONT_STYLE_CSS = """
         .label {
+            font: %s;
+            font-size: 14px;
             font-style: %s;
             font-weight: %i;
-            
         }
     """;
+    #endif
 
     construct {
         text_color_button = new Spice.ColorPicker ();
@@ -249,6 +258,8 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             }
 
             font_type.clear_all ();
+            
+            var family_name = family_cache.get (key).get_name ();
 
             for (int i = 0; i < font_faces.length ; i++) {
                 var font_face = font_faces.index (i);
@@ -278,7 +289,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
                     case Pango.Weight.ULTRAHEAVY: weight = 1000; break;
                 }
 
-                Utils.set_style (entry, FONT_STYLE_CSS.printf (style, weight));
+                Utils.set_style (entry, FONT_STYLE_CSS.printf (family_name, style, weight));
             }
         }
     }
