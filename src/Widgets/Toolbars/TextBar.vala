@@ -49,6 +49,14 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         }
     """;
     #endif
+    
+    const string FONT_STYLE_CSS = """
+        .label {
+            font-style: %s;
+            font-weight: %i;
+            
+        }
+    """;
 
     construct {
         text_color_button = new Spice.ColorPicker ();
@@ -243,7 +251,34 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             font_type.clear_all ();
 
             for (int i = 0; i < font_faces.length ; i++) {
-                font_type.add_entry (font_faces.index (i).get_face_name ());
+                var font_face = font_faces.index (i);
+                var entry = font_type.add_entry (font_face.get_face_name ());
+
+                var description = font_face.describe();
+                string style = null;
+                switch (description.get_style ()) {
+                   case Pango.Style.NORMAL: style = "normal"; break;
+                   case Pango.Style.OBLIQUE: style = "oblique"; break;
+                   case Pango.Style.ITALIC: style = "italic"; break;
+                }
+
+                int weight = 400;
+                switch (description.get_weight ()) {
+                    case Pango.Weight.THIN: weight = 100; break;
+                    case Pango.Weight.ULTRALIGHT: weight = 200; break;
+                    case Pango.Weight.LIGHT: weight = 300; break;
+                    case Pango.Weight.SEMILIGHT: weight = 350; break;
+                    case Pango.Weight.BOOK: weight = 380; break;
+                    case Pango.Weight.NORMAL: weight = 400; break;
+                    case Pango.Weight.MEDIUM: weight = 500; break;
+                    case Pango.Weight.SEMIBOLD: weight = 600; break;
+                    case Pango.Weight.BOLD: weight = 700; break;
+                    case Pango.Weight.ULTRABOLD: weight = 800; break;
+                    case Pango.Weight.HEAVY: weight = 900; break;
+                    case Pango.Weight.ULTRAHEAVY: weight = 1000; break;
+                }
+
+                Utils.set_style (entry, FONT_STYLE_CSS.printf (style, weight));
             }
         }
     }
