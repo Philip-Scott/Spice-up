@@ -44,8 +44,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
 
     const string FONT_STYLE_CSS = """
         label {
-            font: 16px '%s';
-            font-style: %s;
+            font: 16px '%s' %s;
             font-weight: %i;
         }
     """;
