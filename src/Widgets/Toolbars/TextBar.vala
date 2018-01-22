@@ -44,8 +44,9 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
 
     const string FONT_STYLE_CSS = """
         label {
-            font: 16px '%s' %s;
-            font-weight: %i;
+            font: %i '%s' 16px %s;
+            font: 16px ;
+            font-weight: ;
         }
     """;
     #else
@@ -287,8 +288,11 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
                     case Pango.Weight.HEAVY: weight = 900; break;
                     case Pango.Weight.ULTRAHEAVY: weight = 1000; break;
                 }
-
+                #if GTK_3_222
+                Utils.set_style (entry, FONT_STYLE_CSS.printf (weight, style, family_name));
+                #else
                 Utils.set_style (entry, FONT_STYLE_CSS.printf (family_name, style, weight));
+                #endif
             }
         }
     }
