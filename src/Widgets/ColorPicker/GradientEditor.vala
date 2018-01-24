@@ -81,9 +81,11 @@ public class Spice.GradientEditor : Gtk.Grid {
         steps_grid.get_style_context ().add_class ("linked");
 
         add_step = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.MENU);
+        add_step.set_tooltip_text (_("Add color stop"));
         add_step.hexpand = true;
 
         remove_step = new Gtk.Button.from_icon_name ("list-remove-symbolic", Gtk.IconSize.MENU);
+        remove_step.set_tooltip_text (_("Remove color stop"));
         remove_step.hexpand = true;
 
         add_step.clicked.connect (() => {

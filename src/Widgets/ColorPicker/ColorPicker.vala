@@ -88,6 +88,15 @@ public class Spice.ColorPicker : ColorButton {
         button_toolbar.orientation = Gtk.Orientation.HORIZONTAL;
 
         mode_button = new Granite.Widgets.ModeButton ();
+
+        mode_button.mode_added.connect ((index, widget) => {
+            switch (index) {
+                case 0: widget.set_tooltip_text (_("Color Palette")); break;
+                case 1: widget.set_tooltip_text (_("Custom Color")); break;
+                case 2: widget.set_tooltip_text (_("Gradient Palette")); break;
+            }
+        });
+
         mode_button.append_icon ("view-grid-symbolic", Gtk.IconSize.MENU);
         mode_button.append_icon ("applications-graphics-symbolic", Gtk.IconSize.MENU);
         mode_button.selected = 0;
@@ -108,6 +117,7 @@ public class Spice.ColorPicker : ColorButton {
 
         gradient_button = new Gtk.ToggleButton ();
         gradient_button.add (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/gradient-symbolic.svg"));
+        gradient_button.set_tooltip_text (_("Gradient Editor"));
         gradient_button.active = false;
         gradient_button.hexpand = true;
         gradient_button.halign = Gtk.Align.END;
@@ -215,6 +225,7 @@ public class Spice.ColorPicker : ColorButton {
         }
 
         var color_picker_button = new Gtk.Button.from_icon_name ("color-select-symbolic", Gtk.IconSize.MENU);
+        color_picker_button.set_tooltip_text (_("Pick Color"));
         color_picker_button.margin_end = 6;
         color_picker_button.halign = Gtk.Align.START;
 
