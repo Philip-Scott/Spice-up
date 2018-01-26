@@ -265,7 +265,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
                 var entry = font_type.add_entry (font_face.get_face_name ());
 
                 var description = font_face.describe();
-                string style = "";
+                string style = "normal";
                 switch (description.get_style ()) {
                    case Pango.Style.OBLIQUE: style = "oblique"; break;
                    case Pango.Style.ITALIC: style = "italic"; break;
