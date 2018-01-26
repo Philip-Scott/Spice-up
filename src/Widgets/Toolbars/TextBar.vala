@@ -44,9 +44,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
 
     const string FONT_STYLE_CSS = """
         label {
-            font: %i '%s' 16px %s;
-            font: 16px ;
-            font-weight: ;
+            font: %i %s 16px '%s';
         }
     """;
     #else
@@ -259,7 +257,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             }
 
             font_type.clear_all ();
-            
+
             var family_name = family_cache.get (key).get_name ();
 
             for (int i = 0; i < font_faces.length ; i++) {
@@ -267,9 +265,8 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
                 var entry = font_type.add_entry (font_face.get_face_name ());
 
                 var description = font_face.describe();
-                string style = "normal";
+                string style = "";
                 switch (description.get_style ()) {
-                   case Pango.Style.NORMAL: style = "normal"; break;
                    case Pango.Style.OBLIQUE: style = "oblique"; break;
                    case Pango.Style.ITALIC: style = "italic"; break;
                 }
@@ -289,7 +286,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
                     case Pango.Weight.HEAVY: weight = 900; break;
                     case Pango.Weight.ULTRAHEAVY: weight = 1000; break;
                 }
-                #if GTK_3_222
+                #if GTK_3_22
                 Utils.set_style (entry, FONT_STYLE_CSS.printf (weight, style, family_name));
                 #else
                 Utils.set_style (entry, FONT_STYLE_CSS.printf (family_name, style, weight));
