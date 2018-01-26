@@ -274,7 +274,7 @@ public class Spice.TextItem : Spice.CanvasItem {
         font_style = font_style.replace ("light", "200");
         font_style = font_style.replace ("thin", "100");
 
-        return "%s %spx %s".printf (font_style, font_size_text, font);
+        return "%s %spx '%s'".printf (font_style, font_size_text, font);
     #else
         return "%s %s;\n font-size: %spx;".printf (font, _font_style, font_size_text);
     #endif
