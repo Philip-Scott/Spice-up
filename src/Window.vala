@@ -416,6 +416,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
         settings.window_width = width;
         settings.window_height = height;
 
+        set_notification_state (notifications_last_state);
+
         return false;
     }
 
@@ -427,12 +429,13 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     int old_x;
     int old_y;
+    bool? notifications_last_state = null;
     public void start_presentation () {
         var screen = Gdk.Screen.get_default ();
         var monitor_count = screen.get_n_monitors ();
         get_position (out old_x, out old_y);
 
-        if (monitor_count > 1 || DEBUG) {
+        if (monitor_count > 1) {
             presenter_window = new PresenterWindow (slide_manager, this);
             presenter_window.show ();
 
@@ -443,6 +446,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
             move (rec.x, rec.y);
         }
+
+        notifications_last_state = get_notification_state ();
+        set_notification_state (true);
 
         fullscreen ();
     }
@@ -456,6 +462,34 @@ public class Spice.Window : Gtk.ApplicationWindow {
             presenter_window = null;
         }
 
+        set_notification_state (notifications_last_state);
+        notifications_last_state = null;
+
         slide_manager.end_presentation ();
+    }
+
+    GLib.SettingsSchema? gala_notify_schema = null;
+    Settings? gala_notify_settings = null;
+
+    public bool? get_notification_state () {
+        if (gala_notify_schema == null) {
+            gala_notify_schema = SettingsSchemaSource.get_default ().lookup ("org.pantheon.desktop.gala.notifications", true);
+            if (gala_notify_schema == null || !gala_notify_schema.has_key ("do-not-disturb")) {
+                gala_notify_schema = null;
+                warning ("Notifications will not be disabled");
+                return null;
+            }
+        }
+
+        if (gala_notify_settings == null) {
+            gala_notify_settings = new GLib.Settings ("org.pantheon.desktop.gala.notifications");
+        }
+
+        return gala_notify_settings.get_boolean ("do-not-disturb");
+    }
+
+    public void set_notification_state (bool? state) {
+        if (state == null || gala_notify_settings == null) return;
+        gala_notify_settings.set_boolean ("do-not-disturb", state);
     }
 }
