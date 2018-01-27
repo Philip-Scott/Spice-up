@@ -26,6 +26,20 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.3.0" date="2018-2-2">
+      <description>
+        <p>The Color Update</p>
+        <ul>
+          <li>The color picker has had a mayor makeover!</li>
+          <li>You can now add/remove stops in gradients, as well as move them around and rotate them.</li>
+          <li>Grab inspiration from one of the ten new gradient presets!</li>
+          <li>You can also pick colors from the screen.</li>
+          <li>Fonts are search-able now</li>
+          <li>Font-styles are now styled (pun intended)</li>
+          <li>Notifications are now disabled when presenting</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.2.0" date="2017-12-25">
       <description>
         <p>Presents for Presenters!</p>
