@@ -36,7 +36,7 @@ public class Spice.ColorPicker : ColorButton {
             gradient_revealer.reveal_child = false;
 
             if (value && gradient_colors_grid == null) {
-                mode_button.append_icon ("view-list-symbolic", Gtk.IconSize.MENU);
+                mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/gradient-palette-symbolic.svg"));
                 make_gradient_palete ();
             }
 
@@ -97,8 +97,8 @@ public class Spice.ColorPicker : ColorButton {
             }
         });
 
-        mode_button.append_icon ("view-grid-symbolic", Gtk.IconSize.MENU);
-        mode_button.append_icon ("applications-graphics-symbolic", Gtk.IconSize.MENU);
+        mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/color-palette-symbolic.svg"));
+        mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/custom-color-symbolic.svg"));
         mode_button.selected = 0;
 
         mode_button.mode_changed.connect ((w) => {

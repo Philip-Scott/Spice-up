@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="16"
+   id="svg7384"
+   version="1.1"
+   width="16"
+   sodipodi:docname="custom-color-symbolic.svg"
+   inkscape:version="0.91 r13725">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview19"
+     showgrid="true"
+     inkscape:zoom="14.74659"
+     inkscape:cx="-21.007762"
+     inkscape:cy="-0.57689561"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg7384">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4518" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata90">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>elementary Symbolic Icon Theme</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <title
+     id="title9167">elementary Symbolic Icon Theme</title>
+  <defs
+     id="defs7386">
+    <filter
+       id="filter7554"
+       style="color-interpolation-filters:sRGB">
+      <feBlend
+         id="feBlend7556"
+         in2="BackgroundImage"
+         mode="darken" />
+    </filter>
+    <filter
+       id="filter7554-7"
+       style="color-interpolation-filters:sRGB">
+      <feBlend
+         id="feBlend7556-6"
+         in2="BackgroundImage"
+         mode="darken" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter7554-9">
+      <feBlend
+         mode="darken"
+         in2="BackgroundImage"
+         id="feBlend7556-1" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter7554-7-2">
+      <feBlend
+         mode="darken"
+         in2="BackgroundImage"
+         id="feBlend7556-6-7" />
+    </filter>
+  </defs>
+  <g
+     id="layer9"
+     style="display:inline"
+     transform="translate(-793.02488,397.97617)" />
+  <g
+     id="layer10"
+     style="display:inline"
+     transform="translate(-793.02488,397.97617)" />
+  <g
+     id="layer13"
+     style="display:inline"
+     transform="translate(-793.02488,397.97617)" />
+  <g
+     id="layer14"
+     transform="translate(-793.02488,397.97617)" />
+  <g
+     id="g71291"
+     style="display:inline"
+     transform="translate(-793.02488,397.97617)" />
+  <g
+     id="g4953"
+     style="display:inline"
+     transform="translate(-793.02488,397.97617)" />
+  <g
+     id="layer12"
+     style="display:inline"
+     transform="translate(-793.02488,397.97617)" />
+  <g
+     id="layer9-0"
+     style="display:inline"
+     transform="translate(-815.71307,384.23739)" />
+  <g
+     id="layer10-9"
+     style="display:inline"
+     transform="translate(-815.71307,384.23739)" />
+  <g
+     id="layer13-3"
+     style="display:inline"
+     transform="translate(-815.71307,384.23739)" />
+  <g
+     id="layer14-6"
+     transform="translate(-815.71307,384.23739)" />
+  <g
+     id="g71291-6"
+     style="display:inline"
+     transform="translate(-815.71307,384.23739)" />
+  <g
+     id="g4953-2"
+     style="display:inline"
+     transform="translate(-815.71307,384.23739)" />
+  <g
+     id="layer12-6"
+     style="display:inline"
+     transform="translate(-815.71307,384.23739)" />
+  <rect
+     y="4.0230293"
+     x="0.99690533"
+     height="1.9630879"
+     width="7.4114442"
+     id="rect4201"
+     style="opacity:1;fill:#a2a6a6;fill-opacity:1;stroke:none;stroke-width:0.19724813;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+  <ellipse
+     style="opacity:1;fill:#666666;fill-opacity:0.1907895;stroke:#a2a6a6;stroke-width:0.99837017;stroke-miterlimit:3.5999999;stroke-dasharray:none;stroke-opacity:1"
+     id="path4207"
+     cx="11"
+     cy="5.0265999"
+     rx="2.5008149"
+     ry="2.474215" />
+  <rect
+     style="opacity:1;fill:#a2a6a6;fill-opacity:1;stroke:none;stroke-width:0.19724813;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     id="rect4209"
+     width="1.9975108"
+     height="1.9630879"
+     x="-15.034049"
+     y="4.0230293"
+     transform="scale(-1,1)" />
+  <rect
+     style="opacity:1;fill:#a2a6a6;fill-opacity:1;stroke:none;stroke-width:0.19724813;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     id="rect4217"
+     width="7.4114442"
+     height="1.9630879"
+     x="-15.034049"
+     y="10.023029"
+     transform="scale(-1,1)" />
+  <ellipse
+     ry="2.474215"
+     rx="2.5008149"
+     cy="11.0266"
+     cx="-5.0309544"
+     id="ellipse4219"
+     style="opacity:1;fill:#666666;fill-opacity:0.1907895;stroke:#a2a6a6;stroke-width:0.99837017;stroke-miterlimit:3.5999999;stroke-dasharray:none;stroke-opacity:1"
+     transform="scale(-1,1)" />
+  <rect
+     y="10.023029"
+     x="0.99690533"
+     height="1.9630879"
+     width="1.9975108"
+     id="rect4221"
+     style="opacity:1;fill:#a2a6a6;fill-opacity:1;stroke:none;stroke-width:0.19724813;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+</svg>
