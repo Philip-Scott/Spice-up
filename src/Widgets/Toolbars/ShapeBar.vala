@@ -52,9 +52,8 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
             update_properties ();
         });
 
-        background_color_button = new Spice.ColorPicker ();
+        background_color_button = new Spice.ColorPicker.with_gradient ();
         background_color_button.set_tooltip_text (_("Shape color"));
-        background_color_button.gradient = true;
 
         background_color_button.color_picked.connect ((color) => {
             var action = new Spice.Services.HistoryManager.HistoryAction<ColorItem,string>.item_changed (this.item as ColorItem, "background-color");

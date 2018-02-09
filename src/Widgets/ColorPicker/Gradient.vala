@@ -58,8 +58,10 @@ public class Spice.Gradient : Object {
                     if (pos_start == pos_end) {
                         break;
                     }
+                    var step_color = mi.fetch (1);
+                    var step_percent = mi.fetch (2) != null ? mi.fetch (2) : "";
 
-                    var step = new GradientStep (mi.fetch (1), mi.fetch (2));
+                    var step = new GradientStep (step_color, step_percent);
                     steps.append (step);
                 } while (mi.next ());
             } catch (Error e) {
