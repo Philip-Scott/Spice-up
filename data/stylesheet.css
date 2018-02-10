@@ -35,9 +35,14 @@
 }
 
 .gradient.circular {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.5);
     box-shadow: none;
-    border: 1.4px solid rgba(0,0,0,0.7);
+    border: 1.4px solid rgba(0,0,0,0.6);
+}
+
+.gradient.circular.selected {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1.4px solid rgba(0,0,0,0.9);
 }
 
 .canvas, frame {

@@ -119,5 +119,9 @@ public class Spice.Gradient : Object {
         public string to_string () {
             return @"$color $percent".strip ();
         }
+
+        public bool equals (GradientStep step) {
+            return this.to_string () == step.to_string ();
+        }
     }
 }
