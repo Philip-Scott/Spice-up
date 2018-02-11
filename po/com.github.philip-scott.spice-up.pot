@@ -195,26 +195,6 @@ msgstr ""
 msgid "Aspect Ratio: "
 msgstr ""
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:74
-msgid "4:3"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:75
-msgid "16:9"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:76
-msgid "16:10"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:77
-msgid "3:2"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:78
-msgid "5:4"
-msgstr ""
-
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:85
 msgid "Open file location…"
 msgstr ""
