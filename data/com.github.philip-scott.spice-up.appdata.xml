@@ -26,6 +26,17 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.3.1" date="2018-2-23">
+      <description>
+        <p>The Color Update, Part 2</p>
+        <ul>
+          <li>The new color picker now uses their own custom icons!</li>
+          <li>The Gradient Editor's steps now shows feedback when selected</li>
+          <li>Spice-Up's icon has being updated to use the elementary color palette.</li>
+          <li>European Portuguese has been added to the family of translations. Big thanks to emansije!</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.3.0" date="2018-2-2">
       <description>
         <p>The Color Update</p>
