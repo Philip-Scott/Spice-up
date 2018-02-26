@@ -138,15 +138,15 @@ msgstr "Escolher cor"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/GradientEditor.vala:65
 msgid "Gradient Direction"
-msgstr "Direcção do gradiente"
+msgstr "Orientação do gradiente"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/GradientEditor.vala:84
 msgid "Add color stop"
-msgstr "Adicionar ponto fixo de cor"
+msgstr "Adicionar ponto de cor"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/GradientEditor.vala:88
 msgid "Remove color stop"
-msgstr "Remover ponto fixo de cor"
+msgstr "Remover ponto de cor"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:75
 msgid "Undo"
@@ -408,7 +408,7 @@ msgstr "Alinhamento"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:38
 msgid "Make a Simple Presentation"
-msgstr "Criar uma apresentação simples"
+msgstr "Crie uma apresentação simples"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:41
 msgid "New Presentation"
