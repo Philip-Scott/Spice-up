@@ -71,11 +71,11 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             ratio_label.halign = Gtk.Align.END;
 
             var aspect_ratio = new Gtk.ComboBoxText ();
-            aspect_ratio.append ("1", _("4:3"));
-            aspect_ratio.append ("2", _("16:9"));
-            aspect_ratio.append ("3", _("16:10"));
-            aspect_ratio.append ("4", _("3:2"));
-            aspect_ratio.append ("5", _("5:4"));
+            aspect_ratio.append ("1", "4:3");
+            aspect_ratio.append ("2", "16:9");
+            aspect_ratio.append ("3", "16:10");
+            aspect_ratio.append ("4", "3:2");
+            aspect_ratio.append ("5", "5:4");
 
             last_aspect_ratio = "%d".printf (Utils.get_aspect_ratio (data));
             aspect_ratio.set_active_id (last_aspect_ratio);

@@ -27,7 +27,7 @@ public class Spice.ColorPicker : ColorButton {
             return gradient_button.visible;
         }
 
-        set {
+        protected set {
             gradient_button.visible = value;
             gradient_button.no_show_all = !value;
 
@@ -36,11 +36,9 @@ public class Spice.ColorPicker : ColorButton {
             gradient_revealer.reveal_child = false;
 
             if (value && gradient_colors_grid == null) {
-                mode_button.append_icon ("view-list-symbolic", Gtk.IconSize.MENU);
+                mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/gradient-palette-symbolic.svg"));
                 make_gradient_palete ();
             }
-
-            selected_color = 0;
         }
     }
 
@@ -65,17 +63,20 @@ public class Spice.ColorPicker : ColorButton {
     private Gtk.Popover popover;
     private Gtk.Grid colors_grid;
     private Gtk.Grid gradient_colors_grid;
-    private Gtk.Revealer gradient_revealer;
+    protected Gtk.Revealer gradient_revealer;
     private Gtk.ColorChooserWidget color_chooser;
     private Gtk.ToggleButton gradient_button;
     private Granite.Widgets.ModeButton mode_button;
 
     protected GradientEditor gradient_editor;
-    public int selected_color = 0;
 
     public ColorPicker (bool use_alpha = true) {
         Object (color: "white", use_alpha: use_alpha);
+        color_chooser.use_alpha = use_alpha;
+    }
 
+    public ColorPicker.with_gradient (bool use_alpha = true) {
+        Object (color: "white", use_alpha: use_alpha, gradient: true);
         color_chooser.use_alpha = use_alpha;
     }
 
@@ -97,8 +98,8 @@ public class Spice.ColorPicker : ColorButton {
             }
         });
 
-        mode_button.append_icon ("view-grid-symbolic", Gtk.IconSize.MENU);
-        mode_button.append_icon ("applications-graphics-symbolic", Gtk.IconSize.MENU);
+        mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/color-palette-symbolic.svg"));
+        mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/custom-color-symbolic.svg"));
         mode_button.selected = 0;
 
         mode_button.mode_changed.connect ((w) => {
@@ -123,12 +124,6 @@ public class Spice.ColorPicker : ColorButton {
         gradient_button.halign = Gtk.Align.END;
         gradient_button.toggled.connect (() => {
             this.gradient_revealer.reveal_child = gradient_button.active;
-
-            if (gradient_button.active) {
-                selected_color = 1;
-            } else {
-                selected_color = 0;
-            }
         });
 
         button_toolbar.add (mode_button);
@@ -145,7 +140,6 @@ public class Spice.ColorPicker : ColorButton {
         gradient_revealer.add (gradient_editor);
 
         gradient_editor.color_selected.connect ((index, color ) => {
-            selected_color = index;
             set_color_chooser_color (color);
         });
 
@@ -366,26 +360,21 @@ public class Spice.ColorPicker : ColorButton {
         gradient_colors_grid.attach (color_button, x, y, 1, 1);
 
         color_button.clicked.connect (() => {
-            selected_color = 0;
-            set_color_smart (color, true);
+            set_color_smart (color, true, true);
         });
     }
 
-    protected void set_color_smart (string color, bool from_button = false) {
-        switch (selected_color) {
-            case 0: // Single color
-            case -1: // Both colors
-                if (gradient) {
-                    gradient_editor.parse_gradient (color);
-                    this.color = gradient_editor.make_gradient ();
-                } else {
-                    this.color = color;
-                }
-                break;
-            default: // Gradient color
-                gradient_editor.set_color (selected_color, color);
+    protected void set_color_smart (string color, bool from_button = false, bool overwite_gradient = false) {
+        if (gradient_revealer.reveal_child) { // Gradient color changed
+            gradient_editor.set_color (color, overwite_gradient);
+            this.color = gradient_editor.make_gradient ();
+        } else {
+            if (gradient) {
+                gradient_editor.parse_gradient (color);
                 this.color = gradient_editor.make_gradient ();
-                break;
+            } else {
+                this.color = color;
+            }
         }
 
         if (from_button) {

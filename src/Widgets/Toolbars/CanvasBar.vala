@@ -30,8 +30,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         this.manager = slide_manager;
     }
     construct {
-        canvas_gradient_background = new Spice.ColorPicker (false);
-        canvas_gradient_background.gradient = true;
+        canvas_gradient_background = new Spice.ColorPicker.with_gradient (false);
         canvas_gradient_background.set_tooltip_text (_("Background color"));
 
         canvas_gradient_background.color_picked.connect ((s) => {

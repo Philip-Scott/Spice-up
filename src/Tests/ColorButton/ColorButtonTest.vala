@@ -157,10 +157,12 @@ public class ColorButtonTest : Spice.ColorPicker {
 
         Test.add_func ("/ColorPicker/SetOneColor", () => {
             var test = new ColorButtonTest ();
+            test.fake_gradient_mode (true);
+
             var result = "linear-gradient(to bottom, %s 0%, %s 100%)";
 
             // Setting first color
-            test.selected_color = 1;
+            test.gradient_editor.select_step_id (0);
             test.set_color_smart (RED, true);
 
             assert_string (test.get_1 (), RED);
@@ -168,7 +170,7 @@ public class ColorButtonTest : Spice.ColorPicker {
             assert_string (test.get_preview (), result.printf (RED, DEFAULT));
 
             // Setting second color
-            test.selected_color = 2;
+            test.gradient_editor.select_step_id (1);
             test.set_color_smart (BLUE, true);
 
             assert_string (test.get_1 (), RED);
@@ -176,13 +178,18 @@ public class ColorButtonTest : Spice.ColorPicker {
             assert_string (test.get_preview (), result.printf (RED, BLUE));
 
             // Setting both color
-            test.selected_color = 0;
+            test.fake_gradient_mode (false);
+            test.gradient_editor.select_step_id (0);
             test.set_color_smart (DEFAULT, true);
 
             assert_string (test.get_1 (), DEFAULT);
             assert_string (test.get_2 (), DEFAULT);
             assert_string (test.get_preview (), result.printf (DEFAULT, DEFAULT));
         });
+    }
+
+    public void fake_gradient_mode (bool state) {
+        gradient_revealer.reveal_child = state;
     }
 
     public static int main (string[] args) {

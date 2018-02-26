@@ -13,7 +13,7 @@
    height="16"
    width="16"
    version="1.0"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    sodipodi:docname="com.github.philip-scott.spice-up.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -24,16 +24,16 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
+     inkscape:window-width="960"
      inkscape:window-height="1017"
      id="namedview59"
      showgrid="true"
-     inkscape:zoom="45.254834"
-     inkscape:cx="10.313539"
-     inkscape:cy="10.656878"
-     inkscape:window-x="0"
+     inkscape:zoom="8"
+     inkscape:cx="22.730449"
+     inkscape:cy="-21.137785"
+     inkscape:window-x="960"
      inkscape:window-y="30"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg2453"
      units="px"
      fit-margin-top="0"
@@ -52,11 +52,13 @@
     <sodipodi:guide
        position="52,3"
        orientation="0,1"
-       id="guide4204" />
+       id="guide4204"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="11,35"
        orientation="1,0"
-       id="guide4326" />
+       id="guide4326"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata35">
@@ -66,7 +68,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -76,7 +78,7 @@
        inkscape:collect="always"
        id="linearGradient6532">
       <stop
-         style="stop-color:#548ade;stop-opacity:1"
+         style="stop-color:#64baff;stop-opacity:1"
          offset="0"
          id="stop6534" />
       <stop
@@ -84,7 +86,7 @@
          offset="0.27218115"
          style="stop-color:#589cff;stop-opacity:1" />
       <stop
-         style="stop-color:#2878f0;stop-opacity:1"
+         style="stop-color:#0d52bf;stop-opacity:1"
          offset="1"
          id="stop6536" />
     </linearGradient>
@@ -786,7 +788,7 @@
   <path
      d="M 7.2898386,6.0690445 A 0.35900193,0.32407719 3.5054845 0 0 6.9630459,6.3880131 l 0,4.1740639 a 0.35900193,0.32407719 3.5054845 0 0 0.5319877,0.287502 L 11.629339,8.8092861 a 0.35900193,0.32407719 3.5054845 0 0 0,-0.5629581 L 7.4950336,6.112557 A 0.35900193,0.32407719 3.5054845 0 0 7.2898386,6.069044 Z"
      id="path4044-8"
-     style="opacity:0.15;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
+     style="opacity:1;fill:#002e99;fill-opacity:1;fill-rule:evenodd;stroke:none"
      inkscape:connector-curvature="0" />
   <path
      d="M 8.25668,5.4386829 A 0.32984532,0.30545849 0 0 0 7.9563244,5.7426864 l 0,3.9329014 A 0.32984532,0.30545849 0 0 0 8.4452756,9.9408112 L 12.245124,7.9743605 a 0.32984532,0.30545849 0 0 0 0,-0.530416 L 8.4452756,5.4774938 A 0.32984532,0.30545849 0 0 0 8.25668,5.4386829 Z"

@@ -32,6 +32,28 @@ public class Spice.GradientEditor : Gtk.Grid {
         }
     }
 
+    private GradientNub? _selected_nub;
+    private GradientNub? selected_nub {
+        get {
+            return _selected_nub;
+        } set {
+            if (_selected_nub != null) {
+                _selected_nub.selected = false;
+            }
+
+            _selected_nub = value;
+            if (value != null) {
+                value.selected = true;
+            }
+        }
+    }
+
+    public Gradient.GradientStep selected_step {
+        get {
+            return _selected_nub.step;
+        }
+    }
+
     public Gradient gradient { get; private set; }
 
     private string _gradient_color;
@@ -44,12 +66,12 @@ public class Spice.GradientEditor : Gtk.Grid {
     private Gtk.Button remove_step;
 
     public GradientEditor (ColorPicker _color_picker) {
-        gradient = new Gradient ();
         color_picker = _color_picker;
-        make_gradient_view ();
     }
 
-    private void make_gradient_view () {
+    construct {
+        gradient = new Gradient ();
+
         margin_top = 6;
 
         var gradient_grid = new Gtk.Grid ();
@@ -92,8 +114,8 @@ public class Spice.GradientEditor : Gtk.Grid {
             string color = "#df0000";
             int percent = 50;
 
-            if (color_picker.selected_color > 0) {
-                var last = gradient.get_color (color_picker.selected_color - 1);
+            if (selected_step != null) {
+                var last = selected_step;
                 color = last.color;
 
                 var last_percent = int.parse (last.percent.replace ("%", ""));
@@ -101,15 +123,18 @@ public class Spice.GradientEditor : Gtk.Grid {
                 print (@"$percent");
             }
 
-            gradient.steps.append (new Gradient.GradientStep (color, @"$percent%"));
+            var step = new Gradient.GradientStep (color, @"$percent%");
+            gradient.steps.append (step);
+
             parse_gradient (gradient.to_string (false), true);
             updated ();
+
+            select_step (step);
         });
 
         remove_step.clicked.connect (() => {
-            if (color_picker.selected_color > 0) {
-                var last = gradient.get_color (color_picker.selected_color - 1);
-                gradient.steps.remove (last);
+            if (selected_step != null) {
+                gradient.steps.remove (selected_step);
 
                 parse_gradient (gradient.to_string (false), true);
                 updated ();
@@ -127,25 +152,39 @@ public class Spice.GradientEditor : Gtk.Grid {
         add (gradient_grid);
     }
 
-    public void set_color (int step, string color) {
-        gradient.get_color (step - 1).color = color;
+    public void set_color (string color, bool override) {
+        if (override) {
+            parse_gradient (color);
+            return;
+        }
+
+        if (this.selected_step != null) {
+            selected_step.color = color;
+        }
     }
 
     public void parse_gradient (string color, bool force = false) {
         if (!force && make_gradient () == color) return;
 
         gradient.parse (color);
-        editor.css_style (color);
+        editor.css_style (gradient.to_string (true));
         editor.clear_all ();
 
         int step_count = 0;
+        GradientNub? first_nub = null;
+        var first_step = gradient.get_color (0);
         gradient.steps.foreach ((item) => {
             step_count++;
             var nub = new GradientNub (this, item, editor);
             nub.clicked.connect (() => {
                 var index = gradient.steps.index (nub.step);
                 color_selected (index + 1, nub.color);
+                this.selected_nub = nub;
             });
+
+            if (item == first_step) {
+                first_nub = nub;
+            }
 
             editor.add_overlay (nub);
         });
@@ -162,14 +201,31 @@ public class Spice.GradientEditor : Gtk.Grid {
             direction.set_value (double.parse (gradient.direction));
         }
 
-        if (step_count < color_picker.selected_color) {
-            color_picker.selected_color = 1;
+        if (step_count > 0) {
+            selected_nub = first_nub;
         }
     }
 
     public string make_gradient () {
         editor.css_style (gradient.to_string (true));
         return gradient.to_string (false);
+    }
+
+    public void select_step_id (int step_id) {
+        var wanted_step = gradient.get_color (step_id);
+        select_step (wanted_step);
+    }
+
+    public void select_step (Gradient.GradientStep wanted_step) {
+        foreach (var item in editor.get_children ()) {
+            if (item is GradientNub) {
+                var nub = item as GradientNub;
+                if (nub.step.equals (wanted_step)) {
+                    this.selected_nub = nub;
+                    return;
+                }
+            }
+        }
     }
 
     private class GradientNub : ColorButton {
@@ -181,6 +237,16 @@ public class Spice.GradientEditor : Gtk.Grid {
         protected double start_y = 0;
         protected double start_value = 0;
         private bool holding = false;
+
+        public bool selected {
+            set {
+                if (value) {
+                    get_style_context ().add_class ("selected");
+                } else {
+                    get_style_context ().remove_class ("selected");
+                }
+            }
+        }
 
         public GradientNub (GradientEditor editor, Gradient.GradientStep step, GradientMaker maker) {
             Object (color: step.color);
