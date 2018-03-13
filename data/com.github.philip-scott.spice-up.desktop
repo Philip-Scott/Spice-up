@@ -10,10 +10,3 @@ Type=Application
 StartupNotify=true
 Categories=Office;Presentation;
 MimeType=application/x-spiceup;
-Actions=AboutDialog;
-
-[Desktop Action AboutDialog]
-Exec=com.github.philip-scott.spice-up --about
-Name=About Spice-Up
-Name[pt_BR]=Sobre o Spice-Up
-Name[fr]=À propos de Spice-Up
