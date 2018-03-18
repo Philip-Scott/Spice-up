@@ -1,8 +1,9 @@
 [Desktop Entry]
 Name=Spice-Up
 Comment=Spice up your slides
-Comment[pt_BR]=Tempere os seus slides
+Comment[es]=Dele vida a sus presentaciones
 Comment[fr]=Épicer vos présentations
+Comment[pt_BR]=Tempere os seus slides
 Exec=com.github.philip-scott.spice-up %u
 Icon=com.github.philip-scott.spice-up
 Terminal=false
