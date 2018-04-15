@@ -165,14 +165,19 @@ public class Spice.ColorPicker : ColorButton {
                 Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP_COLOR"));
                 switch (key.keyval) {
                     case 99: // C
+                    case 120: // X
                         clipboard.set_text (color, -1);
                         return true;
                     case 118: // V
                         set_color_smart (clipboard.wait_for_text (), true, true);
                         return true;
+                    case 65535: // Delete Key
+                    case 65288: // Backspace
+                        set_color_smart ("#FFF", true, true);
+                        return true;
                 }
             }
-            return true;
+            return false;
         });
 
         this.clicked.connect (() => {
