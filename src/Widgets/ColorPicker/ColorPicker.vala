@@ -159,6 +159,22 @@ public class Spice.ColorPicker : ColorButton {
         popover.position = Gtk.PositionType.BOTTOM;
         popover.add (main_grid);
 
+        popover.key_press_event.connect ((source, key) => {
+            // Ctrl + ? Events
+            if (Gdk.ModifierType.CONTROL_MASK in key.state) {
+                Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP_COLOR"));
+                switch (key.keyval) {
+                    case 99: // C
+                        clipboard.set_text (color, -1);
+                        return true;
+                    case 118: // V
+                        set_color_smart (clipboard.wait_for_text (), true, true);
+                        return true;
+                }
+            }
+            return true;
+        });
+
         this.clicked.connect (() => {
             popover.show_all ();
         });
@@ -369,11 +385,12 @@ public class Spice.ColorPicker : ColorButton {
             gradient_editor.set_color (color, overwite_gradient);
             this.color = gradient_editor.make_gradient ();
         } else {
+            gradient_editor.parse_gradient (color);
             if (gradient) {
-                gradient_editor.parse_gradient (color);
                 this.color = gradient_editor.make_gradient ();
             } else {
-                this.color = color;
+                var first_step = gradient_editor.gradient.get_color (0);
+                this.color = first_step.color;
             }
         }
 
