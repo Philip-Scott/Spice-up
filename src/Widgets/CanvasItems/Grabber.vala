@@ -42,6 +42,7 @@ public class Spice.Grabber : Gtk.Button {
 
         get_style_context ().remove_class ("button");
         get_style_context ().add_class ("flat");
+        get_style_context ().add_class ("padding-none");
 
         var image = new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/drag.svg");
         this.add (image);
