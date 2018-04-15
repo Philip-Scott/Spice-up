@@ -68,7 +68,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     const string TEXT_STYLE_CSS = """
-        .colored {
+        .colored, .view text {
             color: %s;
             font: %s;
             padding: 0px;
@@ -91,7 +91,6 @@ public class Spice.TextItem : Spice.CanvasItem {
         label.wrap_mode = Pango.WrapMode.WORD_CHAR;
         label.expand = true;
         label.wrap = true;
-
 
         stack = new Gtk.Stack ();
         stack.homogeneous = false;
@@ -212,7 +211,9 @@ public class Spice.TextItem : Spice.CanvasItem {
 
         if (converted_font_size > 0) {
             var font_css = get_font_css (font, font_style.down (), converted_font_size);
-            Utils.set_style (this, TEXT_STYLE_CSS.printf (font_color, font_css));
+            var css = TEXT_STYLE_CSS.printf (font_color, font_css);
+            Utils.set_style (this, css);
+            Utils.set_style (entry, css);
         }
 
         switch (justification) {
