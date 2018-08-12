@@ -20,11 +20,27 @@
 */
 
 public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
-    public File file { get; construct set; }
+    private File _file;
+    public File file {
+        get {
+            return _file;
+        } set {
+            _file = value;
+            title_label.label = file.get_basename ().replace (".spice", "");
+
+            if (real_file) {
+                set_tooltip_text (_("Open: %s").printf (file.get_path ()));
+            } else {
+                set_tooltip_text (_("Create Presentation"));
+            }
+        }
+    }
+
     public string data { get; construct set; }
 
     private SlideWidget slide_widget;
     private Gtk.Popover? popover = null;
+    private Gtk.Label title_label;
 
     private string last_aspect_ratio;
 
@@ -32,12 +48,15 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
     public LibraryItem (File file, bool real_file) {
         Object (file: file, real_file: real_file);
+        get_thumbnail ();
+    }
+
+    construct {
+        margin_top = 3;
+        halign = Gtk.Align.CENTER;
 
         var event_box = new Gtk.EventBox ();
         event_box.events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
-
-        set_tooltip_text (_("Open: %s".printf (file.get_path ())));
-        halign = Gtk.Align.CENTER;
 
         slide_widget = new SlideWidget ();
         slide_widget.show_button = real_file;
@@ -45,10 +64,23 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             show_popover ();
         });
 
-        event_box.add (slide_widget);
+        title_label = new Gtk.Label ("");
+        title_label.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+        title_label.get_style_context ().add_class ("remove-padding");
+        title_label.ellipsize = Pango.EllipsizeMode.END;
+        title_label.halign = Gtk.Align.START;
+        title_label.margin_start = 8;
+        title_label.margin_end = 8;
+        title_label.margin_bottom = 6;
+
+        var box = new Gtk.Grid ();
+        box.orientation = Gtk.Orientation.VERTICAL;
+        box.add (slide_widget);
+        box.add (title_label);
+
+        event_box.add (box);
         add (event_box);
 
-        get_thumbnail ();
         show_all ();
 
         event_box.button_release_event.connect ((event) => {
@@ -66,6 +98,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
             var name_entry = new Gtk.Entry ();
             name_entry.text = file.get_basename ().replace (".spice", "");
+            name_entry.activate.connect (() => attempt_name_change(name_entry));
 
             var ratio_label = new Gtk.Label (_("Aspect Ratio: "));
             ratio_label.halign = Gtk.Align.END;
@@ -113,22 +146,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             popover.add (grid);
 
             popover.closed.connect (() => {
-                var new_name = name_entry.get_text ().replace ("/", "") + ".spice";
-
-                if (new_name != this.file.get_basename ()) {
-                    var path = this.file.get_parent ().get_path ();
-                    var new_file = File.new_for_path ("%s/%s".printf (path, new_name));
-
-                    if (new_file.query_exists ()) {
-                        window.add_toast_notification (new Granite.Widgets.Toast (_("Could not rename: File already exists…")));
-                        return;
-                    }
-
-                    FileUtils.rename (this.file.get_path (), new_file.get_path ());
-                    Spice.Services.Settings.get_instance ().add_file (new_file.get_path ());
-
-                    this.file = new_file;
-                }
+                attempt_name_change(name_entry);
 
                 if (aspect_ratio.get_active_id () != last_aspect_ratio) {
                     Spice.SlideManager.aspect_ratio_override = int.parse (aspect_ratio.get_active_id ());
@@ -138,6 +156,25 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         }
 
         popover.show ();
+    }
+
+    private void attempt_name_change (Gtk.Entry name_entry) {
+        var new_name = name_entry.get_text ().replace ("/", "") + ".spice";
+
+        if (new_name != this.file.get_basename ()) {
+            var path = this.file.get_parent ().get_path ();
+            var new_file = File.new_for_path ("%s/%s".printf (path, new_name));
+
+            if (new_file.query_exists ()) {
+                window.add_toast_notification (new Granite.Widgets.Toast (_("Could not rename: File already exists…")));
+                return;
+            }
+
+            FileUtils.rename (this.file.get_path (), new_file.get_path ());
+            Spice.Services.Settings.get_instance ().add_file (new_file.get_path ());
+
+            this.file = new_file;
+        }
     }
 
     private void get_file_data () {
