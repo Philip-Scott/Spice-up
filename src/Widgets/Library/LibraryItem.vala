@@ -110,6 +110,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             aspect_ratio.append ("4", "3:2");
             aspect_ratio.append ("5", "5:4");
 
+
             last_aspect_ratio = "%d".printf (Utils.get_aspect_ratio (data));
             aspect_ratio.set_active_id (last_aspect_ratio);
 

@@ -93,8 +93,8 @@ public class Spice.Canvas : Gtk.Overlay {
 
             allocation.width = (int)(r.width * current_ratio);
             allocation.height = (int)(r.height * current_ratio);
-            allocation.x = default_x_margin + (int)(r.x * current_ratio) + display_widget.delta_x;
-            allocation.y = default_y_margin + (int)(r.y * current_ratio) + display_widget.delta_y;
+            allocation.x = default_x_margin + (int)Math.round(r.x * current_ratio) + display_widget.delta_x;
+            allocation.y = default_y_margin + (int)Math.round(r.y * current_ratio) + display_widget.delta_y;
             return true;
         }
 
@@ -107,9 +107,9 @@ public class Spice.Canvas : Gtk.Overlay {
         current_allocated_width = get_allocated_width ();
         current_allocated_height = get_allocated_height ();
 
-        current_ratio = double.min ((double)(current_allocated_width - 24) / 1500.0, (double)(current_allocated_height - 24) / 1500.0);
-        default_x_margin = (int) ((current_allocated_width - max_width * current_ratio) / 2);
-        default_y_margin = (int) ((current_allocated_height - max_height * current_ratio) / 2);
+        current_ratio = (double)(current_allocated_height - 24) / 1500.0;
+        default_x_margin = (int) ((current_allocated_width - max_width * current_ratio) / 2.0);
+        default_y_margin = (int) ((current_allocated_height - max_height * current_ratio) / 2.0);
     }
 
     public CanvasItem add_item (CanvasItem item, bool undoable_action = false) {
