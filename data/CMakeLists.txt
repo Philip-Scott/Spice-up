@@ -32,7 +32,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/128/com.github.philip-scott.spic
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/16/com.github.philip-scott.spice-up.svg
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/icons/hicolor/16x16/mimetypes/
         RENAME application-x-spiceup.svg)
-
+g
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/24/com.github.philip-scott.spice-up.svg
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/icons/hicolor/24x24/mimetypes/
         RENAME application-x-spiceup.svg)
@@ -58,7 +58,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/128/com.github.philip-scott.spic
         RENAME application-x-spiceup.svg)
 
 # install the appdata
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.appdata.xml
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip_scott.spice_up.appdata.xml
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/metainfo/)
 
 # install the mimefile
