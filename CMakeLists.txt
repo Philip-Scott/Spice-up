@@ -44,7 +44,7 @@ find_package(PkgConfig)
 pkg_check_modules (DEPS REQUIRED ${PKG_DEPS})
 
 add_definitions(${DEPS_CFLAGS})
-link_libraries(${DEPS_LIBRARIES})
+link_libraries(${DEPS_LIBRARIES} -lm)
 link_directories(${DEPS_LIBRARY_DIRS})
 
 find_package(Vala REQUIRED)
@@ -55,4 +55,3 @@ add_subdirectory (po)
 add_subdirectory (schemas)
 add_subdirectory (data)
 add_subdirectory (src)
-

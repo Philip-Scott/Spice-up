@@ -84,9 +84,9 @@ include (gresource)
 glib_compile_resources(GLIB_RESOURCES_ICONS SOURCE ../data/assets.gresource.xml)
 
 
-add_executable(com.github.philip-scott.spice-up ${VALA_C} ${GLIB_RESOURCES_ICONS})
+add_executable(${CMAKE_PROJECT_NAME} ${VALA_C} ${GLIB_RESOURCES_ICONS})
 
-install(TARGETS com.github.philip-scott.spice-up RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
 # pbuilder is the Houston Builder
 if ($ENV{USER} STREQUAL "pbuilder" OR $ENV{USER} STREQUAL "buildd")
