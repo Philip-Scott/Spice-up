@@ -51,6 +51,13 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         get_thumbnail ();
     }
 
+    public LibraryItem.from_data (string data, string? file_name) {
+        Object (data: data);
+
+        title_label.label = file_name;
+        load_thumbnail ();
+    }
+
     construct {
         margin_top = 3;
         halign = Gtk.Align.CENTER;
@@ -197,15 +204,19 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
                     get_template_data ();
                 }
 
-                var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
-
-                Idle.add (() => {
-                    slide_widget.pixbuf = pixbuf;
-                    return GLib.Source.REMOVE;
-                });
+                load_thumbnail ();
 
                 return null;
             });
         }
+    }
+
+    private void load_thumbnail () {
+        var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
+
+        Idle.add (() => {
+            slide_widget.pixbuf = pixbuf;
+            return GLib.Source.REMOVE;
+        });
     }
 }

@@ -27,6 +27,7 @@ set (PKG_DEPS
     json-glib-1.0
     gudev-1.0
     libevdev
+    libsoup-2.4
 )
 
 set (VALA_DEPS
@@ -37,6 +38,7 @@ set (VALA_DEPS
     gudev-1.0
     libevdev
     linux
+    libsoup-2.4
 )
 
 

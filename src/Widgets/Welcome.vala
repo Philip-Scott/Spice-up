@@ -20,6 +20,8 @@
 */
 
 public class Spice.Welcome : Gtk.Box {
+    private const string TEMPLATES_URL = "https://spice-up-dev.azurewebsites.net/api/get-templates";
+
     public signal void open_file (File file);
 
     private Granite.Widgets.Welcome welcome;
@@ -75,6 +77,8 @@ public class Spice.Welcome : Gtk.Box {
                     open_file (file);
                 }
             });
+
+            get_remote_templates ();
         }
 
         welcome_stack.set_visible_child_full ("templates", Gtk.StackTransitionType.SLIDE_RIGHT);
@@ -106,5 +110,36 @@ public class Spice.Welcome : Gtk.Box {
             separator.visible = false;
             separator.no_show_all = true;
         }
+    }
+
+    private void get_remote_templates () {
+        new Thread<void*> ("get-templates", () => {
+            var session = new Soup.Session ();
+            var message = new Soup.Message ("GET", TEMPLATES_URL);
+
+            session.send_message (message);
+
+            var data = new StringBuilder ();
+            foreach (var c in message.response_body.data) {
+                data.append ("%c".printf (c));
+            }
+
+            var json_data = Spice.Utils.get_json_object (data.str);
+
+            if (json_data == null) return null;
+
+            if (json_data.get_int_member ("version") > 1) return null;
+
+            var templates_array = json_data.get_array_member ("templates");
+
+            Idle.add (() => {
+                foreach (var raw in templates_array.get_elements ()) {
+                    var template = raw.get_object ();
+                    templates.add_from_data (template.get_string_member ("data"), template.get_string_member ("name"));
+                }
+                return GLib.Source.REMOVE;
+            });
+            return null;
+        });
     }
 }
