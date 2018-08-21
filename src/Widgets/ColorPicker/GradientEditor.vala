@@ -260,7 +260,7 @@ public class Spice.GradientEditor : Gtk.Grid {
             this.maker = maker;
             this.editor = editor;
 
-            set_size (16);
+            set_size (16, 16);
 
             step.notify["color"].connect (() => {
                 color = step.color;
