@@ -61,17 +61,28 @@ namespace Spice {
             set_skip_pager_hint (true);
             set_keep_above (true);
 
-
             dark_border_color.parse (dark_border_color_string);
             bright_border_color.parse (bright_border_color_string);
 
-            // restore zoomlevel
-            //if (settings.zoomlevel >= min_zoomlevel && settings.zoomlevel <= max_zoomlevel) {
-            zoomlevel = 2;//settings.zoomlevel;
-            //}
+            zoomlevel = 2;
 
-            var screen = get_screen ();
-            set_default_size (screen.get_width (), screen.get_height ());
+            var display = Gdk.Display.get_default ();
+
+            Gdk.Rectangle? screens_rectangle = null;
+            var n_monitors = display.get_n_monitors ();
+
+            for (int i = 0; i < n_monitors; i++) {
+                var monitor = display.get_monitor (i);
+
+                if (screens_rectangle == null) {
+                    screens_rectangle = monitor.get_geometry ();
+                } else {
+                    var rectangle = monitor.get_geometry ();
+                    screens_rectangle.union (rectangle, out screens_rectangle);
+                }
+            }
+
+            set_default_size (screens_rectangle.width, screens_rectangle.height);
         }
 
         public override bool button_release_event (Gdk.EventButton e) {
@@ -121,8 +132,10 @@ namespace Spice {
 
         public void set_magnifier_cursor () {
              // draw cursor
+             var manager = Gdk.Display.get_default ().get_default_seat ();
+
              int px, py;
-             get_pointer (out px, out py);
+             manager.get_pointer ().get_position (null, out px, out py);
 
              var radius = snapsize * zoomlevel / 2;
 
@@ -137,7 +150,6 @@ namespace Spice {
              // Create the base surface for our cursor
              var base_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, snapsize * zoomlevel + shadow_width * 2 , snapsize * zoomlevel + shadow_width * 2);
              var base_context = new Cairo.Context (base_surface);
-
 
              // Create the circular path on our base surface
              base_context.arc (radius + shadow_width, radius + shadow_width, radius, 0, 2 * Math.PI);
@@ -199,15 +211,16 @@ namespace Spice {
                 drawn_pb.get_height () / 2
             );
 
+            var events = new Gdk.Event (Gdk.EventType.BUTTON_PRESS | Gdk.EventType.MOTION_NOTIFY | Gdk.EventType.SCROLL);
+
             // Set the cursor
-            var manager = Gdk.Display.get_default ().get_device_manager ();
-            manager.get_client_pointer ().grab (
-                get_window (),
-                Gdk.GrabOwnership.APPLICATION,
-                true,
-                Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.SCROLL_MASK,
-                magnifier,
-                Gdk.CURRENT_TIME
+            manager.grab (
+                get_window (), // Window to own grab
+                Gdk.SeatCapabilities.ALL,
+                true, // Owner events
+                magnifier, // Cursor
+                events,
+                null
             );
         }
 
@@ -217,7 +230,6 @@ namespace Spice {
             var screenshot = Gdk.pixbuf_get_from_window (root, x, y, w, h);
             return screenshot;
         }
-
 
         public override bool key_press_event (Gdk.EventKey e) {
             if (e.keyval == Gdk.Key.Escape) {
@@ -254,37 +266,27 @@ namespace Spice {
         public override void show_all () {
             base.show_all ();
 
-            var manager = Gdk.Display.get_default ().get_device_manager ();
-            var pointer = manager.get_client_pointer ();
-            var keyboard = pointer.get_associated_device ();
+            var manager = Gdk.Display.get_default ().get_default_seat ();
             var window = get_window ();
 
-            var status = pointer.grab (window,
-                        Gdk.GrabOwnership.NONE,
-                        false,
-                        Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK | Gdk.EventMask.POINTER_MOTION_MASK,
-                        new Gdk.Cursor.for_display (window.get_display (), Gdk.CursorType.CROSSHAIR),
-                        Gtk.get_current_event_time ());
+            var events = new Gdk.Event (Gdk.EventType.BUTTON_PRESS | Gdk.EventType.MOTION_NOTIFY | Gdk.EventType.SCROLL);
+
+            // Set the cursor
+            var status = manager.grab (
+                window,
+                Gdk.SeatCapabilities.ALL,
+                true, // Owner events
+                new Gdk.Cursor.for_display (window.get_display (), Gdk.CursorType.CROSSHAIR),
+                events,
+                null
+            );
 
             if (status != Gdk.GrabStatus.SUCCESS) {
-                pointer.ungrab (Gtk.get_current_event_time ());
+                manager.ungrab ();
             }
 
             // show magnifier
             set_magnifier_cursor ();
-
-            if (keyboard != null) {
-                status = keyboard.grab (window,
-                        Gdk.GrabOwnership.NONE,
-                        false,
-                        Gdk.EventMask.KEY_PRESS_MASK,
-                        null,
-                        Gtk.get_current_event_time ());
-
-                if (status != Gdk.GrabStatus.SUCCESS) {
-                    keyboard.ungrab (Gtk.get_current_event_time ());
-                }
-            }
         }
 
         public new void close () {

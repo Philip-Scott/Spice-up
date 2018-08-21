@@ -104,7 +104,7 @@ GtkToggleButton.spice, .spice,
     border-color: shade (@selected_bg_color, 0.8);
 }
 
-.spice:insensitive {
+.spice:disabled, .spice:disabled image {
     background-image: none;
     background-color: transparent;
     color: @insensitive_color;
