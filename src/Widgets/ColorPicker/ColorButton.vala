@@ -54,8 +54,8 @@ protected class Spice.ColorButton : Gtk.Button {
         background.add (surface);
     }
 
-    public void set_size (int size) {
-        surface.set_size_request (size, size);
+    public void set_size (int x, int y) {
+        surface.set_size_request (x, y);
     }
 
     public new void style () {
