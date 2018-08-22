@@ -41,5 +41,11 @@
             <summary>Controler configuration for presentation mode</summary>
             <description>In JSON format</description>
         </key>
+
+        <key name="last-fetch" type="s">
+            <default>"0"</default>
+            <summary>Last time it fetched templates from server</summary>
+            <description>Stored to fetch templates only once every day</description>
+        </key>
     </schema>
 </schemalist>

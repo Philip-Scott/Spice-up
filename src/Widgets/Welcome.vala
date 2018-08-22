@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
+* Copyright (c) 2018Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,10 +27,14 @@ public class Spice.Welcome : Gtk.Box {
     private Granite.Widgets.Welcome welcome;
     private Spice.Widgets.Library.Library? library = null;
     private Spice.Widgets.Library.Library? templates = null;
+    private Spice.Services.Fetcher fetcher;
     private Gtk.Separator separator;
     private Gtk.Stack welcome_stack;
 
     public Welcome () {
+        fetcher = new Spice.Services.Fetcher ();
+        fetcher.fetch ();
+
         orientation = Gtk.Orientation.HORIZONTAL;
         get_style_context ().add_class ("view");
 
@@ -78,7 +82,7 @@ public class Spice.Welcome : Gtk.Box {
                 }
             });
 
-            get_remote_templates ();
+            load_remote_templates ();
         }
 
         welcome_stack.set_visible_child_full ("templates", Gtk.StackTransitionType.SLIDE_RIGHT);
@@ -112,34 +116,21 @@ public class Spice.Welcome : Gtk.Box {
         }
     }
 
-    private void get_remote_templates () {
-        new Thread<void*> ("get-templates", () => {
-            var session = new Soup.Session ();
-            var message = new Soup.Message ("GET", TEMPLATES_URL);
+    private void load_remote_templates () {
+        var json_data = Spice.Utils.get_json_object (fetcher.get_data ());
 
-            session.send_message (message);
+        if (json_data == null) return;
 
-            var data = new StringBuilder ();
-            foreach (var c in message.response_body.data) {
-                data.append ("%c".printf (c));
+        if (json_data.get_int_member ("version") > Spice.Services.Fetcher.CURRENT_VERSION) return;
+
+        var templates_array = json_data.get_array_member ("templates");
+
+        Idle.add (() => {
+            foreach (var raw in templates_array.get_elements ()) {
+                var template = raw.get_object ();
+                templates.add_from_data (template.get_string_member ("data"), template.get_string_member ("name"));
             }
-
-            var json_data = Spice.Utils.get_json_object (data.str);
-
-            if (json_data == null) return null;
-
-            if (json_data.get_int_member ("version") > 1) return null;
-
-            var templates_array = json_data.get_array_member ("templates");
-
-            Idle.add (() => {
-                foreach (var raw in templates_array.get_elements ()) {
-                    var template = raw.get_object ();
-                    templates.add_from_data (template.get_string_member ("data"), template.get_string_member ("name"));
-                }
-                return GLib.Source.REMOVE;
-            });
-            return null;
+            return GLib.Source.REMOVE;
         });
     }
 }

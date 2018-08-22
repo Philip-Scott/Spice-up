@@ -17,6 +17,7 @@ vala_precompile(VALA_C
   Services/Settings.vala
   Services/Slide.vala
   Services/SlideManager.vala
+  Services/Fetcher.vala
   Services/FileManager.vala
   Services/HistoryManager.vala
   Services/ImageHandler.vala
