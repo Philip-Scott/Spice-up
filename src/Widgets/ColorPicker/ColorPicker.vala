@@ -42,15 +42,18 @@ public class Spice.ColorPicker : ColorButton {
         }
     }
 
+    private bool setting_color = false;
     public new string color {
         get {
             return _color;
         } set {
-            ((ColorButton) this).color = value;
+            setting_color = true;
+            set_color_smart (value, true, true);
 
             if (gradient) {
                 gradient_editor.parse_gradient (value);
             }
+            setting_color = false;
         }
     }
 
@@ -145,8 +148,7 @@ public class Spice.ColorPicker : ColorButton {
         });
 
         gradient_editor.updated.connect (() => {
-            color = gradient_editor.make_gradient ();
-            color_picked (gradient_editor.make_gradient ());
+            set_color_smart (gradient_editor.make_gradient (), false, false, true);
         });
 
         make_palette_view ();
@@ -331,17 +333,21 @@ public class Spice.ColorPicker : ColorButton {
         });
     }
 
-    protected void set_color_smart (string color, bool from_button = false, bool overwite_gradient = false) {
+    protected void set_color_smart (string color, bool from_button = false, bool overwite_gradient = false, bool from_gradient_editor = false) {
         if (gradient_revealer.reveal_child) { // Gradient color changed
-            gradient_editor.set_color (color, overwite_gradient);
-            this.color = gradient_editor.make_gradient ();
+            if (from_gradient_editor) {
+                ((ColorButton) this).color = color;
+            } else {
+                gradient_editor.set_color (color, overwite_gradient);
+                ((ColorButton) this).color = gradient_editor.make_gradient ();
+            }
         } else {
             gradient_editor.parse_gradient (color);
             if (gradient) {
-                this.color = gradient_editor.make_gradient ();
+                ((ColorButton) this).color = gradient_editor.make_gradient ();
             } else {
                 var first_step = gradient_editor.gradient.get_color (0);
-                this.color = first_step.color;
+                ((ColorButton) this).color = first_step.color;
             }
         }
 
@@ -349,7 +355,9 @@ public class Spice.ColorPicker : ColorButton {
             set_color_chooser_color (color);
         }
 
-        color_picked (this.color);
+        if (!setting_color) {
+            color_picked (this.color);
+        }
     }
 
     private void set_color_chooser_color (string color) {
@@ -443,35 +451,35 @@ public class Spice.ColorPicker : ColorButton {
 
     static const string[,] GRADIENT_PALETTE = {
         {
-            " linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
-            " linear-gradient(to right, #f46b45 0%, #eea849 100%)",
-            " linear-gradient(to right, #c79081 0%, #dfa579 100%)",
-            " linear-gradient(to right, #232526 0%, #414345 100%)",
+            "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
+            "linear-gradient(to right, #f46b45 0%, #eea849 100%)",
+            "linear-gradient(to right, #c79081 0%, #dfa579 100%)",
+            "linear-gradient(to right, #232526 0%, #414345 100%)",
         }, {
-            " linear-gradient(to right, #e1eec3 0%, #f05053 100%)",
-            " linear-gradient(to right, #f12711 0%, #f5af19 100%)",
-            " linear-gradient(to right, #d1913c 0%, #ffd194 100%)",
-            " linear-gradient(to right, #0f2027 0%, #203a43 50%, #2c5364 100%)",
+            "linear-gradient(to right, #e1eec3 0%, #f05053 100%)",
+            "linear-gradient(to right, #f12711 0%, #f5af19 100%)",
+            "linear-gradient(to right, #d1913c 0%, #ffd194 100%)",
+            "linear-gradient(to right, #0f2027 0%, #203a43 50%, #2c5364 100%)",
         }, {
-            " linear-gradient(to right, #feada6 0%, #f5efef 100%)",
-            " linear-gradient(to right, #fceabb 0%, #f8b500 100%)",
-            " linear-gradient(to right, #045de9 0%, #09c6f9 74%)",
-            " linear-gradient(to right, #606c88 0%, #3f4c6b 100%)",
+            "linear-gradient(to right, #feada6 0%, #f5efef 100%)",
+            "linear-gradient(to right, #fceabb 0%, #f8b500 100%)",
+            "linear-gradient(to right, #045de9 0%, #09c6f9 74%)",
+            "linear-gradient(to right, #606c88 0%, #3f4c6b 100%)",
         }, {
-            " linear-gradient(to right, #fdcbf1 0%, #fdcbf1 5%, #e6dee9 100%)",
-            " linear-gradient(to right, #fff293 0%, #ffe884 74%)",
-            " linear-gradient(to right, #2980b9 0%, #6dd5fa 50%, #ffffff 100%)",
-            " linear-gradient(to right, #757f9a 0%, #d7dde8 100%)",
+            "linear-gradient(to right, #fdcbf1 0%, #fdcbf1 5%, #e6dee9 100%)",
+            "linear-gradient(to right, #fff293 0%, #ffe884 74%)",
+            "linear-gradient(to right, #2980b9 0%, #6dd5fa 50%, #ffffff 100%)",
+            "linear-gradient(to right, #757f9a 0%, #d7dde8 100%)",
         }, {
-            " linear-gradient(to right, #a18cd1 0%, #fbc2eb 100%)",
-            " linear-gradient(to right, #abecd6 0%, #fbed96 100%)",
-            " linear-gradient(to right, #a6ffcb 0%, #12d8fa 50%, #1fa2ff 100%)",
-            " linear-gradient(to right, #e9defa 0%, #fbfcdb 100%)",
+            "linear-gradient(to right, #a18cd1 0%, #fbc2eb 100%)",
+            "linear-gradient(to right, #abecd6 0%, #fbed96 100%)",
+            "linear-gradient(to right, #a6ffcb 0%, #12d8fa 50%, #1fa2ff 100%)",
+            "linear-gradient(to right, #e9defa 0%, #fbfcdb 100%)",
         }, {
-            " linear-gradient(to right, #f8ceec 0%, #a88beb 74%)",
-            " linear-gradient(to right, #43c6ac 0%, #f8ffae 100%)",
-            " linear-gradient(to right, #3ab5b0 0%, #3D99BE 31%, #56317a 100%)",
-            " linear-gradient(to right, #FFFEFF 0%, #D7FFFE 100%)",
+            "linear-gradient(to right, #7a36b1 20%, #0d52bf 100%)",
+            "linear-gradient(to right, #43c6ac 0%, #f8ffae 100%)",
+            "linear-gradient(to right, #3ab5b0 0%, #3D99BE 31%, #56317a 100%)",
+            "linear-gradient(to right, #FFFEFF 0%, #D7FFFE 100%)",
         }
     };
 }

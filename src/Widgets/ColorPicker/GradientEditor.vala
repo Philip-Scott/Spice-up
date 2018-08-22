@@ -120,7 +120,6 @@ public class Spice.GradientEditor : Gtk.Grid {
 
                 var last_percent = int.parse (last.percent.replace ("%", ""));
                 percent = last_percent < 50 ? last_percent + 25 : last_percent - 25;
-                print (@"$percent");
             }
 
             var step = new Gradient.GradientStep (color, @"$percent%");
