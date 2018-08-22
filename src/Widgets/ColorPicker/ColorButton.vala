@@ -83,5 +83,9 @@ protected class Spice.ColorButton : Gtk.Button {
         .color-button:active .colored {
             opacity: 0.9;
         }
+
+        .color-button:focus .colored {
+            border: 1px solid black;
+        }
     """;
 }

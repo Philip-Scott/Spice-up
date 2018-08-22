@@ -100,6 +100,7 @@ public class Spice.ColorPicker : ColorButton {
 
         mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/color-palette-symbolic.svg"));
         mode_button.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/custom-color-symbolic.svg"));
+        mode_button.can_focus = true;
         mode_button.selected = 0;
 
         mode_button.mode_changed.connect ((w) => {
@@ -278,91 +279,11 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public void generate_colors () {
-        // red
-        attach_color ("#ff8c82", 0, 0);
-        attach_color ("#ed5353", 1, 0);
-        attach_color ("#c6262e", 2, 0);
-        attach_color ("#a10705", 3, 0);
-        attach_color ("#7a0000", 4, 0);
-
-        // orange
-        attach_color ("#ffc27d", 5, 0);
-        attach_color ("#ffa154", 6, 0);
-        attach_color ("#f37329", 7, 0);
-        attach_color ("#cc3b02", 8, 0);
-        attach_color ("#a62100", 9, 0);
-
-        // Cocoa
-        attach_color ("#a3907c", 10, 0);
-        attach_color ("#8a715e", 11, 0);
-        attach_color ("#715344", 12, 0);
-        attach_color ("#57392d", 13, 0);
-        attach_color ("#3d211b", 14, 0);
-
-        // Blacks
-        attach_color ("#666666", 15, 0);
-        attach_color ("#4d4d4d", 16, 0);
-        attach_color ("#333333", 17, 0);
-        attach_color ("#1a1a1a", 18, 0);
-        attach_color ("#000000", 19, 0);
-
-
-        // Bubblegum
-        attach_color ("#fec2cf", 0, 1);
-        attach_color ("#fe9ab8", 1, 1);
-        attach_color ("#f46099", 2, 1);
-        attach_color ("#e41b79", 3, 1);
-        attach_color ("#c10f68", 4, 1);
-
-        // yellow
-        attach_color ("#fff394", 5, 1);
-        attach_color ("#ffe16b", 6, 1);
-        attach_color ("#f9c440", 7, 1);
-        attach_color ("#d48e15", 8, 1);
-        attach_color ("#ad5f00", 9, 1);
-
-        // blue
-        attach_color ("#8cd5ff", 10, 1);
-        attach_color ("#64baff", 11, 1);
-        attach_color ("#3689e6", 12, 1);
-        attach_color ("#0d52bf", 13, 1);
-        attach_color ("#002e99", 14, 1);
-
-        // Slate
-        attach_color ("#95a3ab", 15, 1);
-        attach_color ("#667885", 16, 1);
-        attach_color ("#485a6c", 17, 1);
-        attach_color ("#273445", 18, 1);
-        attach_color ("#0e141f", 19, 1);
-
-
-        // purple
-        attach_color ("#e29ffc", 0, 2);
-        attach_color ("#ad65d6", 1, 2);
-        attach_color ("#7a36b1", 2, 2);
-        attach_color ("#4c158a", 3, 2);
-        attach_color ("#260063", 4, 2);
-
-        // green
-        attach_color ("#d1ff82", 5, 2);
-        attach_color ("#9bdb4d", 6, 2);
-        attach_color ("#68b723", 7, 2);
-        attach_color ("#3a9104", 8, 2);
-        attach_color ("#206b00", 9, 2);
-
-        // Mint
-        attach_color ("#96fce5", 10, 2);
-        attach_color ("#23fdd9", 11, 2);
-        attach_color ("#00f4d4", 12, 2);
-        attach_color ("#00d0bf", 13, 2);
-        attach_color ("#00a69c", 14, 2);
-
-        // grayscale
-        attach_color ("#ffffff", 15, 2);
-        attach_color ("#d4d4d4", 16, 2);
-        attach_color ("#abacae", 17, 2);
-        attach_color ("#7e8087", 18, 2);
-        attach_color ("#555761", 19, 2);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 20; j++) {
+                attach_color (COLOR_PALETTE[i,j], j, i);
+            }
+        }
     }
 
     private void attach_color (string color, int x, int y) {
@@ -389,22 +310,16 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     public void generate_gradient_colors () {
-        attach_gradient ("linear-gradient(to right, #efefbb 0%, #d4d3dd 100%)", 0, 0);
-        attach_gradient ("linear-gradient(to right, #43c6ac 0%, #f8ffae 100%)", 0, 1);
-        attach_gradient ("linear-gradient(to right, #1fa2ff 0%, #12d8fa 50%, #a6ffcb 100%)", 0, 2);
-        attach_gradient ("linear-gradient(to right, #70e1f5 0%, #ffd194 100%)", 0, 3);
-        attach_gradient ("linear-gradient(to right, #ff0844 0%, #ffb199 100%)", 0, 4);
-
-        attach_gradient ("linear-gradient(to right, #f0f2f0 0%, #000c40 100%)", 1, 0);
-        attach_gradient ("linear-gradient(to right, #bbd2c5 0%, #536976 100%)", 1, 1);
-        attach_gradient ("linear-gradient(to right, #3ab5b0 0%, #3D99BE 31%, #56317a 100%)", 1, 2);
-        attach_gradient ("linear-gradient(to right, #f46b45 0%, #eea849 100%)", 1, 3);
-        attach_gradient ("linear-gradient(to right, #F05F57 10%, #360940 100%)", 1, 4);
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 4; j++) {
+                attach_gradient (GRADIENT_PALETTE[i,j], j, i);
+            }
+        }
     }
 
     private void attach_gradient (string color, int x, int y) {
         var color_button = new ColorButton (color);
-        color_button.set_size_request (96, 48);
+        color_button.set_size_request (70, 42);
         color_button.get_style_context ().add_class ("flat");
         color_button.can_focus = true;
         color_button.margin_end = 0;
@@ -446,4 +361,117 @@ public class Spice.ColorPicker : ColorButton {
 
         SignalHandler.unblock (color_chooser, color_chooser_signal);
     }
+
+    static const string[,] COLOR_PALETTE = {
+        {
+            // Red
+            "#ff8c82",
+            "#ed5353",
+            "#c6262e",
+            "#a10705",
+            "#7a0000",
+            // Orange
+            "#ffc27d",
+            "#ffa154",
+            "#f37329",
+            "#cc3b02",
+            "#a62100",
+            // Cocoa
+            "#a3907c",
+            "#8a715e",
+            "#715344",
+            "#57392d",
+            "#3d211b",
+            // Blacks
+            "#666666",
+            "#4d4d4d",
+            "#333333",
+            "#1a1a1a",
+            "#000000"
+        }, {
+            // Bubblegum
+            "#fec2cf",
+            "#fe9ab8",
+            "#f46099",
+            "#e41b79",
+            "#c10f68",
+            // Yellow
+            "#fff394",
+            "#ffe16b",
+            "#f9c440",
+            "#d48e15",
+            "#ad5f00",
+            // Blue
+            "#8cd5ff",
+            "#64baff",
+            "#3689e6",
+            "#0d52bf",
+            "#002e99",
+            // Slate
+            "#95a3ab",
+            "#667885",
+            "#485a6c",
+            "#273445",
+            "#0e141f"
+        }, {
+            // Purple
+            "#e29ffc",
+            "#ad65d6",
+            "#7a36b1",
+            "#4c158a",
+            "#260063",
+            // Green
+            "#d1ff82",
+            "#9bdb4d",
+            "#68b723",
+            "#3a9104",
+            "#206b00",
+            // Mint
+            "#96fce5",
+            "#23fdd9",
+            "#00f4d4",
+            "#00d0bf",
+            "#00a69c",
+            // Grayscale
+            "#ffffff",
+            "#d4d4d4",
+            "#abacae",
+            "#7e8087",
+            "#555761"
+        }
+    };
+
+    static const string[,] GRADIENT_PALETTE = {
+        {
+            " linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
+            " linear-gradient(to right, #f46b45 0%, #eea849 100%)",
+            " linear-gradient(to right, #c79081 0%, #dfa579 100%)",
+            " linear-gradient(to right, #232526 0%, #414345 100%)",
+        }, {
+            " linear-gradient(to right, #e1eec3 0%, #f05053 100%)",
+            " linear-gradient(to right, #f12711 0%, #f5af19 100%)",
+            " linear-gradient(to right, #d1913c 0%, #ffd194 100%)",
+            " linear-gradient(to right, #0f2027 0%, #203a43 50%, #2c5364 100%)",
+        }, {
+            " linear-gradient(to right, #feada6 0%, #f5efef 100%)",
+            " linear-gradient(to right, #fceabb 0%, #f8b500 100%)",
+            " linear-gradient(to right, #045de9 0%, #09c6f9 74%)",
+            " linear-gradient(to right, #606c88 0%, #3f4c6b 100%)",
+        }, {
+            " linear-gradient(to right, #fdcbf1 0%, #fdcbf1 5%, #e6dee9 100%)",
+            " linear-gradient(to right, #fff293 0%, #ffe884 74%)",
+            " linear-gradient(to right, #2980b9 0%, #6dd5fa 50%, #ffffff 100%)",
+            " linear-gradient(to right, #757f9a 0%, #d7dde8 100%)",
+        }, {
+            " linear-gradient(to right, #a18cd1 0%, #fbc2eb 100%)",
+            " linear-gradient(to right, #abecd6 0%, #fbed96 100%)",
+            " linear-gradient(to right, #a6ffcb 0%, #12d8fa 50%, #1fa2ff 100%)",
+            " linear-gradient(to right, #e9defa 0%, #fbfcdb 100%)",
+        }, {
+            " linear-gradient(to right, #f8ceec 0%, #a88beb 74%)",
+            " linear-gradient(to right, #43c6ac 0%, #f8ffae 100%)",
+            " linear-gradient(to right, #3ab5b0 0%, #3D99BE 31%, #56317a 100%)",
+            " linear-gradient(to right, #FFFEFF 0%, #D7FFFE 100%)",
+        }
+    };
 }
