@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
+* Copyright (c) 2018 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -20,15 +20,21 @@
 */
 
 public class Spice.Welcome : Gtk.Box {
+    private const string TEMPLATES_URL = "https://spice-up-dev.azurewebsites.net/api/get-templates";
+
     public signal void open_file (File file);
 
     private Granite.Widgets.Welcome welcome;
     private Spice.Widgets.Library.Library? library = null;
     private Spice.Widgets.Library.Library? templates = null;
+    private Spice.Services.Fetcher fetcher;
     private Gtk.Separator separator;
     private Gtk.Stack welcome_stack;
 
     public Welcome () {
+        fetcher = new Spice.Services.Fetcher ();
+        fetcher.fetch ();
+
         orientation = Gtk.Orientation.HORIZONTAL;
         get_style_context ().add_class ("view");
 
@@ -75,6 +81,8 @@ public class Spice.Welcome : Gtk.Box {
                     open_file (file);
                 }
             });
+
+            load_remote_templates ();
         }
 
         welcome_stack.set_visible_child_full ("templates", Gtk.StackTransitionType.SLIDE_RIGHT);
@@ -106,5 +114,23 @@ public class Spice.Welcome : Gtk.Box {
             separator.visible = false;
             separator.no_show_all = true;
         }
+    }
+
+    private void load_remote_templates () {
+        var json_data = Spice.Utils.get_json_object (fetcher.get_data ());
+
+        if (json_data == null) return;
+
+        if (json_data.get_int_member ("version") > Spice.Services.Fetcher.CURRENT_VERSION) return;
+
+        var templates_array = json_data.get_array_member ("templates");
+
+        Idle.add (() => {
+            foreach (var raw in templates_array.get_elements ()) {
+                var template = raw.get_object ();
+                templates.add_from_data (template.get_string_member ("data"), template.get_string_member ("name"));
+            }
+            return GLib.Source.REMOVE;
+        });
     }
 }

@@ -21,7 +21,7 @@
 
 public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
     private const string RESOURCE_PATH = "resource:///com/github/philip-scott/spice-up/templates/%s";
-    private const string TEMPLATES[] = {"Black.spice", "White.spice", "Green.spice", "Spice-Up.spice", "Paper.spice", "BigCity.spice", "Colorful.spice", "Landscape.spice"};
+    private const string TEMPLATES[] = {"Black.spice", "White.spice", "Green.spice", "Spice-Up.spice", "Paper.spice", "Colorful.spice", "Landscape.spice"};
 
     public signal void item_selected (string data);
     public signal void file_selected (File file);
@@ -77,6 +77,11 @@ public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
         if (!file.query_exists ()) return;
 
         var item = new LibraryItem (file, real_file);
+        item_box.add (item);
+    }
+
+    public void add_from_data (string data, string? file_name) {
+        var item = new LibraryItem.from_data (data, file_name);
         item_box.add (item);
     }
 }

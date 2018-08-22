@@ -17,7 +17,6 @@
     <file alias="save-footer" compressed="false" preprocess="">SaveFooter-min.html</file>
   </gresource>
   <gresource prefix="/com/github/philip-scott/spice-up/templates">
-    <file alias="BigCity.spice" compressed="false" preprocess="">assets/templates/BigCity.spice</file>
     <file alias="Black.spice" compressed="false" preprocess="">assets/templates/Black.spice</file>
     <file alias="Colorful.spice" compressed="false" preprocess="">assets/templates/Colorful.spice</file>
     <file alias="Green.spice" compressed="false" preprocess="">assets/templates/Green.spice</file>
