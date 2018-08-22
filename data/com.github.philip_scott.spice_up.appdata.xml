@@ -26,6 +26,19 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+   <release version="1.5.0" date="2018-8-22">
+      <description>
+        <p>A Very Juno Update</p>
+        <ul>
+          <li>Spice-Up is now ready for elementary OS Juno!</li>
+          <li>Even more colors and gradients for you to make your presentations even better!</li>
+          <li>Files and Templates now show a label with it's name on the welcome screen</li>
+          <li>You can now copy and paste styles on the color pickers!</li>
+          <li>New templates will now be fetched from the web, so expect more to come!</li>
+          <li>New translations for Japanese, Catalan, Portuguese, Dutch!</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.3.2" date="2018-2-20">
       <description>
         <p>The Color Update, Part 2</p>
