@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
+* Copyright (c) 2018 Felipe Escoto (https://github.com/Philip-Scott/Spice-up)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
