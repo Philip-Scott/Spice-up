@@ -1,4 +1,4 @@
-project(com.github.philip-scott.spice-up)
+project(com.github.philip_scott.spice_up)
 cmake_minimum_required(VERSION 2.6)
 
 if ($ENV{USER} STREQUAL "pbuilder" OR $ENV{USER} STREQUAL "buildd")

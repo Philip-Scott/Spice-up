@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up) -->
 <component type="desktop">
-  <id>com.github.philip-scott.spice-up.desktop</id>
+  <id>com.github.philip_scott.spice_up.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Spice-Up</name>

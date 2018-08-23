@@ -1,4 +1,4 @@
-Source: com.github.philip-scott.spice-up
+Source: com.github.philip_scott.spice_up
 Section: editors
 Priority: optional
 Maintainer: Felipe Escoto <felescoto95@hotmail.com>
@@ -10,10 +10,10 @@ Build-Depends: cmake,
                libjson-glib-dev,
                libgudev-1.0-dev,
                libevdev-dev,
-               libsoup-2.4-dev
+               libsoup2.4-dev
 
 Standards-Version: 3.9.6
-Package: com.github.philip-scott.spice-up
+Package: com.github.philip_scott.spice_up
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: dpkg (>= 1.15.6)
