@@ -1,5 +1,5 @@
 # install desktop file
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip_scott.spice_up.desktop
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.desktop
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/applications/)
 
 # install assets
