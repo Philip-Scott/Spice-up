@@ -23,6 +23,7 @@
 <a href="https://www.bountysource.com/trackers/44752823-philip-scott-spice-up">
     <img src="https://www.bountysource.com/badge/tracker?tracker_id=44752823" alt="bountysource">
 </a>
+<img src="https://travis-ci.org/Philip-Scott/Spice-up.svg?branch=master" alt="build status">
 </p>
 
 Spice-up is a modern and intuitive desktop presentation app based upon [SpiceOfDesign's presentation concept](http://spiceofdesign.deviantart.com/art/New-Presentation-Concept-401767854). Built from the ground up for elementary OS, it gives you everything you need to create simple and beautiful presentations.
