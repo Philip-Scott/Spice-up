@@ -62,5 +62,5 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip_scott.spice_up.appda
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/metainfo/)
 
 # install the mimefile
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.mime.xml
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip_scott.spice_up.mime.xml
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/mime/packages/)
