@@ -36,7 +36,6 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
 
         delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.MENU);
         delete_button.set_tooltip_text (_("Delete"));
-        delete_button.get_style_context ().add_class ("spice");
 
         delete_button.clicked.connect (() => {
             if (this.item != null) {
@@ -50,7 +49,6 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         });
 
         clone_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.MENU);
-        clone_button.get_style_context ().add_class ("spice");
         clone_button.set_tooltip_text (_("Clone"));
 
         clone_button.clicked.connect (() => {
@@ -79,11 +77,9 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         });
 
         to_top = new Gtk.Button.from_icon_name ("go-up-symbolic", Gtk.IconSize.MENU);
-        to_top.get_style_context ().add_class ("spice");
         to_top.set_tooltip_text (_("Bring forward"));
 
         to_bottom = new Gtk.Button.from_icon_name ("go-down-symbolic", Gtk.IconSize.MENU);
-        to_bottom.get_style_context ().add_class ("spice");
         to_bottom.set_tooltip_text (_("Send backward"));
 
         var position_grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
