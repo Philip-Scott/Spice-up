@@ -164,6 +164,7 @@ public class Spice.SlideManager : Object {
         if (next_slide != null) {
             var next_index = slides.index_of (next_slide);
 
+
             slides.set (next_index, slide);
             slides.set (index, next_slide);
 
@@ -225,7 +226,11 @@ public class Spice.SlideManager : Object {
                     found = true;
                 }
             } else {
-                next_slide = end_presentation_slide;
+                if (window.is_fullscreen) {
+                    next_slide = end_presentation_slide;
+                } else {
+                    next_slide = null;
+                }
                 found = true;
             }
         } while (!found);
@@ -254,6 +259,7 @@ public class Spice.SlideManager : Object {
             }
 
             if (previous_index < 0) {
+                previous_slide = null;
                 found = true;
             }
         } while (!found);
@@ -403,4 +409,3 @@ public class Spice.SlideManager : Object {
         }
     }
 }
-
