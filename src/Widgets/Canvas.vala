@@ -87,14 +87,16 @@ public class Spice.Canvas : Gtk.Overlay {
             var display_widget = (CanvasItem) widget;
 
             var r = display_widget.rectangle;
-            int i = 0;
-            widget.get_preferred_width (out i, null);
-            widget.get_preferred_height (out i, null);
+            int w, h;
 
-            allocation.width = (int)(r.width * current_ratio);
-            allocation.height = (int)(r.height * current_ratio);
-            allocation.x = default_x_margin + (int)(r.x * current_ratio) + display_widget.delta_x;
-            allocation.y = default_y_margin + (int)(r.y * current_ratio) + display_widget.delta_y;
+            widget.get_preferred_width (out w, null);
+            widget.get_preferred_height (out h, null);
+
+            allocation.width = (int)(((double) r.width) * current_ratio + 0.5);
+            allocation.height = (int)(((double) r.height) * current_ratio + 0.5);
+            allocation.x = default_x_margin + (int)(r.x * current_ratio + 0.5) + display_widget.delta_x;
+            allocation.y = default_y_margin + (int)(r.y * current_ratio + 0.5) + display_widget.delta_y;
+
             return true;
         }
 
@@ -102,14 +104,14 @@ public class Spice.Canvas : Gtk.Overlay {
     }
 
     private void calculate_ratio () {
-        int max_width = 1520, max_height = 1520;
+        double max_width = 1500.0, max_height = 1500.0;
 
         current_allocated_width = get_allocated_width ();
         current_allocated_height = get_allocated_height ();
 
-        current_ratio = double.min ((double)(current_allocated_width - 24) / 1500.0, (double)(current_allocated_height - 24) / 1500.0);
-        default_x_margin = (int) ((current_allocated_width - max_width * current_ratio) / 2);
-        default_y_margin = (int) ((current_allocated_height - max_height * current_ratio) / 2);
+        current_ratio = ((double) (current_allocated_height - 24)) / 1500.0;
+        default_x_margin = (int) (((current_allocated_width - max_width * current_ratio) / 2) + 0.5);
+        default_y_margin = (int) (((current_allocated_height - max_height * current_ratio) / 2) + 0.5);
     }
 
     public CanvasItem add_item (CanvasItem item, bool undoable_action = false) {
