@@ -445,6 +445,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
             screen.get_monitor_geometry (primary_monitor == 1 ? 0 : 1, out rec);
 
             move (rec.x, rec.y);
+        } else if (DEBUG) {
+            presenter_window = new PresenterWindow (slide_manager, this);
+            presenter_window.show ();
         }
 
         notifications_last_state = get_notification_state ();

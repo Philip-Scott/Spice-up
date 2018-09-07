@@ -31,13 +31,27 @@ public class Spice.PresenterWindow : Gtk.Window {
 
     Clock clock;
 
+    private int _font_size;
+    private int font_size {
+        default = 12;
+        get {
+            return _font_size;
+        }
+        set {
+            if (value >= 12 && value <= 50) {
+                _font_size = value;
+                style ();
+            }
+        }
+    }
+
     public PresenterWindow (SlideManager slide_manager, Window window) {
         Object (slide_manager: slide_manager, window: window);
     }
 
     construct {
         title = "Spice-Up - Presenter View";
-        resizable = false;
+
         set_keep_above (true);
         stick ();
 
@@ -70,6 +84,8 @@ public class Spice.PresenterWindow : Gtk.Window {
         notes.halign = Gtk.Align.FILL;
         notes.indent = 6;
 
+        font_size = 12;
+
         var notes_scrolled = new Gtk.ScrolledWindow (null, null);
         notes_scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
         notes_scrolled.height_request = 130;
@@ -77,6 +93,7 @@ public class Spice.PresenterWindow : Gtk.Window {
 
         var frame = new Gtk.Frame (null);
         frame.add (notes_scrolled);
+        frame.expand = true;
 
         var grid = new Gtk.Grid ();
         grid.margin = 6;
@@ -167,6 +184,13 @@ public class Spice.PresenterWindow : Gtk.Window {
             case 65307: // Esc
                 end_presentation ();
                 return true;
+            case 61: // =
+            case 43: // +
+                font_size = font_size + 2;
+                return true;
+            case 45: // -
+                font_size = font_size - 2;
+                return true;
         }
 
         return false;
@@ -175,6 +199,16 @@ public class Spice.PresenterWindow : Gtk.Window {
     public void end_presentation () {
         window.end_presentation ();
     }
+
+    private void style () {
+        var notes_css = NOTES_CSS.printf (font_size);
+        Utils.set_style (notes, notes_css);
+    }
+
+    private const string NOTES_CSS = """
+    .view {
+        font-size: %dpx;
+    }""";
 
     private class SlideshowController : Gtk.Grid {
         public unowned Spice.SlideManager slide_manager { get; construct set; }
