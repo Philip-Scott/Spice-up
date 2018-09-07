@@ -58,9 +58,9 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/128/com.github.philip-scott.spic
         RENAME application-x-spiceup.svg)
 
 # install the appdata
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip_scott.spice_up.appdata.xml
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.appdata.xml
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/metainfo/)
 
 # install the mimefile
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip_scott.spice_up.mime.xml
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/com.github.philip-scott.spice-up.mime.xml
         DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/mime/packages/)
