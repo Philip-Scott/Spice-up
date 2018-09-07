@@ -43,8 +43,6 @@ public class Spice.Services.Fetcher {
         if (try_to_fetch) {
             debug ("Getting templates from server\n");
             new Thread<void*> ("fetch-templates", () => {
-                mutex.lock ();
-
                 var session = new Soup.Session ();
                 var message = new Soup.Message ("GET", TEMPLATES_URL);
 
@@ -54,6 +52,8 @@ public class Spice.Services.Fetcher {
                 foreach (var c in message.response_body.data) {
                     data.append ("%c".printf (c));
                 }
+
+                mutex.lock ();
 
                 cache = data.str;
                 if (cache != "") {
