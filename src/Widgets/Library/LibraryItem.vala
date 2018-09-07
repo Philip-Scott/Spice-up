@@ -90,12 +90,14 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
 
         show_all ();
 
-        event_box.button_release_event.connect ((event) => {
-            if (event.button != 3) return false;
-            show_popover ();
+        if (real_file) {
+            event_box.button_release_event.connect ((event) => {
+                if (event.button != 3) return false;
+                show_popover ();
 
-            return true;
-        });
+                return true;
+            });
+        }
     }
 
     private void show_popover () {
