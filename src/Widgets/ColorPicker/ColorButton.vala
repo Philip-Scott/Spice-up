@@ -21,6 +21,7 @@
 
 protected class Spice.ColorButton : Gtk.Button {
     protected Gtk.EventBox surface;
+    protected Gtk.EventBox checkered_bg;
 
     public string _color = "none";
     public string color {
@@ -45,13 +46,13 @@ protected class Spice.ColorButton : Gtk.Button {
         get_style_context ().add_class ("color-button");
         Utils.set_style (this, STYLE_CSS);
 
-        var background = new Gtk.EventBox ();
-        background.get_style_context ().add_class ("checkered");
-        Utils.set_style (background, CHECKERED_CSS);
+        checkered_bg = new Gtk.EventBox ();
+        checkered_bg.get_style_context ().add_class ("checkered");
+        Utils.set_style (checkered_bg, CHECKERED_CSS);
 
         can_focus = false;
-        add (background);
-        background.add (surface);
+        add (checkered_bg);
+        checkered_bg.add (surface);
     }
 
     public void set_size (int x, int y) {

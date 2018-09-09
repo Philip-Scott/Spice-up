@@ -84,6 +84,12 @@ public class Spice.ColorPicker : ColorButton {
     }
 
     construct {
+        get_style_context ().add_class ("spice");
+        surface.halign = Gtk.Align.CENTER;
+        surface.valign = Gtk.Align.CENTER;
+        checkered_bg.halign = Gtk.Align.CENTER;
+        checkered_bg.valign = Gtk.Align.CENTER;
+
         var main_grid = new Gtk.Grid ();
         main_grid.margin = 6;
 
@@ -290,8 +296,8 @@ public class Spice.ColorPicker : ColorButton {
 
     private void attach_color (string color, int x, int y) {
         var color_button = new ColorButton (color);
-        color_button.set_size (14, 84);
         color_button.get_style_context ().add_class ("flat");
+        color_button.set_size (14, 84);
         color_button.can_focus = true;
         color_button.margin_end = 0;
 

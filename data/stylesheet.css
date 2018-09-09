@@ -86,6 +86,14 @@ GtkToggleButton.spice, .spice,
     box-shadow: 0px 0px 1px 1px rgba (0,0,0, 0.1);
 }
 
+.spice-dynamic-toolbar .spice .entry {
+    padding: 0px 3px;
+}
+
+.spice-dynamic-toolbar .spice.padding-none {
+    padding: 0px;
+}
+
 .spice:active,
 .spice:checked,
 .spice:selected {

@@ -90,6 +90,8 @@ public class Spice.EntryCombo : Gtk.Box {
     // If strict_signal == true, it will only send activated if the entry is the same as a value on the list
     public EntryCombo (bool strict_signal = false, bool alphabetize = false, bool searchable = false) {
         this.strict_signal = strict_signal;
+        get_style_context ().add_class ("spice");
+        get_style_context ().add_class ("padding-none");
 
         row_map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
         keys = new Gee.HashMap<string, string> ();
@@ -107,7 +109,7 @@ public class Spice.EntryCombo : Gtk.Box {
         substitute_label.halign = Gtk.Align.START;
 
         var entry_substitute = new Gtk.Button ();
-        entry_substitute.get_style_context ().add_class ("entry");
+        entry_substitute.get_style_context ().add_class ("flat");
         entry_substitute.add (substitute_label);
         entry_substitute.can_focus = false;
 
@@ -121,7 +123,7 @@ public class Spice.EntryCombo : Gtk.Box {
         scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
         scroll.add (listbox);
 
-        popover = new Gtk.Popover (button);
+        popover = new Gtk.Popover (this);
         popover.position = Gtk.PositionType.BOTTOM;
 
         orientation = Gtk.Orientation.HORIZONTAL;
