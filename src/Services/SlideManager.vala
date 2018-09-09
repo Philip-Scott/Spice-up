@@ -164,7 +164,6 @@ public class Spice.SlideManager : Object {
         if (next_slide != null) {
             var next_index = slides.index_of (next_slide);
 
-
             slides.set (next_index, slide);
             slides.set (index, next_slide);
 
@@ -336,7 +335,13 @@ public class Spice.SlideManager : Object {
             slide.visible = true;
         }
 
-        slides.add (slide);
+        if (current_slide != null) {
+            var index = slides.index_of (current_slide);
+            slides.insert (index + 1, slide);
+        } else {
+            slides.add (slide);
+        }
+
         slideshow.add (slide.canvas);
         slideshow.show_all ();
 
