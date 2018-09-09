@@ -26,7 +26,7 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
-   <release version="1.5.1" date="2018-8-23">
+   <release version="1.5.2" date="2018-8-23">
       <description>
         <p>A Very Juno Update</p>
         <ul>
