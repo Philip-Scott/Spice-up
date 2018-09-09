@@ -72,6 +72,10 @@ public class Spice.Canvas : Gtk.Overlay {
         get_style_context ().add_class ("canvas");
         add (grid);
 
+        // Hacky fix to prevent empty slides
+        // from not rendering in the sidebar
+        add_overlay (new Gtk.Label (""));
+
         calculate_ratio ();
         load_data ();
         style ();
