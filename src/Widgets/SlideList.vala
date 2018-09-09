@@ -18,31 +18,33 @@
 *
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
-using Cairo;
 
-public class Spice.SlideList : Gtk.ScrolledWindow {
+public class Spice.SlideList : Gtk.Grid {
     private Gtk.Grid slides_grid;
     private Gtk.ListBox slides_list;
-    private SlideManager manager;
+    private unowned SlideManager manager;
 
     private Gtk.Button new_slide_button;
 
     public SlideList (SlideManager manager) {
+        orientation = Gtk.Orientation.VERTICAL;
+        get_style_context ().add_class ("slide-list");
+
         this.manager = manager;
 
-        hscrollbar_policy = Gtk.PolicyType.NEVER;
-        vexpand = true;
+        var scrollbox = new Gtk.ScrolledWindow (null, null);
+        scrollbox.hscrollbar_policy = Gtk.PolicyType.NEVER;
+        scrollbox.vexpand = true;
 
         slides_grid = new Gtk.Grid ();
         slides_grid.orientation = Gtk.Orientation.VERTICAL;
-        slides_grid.get_style_context ().add_class ("slide-list");
 
         slides_list = new Gtk.ListBox ();
-        slides_list.get_style_context ().add_class ("slide-list");
         slides_list.get_style_context ().add_class ("linked");
 
         slides_grid.add (slides_list);
-        this.add (slides_grid);
+        scrollbox.add (slides_grid);
+        add (scrollbox);
 
         slides_list.row_selected.connect ((row) => {
             if (row is SlideListRow) {
@@ -87,7 +89,7 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
         });
 
         new_slide_button = add_new_slide ();
-        slides_grid.add (new_slide_button);
+        add (new_slide_button);
 
         new_slide_button.clicked.connect (() => {
             manager.making_new_slide = true;
@@ -119,15 +121,16 @@ public class Spice.SlideList : Gtk.ScrolledWindow {
     public static int HEIGHT = 150;
 
     public Gtk.Button add_new_slide () {
-        var button = new Gtk.Button ();
-        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.DIALOG);
-        plus_icon.margin = 24;
+        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+        plus_icon.margin = 3;
 
-        button.get_style_context ().add_class ("slide");
+        var button = new Gtk.Button ();
+
+
         button.get_style_context ().add_class ("new");
         button.add (plus_icon);
-        button.set_size_request (WIDTH, HEIGHT);
-        button.margin = 9;
+        button.set_size_request (WIDTH, 0);
+        button.margin = 0;
         button.can_focus = false;
 
         return button;
