@@ -36,14 +36,12 @@ public class Spice.SlideList : Gtk.Grid {
         scrollbox.hscrollbar_policy = Gtk.PolicyType.NEVER;
         scrollbox.vexpand = true;
 
-        slides_grid = new Gtk.Grid ();
-        slides_grid.orientation = Gtk.Orientation.VERTICAL;
-
         slides_list = new Gtk.ListBox ();
         slides_list.get_style_context ().add_class ("linked");
+        slides_list.get_style_context ().add_class ("slide-list");
+        slides_list.vexpand = true;
 
-        slides_grid.add (slides_list);
-        scrollbox.add (slides_grid);
+        scrollbox.add (slides_list);
         add (scrollbox);
 
         slides_list.row_selected.connect ((row) => {
@@ -89,6 +87,7 @@ public class Spice.SlideList : Gtk.Grid {
         });
 
         new_slide_button = add_new_slide ();
+        add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
         add (new_slide_button);
 
         new_slide_button.clicked.connect (() => {
