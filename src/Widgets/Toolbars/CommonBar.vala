@@ -78,11 +78,11 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
             }
         });
 
-        to_top = new Gtk.Button.from_icon_name ("go-up-symbolic", Gtk.IconSize.MENU);
+        to_top = new Gtk.Button.from_icon_name ("selection-raise-symbolic", Gtk.IconSize.MENU);
         to_top.get_style_context ().add_class ("spice");
         to_top.set_tooltip_text (_("Bring forward"));
 
-        to_bottom = new Gtk.Button.from_icon_name ("go-down-symbolic", Gtk.IconSize.MENU);
+        to_bottom = new Gtk.Button.from_icon_name ("selection-lower-symbolic", Gtk.IconSize.MENU);
         to_bottom.get_style_context ().add_class ("spice");
         to_bottom.set_tooltip_text (_("Send backward"));
 

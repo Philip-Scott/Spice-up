@@ -32,6 +32,7 @@ vala_precompile(VALA_C
   Widgets/Welcome.vala
   Widgets/SlideWidget.vala
   Widgets/PresenterView.vala
+  Widgets/PresenterNotes.vala
 
   Widgets/ColorPicker/ColorButton.vala
   Widgets/ColorPicker/ColorPicker.vala

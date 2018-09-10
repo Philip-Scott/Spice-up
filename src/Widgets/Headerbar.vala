@@ -25,7 +25,8 @@ public enum Spice.HeaderButton {
     TEXT,
     IMAGE,
     SHAPE,
-    RETURN;
+    RETURN,
+    NOTES;
 }
 
 public class Spice.Headerbar : Gtk.HeaderBar {
@@ -38,8 +39,9 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     private HeaderbarButton shape;
     private HeaderbarButton export;
     private HeaderbarButton show_welcome;
-
     private HeaderbarButton present;
+
+    private Gtk.ToggleButton show_notes;
 
     private Spice.SlideManager slide_manager;
 
@@ -56,6 +58,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
             export.sensitive = value;
             present.sensitive = value;
             show_welcome.sensitive = value;
+            show_notes.sensitive = value;
         }
     }
 
@@ -86,6 +89,19 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         present = new HeaderbarButton ("media-playback-start-symbolic",_("Start Presentation"), null);
         present.get_style_context ().add_class ("suggested-action");
 
+        show_notes = new Gtk.ToggleButton ();
+        show_notes.can_focus = false;
+
+        Gtk.Image show_notes_image = new Gtk.Image.from_icon_name ("accessories-text-editor-symbolic", Gtk.IconSize.BUTTON);
+        show_notes_image.margin = 3;
+
+        show_notes.get_style_context ().add_class ("spice");
+        show_notes.set_tooltip_text (_("Presenter Notes"));
+        show_notes.add (show_notes_image);
+        show_notes.clicked.connect (() => {
+            button_clicked (Spice.HeaderButton.NOTES);
+        });
+
         var undo_redo_box = new Gtk.Grid ();
         var object_box = new Gtk.Grid ();
 
@@ -105,6 +121,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         pack_end (present);
         pack_end (export);
         pack_end (show_welcome);
+        pack_end (show_notes);
     }
 
     private void connect_signals () {
