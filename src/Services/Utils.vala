@@ -148,6 +148,93 @@ public class Spice.Utils {
         var cursor = new Gdk.Cursor.from_name (Gdk.Display.get_default (), cursor_type);
         window.get_screen ().get_active_window ().set_cursor (cursor);
     }
+
+    public static void copy (Object object) {
+        if (object == null) return;
+        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
+
+        if (object is Spice.CanvasItem) {
+            clipboard.set_text ((object as Spice.CanvasItem).serialise (), -1);
+        } else if (object is Spice.Slide){
+            clipboard.set_text ((object as Slide).serialise (), -1);
+        }
+    }
+    public static void paste (Spice.SlideManager manager) {
+        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
+        var data = clipboard.wait_for_text ();
+
+        if (data == null) return;
+
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (data);
+
+            var root_object = parser.get_root ().get_object ();
+
+            if (root_object.has_member ("preview")) {
+                manager.new_slide (root_object, true);
+            } else {
+                manager.current_slide.add_item_from_data (root_object, true, true);
+            }
+        } catch (Error e) {
+            warning ("Cloning didn't work: %s", e.message);
+        }
+    }
+
+    public static void cut (Object object) {
+        if (object == null) return;
+        Utils.copy (object);
+        Utils.delete (object);
+    }
+
+    public static void delete (Object object) {
+        if (object == null) return;
+
+        if (object is Spice.CanvasItem) {
+            (object as Spice.CanvasItem).delete ();
+        } else if (object is Spice.Slide) {
+            (object as Slide).delete ();
+        }
+    }
+
+    public static void duplicate (Object object, Spice.SlideManager manager) {
+        if (object == null) return;
+
+        string data;
+
+        if (object is Spice.CanvasItem) {
+            data = (object as Spice.CanvasItem).serialise ();
+        } else if (object is Spice.Slide){
+            data = (object as Slide).serialise ();
+        } else {
+            return;
+        }
+
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (data);
+
+            var root_object = parser.get_root ().get_object ();
+
+            if (object is Spice.CanvasItem) {
+                manager.current_slide.add_item_from_data (root_object, true, true);
+            } else {
+                manager.new_slide (root_object, true);
+            }
+        } catch (Error e) {
+            warning ("Cloning didn't work: %s", e.message);
+        }
+    }
+
+    public static void new_slide (Spice.SlideManager manager) {
+        manager.making_new_slide = true;
+
+        var slide = manager.new_slide (null, true);
+        slide.reload_preview_data ();
+        manager.current_slide = slide;
+
+        manager.making_new_slide = false;
+    }
 }
 
 public enum Spice.AspectRatio {

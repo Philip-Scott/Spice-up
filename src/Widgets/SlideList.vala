@@ -95,7 +95,7 @@ public class Spice.SlideList : Gtk.Grid {
     }
 
     private SlideListRow add_slide (Slide slide) {
-        var slide_row = new SlideListRow (slide);
+        var slide_row = new SlideListRow (slide, manager);
 
         slide_row.get_style_context ().add_class ("slide");
 
@@ -122,13 +122,7 @@ public class Spice.SlideList : Gtk.Grid {
         new_slide_button.can_focus = false;
 
         new_slide_button.clicked.connect (() => {
-            manager.making_new_slide = true;
-
-            var slide = manager.new_slide (null, true);
-            slide.reload_preview_data ();
-            manager.current_slide = slide;
-
-            manager.making_new_slide = false;
+            Utils.new_slide (manager);
         });
 
         return new_slide_button;
@@ -136,18 +130,18 @@ public class Spice.SlideList : Gtk.Grid {
 
     private class SlideListRow : Gtk.ListBoxRow {
         public unowned Spice.Slide slide;
+        private unowned SlideManager manager;
+
         private SlideWidget slide_widget;
 
-        public SlideListRow (Slide slide) {
+        public SlideListRow (Slide slide, SlideManager manager) {
             this.slide = slide;
+            this.manager = manager;
 
             slide_widget = new SlideWidget.from_slide (slide);
 
             slide_widget.settings_requested.connect (() => {
-                var popover = SlideSettingsPopover.get_instance ();
-                popover.set_relative_to (slide_widget.settings_revealer);
-                popover.slide = this.slide;
-                popover.show_all ();
+                popup_menu ();
             });
 
             add (slide_widget);
@@ -174,67 +168,71 @@ public class Spice.SlideList : Gtk.Grid {
             }
         """;
 
-        private class SlideSettingsPopover : Gtk.Popover {
-            private static SlideSettingsPopover? instance = null;
+        private Gtk.Menu? menu = null;
 
-            private unowned Slide _slide;
-            public Slide slide {
-                get {
-                    return _slide;
-                } set {
-                    changing = true;
-                    _slide = value;
-                    notes.buffer.text = slide.notes;
-                    changing = false;
-                }
+        public void popup_menu () {
+            var menu = new Gtk.Menu ();
+
+            var cut = new Gtk.MenuItem.with_label (_("Cut"));
+            var copy = new Gtk.MenuItem.with_label (_("Copy"));
+            var paste = new Gtk.MenuItem.with_label (_("Paste"));
+            var delete_slide = new Gtk.MenuItem.with_label (_("Delete"));
+
+            var new_slide = new Gtk.MenuItem.with_label (_("New Slide"));
+            // var new_item = new Gtk.MenuItem.with_label (_("Skip Slide"));
+            var duplicate_slide = new Gtk.MenuItem.with_label (_("Duplicate Slide"));
+
+            cut.activate.connect (() => {
+                Utils.cut (this.slide);
+            });
+
+            copy.activate.connect (() => {
+                Utils.copy (this.slide);
+            });
+
+            paste.activate.connect (() => {
+                Utils.paste (this.manager);
+            });
+
+            delete_slide.activate.connect (() => {
+                Utils.delete (this.slide);
+            });
+
+            new_slide.activate.connect (() => {
+                Utils.new_slide (manager);
+            });
+
+            duplicate_slide.activate.connect (() => {
+                Utils.duplicate (this.slide, this.manager);
+            });
+
+            menu.add (cut);
+            menu.add (copy);
+            menu.add (paste);
+            menu.add (delete_slide);
+            menu.add (new Gtk.SeparatorMenuItem ());
+            menu.add (new_slide);
+            menu.add (duplicate_slide);
+
+            menu.attach_to_widget (this, null);
+            menu.show_all ();
+
+            menu.selection_done.connect (() => {
+                menu.detach ();
+                menu.destroy ();
+            });
+
+            menu.popup_at_widget (this, Gdk.Gravity.CENTER, Gdk.Gravity.CENTER, null);
+        }
+
+        public override bool button_press_event (Gdk.EventButton event) {
+            activate ();
+
+            if (event.button == 3) {
+                popup_menu ();
             }
 
-            private bool changing = false;
-            private Gtk.TextView notes;
-
-            public static SlideSettingsPopover get_instance () {
-                if (instance == null) {
-                    instance = new SlideSettingsPopover ();
-                }
-
-                return instance;
-            }
-
-            construct {
-                position = Gtk.PositionType.RIGHT;
-
-                notes = new Gtk.TextView ();
-                notes.get_style_context ().add_class ("h3");
-                notes.wrap_mode = Gtk.WrapMode.WORD_CHAR;
-                notes.halign = Gtk.Align.FILL;
-                notes.indent = 6;
-
-                notes.buffer.changed.connect (() => {
-                    if (!this.changing) {
-                        this.slide.notes = notes.buffer.text;
-                    }
-                });
-
-                var notes_scrolled = new Gtk.ScrolledWindow (null, null);
-                notes_scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
-                notes_scrolled.height_request = 150;
-                notes_scrolled.width_request = 290;
-                notes_scrolled.add (notes);
-
-                var frame = new Gtk.Frame (null);
-                frame.add (notes_scrolled);
-
-                var notes_label = new Granite.HeaderLabel (_("Presenter Notes:"));
-                notes_label.margin_start = 1;
-
-                var grid = new Gtk.Grid ();
-                grid.orientation = Gtk.Orientation.VERTICAL;
-                grid.add (notes_label);
-                grid.add (frame);
-                grid.margin = 6;
-
-                add (grid);
-            }
+            return false;
         }
     }
 }
