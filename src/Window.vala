@@ -287,42 +287,19 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private bool copy () {
-        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
-
         var current_item = slide_manager.current_item;
 
         if (current_item != null) {
-            clipboard.set_text (current_item.serialise (), -1);
+            Utils.copy (current_item);
         } else {
-            if (slide_manager.current_slide != null) {
-                clipboard.set_text (slide_manager.current_slide.serialise (), -1);
-            }
+            Utils.copy (slide_manager.current_slide);
         }
 
         return true;
     }
 
     private bool paste () {
-        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
-        var data = clipboard.wait_for_text ();
-
-        if (data == null) return false;
-
-        try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (data);
-
-            var root_object = parser.get_root ().get_object ();
-
-            if (root_object.has_member ("preview")) {
-                slide_manager.new_slide (root_object, true);
-            } else {
-                slide_manager.current_slide.add_item_from_data (root_object, true, true);
-            }
-        } catch (Error e) {
-            warning ("Cloning didn't work: %s", e.message);
-        }
-
+        Utils.paste (slide_manager);
         return true;
     }
 
@@ -330,11 +307,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
         var current_item = slide_manager.current_item;
 
         if (current_item != null) {
-            current_item.delete ();
-        } else {
-            if (slide_manager.current_slide != null) {
-                slide_manager.current_slide.delete ();
-            }
+            Utils.delete (current_item);
+        } else if (slide_manager.current_slide != null) {
+            Utils.delete (slide_manager.current_slide);
         }
 
         return true;
