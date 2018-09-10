@@ -46,6 +46,20 @@ public class Spice.SlideManager : Object {
         }
     }
 
+    public Slide? preview_slide_ = null;
+    public Slide preview_slide {
+        get {
+            if (preview_slide_ == null || preview_slide_.visible == false) {
+                return null;
+            }
+
+            return preview_slide_;
+        }
+        set {
+            preview_slide_ = value;
+        }
+    }
+
     public Slide? current_slide {
         get { return slide_; }
         set {
@@ -86,6 +100,7 @@ public class Spice.SlideManager : Object {
 
     public void reset () {
         slide_ = null;
+        preview_slide_ = null;
 
         foreach (var slide in slides) {
             slideshow.remove (slide.canvas);
@@ -120,7 +135,9 @@ public class Spice.SlideManager : Object {
         }
 
         var current_slide_index = current_slide != null ? slides.index_of (current_slide) : 0;
-        return """{"current-slide":%d, "aspect-ratio":%d, "slides": [%s]}""".printf (current_slide_index, current_ratio, data);
+        var preview_slide_index = preview_slide != null ? slides.index_of (preview_slide) : 0;
+
+        return """{"current-slide":%d, "preview-slide":%d, "aspect-ratio":%d, "slides": [%s]}""".printf (current_slide_index, preview_slide_index,  current_ratio, data);
     }
 
     public void load_data (string data) {
@@ -151,6 +168,15 @@ public class Spice.SlideManager : Object {
                 current_slide.reload_preview_data ();
             } else {
                 current_slide = slides[0];
+            }
+
+            if (root_object.has_member ("preview-slide")) {
+                position = (int) root_object.get_int_member ("preview-slide");
+                if (slides.size > position && position >= 0) {
+                    preview_slide = slides[position];
+                } else {
+                    preview_slide = slides[0];
+                }
             }
         } catch (Error e) {
             error ("Error loading file: %s", e.message);

@@ -181,6 +181,7 @@ public class Spice.SlideList : Gtk.Grid {
             var new_slide = new Gtk.MenuItem.with_label (_("New Slide"));
             // var new_item = new Gtk.MenuItem.with_label (_("Skip Slide"));
             var duplicate_slide = new Gtk.MenuItem.with_label (_("Duplicate Slide"));
+            var set_as_preview = new Gtk.MenuItem.with_label (_("Set as File Preview"));
 
             cut.activate.connect (() => {
                 Utils.cut (this.slide);
@@ -206,6 +207,10 @@ public class Spice.SlideList : Gtk.Grid {
                 Utils.duplicate (this.slide, this.manager);
             });
 
+            set_as_preview.activate.connect (() => {
+                this.manager.preview_slide = this.slide;
+            });
+
             menu.add (cut);
             menu.add (copy);
             menu.add (paste);
@@ -213,6 +218,8 @@ public class Spice.SlideList : Gtk.Grid {
             menu.add (new Gtk.SeparatorMenuItem ());
             menu.add (new_slide);
             menu.add (duplicate_slide);
+            menu.add (new Gtk.SeparatorMenuItem ());
+            menu.add (set_as_preview);
 
             menu.attach_to_widget (this, null);
             menu.show_all ();

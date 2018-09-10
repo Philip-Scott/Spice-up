@@ -32,10 +32,18 @@ public class Spice.Utils {
     public static string get_thumbnail_data (string raw_json) {
         var root_object = get_json_object (raw_json);
         var slides_array = root_object.get_array_member ("slides");
+        var preview_index = 0;
+
+        if (root_object.has_member ("preview-slide")) {
+            preview_index = (int) root_object.get_int_member ("preview-slide");
+        }
 
         var slides = slides_array.get_elements ();
+        if (preview_index > slides.length ()) preview_index = 0;
+
         if (slides.length () > 0) {
-            var preview_data = slides.nth_data (0).get_object ().get_string_member ("preview");
+
+            var preview_data = slides.nth_data (preview_index).get_object ().get_string_member ("preview");
 
             if (preview_data != null) {
                 return preview_data;
