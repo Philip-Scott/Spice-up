@@ -49,6 +49,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Gtk.Revealer toolbar_revealer;
     private Gtk.AspectFrame? aspect_frame = null;
     private Gtk.Overlay app_overlay;
+    private Spice.PresenterNotes presenter_notes;
 
     private Gtk.Stack app_stack;
     private Spice.Welcome? welcome = null;
@@ -103,6 +104,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
             sidebar_revealer = new Gtk.Revealer ();
             toolbar_revealer = new Gtk.Revealer ();
 
+            presenter_notes = new Spice.PresenterNotes ();
+
             sidebar_revealer.add (slide_list);
             sidebar_revealer.reveal_child = true;
 
@@ -117,9 +120,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
             var grid = new Gtk.Grid ();
             grid.get_style_context ().add_class ("app-back");
-            grid.attach (toolbar_revealer, 1, 0, 2, 1);
-            grid.attach (sidebar_revealer, 0, 0, 1, 2);
+            grid.attach (toolbar_revealer, 1, 0, 1, 1);
+            grid.attach (sidebar_revealer, 0, 0, 1, 3);
             grid.attach (aspect_frame,     1, 1, 1, 1);
+            grid.attach (presenter_notes,   1, 2, 1, 1);
 
             app_stack.add_named (grid, "application");
 
@@ -149,6 +153,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 return;
             }
 
+            if (button == Spice.HeaderButton.NOTES) {
+                presenter_notes.reveal_child = !presenter_notes.reveal_child;
+                return;
+            }
+
             var item = slide_manager.request_new_item (button);
 
             if (item != null) {
@@ -171,6 +180,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 sidebar_revealer.visible = !is_fullscreen;
                 sidebar_revealer.reveal_child = !is_fullscreen;
                 toolbar_revealer.reveal_child = !is_fullscreen;
+                presenter_notes.visible =!is_fullscreen;
                 slide_manager.checkpoint = null;
 
                 if (toast != null && notification_shown) {
@@ -183,6 +193,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
             }
 
             return false;
+        });
+
+        slide_manager.current_slide_changed.connect ((current_slide) => {
+            presenter_notes.set_text (current_slide.notes);
+        });
+
+        presenter_notes.text_changed.connect ((text) => {
+            slide_manager.current_slide.notes = text;
         });
 
         var undo_action = new SimpleAction ("undo-action", null);
@@ -220,6 +238,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
         debug ("Key: %s %u", key.str, key.keyval);
+        if (presenter_notes.notes_area.has_focus) return false;
 
         switch (key.keyval) {
             // Next Slide

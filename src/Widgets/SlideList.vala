@@ -142,6 +142,7 @@ public class Spice.SlideList : Gtk.Grid {
             this.slide = slide;
 
             slide_widget = new SlideWidget.from_slide (slide);
+
             slide_widget.settings_requested.connect (() => {
                 var popover = SlideSettingsPopover.get_instance ();
                 popover.set_relative_to (slide_widget.settings_revealer);
