@@ -86,19 +86,8 @@ public class Spice.SlideList : Gtk.Grid {
             else return 0;
         });
 
-        new_slide_button = add_new_slide ();
         add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
-        add (new_slide_button);
-
-        new_slide_button.clicked.connect (() => {
-            manager.making_new_slide = true;
-
-            var slide = manager.new_slide (null, true);
-            slide.reload_preview_data ();
-            manager.current_slide = slide;
-
-            manager.making_new_slide = false;
-        });
+        add (slides_toolbar ());
 
         foreach (var slide in manager.slides) {
             add_slide (slide);
@@ -119,20 +108,30 @@ public class Spice.SlideList : Gtk.Grid {
     public static int WIDTH = 200;
     public static int HEIGHT = 150;
 
-    public Gtk.Button add_new_slide () {
+    public Gtk.Button slides_toolbar () {
         var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
         plus_icon.margin = 3;
 
-        var button = new Gtk.Button ();
+        var new_slide_button = new Gtk.Button ();
 
+        new_slide_button.set_tooltip_text (_("Add a Slide"));
+        new_slide_button.get_style_context ().add_class ("new");
+        new_slide_button.add (plus_icon);
+        new_slide_button.set_size_request (WIDTH, 0);
+        new_slide_button.margin = 0;
+        new_slide_button.can_focus = false;
 
-        button.get_style_context ().add_class ("new");
-        button.add (plus_icon);
-        button.set_size_request (WIDTH, 0);
-        button.margin = 0;
-        button.can_focus = false;
+        new_slide_button.clicked.connect (() => {
+            manager.making_new_slide = true;
 
-        return button;
+            var slide = manager.new_slide (null, true);
+            slide.reload_preview_data ();
+            manager.current_slide = slide;
+
+            manager.making_new_slide = false;
+        });
+
+        return new_slide_button;
     }
 
     private class SlideListRow : Gtk.ListBoxRow {
