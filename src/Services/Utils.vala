@@ -157,36 +157,100 @@ public class Spice.Utils {
         window.get_screen ().get_active_window ().set_cursor (cursor);
     }
 
+
+    enum Target {
+        STRING,
+        IMAGE,
+        SPICE
+    }
+
+    const string SPICE_UP_TARGET_NAME = "x-application/spice-up-data";
+    const Gtk.TargetEntry[] target_list = {
+        { "text/plain", 0, Target.STRING },
+        { "STRING", 0, Target.STRING },
+        { "image/png", 0, Target.IMAGE },
+        { SPICE_UP_TARGET_NAME, 0, Target.SPICE }
+    };
+
+    static weak Object object_ref;
     public static void copy (Object object) {
         if (object == null) return;
-        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
 
-        if (object is Spice.CanvasItem) {
-            clipboard.set_text ((object as Spice.CanvasItem).serialise (), -1);
-        } else if (object is Spice.Slide){
-            clipboard.set_text ((object as Slide).serialise (), -1);
+        Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
+        object_ref = object;
+        if (object_ref == null) debug ("is null\n");
+
+        clipboard.set_with_data (target_list, set_with_data, null, null);
+    }
+
+    public static void set_with_data (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, uint info, void* user_data_or_owner) {
+        switch (info) {
+            case Target.STRING:
+                debug ("String requested\n");
+                if (object_ref is Spice.TextItem) {
+                    selection_data.set_text ((object_ref as Spice.TextItem).text, -1);
+                }
+                break;
+            case Target.IMAGE:
+                debug ("Image requested\n"); break;
+            case Target.SPICE:
+                debug ("Spice requested\n");
+                if (object_ref is Spice.CanvasItem) {
+                    debug ("canvas item\n");
+                    selection_data.@set (spice_atom, 0, (object_ref as Spice.CanvasItem).serialise ().data);
+                } else if (object_ref is Spice.Slide) {
+                    debug ("slide\n");
+                    selection_data.@set (spice_atom, 0, (object_ref as Slide).serialise ().data);
+                } else {
+                    return;
+                }
+                break;
+            default:
+                debug ("Other data %u\n", info); break;
         }
     }
+
+    static Gdk.Atom spice_atom = Gdk.Atom.intern_static_string ("x-application/spice-up-data");
+
     public static void paste (Spice.SlideManager manager) {
-        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
-        var data = clipboard.wait_for_text ();
+        Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
+        bool is_image = clipboard.wait_is_image_available ();
 
-        if (data == null) return;
+        Gdk.Atom[] targets;
+        clipboard.wait_for_targets (out targets);
 
-        try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (data);
-
-            var root_object = parser.get_root ().get_object ();
-
-            if (root_object.has_member ("preview")) {
-                manager.new_slide (root_object, true);
-            } else {
-                manager.current_slide.add_item_from_data (root_object, true, true);
+        Gdk.Atom? spice_atom = null;
+        foreach (var target in targets) {
+            if (target.name () == SPICE_UP_TARGET_NAME) {
+                spice_atom = target;
+                break;
             }
-        } catch (Error e) {
-            warning ("Cloning didn't work: %s", e.message);
         }
+
+        if (spice_atom != null) {
+            clipboard.request_contents (spice_atom, (c, raw_data) => {
+                var data = (string) raw_data.get_data ();
+                if (data == null) return;
+
+                try {
+                    var parser = new Json.Parser ();
+                    parser.load_from_data (data);
+
+                    var root_object = parser.get_root ().get_object ();
+
+                    if (root_object.has_member ("preview")) {
+                        manager.new_slide (root_object, true);
+                    } else {
+                        manager.current_slide.add_item_from_data (root_object, true, true);
+                    }
+                } catch (Error e) {
+                    warning ("Cloning didn't work: %s", e.message);
+                }
+            });
+            return;
+        }
+
+        // TODO: Handle other types of data, such as Text, images and more
     }
 
     public static void cut (Object object) {
