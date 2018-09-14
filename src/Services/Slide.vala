@@ -70,9 +70,8 @@ public class Spice.Slide : Object {
         var items = save_data.get_array_member ("items");
 
         foreach (var raw in items.get_elements ()) {
-            var item = raw.get_object ();
-
-            add_item_from_data (item);
+            var item = Utils.canvas_item_from_data (raw.get_object (), canvas);
+            add_item (item);
         }
 
         this.save_data = null;
@@ -94,29 +93,12 @@ public class Spice.Slide : Object {
         }
     }
 
-    public void add_item_from_data (Json.Object data, bool select_item = false, bool save_history = false) {
-        string type = data.get_string_member ("type");
-        CanvasItem? item = null;
+    public void add_item (CanvasItem item, bool select_item = false, bool save_history = false) {
+        canvas.add_item (item, save_history);
 
-        switch (type) {
-            case "text":
-                item = new TextItem (canvas, data);
-            break;
-            case "color":
-                item = new ColorItem (canvas, data);
-            break;
-            case "image":
-                item = new ImageItem (canvas, data);
-            break;
-        }
-
-        if (item != null) {
-            canvas.add_item (item, save_history);
-
-            if (select_item) {
-                canvas.item_clicked (item);
-                item.clicked ();
-            }
+        if (select_item) {
+            canvas.item_clicked (item);
+            item.clicked ();
         }
     }
 

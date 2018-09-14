@@ -148,7 +148,7 @@ public class Spice.Utils {
             context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         } catch (Error e) {
             warning ("Style error: %s", e.message);
-            stderr.printf ("%s %s\n", widget.name, css);
+            debug ("%s %s\n", widget.name, css);
         }
     }
 
@@ -212,6 +212,25 @@ public class Spice.Utils {
 
     static Gdk.Atom spice_atom = Gdk.Atom.intern_static_string ("x-application/spice-up-data");
 
+    public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas canvas) {
+        string type = data.get_string_member ("type");
+        CanvasItem? item = null;
+
+        switch (type) {
+            case "text":
+                item = new TextItem (canvas, data);
+            break;
+            case "color":
+                item = new ColorItem (canvas, data);
+            break;
+            case "image":
+                item = new ImageItem (canvas, data);
+            break;
+        }
+
+        return item;
+    }
+
     public static void paste (Spice.SlideManager manager) {
         Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
         bool is_image = clipboard.wait_is_image_available ();
@@ -221,9 +240,10 @@ public class Spice.Utils {
 
         Gdk.Atom? spice_atom = null;
         foreach (var target in targets) {
+            debug ("%s\n", target.name());
             if (target.name () == SPICE_UP_TARGET_NAME) {
                 spice_atom = target;
-                break;
+                //break;
             }
         }
 
@@ -232,19 +252,14 @@ public class Spice.Utils {
                 var data = (string) raw_data.get_data ();
                 if (data == null) return;
 
-                try {
-                    var parser = new Json.Parser ();
-                    parser.load_from_data (data);
+                var root_object = get_json_object (data);
+                if (root_object == null) return;
 
-                    var root_object = parser.get_root ().get_object ();
-
-                    if (root_object.has_member ("preview")) {
-                        manager.new_slide (root_object, true);
-                    } else {
-                        manager.current_slide.add_item_from_data (root_object, true, true);
-                    }
-                } catch (Error e) {
-                    warning ("Cloning didn't work: %s", e.message);
+                if (root_object.has_member ("preview")) {
+                    manager.new_slide (root_object, true);
+                } else {
+                    var item = canvas_item_from_data (root_object, manager.current_slide.canvas);
+                    manager.current_slide.add_item (item, true, true);
                 }
             });
             return;
@@ -282,19 +297,14 @@ public class Spice.Utils {
             return;
         }
 
-        try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (data);
+        var root_object = get_json_object (data);
+        if (root_object == null) return;
 
-            var root_object = parser.get_root ().get_object ();
-
-            if (object is Spice.CanvasItem) {
-                manager.current_slide.add_item_from_data (root_object, true, true);
-            } else {
-                manager.new_slide (root_object, true);
-            }
-        } catch (Error e) {
-            warning ("Cloning didn't work: %s", e.message);
+        if (object is Spice.CanvasItem) {
+            var item = canvas_item_from_data (root_object, manager.current_slide.canvas);
+            manager.current_slide.add_item (item, true, true);
+        } else {
+            manager.new_slide (root_object, true);
         }
     }
 
