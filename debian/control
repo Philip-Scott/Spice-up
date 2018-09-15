@@ -1,0 +1,21 @@
+Source: com.github.philip-scott.spice-up
+Section: editors
+Priority: optional
+Maintainer: Felipe Escoto <felescoto95@hotmail.com>
+Build-Depends: cmake,
+               debhelper (>= 9),
+               libgtk-3-dev,
+               valac (>= 0.26),
+               libgranite-dev,
+               libjson-glib-dev,
+               libgudev-1.0-dev,
+               libevdev-dev,
+               libsoup2.4-dev
+
+Standards-Version: 3.9.6
+Package: com.github.philip-scott.spice-up
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Pre-Depends: dpkg (>= 1.15.6)
+Description: Spice-Up
+ Create simple and beautiful presentations
