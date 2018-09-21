@@ -24,6 +24,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
 
     private Spice.ColorPicker canvas_gradient_background;
     private Spice.EntryCombo canvas_pattern;
+    private Spice.EntryCombo transition;
     private SlideManager manager;
 
     public CanvasToolbar (SlideManager slide_manager) {
@@ -71,8 +72,34 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
             update_properties ();
         });
 
+        transition = new Spice.EntryCombo (true, false);
+        transition.set_tooltip_text (_("Transition"));
+        transition.editable = false;
+
+        transition.add_entry (((int) Gtk.StackTransitionType.NONE).to_string (), _("No Transition"));
+        transition.add_entry (((int) Gtk.StackTransitionType.CROSSFADE).to_string (), _("Crossfade"));
+        transition.add_entry (((int) Gtk.StackTransitionType.SLIDE_RIGHT).to_string (), _("Slide right"));
+        transition.add_entry (((int) Gtk.StackTransitionType.SLIDE_LEFT).to_string (), _("Slide left"));
+        transition.add_entry (((int) Gtk.StackTransitionType.SLIDE_UP).to_string (), _("Slide up"));
+        transition.add_entry (((int) Gtk.StackTransitionType.SLIDE_DOWN).to_string (), _("Slide down"));
+        transition.add_entry (((int) Gtk.StackTransitionType.OVER_UP).to_string (), _("Cover up"));
+        transition.add_entry (((int) Gtk.StackTransitionType.OVER_DOWN).to_string (), _("Cover down"));
+        transition.add_entry (((int) Gtk.StackTransitionType.OVER_LEFT).to_string (), _("Cover left"));
+        transition.add_entry (((int) Gtk.StackTransitionType.OVER_RIGHT).to_string (), _("Cover right"));
+        transition.add_entry (((int) Gtk.StackTransitionType.UNDER_UP).to_string (), _("Uncover up"));
+        transition.add_entry (((int) Gtk.StackTransitionType.UNDER_DOWN).to_string (), _("Uncover down"));
+        transition.add_entry (((int) Gtk.StackTransitionType.UNDER_LEFT).to_string (), _("Uncover left"));
+        transition.add_entry (((int) Gtk.StackTransitionType.UNDER_RIGHT).to_string (), _("Uncover right"));
+
+        transition.activated.connect (() => {
+            var action = new Spice.Services.HistoryManager.HistoryAction<Slide, Gtk.StackTransitionType>.canvas_changed (this.manager.current_slide, "transition");
+            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            update_properties ();
+        });
+
         add (canvas_gradient_background);
         add (canvas_pattern);
+        add (transition);
     }
 
     protected override void item_selected (Spice.CanvasItem? item, bool new_item = false) {
@@ -81,11 +108,13 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
             return;
         }
 
+        transition.text = ((int) manager.current_slide.transition).to_string ();
         canvas_gradient_background.color = manager.current_slide.canvas.background_color;
         canvas_pattern.text = manager.current_slide.canvas.background_pattern;
     }
 
     public override void update_properties () {
+        manager.current_slide.transition = (Gtk.StackTransitionType) int.parse (transition.text);
         manager.current_slide.canvas.background_pattern = canvas_pattern.text;
         manager.current_slide.canvas.background_color = canvas_gradient_background.color;
         manager.current_slide.canvas.style ();
