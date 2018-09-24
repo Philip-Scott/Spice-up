@@ -47,7 +47,7 @@ public class Spice.SlideManager : Object {
     }
 
     public Slide? preview_slide_ = null;
-    public Slide preview_slide {
+    public Slide? preview_slide {
         get {
             if (preview_slide_ == null || preview_slide_.visible == false) {
                 return null;
