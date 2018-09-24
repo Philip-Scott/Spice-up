@@ -161,7 +161,7 @@ public class Spice.Slide : Object {
         }
 
         var raw_notes = (string) GLib.Base64.encode (notes.data);
-        return "{\"transition\": %d, %s, \"items\": [%s], \"notes\": \"%s\", \"preview\": \"%s\"}\n".printf ((int) transition, canvas.serialise (), data, raw_notes, preview_data);
+        return "{%s, \"transition\": %d, \"items\": [%s], \"notes\": \"%s\", \"preview\": \"%s\"}\n".printf (canvas.serialise (), (int) transition, data, raw_notes, preview_data);
     }
 
     public void delete () {
