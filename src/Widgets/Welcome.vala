@@ -33,7 +33,7 @@ public class Spice.Welcome : Gtk.Box {
 
     public Welcome () {
         fetcher = new Spice.Services.Fetcher ();
-        fetcher.fetch ();
+        fetcher.fetch_templates ();
 
         orientation = Gtk.Orientation.HORIZONTAL;
         get_style_context ().add_class ("view");
@@ -121,14 +121,18 @@ public class Spice.Welcome : Gtk.Box {
 
         if (json_data == null) return;
 
-        if (json_data.get_int_member ("version") > Spice.Services.Fetcher.CURRENT_VERSION) return;
+        if (json_data.get_string_member ("version") != Spice.Services.Fetcher.CURRENT_VERSION) return;
 
         var templates_array = json_data.get_array_member ("templates");
 
         Idle.add (() => {
             foreach (var raw in templates_array.get_elements ()) {
                 var template = raw.get_object ();
-                templates.add_from_data (template.get_string_member ("data"), template.get_string_member ("name"));
+                templates.add_remote (
+                    template.get_string_member ("name"),
+                    template.get_string_member ("url"),
+                    template.get_string_member ("preview")
+                );
             }
             return GLib.Source.REMOVE;
         });

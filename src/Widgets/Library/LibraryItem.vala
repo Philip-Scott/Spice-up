@@ -37,6 +37,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     }
 
     public string data { get; construct set; }
+    public string? remote_path {get; construct set; default = null; }
 
     private SlideWidget slide_widget;
     private Gtk.Popover? popover = null;
@@ -55,7 +56,14 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         Object (data: data);
 
         title_label.label = file_name;
-        load_thumbnail ();
+        load_thumbnail (data);
+    }
+
+    public LibraryItem.from_remote (string data, string file_name, string path) {
+        Object (data: data, remote_path: path);
+
+        title_label.label = file_name;
+        load_thumbnail (data);
     }
 
     construct {
@@ -202,19 +210,21 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             new Thread<void*> ("content-loading", () => {
                 if (real_file) {
                     get_file_data ();
+                    load_thumbnail (Utils.get_thumbnail_data (data));
+                } else if (remote_path != null) {
+                    load_thumbnail (data);
                 } else {
                     get_template_data ();
+                    load_thumbnail (Utils.get_thumbnail_data (data));
                 }
-
-                load_thumbnail ();
 
                 return null;
             });
         }
     }
 
-    private void load_thumbnail () {
-        var pixbuf = Utils.base64_to_pixbuf (Utils.get_thumbnail_data (data));
+    private void load_thumbnail (string base64_image) {
+        var pixbuf = Utils.base64_to_pixbuf (base64_image);
 
         Idle.add (() => {
             slide_widget.pixbuf = pixbuf;
