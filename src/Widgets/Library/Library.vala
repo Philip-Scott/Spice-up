@@ -99,11 +99,6 @@ public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
         item_box.add (item);
     }
 
-    public void add_from_data (string data, string? file_name) {
-        var item = new LibraryItem.from_data (data, file_name);
-        item_box.add (item);
-    }
-
     public void add_remote (string file_name, string path, string data) {
         var item = new LibraryItem.from_remote (data, file_name, path);
         item_box.add (item);

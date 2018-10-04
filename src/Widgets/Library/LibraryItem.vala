@@ -52,18 +52,12 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
         get_thumbnail ();
     }
 
-    public LibraryItem.from_data (string data, string? file_name) {
-        Object (data: data);
-
-        title_label.label = file_name;
-        load_thumbnail (data);
-    }
-
     public LibraryItem.from_remote (string data, string file_name, string path) {
         Object (data: data, remote_path: path);
 
         title_label.label = file_name;
         load_thumbnail (data);
+        set_tooltip_text (_("Create Presentation"));
     }
 
     construct {
