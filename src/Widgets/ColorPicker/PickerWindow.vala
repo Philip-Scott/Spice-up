@@ -123,57 +123,54 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
                 break;
             default:
                 break;
-            }
+        }
 
-            return true;
+        return true;
     }
 
     public void set_magnifier_cursor () {
-            // draw cursor
-            var manager = Gdk.Display.get_default ().get_default_seat ();
+        // draw cursor
+        var manager = Gdk.Display.get_default ().get_default_seat ();
 
-            int px, py;
-            manager.get_pointer ().get_position (null, out px, out py);
+        int px, py;
+        manager.get_pointer ().get_position (null, out px, out py);
 
-            var radius = snapsize * zoomlevel / 2;
+        var radius = snapsize * zoomlevel / 2;
 
-            // take screenshot
+        // take screenshot
+        var latest_pb = snap (px - snapsize / 2, py - snapsize / 2, snapsize, snapsize);
 
-            var latest_pb = snap (px - snapsize / 2, py - snapsize / 2, snapsize, snapsize);
+        // Zoom that screenshot up, and grab a snapsize-sized piece from the middle
+        var scaled_pb = latest_pb.scale_simple (snapsize * zoomlevel + shadow_width * 2 , snapsize * zoomlevel + shadow_width * 2 , Gdk.InterpType.NEAREST);
 
-            // Zoom that screenshot up, and grab a snapsize-sized piece from the middle
-            var scaled_pb = latest_pb.scale_simple (snapsize * zoomlevel + shadow_width * 2 , snapsize * zoomlevel + shadow_width * 2 , Gdk.InterpType.NEAREST);
+        // Create the base surface for our cursor
+        var base_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, snapsize * zoomlevel + shadow_width * 2 , snapsize * zoomlevel + shadow_width * 2);
+        var base_context = new Cairo.Context (base_surface);
 
+        // Create the circular path on our base surface
+        base_context.arc (radius + shadow_width, radius + shadow_width, radius, 0, 2 * Math.PI);
 
-            // Create the base surface for our cursor
-            var base_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, snapsize * zoomlevel + shadow_width * 2 , snapsize * zoomlevel + shadow_width * 2);
-            var base_context = new Cairo.Context (base_surface);
+        // Paste in the screenshot
+        Gdk.cairo_set_source_pixbuf (base_context, scaled_pb, 0, 0);
 
-            // Create the circular path on our base surface
-            base_context.arc (radius + shadow_width, radius + shadow_width, radius, 0, 2 * Math.PI);
+        // Clip to that circular path, keeping the path around for later, and paint the pasted screenshot
+        base_context.save ();
+        base_context.clip_preserve ();
+        base_context.paint ();
+        base_context.restore ();
 
-            // Paste in the screenshot
-            Gdk.cairo_set_source_pixbuf (base_context, scaled_pb, 0, 0);
+        // Draw a shadow as outside magnifier border
+        double shadow_alpha = 0.6;
+        base_context.set_line_width (1);
 
-            // Clip to that circular path, keeping the path around for later, and paint the pasted screenshot
-            base_context.save ();
-            base_context.clip_preserve ();
-            base_context.paint ();
-            base_context.restore ();
-
-
-            // Draw a shadow as outside magnifier border
-            double shadow_alpha = 0.6;
-            base_context.set_line_width (1);
-
-            for (int i = 0; i <= shadow_width; i++) {
-                base_context.arc (radius + shadow_width, radius + shadow_width, radius + shadow_width- i, 0, 2 * Math.PI);
-                Gdk.RGBA shadow_color = Gdk.RGBA();
-                shadow_color.parse(dark_border_color_string);
-                shadow_color.alpha = shadow_alpha / ((shadow_width - i + 1)*(shadow_width - i + 1));
-                Gdk.cairo_set_source_rgba (base_context, shadow_color);
-                base_context.stroke ();
-            }
+        for (int i = 0; i <= shadow_width; i++) {
+            base_context.arc (radius + shadow_width, radius + shadow_width, radius + shadow_width- i, 0, 2 * Math.PI);
+            Gdk.RGBA shadow_color = Gdk.RGBA();
+            shadow_color.parse(dark_border_color_string);
+            shadow_color.alpha = shadow_alpha / ((shadow_width - i + 1)*(shadow_width - i + 1));
+            Gdk.cairo_set_source_rgba (base_context, shadow_color);
+            base_context.stroke ();
+        }
 
         // Draw an outside bright magnifier border
         Gdk.cairo_set_source_rgba (base_context, bright_border_color);
