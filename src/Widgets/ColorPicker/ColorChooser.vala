@@ -376,7 +376,7 @@ public class Spice.ColorChooser : ColorButton {
         SignalHandler.unblock (color_chooser, color_chooser_signal);
     }
 
-    static const string[,] COLOR_PALETTE = {
+    const string[,] COLOR_PALETTE = {
         {
             // Red
             "#ff8c82",
@@ -455,7 +455,7 @@ public class Spice.ColorChooser : ColorButton {
         }
     };
 
-    static const string[,] GRADIENT_PALETTE = {
+    const string[,] GRADIENT_PALETTE = {
         {
             "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
             "linear-gradient(to right, #f46b45 0%, #eea849 100%)",
