@@ -32,6 +32,8 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
     const string bright_border_color_string = "#FFFFFF";
     private Gdk.RGBA bright_border_color = Gdk.RGBA ();
 
+    private Gdk.Cursor magnifier = null;
+
     // 1. Snapsize is the amount of pixel going to be magnified by the zoomlevel.
     // 2. The snapsize must be odd to have a 1px magnifier center.
     // 3. Asure that snapsize * max_zoomlevel + shadow_width * 2 is smaller than 2 * get_screen ().get_display ().get_maximal_cursor_size()
@@ -39,13 +41,24 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
     //           get_maximal_cursor_size = 128 --> 256px
     //    Otherwise the cursor starts to flicker. See https://github.com/stuartlangridge/ColourPicker/issues/6#issuecomment-277972290
     //    and https://github.com/RonnyDo/ColorPicker/issues/19
-    int snapsize = 31;
-    int min_zoomlevel = 2;
-    int max_zoomlevel = 7;
-    int zoomlevel = 3;
-    int shadow_width = 15;
+    const int SNAPSIZE = 31;
+    const int SHADOW_WIDTH = 15;
+    const int MAX_ZOOM_LEVEL = 7;
+    const int MIN_ZOOM_LEVEL = 2;
 
-    private Gdk.Cursor magnifier = null;
+    // Static so it's remembered across uses of the picker
+    private static int _zoom_level = 2;
+    public int zoomlevel {
+        get {
+            return _zoom_level;
+        }
+        set {
+            if (value >= MIN_ZOOM_LEVEL && value <= MAX_ZOOM_LEVEL) {
+                _zoom_level = value;
+                set_magnifier_cursor ();
+            }
+        }
+    }
 
     construct {
         type = Gtk.WindowType.POPUP;
@@ -61,8 +74,6 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
 
         dark_border_color.parse (dark_border_color_string);
         bright_border_color.parse (bright_border_color_string);
-
-        zoomlevel = 2;
 
         var display = Gdk.Display.get_default ();
 
@@ -110,16 +121,10 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
     public override bool scroll_event (Gdk.EventScroll e)  {
         switch (e.direction) {
             case Gdk.ScrollDirection.UP:
-                if (zoomlevel < max_zoomlevel) {
-                    zoomlevel++;
-                }
-                set_magnifier_cursor ();
+                zoomlevel++;
                 break;
             case Gdk.ScrollDirection.DOWN:
-                if (zoomlevel > min_zoomlevel) {
-                    zoomlevel--;
-                }
-                set_magnifier_cursor ();
+                zoomlevel--;
                 break;
             default:
                 break;
@@ -128,27 +133,27 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
         return true;
     }
 
-    public void set_magnifier_cursor () {
+    private void set_magnifier_cursor () {
         // draw cursor
         var manager = Gdk.Display.get_default ().get_default_seat ();
 
         int px, py;
         manager.get_pointer ().get_position (null, out px, out py);
 
-        var radius = snapsize * zoomlevel / 2;
+        var radius = SNAPSIZE * zoomlevel / 2;
 
         // take screenshot
-        var latest_pb = snap (px - snapsize / 2, py - snapsize / 2, snapsize, snapsize);
+        var latest_pb = snap (px - SNAPSIZE / 2, py - SNAPSIZE / 2, SNAPSIZE, SNAPSIZE);
 
         // Zoom that screenshot up, and grab a snapsize-sized piece from the middle
-        var scaled_pb = latest_pb.scale_simple (snapsize * zoomlevel + shadow_width * 2 , snapsize * zoomlevel + shadow_width * 2 , Gdk.InterpType.NEAREST);
+        var scaled_pb = latest_pb.scale_simple (SNAPSIZE * zoomlevel + SHADOW_WIDTH * 2 , SNAPSIZE * zoomlevel + SHADOW_WIDTH * 2 , Gdk.InterpType.NEAREST);
 
         // Create the base surface for our cursor
-        var base_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, snapsize * zoomlevel + shadow_width * 2 , snapsize * zoomlevel + shadow_width * 2);
+        var base_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, SNAPSIZE * zoomlevel + SHADOW_WIDTH * 2 , SNAPSIZE * zoomlevel + SHADOW_WIDTH * 2);
         var base_context = new Cairo.Context (base_surface);
 
         // Create the circular path on our base surface
-        base_context.arc (radius + shadow_width, radius + shadow_width, radius, 0, 2 * Math.PI);
+        base_context.arc (radius + SHADOW_WIDTH, radius + SHADOW_WIDTH, radius, 0, 2 * Math.PI);
 
         // Paste in the screenshot
         Gdk.cairo_set_source_pixbuf (base_context, scaled_pb, 0, 0);
@@ -163,36 +168,36 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
         double shadow_alpha = 0.6;
         base_context.set_line_width (1);
 
-        for (int i = 0; i <= shadow_width; i++) {
-            base_context.arc (radius + shadow_width, radius + shadow_width, radius + shadow_width- i, 0, 2 * Math.PI);
+        for (int i = 0; i <= SHADOW_WIDTH; i++) {
+            base_context.arc (radius + SHADOW_WIDTH, radius + SHADOW_WIDTH, radius + SHADOW_WIDTH- i, 0, 2 * Math.PI);
             Gdk.RGBA shadow_color = Gdk.RGBA();
             shadow_color.parse(dark_border_color_string);
-            shadow_color.alpha = shadow_alpha / ((shadow_width - i + 1)*(shadow_width - i + 1));
+            shadow_color.alpha = shadow_alpha / ((SHADOW_WIDTH - i + 1)*(SHADOW_WIDTH - i + 1));
             Gdk.cairo_set_source_rgba (base_context, shadow_color);
             base_context.stroke ();
         }
 
         // Draw an outside bright magnifier border
         Gdk.cairo_set_source_rgba (base_context, bright_border_color);
-        base_context.arc (radius + shadow_width, radius + shadow_width, radius - 1, 0, 2 * Math.PI);
+        base_context.arc (radius + SHADOW_WIDTH, radius + SHADOW_WIDTH, radius - 1, 0, 2 * Math.PI);
         base_context.stroke();
 
         // Draw inside square
         base_context.set_line_width (1);
 
         Gdk.cairo_set_source_rgba (base_context, dark_border_color);
-        base_context.move_to (radius + shadow_width - zoomlevel, radius + shadow_width - zoomlevel);
-        base_context.line_to (radius + shadow_width + zoomlevel, radius + shadow_width - zoomlevel);
-        base_context.line_to (radius + shadow_width + zoomlevel, radius + shadow_width + zoomlevel);
-        base_context.line_to (radius + shadow_width - zoomlevel, radius + shadow_width + zoomlevel);
+        base_context.move_to (radius + SHADOW_WIDTH - zoomlevel, radius + SHADOW_WIDTH - zoomlevel);
+        base_context.line_to (radius + SHADOW_WIDTH + zoomlevel, radius + SHADOW_WIDTH - zoomlevel);
+        base_context.line_to (radius + SHADOW_WIDTH + zoomlevel, radius + SHADOW_WIDTH + zoomlevel);
+        base_context.line_to (radius + SHADOW_WIDTH - zoomlevel, radius + SHADOW_WIDTH + zoomlevel);
         base_context.close_path ();
         base_context.stroke ();
 
         Gdk.cairo_set_source_rgba (base_context, bright_border_color);
-        base_context.move_to (radius + shadow_width - zoomlevel + 1, radius + shadow_width - zoomlevel + 1);
-        base_context.line_to (radius + shadow_width + zoomlevel - 1, radius + shadow_width - zoomlevel + 1);
-        base_context.line_to (radius + shadow_width + zoomlevel - 1, radius + shadow_width + zoomlevel - 1);
-        base_context.line_to (radius + shadow_width - zoomlevel + 1, radius + shadow_width + zoomlevel - 1);
+        base_context.move_to (radius + SHADOW_WIDTH - zoomlevel + 1, radius + SHADOW_WIDTH - zoomlevel + 1);
+        base_context.line_to (radius + SHADOW_WIDTH + zoomlevel - 1, radius + SHADOW_WIDTH - zoomlevel + 1);
+        base_context.line_to (radius + SHADOW_WIDTH + zoomlevel - 1, radius + SHADOW_WIDTH + zoomlevel - 1);
+        base_context.line_to (radius + SHADOW_WIDTH - zoomlevel + 1, radius + SHADOW_WIDTH + zoomlevel - 1);
         base_context.close_path ();
         base_context.stroke ();
 
