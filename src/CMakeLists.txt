@@ -35,7 +35,7 @@ vala_precompile(VALA_C
   Widgets/PresenterNotes.vala
 
   Widgets/ColorPicker/ColorButton.vala
-  Widgets/ColorPicker/ColorPicker.vala
+  Widgets/ColorPicker/ColorChooser.vala
   Widgets/ColorPicker/Gradient.vala
   Widgets/ColorPicker/GradientEditor.vala
   Widgets/ColorPicker/PickerWindow.vala

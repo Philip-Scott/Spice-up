@@ -20,7 +20,7 @@
 */
 
 public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
-    private Spice.ColorPicker background_color_button;
+    private Spice.ColorChooser background_color_button;
     private Gtk.Scale border_radius;
 
     construct {
@@ -52,7 +52,7 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
             update_properties ();
         });
 
-        background_color_button = new Spice.ColorPicker.with_gradient ();
+        background_color_button = new Spice.ColorChooser.with_gradient ();
         background_color_button.set_tooltip_text (_("Shape color"));
 
         background_color_button.color_picked.connect ((color) => {

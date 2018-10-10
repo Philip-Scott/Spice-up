@@ -22,7 +22,7 @@
 public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
     public const string PATTERNS_DIR = "resource:///com/github/philip-scott/spice-up/patterns/";
 
-    private Spice.ColorPicker canvas_gradient_background;
+    private Spice.ColorChooser canvas_gradient_background;
     private Spice.EntryCombo canvas_pattern;
     private Spice.EntryCombo transition;
     private SlideManager manager;
@@ -31,7 +31,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         this.manager = slide_manager;
     }
     construct {
-        canvas_gradient_background = new Spice.ColorPicker.with_gradient (false);
+        canvas_gradient_background = new Spice.ColorChooser.with_gradient (false);
         canvas_gradient_background.set_tooltip_text (_("Background color"));
 
         canvas_gradient_background.color_picked.connect ((s) => {
