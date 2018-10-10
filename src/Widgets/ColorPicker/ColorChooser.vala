@@ -19,7 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class Spice.ColorPicker : ColorButton {
+public class Spice.ColorChooser : ColorButton {
     public signal void color_picked (string color);
 
     public bool gradient {
@@ -73,12 +73,12 @@ public class Spice.ColorPicker : ColorButton {
 
     protected GradientEditor gradient_editor;
 
-    public ColorPicker (bool use_alpha = true) {
+    public ColorChooser (bool use_alpha = true) {
         Object (color: "white", use_alpha: use_alpha);
         color_chooser.use_alpha = use_alpha;
     }
 
-    public ColorPicker.with_gradient (bool use_alpha = true) {
+    public ColorChooser.with_gradient (bool use_alpha = true) {
         Object (color: "white", use_alpha: use_alpha, gradient: true);
         color_chooser.use_alpha = use_alpha;
     }

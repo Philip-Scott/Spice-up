@@ -58,14 +58,14 @@ public class Spice.GradientEditor : Gtk.Grid {
 
     private string _gradient_color;
 
-    private unowned ColorPicker color_picker;
+    private unowned ColorChooser color_picker;
     private GradientMaker editor;
     private Gtk.Scale direction;
 
     private Gtk.Button add_step;
     private Gtk.Button remove_step;
 
-    public GradientEditor (ColorPicker _color_picker) {
+    public GradientEditor (ColorChooser _color_picker) {
         color_picker = _color_picker;
     }
 
