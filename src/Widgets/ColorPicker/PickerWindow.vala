@@ -254,12 +254,12 @@ public class Spice.PickerWindow : Granite.Widgets.CompositedWindow {
             if (color.parse (spec)) {
                 return color;
             } else {
-                stdout.printf("ERROR: Parse pixel rgb values failed.");
+                warning ("Parse of pixel rgb values failed.");
             }
         }
 
         // fallback: default RGBA color
-        stdout.printf("ERROR: Gdk.pixbuf_get_from_window failed");
+        warning ("Gdk.pixbuf_get_from_window failed");
         return Gdk.RGBA ();
     }
 
