@@ -24,6 +24,7 @@ public class Spice.Clipboard {
     static Gdk.Atom SPICE_ATOM = Gdk.Atom.intern_static_string (SPICE_UP_TARGET_NAME);
 
     static weak Object object_ref;
+    static bool set_internally = false;
 
     enum Target {
         STRING,
@@ -52,6 +53,7 @@ public class Spice.Clipboard {
                 debug ("String requested\n");
                 if (object_ref is Spice.TextItem) {
                     selection_data.set_text ((object_ref as Spice.TextItem).text, -1);
+                    debug ("String set\n");
                 }
                 break;
             case Target.IMAGE:
@@ -82,26 +84,35 @@ public class Spice.Clipboard {
         }
     }
 
+    public static void clear_data (Gtk.Clipboard clipboard, void* user_data_or_owner) {
+        if (!set_internally) {
+            object_ref = null;
+        }
+
+        set_internally = false;
+    }
+
     public static void copy (Object object) {
         if (object == null) return;
+        object_ref = object;
+
+        set_internally = true;
 
         Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
-        object_ref = object;
 
         if (object is Spice.TextItem) {
             debug ("set text target list");
-            clipboard.set_with_data (text_target_list, set_with_data, null, null);
+            clipboard.set_with_data (text_target_list, set_with_data, clear_data, null);
         } else if (object is Spice.ImageItem || object is Spice.Slide) {
             debug ("set image target list");
-            clipboard.set_with_data (image_target_list, set_with_data, null, null);
+            clipboard.set_with_data (image_target_list, set_with_data, clear_data, null);
         } else {
-            clipboard.set_with_data (spice_target_list, set_with_data, null, null);
+            clipboard.set_with_data (spice_target_list, set_with_data, clear_data, null);
         }
     }
 
     public static void paste (Spice.SlideManager manager) {
         Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
-        bool is_image = clipboard.wait_is_image_available ();
 
         Gdk.Atom[] targets;
         clipboard.wait_for_targets (out targets);
