@@ -53,7 +53,6 @@ public class Spice.Clipboard {
                 debug ("String requested\n");
                 if (object_ref is Spice.TextItem) {
                     selection_data.set_text ((object_ref as Spice.TextItem).text, -1);
-                    debug ("String set\n");
                 }
                 break;
             case Target.IMAGE:
@@ -68,15 +67,13 @@ public class Spice.Clipboard {
                 }
                 break;
             case Target.SPICE:
-                debug ("Spice requested\n");
+                debug ("Spice object requested\n");
                 if (object_ref is Spice.CanvasItem) {
                     debug ("canvas item\n");
                     selection_data.@set (SPICE_ATOM, 0, (object_ref as Spice.CanvasItem).serialise ().data);
                 } else if (object_ref is Spice.Slide) {
                     debug ("slide\n");
                     selection_data.@set (SPICE_ATOM, 0, (object_ref as Slide).serialise ().data);
-                } else {
-                    return;
                 }
                 break;
             default:
@@ -148,7 +145,7 @@ public class Spice.Clipboard {
             return;
         } else if (image_atom != null) {
             clipboard.request_contents (image_atom, (c, raw_data) => {
-                debug ("Getting text data");
+                debug ("Getting image data");
                 var pixbuf = raw_data.get_pixbuf ();
                 if (pixbuf == null) return;
 
@@ -167,7 +164,8 @@ public class Spice.Clipboard {
                 (item as Spice.TextItem).text = data;
             });
         } else {
-
+            // Show an error instead of silently failing
+            window.add_toast_notification (new Granite.Widgets.Toast (_("Unknown clipboard data")));
         }
     }
 
