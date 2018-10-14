@@ -20,7 +20,7 @@
 */
 
 public class Spice.TextItem : Spice.CanvasItem {
-    private Gtk.TextView entry;
+    public Gtk.TextView entry;
     private Gtk.Label label;
     private Gtk.Stack stack;
 

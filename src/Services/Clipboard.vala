@@ -20,6 +20,10 @@
 */
 
 public class Spice.Clipboard {
+    const string SPICE_UP_TARGET_NAME = "x-application/spice-up-data";
+    static Gdk.Atom SPICE_ATOM = Gdk.Atom.intern_static_string (SPICE_UP_TARGET_NAME);
+
+    static weak Object object_ref;
 
     enum Target {
         STRING,
@@ -27,24 +31,20 @@ public class Spice.Clipboard {
         SPICE
     }
 
-    const string SPICE_UP_TARGET_NAME = "x-application/spice-up-data";
-    const Gtk.TargetEntry[] target_list = {
+    const Gtk.TargetEntry[] text_target_list = {
         { "text/plain", 0, Target.STRING },
         { "STRING", 0, Target.STRING },
+        { SPICE_UP_TARGET_NAME, 0, Target.SPICE }
+    };
+
+    const Gtk.TargetEntry[] image_target_list = {
         { "image/png", 0, Target.IMAGE },
         { SPICE_UP_TARGET_NAME, 0, Target.SPICE }
     };
 
-    static weak Object object_ref;
-    public static void copy (Object object) {
-        if (object == null) return;
-
-        Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
-        object_ref = object;
-        if (object_ref == null) debug ("is null\n");
-
-        clipboard.set_with_data (target_list, set_with_data, null, null);
-    }
+    const Gtk.TargetEntry[] spice_target_list = {
+        { SPICE_UP_TARGET_NAME, 0, Target.SPICE }
+    };
 
     public static void set_with_data (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, uint info, void* user_data_or_owner) {
         switch (info) {
@@ -69,10 +69,10 @@ public class Spice.Clipboard {
                 debug ("Spice requested\n");
                 if (object_ref is Spice.CanvasItem) {
                     debug ("canvas item\n");
-                    selection_data.@set (spice_atom, 0, (object_ref as Spice.CanvasItem).serialise ().data);
+                    selection_data.@set (SPICE_ATOM, 0, (object_ref as Spice.CanvasItem).serialise ().data);
                 } else if (object_ref is Spice.Slide) {
                     debug ("slide\n");
-                    selection_data.@set (spice_atom, 0, (object_ref as Slide).serialise ().data);
+                    selection_data.@set (SPICE_ATOM, 0, (object_ref as Slide).serialise ().data);
                 } else {
                     return;
                 }
@@ -82,7 +82,22 @@ public class Spice.Clipboard {
         }
     }
 
-    static Gdk.Atom spice_atom = Gdk.Atom.intern_static_string ("x-application/spice-up-data");
+    public static void copy (Object object) {
+        if (object == null) return;
+
+        Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
+        object_ref = object;
+
+        if (object is Spice.TextItem) {
+            debug ("set text target list");
+            clipboard.set_with_data (text_target_list, set_with_data, null, null);
+        } else if (object is Spice.ImageItem || object is Spice.Slide) {
+            debug ("set image target list");
+            clipboard.set_with_data (image_target_list, set_with_data, null, null);
+        } else {
+            clipboard.set_with_data (spice_target_list, set_with_data, null, null);
+        }
+    }
 
     public static void paste (Spice.SlideManager manager) {
         Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
@@ -92,11 +107,15 @@ public class Spice.Clipboard {
         clipboard.wait_for_targets (out targets);
 
         Gdk.Atom? spice_atom = null;
+        Gdk.Atom? text_atom = null;
+        Gdk.Atom? image_atom = null;
+
         foreach (var target in targets) {
             debug ("%s\n", target.name ());
-            if (target.name () == SPICE_UP_TARGET_NAME) {
-                spice_atom = target;
-                //break; Commented to show all target names
+            switch (target.name ()) {
+                case SPICE_UP_TARGET_NAME: spice_atom = target; break;
+                case "text/plain": text_atom = target; break;
+                case "image/png": image_atom = target; break;
             }
         }
 
@@ -116,9 +135,29 @@ public class Spice.Clipboard {
                 }
             });
             return;
-        }
+        } else if (image_atom != null) {
+            clipboard.request_contents (image_atom, (c, raw_data) => {
+                debug ("Getting text data");
+                var pixbuf = raw_data.get_pixbuf ();
+                if (pixbuf == null) return;
 
-        // TODO: Handle other types of data, such as Text, images and more
+                var data = Utils.pixbuf_to_base64 (pixbuf);
+
+                var item = new ImageItem.from_data (manager.current_slide.canvas, data, "png");
+                manager.current_slide.add_item (item, true);
+            });
+        } else if (text_atom != null) {
+            clipboard.request_contents (text_atom, (c, raw_data) => {
+                debug ("Getting text data");
+                var data = (string) raw_data.get_data ();
+                if (data == null) return;
+
+                var item = manager.request_new_item (Spice.HeaderButton.TEXT);
+                (item as Spice.TextItem).text = data;
+            });
+        } else {
+
+        }
     }
 
     public static void cut (Object object) {
@@ -160,5 +199,4 @@ public class Spice.Clipboard {
             manager.new_slide (root_object, true);
         }
     }
-
 }
