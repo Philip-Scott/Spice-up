@@ -20,11 +20,11 @@
 */
 
 public class Spice.SlideList : Gtk.Grid {
-    private Gtk.Grid slides_grid;
+    public static int WIDTH = 200;
+    public static int HEIGHT = 150;
+
     private Gtk.ListBox slides_list;
     private unowned SlideManager manager;
-
-    private Gtk.Button new_slide_button;
 
     public SlideList (SlideManager manager) {
         orientation = Gtk.Orientation.VERTICAL;
@@ -87,7 +87,25 @@ public class Spice.SlideList : Gtk.Grid {
         });
 
         add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
-        add (slides_toolbar ());
+
+        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+        plus_icon.margin = 3;
+
+        var new_slide_button = new Gtk.Button ();
+
+        new_slide_button.set_tooltip_text (_("Add a Slide"));
+        new_slide_button.get_style_context ().add_class ("new");
+        new_slide_button.add (plus_icon);
+        new_slide_button.set_size_request (WIDTH, 0);
+        new_slide_button.margin = 0;
+        new_slide_button.can_focus = false;
+
+        new_slide_button.clicked.connect (() => {
+            Utils.new_slide (manager);
+        });
+
+
+        add (new_slide_button);
 
         foreach (var slide in manager.slides) {
             add_slide (slide);
@@ -105,29 +123,6 @@ public class Spice.SlideList : Gtk.Grid {
         return slide_row;
     }
 
-    public static int WIDTH = 200;
-    public static int HEIGHT = 150;
-
-    public Gtk.Button slides_toolbar () {
-        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
-        plus_icon.margin = 3;
-
-        var new_slide_button = new Gtk.Button ();
-
-        new_slide_button.set_tooltip_text (_("Add a Slide"));
-        new_slide_button.get_style_context ().add_class ("new");
-        new_slide_button.add (plus_icon);
-        new_slide_button.set_size_request (WIDTH, 0);
-        new_slide_button.margin = 0;
-        new_slide_button.can_focus = false;
-
-        new_slide_button.clicked.connect (() => {
-            Utils.new_slide (manager);
-        });
-
-        return new_slide_button;
-    }
-
     private class SlideListRow : Gtk.ListBoxRow {
         public unowned Spice.Slide slide;
         private unowned SlideManager manager;
@@ -141,7 +136,7 @@ public class Spice.SlideList : Gtk.Grid {
             slide_widget = new SlideWidget.from_slide (slide);
 
             slide_widget.settings_requested.connect (() => {
-                popup_menu ();
+                show_rightclick_menu ();
             });
 
             add (slide_widget);
@@ -168,9 +163,7 @@ public class Spice.SlideList : Gtk.Grid {
             }
         """;
 
-        private Gtk.Menu? menu = null;
-
-        public void popup_menu () {
+        public void show_rightclick_menu () {
             var menu = new Gtk.Menu ();
 
             var cut = new Gtk.MenuItem.with_label (_("Cut"));
@@ -236,7 +229,7 @@ public class Spice.SlideList : Gtk.Grid {
             activate ();
 
             if (event.button == 3) {
-                popup_menu ();
+                show_rightclick_menu ();
             }
 
             return false;

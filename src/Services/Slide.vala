@@ -29,6 +29,7 @@ public class Spice.Slide : Object {
 
     public string preview_data { get; private set; default = ""; }
     public string notes { get; set; default = ""; }
+    public Gtk.StackTransitionType transition { get; set; default = Gtk.StackTransitionType.NONE; }
 
     private bool visible_ = true;
     public bool visible {
@@ -87,6 +88,12 @@ public class Spice.Slide : Object {
             preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
         }
 
+        if (save_data.has_member ("transition")) {
+            transition = (Gtk.StackTransitionType) save_data.get_int_member ("transition");
+        } else {
+            transition = Gtk.StackTransitionType.NONE;
+        }
+
         var raw_notes = save_data.get_string_member ("notes");
         if (raw_notes != null && raw_notes != "") {
             notes = (string) GLib.Base64.decode (raw_notes);
@@ -136,7 +143,7 @@ public class Spice.Slide : Object {
         }
 
         var raw_notes = (string) GLib.Base64.encode (notes.data);
-        return "{%s, \"items\": [%s], \"notes\": \"%s\", \"preview\": \"%s\"}\n".printf (canvas.serialise (), data, raw_notes, preview_data);
+        return "{%s, \"transition\": %d, \"items\": [%s], \"notes\": \"%s\", \"preview\": \"%s\"}\n".printf (canvas.serialise (), (int) transition, data, raw_notes, preview_data);
     }
 
     public void delete () {

@@ -36,18 +36,20 @@ public class Spice.SlideWidget : Gtk.EventBox {
 
     public Spice.SlideWidget.from_slide (Slide slide) {
         this.overlay.add (slide.preview);
+        slide.preview.get_style_context ().add_class ("card");
     }
 
     public SlideWidget () {
         image = new Gtk.Image ();
+        image.get_style_context ().add_class ("card");
         overlay.add (image);
     }
 
     construct {
         events |= Gdk.EventMask.ENTER_NOTIFY_MASK & Gdk.EventMask.LEAVE_NOTIFY_MASK;
-        margin = 9;
 
         overlay = new Gtk.Overlay ();
+        overlay.margin = 9;
 
         var settings_button = new Gtk.Button.from_icon_name ("document-properties-symbolic", Gtk.IconSize.BUTTON);
         settings_button.events |= Gdk.EventMask.ENTER_NOTIFY_MASK & Gdk.EventMask.LEAVE_NOTIFY_MASK;
@@ -81,7 +83,5 @@ public class Spice.SlideWidget : Gtk.EventBox {
             settings_revealer.set_reveal_child (false);
             return false;
         });
-
-        get_style_context ().add_class ("card");
     }
 }

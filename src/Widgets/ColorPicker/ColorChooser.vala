@@ -19,7 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public class Spice.ColorPicker : ColorButton {
+public class Spice.ColorChooser : ColorButton {
     public signal void color_picked (string color);
 
     public bool gradient {
@@ -73,12 +73,12 @@ public class Spice.ColorPicker : ColorButton {
 
     protected GradientEditor gradient_editor;
 
-    public ColorPicker (bool use_alpha = true) {
+    public ColorChooser (bool use_alpha = true) {
         Object (color: "white", use_alpha: use_alpha);
         color_chooser.use_alpha = use_alpha;
     }
 
-    public ColorPicker.with_gradient (bool use_alpha = true) {
+    public ColorChooser.with_gradient (bool use_alpha = true) {
         Object (color: "white", use_alpha: use_alpha, gradient: true);
         color_chooser.use_alpha = use_alpha;
     }
@@ -376,7 +376,7 @@ public class Spice.ColorPicker : ColorButton {
         SignalHandler.unblock (color_chooser, color_chooser_signal);
     }
 
-    static const string[,] COLOR_PALETTE = {
+    const string[,] COLOR_PALETTE = {
         {
             // Red
             "#ff8c82",
@@ -455,7 +455,7 @@ public class Spice.ColorPicker : ColorButton {
         }
     };
 
-    static const string[,] GRADIENT_PALETTE = {
+    const string[,] GRADIENT_PALETTE = {
         {
             "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
             "linear-gradient(to right, #f46b45 0%, #eea849 100%)",

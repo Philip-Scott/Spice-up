@@ -26,7 +26,22 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
-   <release version="1.5.2" date="2018-8-23">
+    <release version="1.6.1" date="2018-10-3">
+      <description>
+        <p>Slide Transitions and the Slide List Redesign</p>
+        <ul>
+          <li>After so long, Slide Transitions are finally here! Use them to make your presentations more interesting</li>
+          <li>The New Slide Button will now always appear at the bottom, and new slides will now be added after the currently selected slide</li>
+          <li>You can right click the slide, and select from the actions there.</li>
+          <li>From that right click menu, you can now select which slide will be shown in the thumbnail!</li>
+          <li>Presenter notes has been moved to the main window. Toggle the editor from the new button on the headerbar!</li>
+          <li>Some color and Style changes!</li>
+          <li>Fixed the problem where empty slides would refuse to render on the Slide List!</li>
+          <li>Fixed: Non-editable items on the toolbar now show up properly</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.5.2" date="2018-8-23">
       <description>
         <p>A Very Juno Update</p>
         <ul>
@@ -173,7 +188,7 @@
     <content_attribute id="language-humor">none</content_attribute>
     <content_attribute id="language-discrimination">none</content_attribute>
     <content_attribute id="social-chat">none</content_attribute>
-    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-info">mild</content_attribute>
     <content_attribute id="social-audio">none</content_attribute>
     <content_attribute id="social-location">none</content_attribute>
     <content_attribute id="social-contacts">none</content_attribute>

@@ -57,7 +57,26 @@ public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
         item_box.min_children_per_line = 2;
 
         item_box.child_activated.connect ((child) => {
-            item_selected ((child as LibraryItem).data);
+            var library_item = child as LibraryItem;
+            if (library_item == null) return;
+
+            if (library_item.remote_path == null) {
+                item_selected (library_item.data);
+            } else {
+                sensitive = false;
+                new Thread<void*> ("fetch-template", () => {
+                    var data = Spice.Services.Fetcher.get_template_data (library_item.remote_path);
+
+                    Idle.add (() => {
+                        item_selected (data);
+                        sensitive = true;
+                        return GLib.Source.REMOVE;
+                    });
+                    return null;
+                });
+            }
+
+
         });
     }
 
@@ -80,8 +99,8 @@ public class Spice.Widgets.Library.Library : Gtk.ScrolledWindow {
         item_box.add (item);
     }
 
-    public void add_from_data (string data, string? file_name) {
-        var item = new LibraryItem.from_data (data, file_name);
+    public void add_remote (string file_name, string path, string data) {
+        var item = new LibraryItem.from_remote (data, file_name, path);
         item_box.add (item);
     }
 }

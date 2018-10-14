@@ -47,7 +47,7 @@ public class Spice.SlideManager : Object {
     }
 
     public Slide? preview_slide_ = null;
-    public Slide preview_slide {
+    public Slide? preview_slide {
         get {
             if (preview_slide_ == null || preview_slide_.visible == false) {
                 return null;
@@ -71,16 +71,33 @@ public class Spice.SlideManager : Object {
                 current_slide.reload_preview_data ();
             }
 
+            if (window.is_fullscreen) {
+                slideshow.set_transition_duration (600);
+                slideshow.set_transition_type ((Gtk.StackTransitionType) value.transition);
+
+                // Preload the next slide while presenting
+                Idle.add (() => {
+                   var next_slide = get_next_slide (this.current_slide);
+                   if (next_slide != null) {
+                       next_slide.load_slide ();
+                   }
+                   return false;
+                });
+            } else {
+                slideshow.set_transition_type (Gtk.StackTransitionType.NONE);
+                slideshow.set_transition_duration (0);
+            }
+
             if (slides.contains (value)) {
                 slide_ = value;
                 current_item = null;
+                value.load_slide ();
                 slideshow.set_visible_child (value.canvas);
                 current_slide_changed (value);
-                value.load_slide ();
             } else if (value == end_presentation_slide) {
+                value.load_slide ();
                 slideshow.set_visible_child (value.canvas);
                 current_slide_changed (value);
-                value.load_slide ();
                 slide_ = value;
             }
         }

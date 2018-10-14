@@ -26,7 +26,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     private Granite.Widgets.ModeButton justification;
     private Granite.Widgets.ModeButton align;
     private Spice.EntryCombo font_button;
-    private Spice.ColorPicker text_color_button;
+    private Spice.ColorChooser text_color_button;
     private Spice.EntryCombo font_size;
     private Spice.EntryCombo font_type;
 
@@ -66,7 +66,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     #endif
 
     construct {
-        text_color_button = new Spice.ColorPicker ();
+        text_color_button = new Spice.ColorChooser ();
         text_color_button.set_tooltip_text (_("Font color"));
 
         font_type = new Spice.EntryCombo (true, true);
