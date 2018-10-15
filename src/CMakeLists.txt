@@ -14,6 +14,7 @@ vala_precompile(VALA_C
   Application.vala
   Window.vala
 
+  Services/Clipboard.vala
   Services/Settings.vala
   Services/Slide.vala
   Services/SlideManager.vala

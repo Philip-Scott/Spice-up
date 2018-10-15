@@ -148,7 +148,7 @@ public class Spice.Utils {
             context.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         } catch (Error e) {
             warning ("Style error: %s", e.message);
-            stderr.printf ("%s %s\n", widget.name, css);
+            debug ("%s %s\n", widget.name, css);
         }
     }
 
@@ -157,81 +157,23 @@ public class Spice.Utils {
         window.get_screen ().get_active_window ().set_cursor (cursor);
     }
 
-    public static void copy (Object object) {
-        if (object == null) return;
-        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
+    public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas canvas) {
+        string type = data.get_string_member ("type");
+        CanvasItem? item = null;
 
-        if (object is Spice.CanvasItem) {
-            clipboard.set_text ((object as Spice.CanvasItem).serialise (), -1);
-        } else if (object is Spice.Slide){
-            clipboard.set_text ((object as Slide).serialise (), -1);
-        }
-    }
-    public static void paste (Spice.SlideManager manager) {
-        Gtk.Clipboard clipboard = Gtk.Clipboard.get (Gdk.Atom.intern_static_string ("SPICE_UP"));
-        var data = clipboard.wait_for_text ();
-
-        if (data == null) return;
-
-        try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (data);
-
-            var root_object = parser.get_root ().get_object ();
-
-            if (root_object.has_member ("preview")) {
-                manager.new_slide (root_object, true);
-            } else {
-                manager.current_slide.add_item_from_data (root_object, true, true);
-            }
-        } catch (Error e) {
-            warning ("Cloning didn't work: %s", e.message);
-        }
-    }
-
-    public static void cut (Object object) {
-        if (object == null) return;
-        Utils.copy (object);
-        Utils.delete (object);
-    }
-
-    public static void delete (Object object) {
-        if (object == null) return;
-
-        if (object is Spice.CanvasItem) {
-            (object as Spice.CanvasItem).delete ();
-        } else if (object is Spice.Slide) {
-            (object as Slide).delete ();
-        }
-    }
-
-    public static void duplicate (Object object, Spice.SlideManager manager) {
-        if (object == null) return;
-
-        string data;
-
-        if (object is Spice.CanvasItem) {
-            data = (object as Spice.CanvasItem).serialise ();
-        } else if (object is Spice.Slide){
-            data = (object as Slide).serialise ();
-        } else {
-            return;
+        switch (type) {
+            case "text":
+                item = new TextItem (canvas, data);
+            break;
+            case "color":
+                item = new ColorItem (canvas, data);
+            break;
+            case "image":
+                item = new ImageItem (canvas, data);
+            break;
         }
 
-        try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (data);
-
-            var root_object = parser.get_root ().get_object ();
-
-            if (object is Spice.CanvasItem) {
-                manager.current_slide.add_item_from_data (root_object, true, true);
-            } else {
-                manager.new_slide (root_object, true);
-            }
-        } catch (Error e) {
-            warning ("Cloning didn't work: %s", e.message);
-        }
+        return item;
     }
 
     public static void new_slide (Spice.SlideManager manager) {

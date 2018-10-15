@@ -55,9 +55,9 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
 
         clone_button.clicked.connect (() => {
             if (this.item != null) {
-                Utils.duplicate (this.item, this.manager);
+                Clipboard.duplicate (this.item, this.manager);
             } else {
-                Utils.duplicate (this.manager.current_slide, this.manager);
+                Clipboard.duplicate (this.manager.current_slide, this.manager);
             }
         });
 

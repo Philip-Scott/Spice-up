@@ -66,6 +66,14 @@ public class Spice.ImageItem : Spice.CanvasItem {
         style ();
     }
 
+    public ImageItem.from_data (Canvas _canvas, string base64_image, string extension) {
+        Object (canvas: _canvas, save_data: null);
+
+        this.image = new ImageHandler.from_data (extension, base64_image);
+        connect_image ();
+        style ();
+    }
+
     protected override void load_item_data () {
         string? base64_image = null;
 
