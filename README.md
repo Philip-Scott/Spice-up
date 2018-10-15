@@ -11,6 +11,7 @@
   </a>
 </p>
 
+
 <br/>
 
 <p align="center">
@@ -26,7 +27,7 @@
 <img src="https://travis-ci.org/Philip-Scott/Spice-up.svg?branch=master" alt="build status">
 </p>
 
-Spice-up is a modern and intuitive desktop presentation app based upon [SpiceOfDesign's presentation concept](http://spiceofdesign.deviantart.com/art/New-Presentation-Concept-401767854). Built from the ground up for elementary OS, it gives you everything you need to create simple and beautiful presentations.
+Create presentations that stand out! Spice-Up has everything you need to create simple and beautiful presentations. Get your ideas across with beautiful designed templates, or start from scratch with a blank canvas. Either way, you will add some spice to your presentations with a wide variety of background patterns and a beautiful color palette.
 
 ### Spice Presentations Look Amazing!
 Images, Shapes, Text, as well as beautiful background patterns and easy to make custom gradients!
@@ -35,14 +36,16 @@ Images, Shapes, Text, as well as beautiful background patterns and easy to make 
     <img src="Screenshot1.png" alt="Screenshot">
 </p>
 
-Its features include:
+Easy-to-design slides and powerful features:
 
-- **Exporting to PDF:** Share your presentation with anyone, no matter the platform they're at 
-- **Presentation Browser**: Scroll though the presentations you have made and jump right into them with one click!.
-- **Controller Support**: If you have a USB or Bluetooth controller, plug it in and control your slides!
-- **Templates**, so you can whip up a presentation in a blink of an eye.
+
+- **Exporting to PDF:** Share your presentation with anyone, no matter the platform they're at.
+- **Presentation Browser:** Scroll though the presentations you have made and jump right into them with one click!.
+- **Controller Support:** If you have a USB or Bluetooth controller, plug it in and control your slides!
+- **Web Viewer:** Presentations can now be viewed from a web browser if Spice-Up is not installed, even if you're not using Linux. No extra software needed!
 - **Edit images** in your favorite editor, and it will automatically update when saved
-- **Web Viewer**: Presentations can now be viewed from a web browser if Spice-Up is not installed, even if you're not using Linux
+- **Templates:** a touch of creativity is all you need to make presentations in a blink of an eye.
+- **Presenter Notes:** Present like a pro with slide-by-slide notes only viewable by you!
 - And much more!
 
 <p align="center">
@@ -63,7 +66,7 @@ You can install Spice-Up from a PPA. But be aware that your results may vary
     sudo apt-get install com.github.philip-scott.spice-up
 
 ### Donations
-Liked Spice-up? Would like to support its development of this app and more? Feel free to [leave a little tip :)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYD9ZJK6ZFUDQ) or support my work torwards a new feature over at [Bountysource](https://www.bountysource.com/trackers/44752823-philip-scott-spice-up). I'd really appreciate it :) 
+Liked Spice-up? Would like to support its development of this app and more? Feel free to [leave a little tip :)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYD9ZJK6ZFUDQ) or support my work torwards a new feature over at [Bountysource](https://www.bountysource.com/trackers/44752823-philip-scott-spice-up). I'd really appreciate it :)
 
 ## Dependencies
 These dependencies must be present before building
@@ -73,6 +76,7 @@ These dependencies must be present before building
  - `gee-0.8`
  - `gudev-1.0`
  - `libevdev`
+ - `libsoup-2.4`
 
 ## Building
 ```
@@ -80,3 +84,8 @@ mkdir build/ && cd build
 cmake ..
 make && sudo make all test install
 ```
+
+
+<p align="center">
+    <img src="data/icons/128/com.github.philip-scott.spice-up.svg" alt="Spice-Up's Icon">
+</p>
