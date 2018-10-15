@@ -62,8 +62,8 @@ public class Spice.Clipboard {
                     var image_item = object_ref as Spice.ImageItem;
                     var pixbuf = new Gdk.Pixbuf.from_file (image_item.image.url);
                     selection_data.set_pixbuf (pixbuf);
-                } else if (object_ref is Spice.Slide) {
-                    var pixbuf = (object_ref as Spice.Slide).canvas.surface.load_to_pixbuf ();
+                } else if (object_ref is Gdk.Pixbuf) {
+                    var pixbuf = (object_ref as Gdk.Pixbuf);
                     selection_data.set_pixbuf (pixbuf);
                 }
                 break;
@@ -107,7 +107,7 @@ public class Spice.Clipboard {
         if (object is Spice.CanvasItem) {
             object_ref = Utils.canvas_item_from_data (Utils.get_json_object (object_data), null);
         } else {
-
+            object_ref = (object as Spice.Slide).canvas.surface.load_to_pixbuf ();
         }
     }
 
