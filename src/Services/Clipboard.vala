@@ -152,7 +152,7 @@ public class Spice.Clipboard {
                 var data = Utils.pixbuf_to_base64 (pixbuf);
 
                 var item = new ImageItem.from_data (manager.current_slide.canvas, data, "png");
-                manager.current_slide.add_item (item, true);
+                manager.current_slide.add_item (item, true, true);
             });
         } else if (text_atom != null) {
             clipboard.request_contents (text_atom, (c, raw_data) => {
