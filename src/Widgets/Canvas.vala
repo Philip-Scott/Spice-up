@@ -44,10 +44,10 @@ public class Spice.Canvas : Gtk.Overlay {
         default = 1.0f;
     }
 
-    public int current_allocated_width = 0;
-    public int current_allocated_height = 0;
-    private int default_x_margin = 0;
-    private int default_y_margin = 0;
+    public double current_allocated_width = 0;
+    public double current_allocated_height = 0;
+    private double default_x_margin = 0;
+    private double default_y_margin = 0;
 
     public CanvasGrid grid;
 
@@ -98,8 +98,8 @@ public class Spice.Canvas : Gtk.Overlay {
 
             allocation.width = (int)(((double) r.width) * current_ratio + 0.5);
             allocation.height = (int)(((double) r.height) * current_ratio + 0.5);
-            allocation.x = default_x_margin + (int)(r.x * current_ratio + 0.5) + display_widget.delta_x;
-            allocation.y = default_y_margin + (int)(r.y * current_ratio + 0.5) + display_widget.delta_y;
+            allocation.x = (int) (default_x_margin + (r.x * current_ratio + 0.5) + display_widget.delta_x);
+            allocation.y = (int) (default_y_margin + (r.y * current_ratio + 0.5) + display_widget.delta_y);
 
             return true;
         }
@@ -110,12 +110,14 @@ public class Spice.Canvas : Gtk.Overlay {
     private void calculate_ratio () {
         double max_width = 1500.0, max_height = 1500.0;
 
-        current_allocated_width = get_allocated_width ();
-        current_allocated_height = get_allocated_height ();
+        current_allocated_width = (double) get_allocated_width ();
+        current_allocated_height = (double) get_allocated_height ();
 
-        current_ratio = ((double) (current_allocated_height - 24)) / 1500.0;
-        default_x_margin = (int) (((current_allocated_width - max_width * current_ratio) / 2) + 0.5);
-        default_y_margin = (int) (((current_allocated_height - max_height * current_ratio) / 2) + 0.5);
+        var ratio = ((double) (current_allocated_height)) / 1500.0;
+        current_ratio = ratio - ratio * 0.016; // 24/1500 = 0.016; Legacy offset;
+
+        default_x_margin = (((current_allocated_width - max_width * current_ratio) / 2.0) + 0.5);
+        default_y_margin = (((current_allocated_height - max_height * current_ratio) / 2.0) + 0.5);
     }
 
     public CanvasItem add_item (CanvasItem item, bool undoable_action = false) {
@@ -260,7 +262,7 @@ public class Spice.Canvas : Gtk.Overlay {
         base.draw (cr);
 
         drawing_preview = true;
-        surface = new Granite.Drawing.BufferSurface (this.current_allocated_width, this.current_allocated_height);
+        surface = new Granite.Drawing.BufferSurface ((int) this.current_allocated_width, (int) this.current_allocated_height);
         base.draw (surface.context);
         drawing_preview = false;
 
