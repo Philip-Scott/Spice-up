@@ -281,8 +281,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private bool cut () {
-        copy ();
-        delete_object ();
+        var current_item = slide_manager.current_item;
+
+        if (current_item != null) {
+            Clipboard.cut (slide_manager, current_item);
+        } else {
+            Clipboard.cut (slide_manager, slide_manager.current_slide);
+        }
+
         return true;
     }
 
@@ -290,9 +296,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
         var current_item = slide_manager.current_item;
 
         if (current_item != null) {
-            Clipboard.copy (current_item);
+            Clipboard.copy (slide_manager, current_item);
         } else {
-            Clipboard.copy (slide_manager.current_slide);
+            Clipboard.copy (slide_manager, slide_manager.current_slide);
         }
 
         return true;

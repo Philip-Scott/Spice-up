@@ -177,11 +177,11 @@ public class Spice.SlideList : Gtk.Grid {
             var set_as_preview = new Gtk.MenuItem.with_label (_("Set as File Preview"));
 
             cut.activate.connect (() => {
-                Clipboard.cut (this.slide);
+                Clipboard.cut (this.manager, this.slide);
             });
 
             copy.activate.connect (() => {
-                Clipboard.copy (this.slide);
+                Clipboard.copy (this.manager, this.slide);
             });
 
             paste.activate.connect (() => {
@@ -197,7 +197,7 @@ public class Spice.SlideList : Gtk.Grid {
             });
 
             duplicate_slide.activate.connect (() => {
-                Clipboard.duplicate (this.slide, this.manager);
+                Clipboard.duplicate (this.manager, this.slide);
             });
 
             set_as_preview.activate.connect (() => {

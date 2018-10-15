@@ -85,8 +85,17 @@ public class Spice.Clipboard {
         set_internally = false;
     }
 
-    public static void copy (Object object) {
+    public static void copy (Spice.SlideManager manager, Object object) {
         if (object == null) return;
+
+        // Use the pase operation of the textItem
+        if (object == manager.current_item && object is Spice.TextItem) {
+            var text_entry = (object as Spice.TextItem).entry;
+            if (text_entry.buffer.get_has_selection ()) {
+                text_entry.copy_clipboard ();
+                return;
+            }
+        }
 
         set_internally = true;
 
@@ -128,6 +137,12 @@ public class Spice.Clipboard {
                 case "text/plain": text_atom = target; break;
                 case "image/png": image_atom = target; break;
             }
+        }
+
+        // Use the pase operation of the textItem
+        if (text_atom != null && image_atom == null && manager.current_item is Spice.TextItem) {
+            (manager.current_item as Spice.TextItem).entry.paste_clipboard ();
+            return;
         }
 
         if (spice_atom != null) {
@@ -172,9 +187,19 @@ public class Spice.Clipboard {
         }
     }
 
-    public static void cut (Object object) {
+    public static void cut (Spice.SlideManager manager, Object object) {
         if (object == null) return;
-        copy (object);
+
+        if (object == manager.current_item && object is Spice.TextItem) {
+            var text_entry = (object as Spice.TextItem).entry;
+            if (text_entry.buffer.get_has_selection ()) {
+                text_entry.cut_clipboard ();
+                return;
+            }
+        }
+
+        copy (manager, object);
+
         Clipboard.delete (object);
     }
 
@@ -191,8 +216,6 @@ public class Spice.Clipboard {
     public static string clone (Object object) {
         if (object == null) return "";
 
-        string data;
-
         if (object is Spice.CanvasItem) {
             return (object as Spice.CanvasItem).serialise ();
         } else if (object is Spice.Slide) {
@@ -202,7 +225,7 @@ public class Spice.Clipboard {
         }
     }
 
-    public static void duplicate (Object object, Spice.SlideManager manager) {
+    public static void duplicate (Spice.SlideManager manager, Object object) {
         if (object == null) return;
 
         string data = clone (object);
