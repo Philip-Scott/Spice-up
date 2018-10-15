@@ -23,7 +23,8 @@ public class Spice.Clipboard {
     const string SPICE_UP_TARGET_NAME = "x-application/spice-up-data";
     static Gdk.Atom SPICE_ATOM = Gdk.Atom.intern_static_string (SPICE_UP_TARGET_NAME);
 
-    static weak Object object_ref;
+    static Object? object_ref;
+    static string? object_data;
     static bool set_internally = false;
 
     enum Target {
@@ -68,13 +69,7 @@ public class Spice.Clipboard {
                 break;
             case Target.SPICE:
                 debug ("Spice object requested\n");
-                if (object_ref is Spice.CanvasItem) {
-                    debug ("canvas item\n");
-                    selection_data.@set (SPICE_ATOM, 0, (object_ref as Spice.CanvasItem).serialise ().data);
-                } else if (object_ref is Spice.Slide) {
-                    debug ("slide\n");
-                    selection_data.@set (SPICE_ATOM, 0, (object_ref as Slide).serialise ().data);
-                }
+                selection_data.@set (SPICE_ATOM, 0, object_data.data);
                 break;
             default:
                 debug ("Other data %u\n", info); break;
@@ -84,6 +79,7 @@ public class Spice.Clipboard {
     public static void clear_data (Gtk.Clipboard clipboard, void* user_data_or_owner) {
         if (!set_internally) {
             object_ref = null;
+            object_data = null;
         }
 
         set_internally = false;
@@ -91,11 +87,12 @@ public class Spice.Clipboard {
 
     public static void copy (Object object) {
         if (object == null) return;
-        object_ref = object;
 
         set_internally = true;
 
         Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
+
+        object_data = clone (object);
 
         if (object is Spice.TextItem) {
             debug ("set text target list");
@@ -105,6 +102,12 @@ public class Spice.Clipboard {
             clipboard.set_with_data (image_target_list, set_with_data, clear_data, null);
         } else {
             clipboard.set_with_data (spice_target_list, set_with_data, clear_data, null);
+        }
+
+        if (object is Spice.CanvasItem) {
+            object_ref = Utils.canvas_item_from_data (Utils.get_json_object (object_data), null);
+        } else {
+
         }
     }
 
@@ -185,18 +188,24 @@ public class Spice.Clipboard {
         }
     }
 
-    public static void duplicate (Object object, Spice.SlideManager manager) {
-        if (object == null) return;
+    public static string clone (Object object) {
+        if (object == null) return "";
 
         string data;
 
         if (object is Spice.CanvasItem) {
-            data = (object as Spice.CanvasItem).serialise ();
-        } else if (object is Spice.Slide){
-            data = (object as Slide).serialise ();
+            return (object as Spice.CanvasItem).serialise ();
+        } else if (object is Spice.Slide) {
+            return (object as Slide).serialise ();
         } else {
-            return;
+            return "";
         }
+    }
+
+    public static void duplicate (Object object, Spice.SlideManager manager) {
+        if (object == null) return;
+
+        string data = clone (object);
 
         var root_object = Utils.get_json_object (data);
         if (root_object == null) return;

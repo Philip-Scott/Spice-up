@@ -60,6 +60,13 @@ public class Spice.Slide : Object {
         visible = false;
     }
 
+    public Slide.without_canvas (Json.Object? save_data = null) {
+        this.save_data = save_data;
+        canvas = null;
+
+        load_data ();
+    }
+
     construct {
         preview = new Gtk.Image ();
     }

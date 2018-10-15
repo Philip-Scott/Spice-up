@@ -78,9 +78,9 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
                                      border: 2px dotted white;
                                   }""";
 
-    public unowned Canvas canvas { protected get; construct; }
+    public unowned Canvas? canvas { protected get; construct; }
 
-    public CanvasItem (Spice.Canvas _canvas, Json.Object _save_data) {
+    public CanvasItem (Spice.Canvas? _canvas, Json.Object _save_data) {
         Object (canvas: _canvas, save_data: _save_data);
     }
 
