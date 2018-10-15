@@ -30,10 +30,11 @@ public class Spice.ColorItem : Spice.CanvasItem {
         }
     """;
 
-    public ColorItem (Canvas _canvas, Json.Object? _save_data = null) {
+    public ColorItem (Canvas? _canvas, Json.Object? _save_data = null) {
         Object (canvas: _canvas, save_data: _save_data);
         load_data ();
-        style ();
+
+        if (canvas != null) style ();
     }
 
     protected override string serialise_item () {

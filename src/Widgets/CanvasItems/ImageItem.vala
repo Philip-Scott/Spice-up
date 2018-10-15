@@ -51,27 +51,30 @@ public class Spice.ImageItem : Spice.CanvasItem {
         }
     }
 
-    public ImageItem (Canvas _canvas, Json.Object? _save_data = null) {
+    public ImageItem (Canvas? _canvas, Json.Object? _save_data = null) {
         Object (canvas: _canvas, save_data: _save_data);
 
         load_data ();
-        style ();
+
+        if (canvas != null) style ();
     }
 
-    public ImageItem.from_file (Canvas _canvas, File file) {
+    public ImageItem.from_file (Canvas? _canvas, File file) {
         Object (canvas: _canvas, save_data: null);
 
         this.image = new ImageHandler.from_file (file);
         connect_image ();
-        style ();
+
+        if (canvas != null) style ();
     }
 
-    public ImageItem.from_data (Canvas _canvas, string base64_image, string extension) {
+    public ImageItem.from_data (Canvas? _canvas, string base64_image, string extension) {
         Object (canvas: _canvas, save_data: null);
 
         this.image = new ImageHandler.from_data (extension, base64_image);
         connect_image ();
-        style ();
+
+        if (canvas != null) style ();
     }
 
     protected override void load_item_data () {

@@ -157,7 +157,7 @@ public class Spice.Utils {
         window.get_screen ().get_active_window ().set_cursor (cursor);
     }
 
-    public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas canvas) {
+    public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas? canvas) {
         string type = data.get_string_member ("type");
         CanvasItem? item = null;
 

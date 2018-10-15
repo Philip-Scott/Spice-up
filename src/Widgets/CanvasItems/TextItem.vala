@@ -76,7 +76,7 @@ public class Spice.TextItem : Spice.CanvasItem {
         }
     """;
 
-    public TextItem (Canvas _canvas, Json.Object? _save_data = null) {
+    public TextItem (Canvas? _canvas, Json.Object? _save_data = null) {
         Object (canvas: _canvas, save_data: _save_data);
 
         entry = new Gtk.TextView ();
@@ -137,10 +137,6 @@ public class Spice.TextItem : Spice.CanvasItem {
             stack.set_visible_child_name ("label");
         });
 
-        canvas.ratio_changed.connect ((ratio) => {
-            style ();
-        });
-
         editing = false;
 
         load_data ();
@@ -155,7 +151,13 @@ public class Spice.TextItem : Spice.CanvasItem {
             }
         });
 
-        style ();
+        if (canvas != null) {
+            canvas.ratio_changed.connect ((ratio) => {
+                style ();
+            });
+
+            style ();
+        }
     }
 
     // Needed to fix GTK glitches
