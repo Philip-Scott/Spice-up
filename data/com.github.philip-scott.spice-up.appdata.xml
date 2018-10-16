@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2016 Felipe Escoto (https://github.com/Philip-Scott/Spice-up) -->
+<!-- Copyright (c) 2016-2018 Felipe Escoto (https://github.com/Philip-Scott/Spice-up) -->
 <component type="desktop">
   <id>com.github.philip-scott.spice-up</id>
   <metadata_license>CC0-1.0</metadata_license>
@@ -8,24 +8,39 @@
   <summary>Create simple and beautiful presentations</summary>
   <description>
     <p>
-      Everything you need to create simple and beautiful presentations with text, images, and shapes. Add some spice to your presentations with a wide variety of background patterns and beautiful color palette.
+      Create presentations that stand out! Spice-Up has everything you need to create simple and beautiful presentations. Get your ideas across with beautiful designed templates, or start from scratch with a blank canvas. Either way, you will add some spice to your presentations with a wide variety of background patterns and a beautiful color palette.
     </p>
     <p>
-      Features Include:
+      Easy-to-design slides and powerful features:
     </p>
     <ul>
-      <li>Exporting to PDF!</li>
-      <li>Presentation Browser: Scroll through the presentations you have made and jump right into them with one click!.</li>
+      <li>Export to PDF!</li>
+      <li>Presentation Browser: Scroll through the presentations you have made and jump right into them with one click!</li>
       <li>Controller Support: If you have a USB or Bluetooth controller, plug it in and control your slides!</li>
-      <li>Templates, so you can whip up a presentation in a blink of an eye.</li>
-      <li>You can edit images in your favorite editor, and it will automatically update when saved</li>
-      <li>Open Spice-Up files from a web browser by drag and drop if the app is not installed!</li>
+      <li>Share your Spice-Up files and open them from a web browser if the app is not installed, no extra software needed!</li>
+      <li>Open and edit images in your favorite editor, and it will automatically update when saved.</li>
+      <li>Templates, a touch of creativity is all you need to make presentations in a blink of an eye.</li>
+      <li>Bring your presentation to life with slide show transitions.</li>
+      <li>Present like a pro with slide-by-slide notes only viewable by you!</li>
     </ul>
   </description>
   <provides>
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.7.0" date="2018-10-16">
+      <description>
+        <p>Smart Clipboard</p>
+        <ul>
+          <li>The Clipboard is now super smart!</li>
+          <li>You can now paste text and images into Spice-Up for external apps!</li>
+          <li>And you can also copy text and images to apps outside of Spice-Up</li>
+          <li>Pasting a slide to another app with paste it as an image. Sharing your work is even easier now!</li>
+          <li>Fixed shadows on the Slide Previews not showing up, making the slide appear flat.</li>
+          <li>Fixed problem with canvas showing items moved a bit when resizing.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.6.1" date="2018-10-3">
       <description>
         <p>Slide Transitions and the Slide List Redesign</p>
@@ -73,7 +88,7 @@
           <li>You can now add/remove stops in gradients, as well as move them around and rotate them.</li>
           <li>Grab inspiration from one of the ten new gradient presets!</li>
           <li>You can also pick colors from the screen.</li>
-          <li>Fonts are search-able now</li>
+          <li>Fonts are searchable now</li>
           <li>Font-styles are now styled (pun intended)</li>
           <li>Notifications are now disabled when presenting</li>
         </ul>
@@ -120,7 +135,7 @@
           <li>You can now replace images right from Spice-Up.</li>
           <li>Making a new slide now picks up the style from your last one.</li>
           <li>You can now make Text and Shapes transparent, right from the custom color picker!</li>
-          <li>Fixed: Double clicking would sometimes unselect the item.</li>
+          <li>Fixed: Double clicking would sometimes deselect the item.</li>
           <li>Fixed: The text on the roundness slider was hard to read.</li>
           <li>Spice-Up is also now available in Spanish!</li>
         </ul>
