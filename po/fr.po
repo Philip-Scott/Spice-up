@@ -1,15 +1,67 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0.0\n"
-"Report-Msgid-Bugs-To: Felipe\n"
-"POT-Creation-Date: 2017-09-14 17:37-0500\n"
-"PO-Revision-Date: 2017-09-14 18:00+5\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2018-10-17 21:53+0200\n"
 "Last-Translator: dabou\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:29
+msgid "Spice-Up"
+msgstr "Spice-Up"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:30
+msgid "About Spice-Up"
+msgstr "À propos de Spice-Up"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:34
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:166
+msgid "Cancel"
+msgstr "Annuler"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:64
+msgid "Open Image"
+msgstr "Ouvrir une Image"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:64
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:77
+msgid "Open"
+msgstr "Ouvrir"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:77
+msgid "Open file"
+msgstr "Ouvrir un fichier"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:85
+msgid "Presentations"
+msgstr "Présentations"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:98
+msgid "Untitled Presentation"
+msgstr "Présentation sans titre"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:103
+msgid "My Presentation"
+msgstr "Ma Présentation"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:104
+#, c-format
+msgid "By: %s"
+msgstr "De: %s"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:210
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:85
+msgid "Export to PDF"
+msgstr "Exporter en PDF"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:210
+msgid "Save"
+msgstr "Enregistrer"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:66
 msgid "Controller found"
@@ -43,11 +95,6 @@ msgstr "Allez à la diapositive:"
 msgid "Toggle Presentation:"
 msgstr "Démarrer/Quitter la présentation"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:166
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:34
-msgid "Cancel"
-msgstr "Annuler"
-
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:167
 msgid "Apply"
 msgstr "Appliquer"
@@ -63,105 +110,43 @@ msgstr "Bouton %d"
 msgid "..."
 msgstr "..."
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:64
-msgid "Open Image"
-msgstr "Ouvrir une Image"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:45
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:90
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:111
+msgid "Click to add text..."
+msgstr "Cliquer pour ajouter du text..."
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:64
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:77
-msgid "Open"
-msgstr "Ouvrir"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/ColorPicker.vala:94
+msgid "Color Palette"
+msgstr "Palette de Couleurs"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:77
-msgid "Open file"
-msgstr "Ouvrir un fichier"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/ColorPicker.vala:95
+msgid "Custom Color"
+msgstr "Modifier la Couleur"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:85
-msgid "Presentations"
-msgstr "Présentations"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/ColorPicker.vala:96
+msgid "Gradient Palette"
+msgstr "Dégradé de Couleur"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:90
-msgid "Untitled Presentation"
-msgstr "Présentation sans titre"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/ColorPicker.vala:120
+msgid "Gradient Editor"
+msgstr "Éditeur de dégradé"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:95
-msgid "My Presentation"
-msgstr "Ma Présentation"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/ColorPicker.vala:228
+msgid "Pick Color"
+msgstr "Sélectionner la couleur"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:96
-#, c-format
-msgid "By: %s"
-msgstr "De: %s"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/GradientEditor.vala:65
+msgid "Gradient Direction"
+msgstr "Direction du dégradé"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:166
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:85
-msgid "Export to PDF"
-msgstr "Exporter en PDF"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/GradientEditor.vala:84
+msgid "Add color stop"
+msgstr "Ajouter un arrêt de couleur"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:166
-msgid "Save"
-msgstr "Enregistrer"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:37
-#, c-format
-msgid "Open: %s"
-msgstr "Ouvrir: %s"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:62
-msgid "Name: "
-msgstr "Nom: "
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:68
-msgid "Aspect Ratio: "
-msgstr "Ratio: "
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:72
-msgid "4:3"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:73
-msgid "16:9"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:74
-msgid "16:10"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:75
-msgid "3:2"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:76
-msgid "5:4"
-msgstr ""
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:83
-msgid "Open file location…"
-msgstr "Ouvrir le dossier…"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:121
-msgid "Could not rename: File already exists…"
-msgstr "Renommage impossible: Le fichier existe déjà…"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:39
-msgid "Make a Simple Presentation"
-msgstr "Créer une Présentation Simple"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:42
-msgid "New Presentation"
-msgstr "Nouvelle Présentation"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:42
-msgid "Create a new presentation"
-msgstr "Créer une nouvelle présentation"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:43
-msgid "Open File"
-msgstr "Ouvrir un fichier"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:43
-msgid "Open a saved presentation"
-msgstr "Ouvrir une présentation enregistrée"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/GradientEditor.vala:88
+msgid "Remove color stop"
+msgstr "Supprimer un arrêt de couleur"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:75
 msgid "Undo"
@@ -191,139 +176,127 @@ msgstr "Retourner à l'accueil"
 msgid "Start Presentation"
 msgstr "Commencer la Présentation"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Templates/TemplateItem.vala:34
-msgid "Create new presentation"
-msgstr "Créer une Présentation"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:39
+#, c-format
+msgid "Open: %s"
+msgstr "Ouvrir: %s"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:98
-msgid "Custom Color"
-msgstr "Modifier la Couleur"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:64
+msgid "Name: "
+msgstr "Nom: "
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:112
-msgid "Color 1:"
-msgstr "Couleur 1:"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:70
+msgid "Aspect Ratio: "
+msgstr "Ratio: "
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:113
-msgid "Color 2:"
-msgstr "Couleur 2:"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:85
+msgid "Open file location…"
+msgstr "Ouvrir le dossier…"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:148
-msgid "Vertical"
-msgstr "Verticale"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:123
+msgid "Could not rename: File already exists…"
+msgstr "Renommage impossible: Le fichier existe déjà…"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorButton.vala:149
-msgid "Horizontal"
-msgstr "Horizontale"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/PresenterView.vala:228
+#, c-format
+msgid "%d of %d"
+msgstr "%d de %d"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:44
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:89
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:108
-msgid "Click to add text..."
-msgstr "Cliquer pour ajouter du text..."
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/PresenterView.vala:230
+msgid "End"
+msgstr "Fin"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/SlideList.vala:225
+msgid "Presenter Notes:"
+msgstr "Notes du présentateur:"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:35
 msgid "Background color"
 msgstr "Couleur de fond"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:44
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:45
 msgid "Background pattern"
 msgstr "Modèle de fond"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:47
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:48
 msgid "3px tile"
 msgstr "tuile de 3px"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:48
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:49
 msgid "Fabric dark"
 msgstr "Tissu sombre"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:49
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:50
 msgid "Fabric light"
 msgstr "Tissu claire"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:50
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:51
 msgid "Batthern"
 msgstr "Batthern"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:51
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:52
 msgid "Beige paper"
 msgstr "Papier beige"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:52
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:53
 msgid "Black linen"
 msgstr "Linge noir"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:53
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:54
 msgid "Bright squares"
 msgstr "Carrés brillants"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:54
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:55
 msgid "Diamond Upholstery"
 msgstr "Diamant tissé"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:55
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:56
 msgid "Flowers"
 msgstr "Fleurs"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:56
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:57
 msgid "Hexellence"
 msgstr "Hexellence"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:57
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:58
 msgid "Gplay"
 msgstr "Gplay"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:58
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:59
 msgid "Geometry"
 msgstr "Géométrie"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:59
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:60
 msgid "Dark geometric"
 msgstr "Sombre Géométrie"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:60
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:61
 msgid "Light wool"
 msgstr "Laine fine"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:61
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:62
 msgid "Neutral squares"
 msgstr "Petits carrés neutres"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:62
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:63
 msgid "Silver scales"
 msgstr "Écailles argentées"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:63
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:64
 msgid "Subtle grid"
 msgstr "Grille subtile"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:64
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:65
 msgid "Subtle squares"
 msgstr "Carrés subtils"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:65
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:66
 msgid "XV"
 msgstr "XV"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:66
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:67
 msgid " None"
 msgstr " Aucun"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:41
-msgid "Font color"
-msgstr "Couleur du text"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:44
-msgid "Font Style"
-msgstr "Couleur du fond"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:51
-msgid "Font"
-msgstr "Police"
-
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:62
-msgid "Font size"
-msgstr "Taille de police"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CommonBar.vala:38
 msgid "Delete"
@@ -365,14 +338,88 @@ msgstr "Arrondir"
 msgid "Shape color"
 msgstr "Couleur de la forme"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:29
-msgid "Spice-Up"
-msgstr "Spice-Up"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:35
+msgid "Left"
+msgstr "Gauche"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:30
-msgid "About Spice-Up"
-msgstr "À propos de Spice-Up"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:35
+msgid "Center"
+msgstr "Centre"
 
-#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:50
-msgid "translator-credits"
-msgstr "Damien Bouthier"
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:35
+msgid "Right"
+msgstr "Droite"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:35
+msgid "Justify"
+msgstr "Justifier"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:36
+msgid "Top"
+msgstr "Haut"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:36
+msgid "Middle"
+msgstr "Milieu"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:36
+msgid "Bottom"
+msgstr "Bas"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:70
+msgid "Font color"
+msgstr "Couleur du text"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:73
+msgid "Font Style"
+msgstr "Couleur du fond"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:80
+msgid "Font"
+msgstr "Police"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:92
+msgid "Font size"
+msgstr "Taille de police"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:103
+msgid "Align"
+msgstr "Aligner"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:38
+msgid "Make a Simple Presentation"
+msgstr "Créer une Présentation Simple"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:41
+msgid "New Presentation"
+msgstr "Nouvelle Présentation"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:41
+msgid "Create a new presentation"
+msgstr "Créer une nouvelle présentation"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:42
+msgid "Open File"
+msgstr "Ouvrir un fichier"
+
+#: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Welcome.vala:42
+msgid "Open a saved presentation"
+msgstr "Ouvrir une présentation enregistrée"
+
+#~ msgid "Create new presentation"
+#~ msgstr "Créer une Présentation"
+
+#~ msgid "Color 1:"
+#~ msgstr "Couleur 1:"
+
+#~ msgid "Color 2:"
+#~ msgstr "Couleur 2:"
+
+#~ msgid "Vertical"
+#~ msgstr "Verticale"
+
+#~ msgid "Horizontal"
+#~ msgstr "Horizontale"
+
+#~ msgid "translator-credits"
+#~ msgstr "Damien Bouthier"
