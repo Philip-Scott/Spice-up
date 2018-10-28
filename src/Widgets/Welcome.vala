@@ -117,7 +117,10 @@ public class Spice.Welcome : Gtk.Box {
     }
 
     private void load_remote_templates () {
-        var json_data = Spice.Utils.get_json_object (fetcher.get_data ());
+        var template_data = fetcher.get_data ();
+        if (template_data == null) return;
+
+        var json_data = Spice.Utils.get_json_object (template_data);
 
         if (json_data == null) return;
 

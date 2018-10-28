@@ -24,15 +24,30 @@ public class Spice.Services.Fetcher {
     private const int64 CACHE_LIFE = 43200; // 1/2 a day
     public const string CURRENT_VERSION = "2";
 
-    private File cache_file;
+    private File? cache_file = null;
     private string cache = "";
     private Mutex mutex = Mutex ();
 
     public Fetcher () {
-        cache_file = File.new_for_path (Environment.get_tmp_dir () + "/com.github.philip-scott.spice-up.cache.json");
+        var cache_folder = GLib.Path.build_filename (GLib.Environment.get_user_cache_dir (), Spice.Application.APP_ID);
+
+        try {
+            File file = File.new_for_path (cache_folder);
+            if (!file.query_exists ()) {
+                file.make_directory ();
+            }
+        } catch (Error e) {
+            warning (e.message);
+            return;
+        }
+
+        var cache_file_path = GLib.Path.build_filename (cache_folder, "templates-v%s.json".printf(CURRENT_VERSION));
+        cache_file = File.new_for_path (cache_file_path);
     }
 
     public void fetch_templates () {
+        if (cache_file == null) return;
+
         var now = new DateTime.now_utc ().to_unix ();
 
         var settigns = Spice.Services.Settings.get_instance ();
@@ -85,7 +100,9 @@ public class Spice.Services.Fetcher {
         return data.str;
     }
 
-    public string get_data () {
+    public string? get_data () {
+        if (cache_file == null) return null;
+
         mutex.lock ();
         if (cache == "" && cache_file.query_exists ()) {
             cache = Services.FileManager.get_data (cache_file);
