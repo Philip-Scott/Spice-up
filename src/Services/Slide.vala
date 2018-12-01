@@ -40,8 +40,6 @@ public class Spice.Slide : Object {
             canvas.visible = value;
             visible_changed (value);
         }
-
-        default = true;
     }
 
     public Slide (Json.Object? save_data = null) {
