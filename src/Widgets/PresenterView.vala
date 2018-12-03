@@ -31,9 +31,8 @@ public class Spice.PresenterWindow : Gtk.Window {
 
     Clock clock;
 
-    private int _font_size;
+    private int _font_size = 12;
     private int font_size {
-        default = 12;
         get {
             return _font_size;
         }

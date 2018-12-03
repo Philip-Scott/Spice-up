@@ -32,11 +32,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
             } else {
                 aspect_frame.margin = 24;
             }
-        } default = false;
+        }
     }
 
     private bool notification_shown = false;
-    private bool is_full_;
+    private bool is_full_ = false;
 
     private Spice.Headerbar headerbar;
     private Spice.SlideManager slide_manager;

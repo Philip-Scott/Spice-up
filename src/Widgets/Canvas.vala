@@ -28,7 +28,7 @@ public class Spice.Canvas : Gtk.Overlay {
     public signal void next_slide ();
     public signal void previous_slide ();
 
-    private double _current_ratio;
+    private double _current_ratio = 1.0f;
     public double current_ratio {
         get {
             return _current_ratio;
@@ -40,8 +40,6 @@ public class Spice.Canvas : Gtk.Overlay {
                 ratio_changed (current_ratio);
             }
         }
-
-        default = 1.0f;
     }
 
     public double current_allocated_width = 0;
