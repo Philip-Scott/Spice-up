@@ -99,8 +99,8 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         HeaderbarButton.headerbar = this;
         has_subtitle = false;
 
-        undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO);
-        redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO);
+        undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO, {"<Ctrl>Z"});
+        redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO, {"<Ctrl><Shift>Z"});
         text = new HeaderbarButton ("text-symbolic", _("Insert Text Box"), HeaderButton.TEXT);
         image = new HeaderbarButton ("photo-symbolic", _("Insert Image"), HeaderButton.IMAGE);
         shape = new HeaderbarButton ("shape-symbolic", _("Insert Shape"), HeaderButton.SHAPE);
@@ -109,8 +109,8 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         undo.sensitive = false;
         redo.sensitive = false;
 
-        export = new HeaderbarButton ("document-export-symbolic",_("Export to PDF"), null);
-        present = new HeaderbarButton ("media-playback-start-symbolic",_("Start Presentation"), null);
+        export = new HeaderbarButton ("document-export-symbolic", _("Export to PDF"), null);
+        present = new HeaderbarButton ("media-playback-start-symbolic", _("Start Presentation"), null, {"<Ctrl><Shift>P"});
         present.get_style_context ().add_class ("suggested-action");
 
         show_notes = new Gtk.ToggleButton ();
@@ -177,14 +177,14 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     protected class HeaderbarButton : Gtk.Button {
         public static Headerbar headerbar;
 
-        public HeaderbarButton (string icon_name, string tooltip, HeaderButton? signal_mask) {
+        public HeaderbarButton (string icon_name, string description, HeaderButton? signal_mask, string[] accels = null) {
             can_focus = false;
 
             Gtk.Image image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
             image.margin = 3;
 
             get_style_context ().add_class ("spice");
-            set_tooltip_text (tooltip);
+            set_tooltip_markup (Granite.markup_accel_tooltip (accels, description));
             this.add (image);
 
             if (signal_mask != null) {

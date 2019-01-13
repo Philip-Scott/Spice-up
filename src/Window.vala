@@ -252,6 +252,18 @@ public class Spice.Window : Gtk.ApplicationWindow {
             Spice.Services.HistoryManager.get_instance ().undo ();
         });
 
+        var clone_action = new SimpleAction ("clone-action", null);
+        add_action (clone_action);
+        app.set_accels_for_action ("win.clone-action", {"<Ctrl>D"});
+        clone_action.activate.connect (() => {
+            var current_item = slide_manager.current_item;
+            if (current_item != null) {
+                Clipboard.duplicate (slide_manager, current_item);
+            } else {
+                Clipboard.duplicate (slide_manager, slide_manager.current_slide);
+            }
+        });
+
         var redo_action = new SimpleAction ("redo-action", null);
         add_action (redo_action);
         app.set_accels_for_action ("win.redo-action", {"<Ctrl><Shift>Z"});
@@ -301,16 +313,29 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 return esc_event ();
         }
 
+        // Ctrl + Shift + ? Events
+        if (Gdk.ModifierType.CONTROL_MASK in key.state && Gdk.ModifierType.SHIFT_MASK in key.state) {
+            switch (key.keyval) {
+                case 80: // P
+                case 112: // p
+                    is_presenting = !is_presenting;
+                    return true;
+            }
+        }
+
         // Ctrl + ? Events
         if (Gdk.ModifierType.CONTROL_MASK in key.state) {
             switch (key.keyval) {
-                case 99: // C
+                case 67: // C
+                case 99: // c
                     return copy ();
 
-                case 118: // V
+                case 86: // V
+                case 118: // v
                     return paste ();
 
-                case 120: // X
+                case 88: // X
+                case 120: // x
                     return cut ();
 
                 case 65535: // Delete Key
@@ -321,6 +346,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         return false;
     }
+
 
     private bool cut () {
         var current_item = slide_manager.current_item;

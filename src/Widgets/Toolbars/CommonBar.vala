@@ -35,7 +35,7 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         halign = Gtk.Align.END;
 
         delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.MENU);
-        delete_button.set_tooltip_text (_("Delete"));
+        delete_button.set_tooltip_markup (Granite.markup_accel_tooltip ({"<Ctrl>BackSpace","<Ctrl>Delete"}, _("Delete")));
         delete_button.get_style_context ().add_class ("spice");
 
         delete_button.clicked.connect (() => {
@@ -51,7 +51,7 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
 
         clone_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.MENU);
         clone_button.get_style_context ().add_class ("spice");
-        clone_button.set_tooltip_text (_("Clone"));
+        clone_button.set_tooltip_markup (Granite.markup_accel_tooltip ({"<Ctrl>D"}, _("Clone")));
 
         clone_button.clicked.connect (() => {
             if (this.item != null) {
