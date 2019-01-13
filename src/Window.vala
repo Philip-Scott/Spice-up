@@ -80,6 +80,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
             sidebar_revealer.visible = !value;
             sidebar_revealer.reveal_child = !value;
             toolbar_revealer.reveal_child = !value;
+            headerbar.is_presenting = value;
             presenter_notes.visible =!value;
             slide_manager.checkpoint = null;
 

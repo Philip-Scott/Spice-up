@@ -62,6 +62,30 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         }
     }
 
+    public bool is_presenting {
+        set {
+            text.visible = !value;
+            undo.visible = !value;
+            redo.visible = !value;
+            shape.visible = !value;
+            image.visible = !value;
+            export.visible = !value;
+            show_welcome.visible = !value;
+            show_notes.visible = !value;
+
+            text.no_show_all = value;
+            undo.no_show_all = value;
+            redo.no_show_all = value;
+            shape.no_show_all = value;
+            image.no_show_all = value;
+            export.no_show_all = value;
+            show_welcome.no_show_all = value;
+            show_notes.no_show_all = value;
+
+            present.tooltip_text = value ? _("Stop Presentation") : _("Start Presentation");
+        }
+    }
+
     public Headerbar (Spice.SlideManager slide_manager) {
         this.slide_manager = slide_manager;
         set_title ("Presentation");
@@ -142,7 +166,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         });
 
         present.clicked.connect (() => {
-            window.is_presenting = true;
+            window.is_presenting = !window.is_presenting;
         });
 
         export.clicked.connect (() => {
