@@ -22,15 +22,77 @@
 public class Spice.Window : Gtk.ApplicationWindow {
     const Gtk.TargetEntry[] DRAG_TARGETS = {{ "text/uri-list", 0, 0 }};
 
-    public bool is_fullscreen {
+    int old_x;
+    int old_y;
+    bool? notifications_last_state = null;
+
+    GLib.SettingsSchema? gala_notify_schema = null;
+    Settings? gala_notify_settings = null;
+
+    public bool is_presenting {
         public get {
             return is_full_;
-        } private set {
-            is_full_ = value;
+        } public set {
+            if (value == is_full_) return;
+
+            // Window Positioning
             if (value) {
-                aspect_frame.margin = 0;
+                var screen = Gdk.Screen.get_default ();
+                var monitor_count = screen.get_n_monitors ();
+                get_position (out old_x, out old_y);
+
+                fullscreen ();
+
+                if (monitor_count > 1) {
+                    presenter_window = new PresenterWindow (slide_manager, this);
+                    presenter_window.show ();
+
+                    var primary_monitor = screen.get_primary_monitor ();
+
+                    Gdk.Rectangle rec;
+                    screen.get_monitor_geometry (primary_monitor == 1 ? 0 : 1, out rec);
+
+                    move (rec.x, rec.y);
+                } else if (DEBUG) {
+                    presenter_window = new PresenterWindow (slide_manager, this);
+                    presenter_window.show ();
+                }
+
+                // set Gala Notifications
+                notifications_last_state = get_do_not_disturb_value ();
+                set_do_not_disturb_value (true);
             } else {
-                aspect_frame.margin = 24;
+                unfullscreen ();
+                move (old_x, old_y);
+
+                if (presenter_window != null) {
+                    presenter_window.destroy ();
+                    presenter_window = null;
+                }
+
+                set_do_not_disturb_value (notifications_last_state);
+                notifications_last_state = null;
+            }
+
+            is_full_ = value;
+            aspect_frame.margin = value? 0 : 24;
+
+            sidebar_revealer.visible = !value;
+            sidebar_revealer.reveal_child = !value;
+            toolbar_revealer.reveal_child = !value;
+            presenter_notes.visible =!value;
+            slide_manager.checkpoint = null;
+
+            if (toast != null && notification_shown) {
+                toast.reveal_child = !value;
+            }
+
+            if (slide_manager.current_slide != null) {
+                slide_manager.current_slide.canvas.unselect_all ();
+            }
+
+            if (!value) {
+                slide_manager.end_presentation ();
             }
         }
     }
@@ -174,27 +236,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
             aspect_frame.ratio = Spice.AspectRatio.get_ratio_value (new_ratio);
         });
 
-        window_state_event.connect ((e) => {
-            if (Gdk.WindowState.FULLSCREEN in e.changed_mask) {
-                is_fullscreen = (Gdk.WindowState.FULLSCREEN in e.new_window_state);
-                sidebar_revealer.visible = !is_fullscreen;
-                sidebar_revealer.reveal_child = !is_fullscreen;
-                toolbar_revealer.reveal_child = !is_fullscreen;
-                presenter_notes.visible =!is_fullscreen;
-                slide_manager.checkpoint = null;
-
-                if (toast != null && notification_shown) {
-                    toast.reveal_child = !is_fullscreen;
-                }
-
-                if (slide_manager.current_slide != null) {
-                    slide_manager.current_slide.canvas.unselect_all ();
-                }
-            }
-
-            return false;
-        });
-
         slide_manager.current_slide_changed.connect ((current_slide) => {
             presenter_notes.set_text (current_slide.notes);
         });
@@ -322,7 +363,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private bool next_slide (bool override = false) {
-        if (is_fullscreen || override) {
+        if (is_presenting || override) {
             this.slide_manager.next_slide ();
             return true;
         }
@@ -331,7 +372,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private bool previous_slide (bool override = false) {
-        if (is_fullscreen || override) {
+        if (is_presenting || override) {
             this.slide_manager.previous_slide ();
             return true;
         }
@@ -340,8 +381,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private bool esc_event () {
-        if (is_fullscreen) {
-            end_presentation ();
+        if (is_presenting) {
+            is_presenting = false;
         } else {
             var slide = slide_manager.current_slide;
             if (slide != null) {
@@ -416,7 +457,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         settings.window_width = width;
         settings.window_height = height;
 
-        set_notification_state (notifications_last_state);
+        set_do_not_disturb_value (notifications_last_state);
 
         return false;
     }
@@ -427,54 +468,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         present ();
     }
 
-    int old_x;
-    int old_y;
-    bool? notifications_last_state = null;
-    public void start_presentation () {
-        var screen = Gdk.Screen.get_default ();
-        var monitor_count = screen.get_n_monitors ();
-        get_position (out old_x, out old_y);
-
-        if (monitor_count > 1) {
-            presenter_window = new PresenterWindow (slide_manager, this);
-            presenter_window.show ();
-
-            var primary_monitor = screen.get_primary_monitor ();
-
-            Gdk.Rectangle rec;
-            screen.get_monitor_geometry (primary_monitor == 1 ? 0 : 1, out rec);
-
-            move (rec.x, rec.y);
-        } else if (DEBUG) {
-            presenter_window = new PresenterWindow (slide_manager, this);
-            presenter_window.show ();
-        }
-
-        notifications_last_state = get_notification_state ();
-        set_notification_state (true);
-
-        fullscreen ();
-    }
-
-    public void end_presentation () {
-        unfullscreen ();
-        move (old_x, old_y);
-
-        if (presenter_window != null) {
-            presenter_window.destroy ();
-            presenter_window = null;
-        }
-
-        set_notification_state (notifications_last_state);
-        notifications_last_state = null;
-
-        slide_manager.end_presentation ();
-    }
-
-    GLib.SettingsSchema? gala_notify_schema = null;
-    Settings? gala_notify_settings = null;
-
-    public bool? get_notification_state () {
+    public bool? get_do_not_disturb_value () {
         if (gala_notify_schema == null) {
             gala_notify_schema = SettingsSchemaSource.get_default ().lookup ("org.pantheon.desktop.gala.notifications", true);
             if (gala_notify_schema == null || !gala_notify_schema.has_key ("do-not-disturb")) {
@@ -491,7 +485,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         return gala_notify_settings.get_boolean ("do-not-disturb");
     }
 
-    public void set_notification_state (bool? state) {
+    public void set_do_not_disturb_value (bool? state) {
         if (state == null || gala_notify_settings == null) return;
         gala_notify_settings.set_boolean ("do-not-disturb", state);
     }

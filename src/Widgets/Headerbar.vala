@@ -142,7 +142,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         });
 
         present.clicked.connect (() => {
-            window.start_presentation ();
+            window.is_presenting = true;
         });
 
         export.clicked.connect (() => {

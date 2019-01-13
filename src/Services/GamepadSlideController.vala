@@ -102,19 +102,19 @@ public class Spice.GamepadSlideController : Object {
     }
 
     private void next_slide () {
-        if (window.is_fullscreen) {
+        if (window.is_presenting) {
             this.slide_manager.next_slide ();
         }
     }
 
     private void previous_slide () {
-        if (window.is_fullscreen) {
+        if (window.is_presenting) {
             this.slide_manager.previous_slide ();
         }
     }
 
     private void toggle_present () {
-        if (window.is_fullscreen) {
+        if (window.is_presenting) {
             window.unfullscreen ();
         } else {
             window.fullscreen ();

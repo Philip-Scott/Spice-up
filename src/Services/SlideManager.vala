@@ -67,11 +67,11 @@ public class Spice.SlideManager : Object {
                 slide_.canvas.unselect_all ();
             }
 
-            if (!window.is_fullscreen && current_slide != null) {
+            if (!window.is_presenting && current_slide != null) {
                 current_slide.reload_preview_data ();
             }
 
-            if (window.is_fullscreen) {
+            if (window.is_presenting) {
                 slideshow.set_transition_duration (600);
                 slideshow.set_transition_type ((Gtk.StackTransitionType) value.transition);
 
@@ -240,7 +240,7 @@ public class Spice.SlideManager : Object {
         var next_slide = get_next_slide (current_slide);
 
         if (slideshow.visible_child == end_presentation_slide.canvas){
-            window.end_presentation ();
+            window.is_presenting = false;
             return;
         }
 
@@ -268,7 +268,7 @@ public class Spice.SlideManager : Object {
                     found = true;
                 }
             } else {
-                if (window.is_fullscreen) {
+                if (window.is_presenting) {
                     next_slide = end_presentation_slide;
                 } else {
                     next_slide = null;
@@ -436,7 +436,7 @@ public class Spice.SlideManager : Object {
 
     public Slide? checkpoint = null;
     public void jump_to_checkpoint () {
-        if (!window.is_fullscreen) return;
+        if (!window.is_presenting) return;
 
         if (checkpoint != null) {
             var temp = checkpoint;
@@ -446,7 +446,7 @@ public class Spice.SlideManager : Object {
     }
 
     public void set_checkpoint () {
-        if (!window.is_fullscreen) return;
+        if (!window.is_presenting) return;
 
         checkpoint = current_slide;
     }

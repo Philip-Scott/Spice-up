@@ -196,7 +196,7 @@ public class Spice.PresenterWindow : Gtk.Window {
     }
 
     public void end_presentation () {
-        window.end_presentation ();
+        window.is_presenting = false;
     }
 
     private void style () {

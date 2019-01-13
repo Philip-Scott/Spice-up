@@ -132,7 +132,7 @@ public class Spice.Canvas : Gtk.Overlay {
         });
 
         canvas_item.move_item.connect ((delta_x, delta_y) => {
-            if (window.is_fullscreen) return;
+            if (window.is_presenting) return;
 
             var r = canvas_item.rectangle;
             canvas_item.rectangle = { (int)(delta_x / current_ratio) + r.x, (int)(delta_y / current_ratio) + r.y, r.width, r.height };
@@ -217,7 +217,7 @@ public class Spice.Canvas : Gtk.Overlay {
     */
 
     public override bool button_press_event (Gdk.EventButton event) {
-        if (window.is_fullscreen) {
+        if (window.is_presenting) {
             if (event.button == 1) {
                 next_slide ();
             } else if (event.button == 3) {

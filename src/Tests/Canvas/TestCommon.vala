@@ -27,7 +27,7 @@ public class Spice.Widgets.CanvasToolbar : Gtk.Box {
 }
 
 public class Spice.Window : Gtk.Window {
-    public bool is_fullscreen {get; set; default = false; }
+    public bool is_presenting { get; set; default = false; }
     public Window () {}
 
     static construct {
