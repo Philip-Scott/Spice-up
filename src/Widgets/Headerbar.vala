@@ -166,7 +166,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         });
 
         present.clicked.connect (() => {
-            window.is_presenting = !window.is_presenting;
+            slide_manager.window.is_presenting = !slide_manager.window.is_presenting;
         });
 
         export.clicked.connect (() => {

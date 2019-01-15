@@ -51,7 +51,7 @@ public class Spice.Grabber : Gtk.Button {
     }
 
     public override bool draw (Cairo.Context ctx) {
-        if (window.is_presenting || Canvas.drawing_preview) return false;
+        if (Spice.Application.get_active_spice_window ().is_presenting || Canvas.drawing_preview) return false;
 
         return base.draw (ctx);
     }

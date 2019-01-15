@@ -20,6 +20,8 @@
 */
 
 public class Spice.SlideManager : Object {
+    public unowned Spice.Window window { get; construct; }
+
     public static int aspect_ratio_override = -1;
 
     public signal void aspect_ratio_changed (Spice.AspectRatio ratio);
@@ -103,12 +105,14 @@ public class Spice.SlideManager : Object {
         }
     }
 
-    public SlideManager () {
+    public SlideManager (Spice.Window window) {
+        Object (window: window);
+
         slides = new Gee.ArrayList<Slide> ();
         slideshow = new Gtk.Stack ();
         slideshow.homogeneous = false;
 
-        end_presentation_slide = new Slide.empty ();
+        end_presentation_slide = new Slide.empty (window);
         end_presentation_slide.canvas.next_slide.connect (next_slide);
         end_presentation_slide.canvas.previous_slide.connect (previous_slide);
 
@@ -337,7 +341,7 @@ public class Spice.SlideManager : Object {
     private bool propagating_ratio = false;
 
     public Slide new_slide (Json.Object? save_data = null, bool undoable_action = false) {
-        Slide slide = new Slide (save_data);
+        Slide slide = new Slide (window, save_data);
 
         slide.canvas.item_clicked.connect ((item) => {
             current_item = item;

@@ -32,7 +32,7 @@ void add_tests () {
 
 Spice.Canvas load_test (string raw) {
     var json = Spice.Utils.get_json (raw);
-    var item = new Spice.Canvas (json);
+    var item = new Spice.Canvas (Spice.Application.get_active_spice_window (), json);
 
     assert (item.background_color == "blue");
     assert (item.background_pattern == "pattern");

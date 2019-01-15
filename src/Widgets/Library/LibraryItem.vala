@@ -177,7 +177,7 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
             var new_file = File.new_for_path ("%s/%s".printf (path, new_name));
 
             if (new_file.query_exists ()) {
-                window.add_toast_notification (new Granite.Widgets.Toast (_("Could not rename: File already exists…")));
+                Spice.Application.get_active_spice_window ().add_toast_notification (new Granite.Widgets.Toast (_("Could not rename: File already exists…")));
                 return;
             }
 

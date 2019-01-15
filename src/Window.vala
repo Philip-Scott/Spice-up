@@ -173,7 +173,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         provider.load_from_resource ("/com/github/philip-scott/spice-up/stylesheet.css");
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-        slide_manager = new Spice.SlideManager ();
+        slide_manager = new Spice.SlideManager (this);
         app_overlay = new Gtk.Overlay ();
         app_stack = new Gtk.Stack ();
         app_stack.transition_duration = 500;
@@ -471,6 +471,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         show_editor ();
 
         slide_manager.reset ();
+        Spice.Services.HistoryManager.get_instance ().clear_history ();
         Services.FileManager.current_file = file;
         string content = Services.FileManager.open_file ();
 
