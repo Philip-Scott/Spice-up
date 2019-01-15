@@ -46,9 +46,9 @@ public class Spice.DynamicToolbar : Gtk.Box {
         get_style_context ().add_class ("toolbar");
         get_style_context ().add_class ("spice-dynamic-toolbar");
 
-        text_bar = new Spice.Widgets.TextToolbar ();
-        shape_bar = new Spice.Widgets.ShapeToolbar ();
-        image_bar = new Spice.Widgets.ImageToolbar ();
+        text_bar = new Spice.Widgets.TextToolbar (slide_manager);
+        shape_bar = new Spice.Widgets.ShapeToolbar (slide_manager);
+        image_bar = new Spice.Widgets.ImageToolbar (slide_manager);
         canvas_bar = new Spice.Widgets.CanvasToolbar (slide_manager);
         common_bar = new Spice.Widgets.CommonToolbar (slide_manager);
 
@@ -60,7 +60,7 @@ public class Spice.DynamicToolbar : Gtk.Box {
         this.add (stack);
         this.add (common_bar);
 
-        Spice.Services.HistoryManager.get_instance ().action_called.connect ((i) => {
+        slide_manager.window.history_manager.action_called.connect ((i) => {
             item_selected (i);
         });
     }

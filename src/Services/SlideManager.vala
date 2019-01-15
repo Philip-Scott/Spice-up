@@ -378,7 +378,7 @@ public class Spice.SlideManager : Object {
         if (undoable_action) {
             slide.visible = false;
             var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (slide, "visible");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+            window.history_manager.add_undoable_action (action, true);
             slide.visible = true;
         }
 

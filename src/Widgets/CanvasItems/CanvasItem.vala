@@ -212,7 +212,7 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
 
     public void delete () {
         var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.item_changed (this, "item-visible");
-        Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+        canvas.window.history_manager.add_undoable_action (action, true);
 
         this.item_visible = false;
     }
@@ -285,7 +285,7 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
             return false;
         }
 
-        Spice.Services.HistoryManager.get_instance ().add_undoable_action (undo_move_action, true);
+        canvas.window.history_manager.add_undoable_action (undo_move_action, true);
 
         move_item (delta_x, delta_y);
         delta_x = 0;

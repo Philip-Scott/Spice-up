@@ -183,7 +183,7 @@ public class Spice.Clipboard {
             });
         } else {
             // Show an error instead of silently failing
-            Spice.Application.instance.get_active_spice_window ().add_toast_notification (new Granite.Widgets.Toast (_("Unknown clipboard data")));
+            Spice.Application.get_active_spice_window ().add_toast_notification (new Granite.Widgets.Toast (_("Unknown clipboard data")));
         }
     }
 

@@ -144,7 +144,7 @@ public class Spice.TextItem : Spice.CanvasItem {
         entry.buffer.changed.connect (() => {
             if (!setting_text) {
                 var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this as TextItem, "text");
-                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, first_change_in_edit);
+                canvas.window.history_manager.add_undoable_action (action, first_change_in_edit);
                 first_change_in_edit = false;
 
                 previous_text = entry.buffer.text;

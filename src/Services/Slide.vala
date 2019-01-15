@@ -153,7 +153,7 @@ public class Spice.Slide : Object {
 
     public void delete () {
         var action = new Spice.Services.HistoryManager.HistoryAction<Slide,bool>.slide_changed (this, "visible");
-        Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+        canvas.window.history_manager.add_undoable_action (action, true);
 
         this.visible = false;
     }

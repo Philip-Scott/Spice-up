@@ -102,19 +102,9 @@ public class Spice.Services.HistoryManager : Object {
     private Queue<HistoryAction> undo_history;
     private Queue<HistoryAction> redo_history;
 
-    private static HistoryManager? instance = null;
-
-    private HistoryManager () {
+    public HistoryManager () {
         undo_history = new Queue<HistoryAction>();
         redo_history = new Queue<HistoryAction>();
-    }
-
-    public static HistoryManager get_instance () {
-        if (instance == null) {
-            instance = new HistoryManager ();
-        }
-
-        return instance;
     }
 
     public void add_undoable_action (HistoryAction action, bool force_add = false) {

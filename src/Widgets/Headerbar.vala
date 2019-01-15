@@ -149,20 +149,20 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     }
 
     private void connect_signals () {
-        Spice.Services.HistoryManager.get_instance ().undo_changed.connect ((is_empty) => {
+        slide_manager.window.history_manager.undo_changed.connect ((is_empty) => {
             undo.sensitive = !is_empty;
         });
 
-        Spice.Services.HistoryManager.get_instance ().redo_changed.connect ((is_empty) => {
+        slide_manager.window.history_manager.redo_changed.connect ((is_empty) => {
             redo.sensitive = !is_empty;
         });
 
         undo.clicked.connect (() => {
-            Spice.Services.HistoryManager.get_instance ().undo ();
+            slide_manager.window.history_manager.undo ();
         });
 
         redo.clicked.connect (() => {
-            Spice.Services.HistoryManager.get_instance ().redo ();
+            slide_manager.window.history_manager.redo ();
         });
 
         present.clicked.connect (() => {
@@ -177,7 +177,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     protected class HeaderbarButton : Gtk.Button {
         public static Headerbar headerbar;
 
-        public HeaderbarButton (string icon_name, string description, HeaderButton? signal_mask, string[] accels = null) {
+        public HeaderbarButton (string icon_name, string description, HeaderButton? signal_mask, string[]? accels = null) {
             can_focus = false;
 
             Gtk.Image image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);

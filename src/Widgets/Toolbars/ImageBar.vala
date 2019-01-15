@@ -23,6 +23,12 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
     private Gtk.MenuButton open_with;
     private Gtk.Button replace_image;
 
+    private unowned SlideManager manager;
+
+    public ImageToolbar (SlideManager slide_manager) {
+        this.manager = slide_manager;
+    }
+
     construct {
         open_with = new Gtk.MenuButton ();
         open_with.add (new Gtk.Image.from_icon_name ("applications-graphics-symbolic", Gtk.IconSize.MENU));

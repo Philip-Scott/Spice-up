@@ -29,7 +29,7 @@ public class Spice.Services.FileManager {
 
         var dialog = new Gtk.FileChooserDialog (
             title,
-            Spice.Application.instance.get_active_spice_window (),
+            Spice.Application.get_active_spice_window (),
             chooser_action,
             _("Cancel"), Gtk.ResponseType.CANCEL,
             accept_button_label, Gtk.ResponseType.ACCEPT);

@@ -19,6 +19,17 @@ public class Spice.Utils {
 public class Spice.Canvas : Object {
     public signal void ratio_changed (double ratio);
     public double current_ratio { get; set; default = 2.0;}
+
+    public Spice.Window window = new Spice.Window ();
+}
+
+public class Spice.Window : Gtk.Window {
+    public bool is_presenting { get; set; default = false; }
+    public Spice.Services.HistoryManager history_manager { get; set; }
+
+    public Window () {
+        history_manager = new Spice.Services.HistoryManager ();
+    }
 }
 
 public class Spice.Services.HistoryManager : Object {
@@ -33,17 +44,15 @@ public class Spice.Services.HistoryManager : Object {
         public HistoryAction () {}
 
         public HistoryAction.item_changed (I item, string property) {}
+        public HistoryAction.item_moved (I item, Spice.Canvas? canvas = null, bool? value = null) {}
+        public HistoryAction.depth_changed (I item, Spice.Canvas canvas, bool value) {}
     }
 
     public HistoryManager () {
 
     }
 
-    public static HistoryManager get_instance () {
-        return new HistoryManager ();
-    }
-
-    public void add_undoable_action (Object a, Value b) {
+    public void add_undoable_action (Object a, Value? b = null) {
 
     }
 }
