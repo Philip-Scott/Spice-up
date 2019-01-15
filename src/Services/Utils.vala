@@ -154,7 +154,7 @@ public class Spice.Utils {
 
     public static void set_cursor (string cursor_type) {
         var cursor = new Gdk.Cursor.from_name (Gdk.Display.get_default (), cursor_type);
-        window.get_screen ().get_active_window ().set_cursor (cursor);
+        Spice.Application.instance.get_active_spice_window ().get_screen ().get_active_window ().set_cursor (cursor);
     }
 
     public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas? canvas) {

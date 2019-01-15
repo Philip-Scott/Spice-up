@@ -42,6 +42,8 @@ public class Spice.Canvas : Gtk.Overlay {
         }
     }
 
+    public unowned Spice.Window window;
+
     public double current_allocated_width = 0;
     public double current_allocated_height = 0;
     private double default_x_margin = 0;
@@ -60,8 +62,9 @@ public class Spice.Canvas : Gtk.Overlay {
         }
     """;
 
-    public Canvas (Json.Object? save_data = null) {
+    public Canvas (Spice.Window window, Json.Object? save_data = null) {
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
+        this.window = window;
         this.save_data = save_data;
 
         grid = new CanvasGrid (this);

@@ -26,6 +26,12 @@ public class Spice.Widgets.CanvasToolbar : Gtk.Box {
     public static string PATTERNS_DIR = "";
 }
 
+public class Spice.Application {
+    public static Spice.Window get_active_spice_window () {
+        return new Spice.Window ();
+    }
+}
+
 public class Spice.Window : Gtk.Window {
     public bool is_presenting { get; set; default = false; }
     public Window () {}

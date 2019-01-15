@@ -21,7 +21,6 @@
 
 namespace Spice {
     public Spice.Services.Settings settings;
-    public Spice.Window window;
     public string DATA_DIR;
 }
 
@@ -32,7 +31,16 @@ public class Spice.Application : Granite.Application {
     public const string RESOURCE_PATH = "/com/github/philip-scott/spice-up/";
 
     public bool running = false;
-    public bool opening_file = false;
+
+    public static Spice.Application _instance = null;
+    public static unowned Spice.Application instance {
+        get {
+            if (_instance == null) {
+                _instance = new Spice.Application ();
+            }
+            return _instance;
+        }
+    }
 
     construct {
         flags |= ApplicationFlags.HANDLES_OPEN;
@@ -42,7 +50,7 @@ public class Spice.Application : Granite.Application {
         exec_name = APP_ID;
         app_launcher = APP_ID;
 
-        build_version = "1.2";
+        build_version = "1.7";
 
         Granite.Staging.Services.Inhibitor.initialize (this);
     }
@@ -53,11 +61,14 @@ public class Spice.Application : Granite.Application {
             uris += file.get_uri ();
         }
 
-        opening_file = true;
-        activate ();
-        if (window != null) {
-            window.open_file (File.new_for_uri (uris[0]));
+        var window = get_active_spice_window ();
+        if (window == null) {
+            activate ();
+            window = get_active_spice_window ();
         }
+
+        window.open_file (File.new_for_uri (uris[0]));
+        window.show_app ();
     }
 
     public override void activate () {
@@ -66,16 +77,18 @@ public class Spice.Application : Granite.Application {
             default_theme.add_resource_path (RESOURCE_PATH);
 
             settings = Spice.Services.Settings.get_instance ();
-            window = new Spice.Window (this);
+            var window = new Spice.Window (this);
             this.add_window (window);
 
             running = true;
-        }
 
-        if (!opening_file) {
             window.show_welcome ();
         }
 
-        window.show_app ();
+        get_active_spice_window ().show_app ();
+    }
+
+    public static unowned Spice.Window get_active_spice_window () {
+        return (Spice.Window) instance.get_active_window ();
     }
 }

@@ -42,17 +42,17 @@ public class Spice.Slide : Object {
         }
     }
 
-    public Slide (Json.Object? save_data = null) {
+    public Slide (Spice.Window window, Json.Object? save_data = null) {
         this.save_data = save_data;
-        canvas = new Spice.Canvas (save_data);
+        canvas = new Spice.Canvas (window, save_data);
 
         canvas.request_draw_preview.connect (reload_preview_data);
         load_data ();
     }
 
-    public Slide.empty () {
+    public Slide.empty (Spice.Window window) {
         this.save_data = Utils.get_json_object (EMPTY_SLIDE);
-        canvas = new Spice.Canvas (save_data);
+        canvas = new Spice.Canvas (window, save_data);
 
         load_data ();
         visible = false;

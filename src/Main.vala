@@ -35,7 +35,7 @@ public static int main (string[] args) {
     Environment.set_application_name (APP_NAME);
     Environment.set_prgname (APP_NAME);
 
-    var application = new Spice.Application ();
+    var application = Spice.Application.instance;
 
     return application.run (args);
 }
