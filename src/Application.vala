@@ -52,6 +52,7 @@ public class Spice.Application : Granite.Application {
 
         build_version = "1.7";
 
+        settings = Spice.Services.Settings.get_instance ();
         Granite.Staging.Services.Inhibitor.initialize (this);
     }
 
@@ -76,7 +77,6 @@ public class Spice.Application : Granite.Application {
             weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
             default_theme.add_resource_path (RESOURCE_PATH);
 
-            settings = Spice.Services.Settings.get_instance ();
             var window = new Spice.Window (this);
             this.add_window (window);
 

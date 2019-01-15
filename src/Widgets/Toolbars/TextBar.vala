@@ -65,6 +65,12 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     """;
     #endif
 
+    private unowned SlideManager manager;
+
+    public TextToolbar (SlideManager slide_manager) {
+        this.manager = slide_manager;
+    }
+
     construct {
         text_color_button = new Spice.ColorChooser ();
         text_color_button.set_tooltip_text (_("Font color"));
@@ -160,13 +166,13 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     private void connect_signals () {
         text_color_button.color_picked.connect (() => {
             var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this.item as TextItem, "font-color");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 
         font_size.activated.connect (() => {
             var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "font-size");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 
@@ -175,7 +181,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
 
             if (!selecting) {
                 var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "justification");
-                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+                manager.window.history_manager.add_undoable_action (action);
                 update_properties ();
             }
         });
@@ -183,7 +189,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         align.mode_changed.connect ((widget) => {
             if (!selecting) {
                 var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "align");
-                Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+                manager.window.history_manager.add_undoable_action (action);
                 update_properties ();
             }
         });
@@ -192,14 +198,14 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             reset_font_type (font_button.text);
 
             var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this.item as TextItem,  "font");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
 
             update_properties ();
         });
 
         font_type.activated.connect (() => {
             var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,string>.item_changed (this.item as TextItem, "font-style");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 

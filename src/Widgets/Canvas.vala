@@ -146,7 +146,7 @@ public class Spice.Canvas : Gtk.Overlay {
         if (undoable_action) {
             canvas_item.visible = false;
             var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem,bool>.item_changed (canvas_item, "visible");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            window.history_manager.add_undoable_action (action);
             canvas_item.visible = true;
         }
 
@@ -186,7 +186,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
         if (add_undo_action) {
             var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.depth_changed (item_, this, true);
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+            window.history_manager.add_undoable_action (action, true);
         }
 
         reorder_overlay (item_, index + 1);
@@ -205,7 +205,7 @@ public class Spice.Canvas : Gtk.Overlay {
 
         if (add_undo_action) {
             var action = new Spice.Services.HistoryManager.HistoryAction<CanvasItem, bool>.depth_changed (item_, this, false);
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action, true);
+            window.history_manager.add_undoable_action (action, true);
         }
     }
 

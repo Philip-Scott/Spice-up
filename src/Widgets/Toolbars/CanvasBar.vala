@@ -25,11 +25,12 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
     private Spice.ColorChooser canvas_gradient_background;
     private Spice.EntryCombo canvas_pattern;
     private Spice.EntryCombo transition;
-    private SlideManager manager;
+    private unowned SlideManager manager;
 
     public CanvasToolbar (SlideManager slide_manager) {
         this.manager = slide_manager;
     }
+
     construct {
         canvas_gradient_background = new Spice.ColorChooser.with_gradient (false);
         canvas_gradient_background.set_tooltip_text (_("Background color"));
@@ -37,7 +38,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
         canvas_gradient_background.color_picked.connect ((s) => {
             if (selecting) return;
             var action = new Spice.Services.HistoryManager.HistoryAction<Canvas,string>.canvas_changed (this.manager.current_slide.canvas, "background-color");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 
@@ -68,7 +69,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
 
         canvas_pattern.activated.connect (() => {
             var action = new Spice.Services.HistoryManager.HistoryAction<Canvas,string>.canvas_changed (this.manager.current_slide.canvas, "background-pattern");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 
@@ -93,7 +94,7 @@ public class Spice.Widgets.CanvasToolbar : Spice.Widgets.Toolbar {
 
         transition.activated.connect (() => {
             var action = new Spice.Services.HistoryManager.HistoryAction<Slide, Gtk.StackTransitionType>.canvas_changed (this.manager.current_slide, "transition");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 

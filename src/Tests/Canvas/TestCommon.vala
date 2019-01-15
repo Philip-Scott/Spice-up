@@ -34,7 +34,11 @@ public class Spice.Application {
 
 public class Spice.Window : Gtk.Window {
     public bool is_presenting { get; set; default = false; }
-    public Window () {}
+    public Spice.Services.HistoryManager history_manager { get; set; }
+
+    public Window () {
+        history_manager = new Spice.Services.HistoryManager ();
+    }
 
     static construct {
         window = new Spice.Window ();
@@ -59,10 +63,6 @@ public class Spice.Services.HistoryManager : Object {
 
     public HistoryManager () {
 
-    }
-
-    public static HistoryManager get_instance () {
-        return new HistoryManager ();
     }
 
     public void add_undoable_action (Object a, Value? b = null) {

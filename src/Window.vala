@@ -122,6 +122,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Spice.Welcome? welcome = null;
     private PresenterWindow? presenter_window = null;
 
+    public Spice.Services.HistoryManager history_manager { get; construct; }
+
     public SimpleActionGroup actions { get; private set; }
     public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
 
@@ -151,8 +153,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
     public Window (Gtk.Application app) {
         Object (application: app);
 
-        build_ui ();
-
         move (settings.pos_x, settings.pos_y);
         resize (settings.window_width, settings.window_height);
         show_app ();
@@ -166,7 +166,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
     }
 
-    private void build_ui () {
+    construct {
+        history_manager = new Spice.Services.HistoryManager ();
+
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 
         var provider = new Gtk.CssProvider ();
@@ -471,7 +473,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         show_editor ();
 
         slide_manager.reset ();
-        Spice.Services.HistoryManager.get_instance ().clear_history ();
+        history_manager.clear_history ();
         Services.FileManager.current_file = file;
         string content = Services.FileManager.open_file ();
 
@@ -554,11 +556,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
     // Actions
 
     private void action_undo () {
-        Spice.Services.HistoryManager.get_instance ().undo ();
+        history_manager.undo ();
     }
 
     private void action_redo () {
-        Spice.Services.HistoryManager.get_instance ().redo ();
+        history_manager.redo ();
     }
 
     private void action_clone () {

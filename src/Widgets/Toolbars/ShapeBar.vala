@@ -23,6 +23,12 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
     private Spice.ColorChooser background_color_button;
     private Gtk.Scale border_radius;
 
+    private unowned SlideManager manager;
+
+    public ShapeToolbar (SlideManager slide_manager) {
+        this.manager = slide_manager;
+    }
+
     construct {
         border_radius = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0.0, 50.0, 1);
         border_radius.get_style_context ().add_class ("spice-scale");
@@ -48,7 +54,7 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
 
         border_radius.value_changed.connect (() => {
             var action = new Spice.Services.HistoryManager.HistoryAction<ColorItem,int>.item_changed (this.item as ColorItem, "border-radius");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 
@@ -57,7 +63,7 @@ public class Spice.Widgets.ShapeToolbar : Spice.Widgets.Toolbar {
 
         background_color_button.color_picked.connect ((color) => {
             var action = new Spice.Services.HistoryManager.HistoryAction<ColorItem,string>.item_changed (this.item as ColorItem, "background-color");
-            Spice.Services.HistoryManager.get_instance ().add_undoable_action (action);
+            manager.window.history_manager.add_undoable_action (action);
             update_properties ();
         });
 
