@@ -19,17 +19,7 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
-public enum Spice.HeaderButton {
-    TEXT,
-    IMAGE,
-    SHAPE,
-    RETURN,
-    NOTES;
-}
-
 public class Spice.Headerbar : Gtk.HeaderBar {
-    public signal void button_clicked (Spice.HeaderButton button);
-
     private HeaderbarButton undo;
     private HeaderbarButton redo;
     private HeaderbarButton text;
@@ -111,9 +101,9 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         undo = new HeaderbarButton (this, "edit-undo-symbolic", Utils.get_accel_tooltip (Window.ACTION_UNDO, _("Undo")));
         redo = new HeaderbarButton (this, "edit-redo-symbolic", Utils.get_accel_tooltip (Window.ACTION_REDO, _("Redo")));
-        text = new HeaderbarButton (this, "text-symbolic", Utils.get_accel_tooltip ("", _("Insert Text Box")), HeaderButton.TEXT);
-        image = new HeaderbarButton (this, "photo-symbolic", Utils.get_accel_tooltip ("", _("Insert Image")), HeaderButton.IMAGE);
-        shape = new HeaderbarButton (this, "shape-symbolic", Utils.get_accel_tooltip ("", _("Insert Shape")), HeaderButton.SHAPE);
+        text = new HeaderbarButton (this, "text-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_TEXT, _("Insert Text Box")));
+        image = new HeaderbarButton (this, "photo-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_IMG, _("Insert Image")));
+        shape = new HeaderbarButton (this, "shape-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_SHAPE, _("Insert Shape")));
         show_welcome = new HeaderbarButton (this, "document-open-symbolic", Utils.get_accel_tooltip (Window.ACTION_SHOW_WELCOME, _("Return to Welcome Screen")));
 
         undo.sensitive = false;
@@ -182,13 +172,16 @@ public class Spice.Headerbar : Gtk.HeaderBar {
             }
         });
 
+        text.clicked.connect (slide_manager.window.action_insert_txt);
+        image.clicked.connect (slide_manager.window.action_insert_img);
+        shape.clicked.connect (slide_manager.window.action_insert_shape);
         show_welcome.clicked.connect (slide_manager.window.show_welcome);
         export.clicked.connect (slide_manager.window.action_export);
     }
 
     protected class HeaderbarButton : Gtk.Button {
 
-        public HeaderbarButton (Headerbar headerbar, string icon_name, string description, HeaderButton? signal_mask = null) {
+        public HeaderbarButton (Headerbar headerbar, string icon_name, string description) {
             can_focus = false;
 
             Gtk.Image image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
@@ -197,12 +190,6 @@ public class Spice.Headerbar : Gtk.HeaderBar {
             get_style_context ().add_class ("spice");
             set_tooltip_markup (description);
             this.add (image);
-
-            if (signal_mask != null) {
-                this.clicked.connect (() => {
-                    headerbar.button_clicked (signal_mask);
-                });
-            }
         }
     }
 }

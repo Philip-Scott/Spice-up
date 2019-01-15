@@ -417,17 +417,17 @@ public class Spice.SlideManager : Object {
         return slide;
     }
 
-    public CanvasItem? request_new_item (Spice.HeaderButton type) {
+    public CanvasItem? request_new_item (Spice.CanvasItemType type) {
         CanvasItem? item = null;
 
-        if (type == HeaderButton.TEXT) {
+        if (type == CanvasItemType.TEXT) {
             item = new TextItem (current_slide.canvas);
-        } else if (type == HeaderButton.IMAGE) {
+        } else if (type == CanvasItemType.IMAGE) {
             var file = Spice.Services.FileManager.open_image ();
             if (file != null && file.query_exists ()) {
                 item = new ImageItem.from_file (current_slide.canvas, file);
             }
-        } else if (type == HeaderButton.SHAPE) {
+        } else if (type == CanvasItemType.SHAPE) {
             item = new ColorItem (current_slide.canvas);
         }
 

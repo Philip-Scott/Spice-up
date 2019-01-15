@@ -178,7 +178,7 @@ public class Spice.Clipboard {
                 var data = (string) raw_data.get_data ();
                 if (data == null) return;
 
-                var item = manager.request_new_item (Spice.HeaderButton.TEXT);
+                var item = manager.request_new_item (Spice.CanvasItemType.TEXT);
                 (item as Spice.TextItem).text = data;
             });
         } else {

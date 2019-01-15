@@ -19,6 +19,12 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
+public enum Spice.CanvasItemType {
+    TEXT,
+    IMAGE,
+    SHAPE
+}
+
 public abstract class Spice.CanvasItem : Gtk.EventBox {
     private const int MIN_SIZE = 40;
 
