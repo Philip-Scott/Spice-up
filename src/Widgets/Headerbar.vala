@@ -96,21 +96,20 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     }
 
     private void build_ui () {
-        HeaderbarButton.headerbar = this;
         has_subtitle = false;
 
-        undo = new HeaderbarButton ("edit-undo-symbolic", _("Undo"), HeaderButton.UNDO, {"<Ctrl>Z"});
-        redo = new HeaderbarButton ("edit-redo-symbolic", _("Redo"), HeaderButton.REDO, {"<Ctrl><Shift>Z"});
-        text = new HeaderbarButton ("text-symbolic", _("Insert Text Box"), HeaderButton.TEXT);
-        image = new HeaderbarButton ("photo-symbolic", _("Insert Image"), HeaderButton.IMAGE);
-        shape = new HeaderbarButton ("shape-symbolic", _("Insert Shape"), HeaderButton.SHAPE);
-        show_welcome = new HeaderbarButton ("document-open-symbolic", _("Return to Welcome Screen"), HeaderButton.RETURN);
+        undo = new HeaderbarButton (this, "edit-undo-symbolic", _("Undo"), HeaderButton.UNDO, {"<Ctrl>Z"});
+        redo = new HeaderbarButton (this, "edit-redo-symbolic", _("Redo"), HeaderButton.REDO, {"<Ctrl><Shift>Z"});
+        text = new HeaderbarButton (this, "text-symbolic", _("Insert Text Box"), HeaderButton.TEXT);
+        image = new HeaderbarButton (this, "photo-symbolic", _("Insert Image"), HeaderButton.IMAGE);
+        shape = new HeaderbarButton (this, "shape-symbolic", _("Insert Shape"), HeaderButton.SHAPE);
+        show_welcome = new HeaderbarButton (this, "document-open-symbolic", _("Return to Welcome Screen"), HeaderButton.RETURN);
 
         undo.sensitive = false;
         redo.sensitive = false;
 
-        export = new HeaderbarButton ("document-export-symbolic", _("Export to PDF"), null);
-        present = new HeaderbarButton ("media-playback-start-symbolic", _("Start Presentation"), null, {"<Ctrl><Shift>P"});
+        export = new HeaderbarButton (this, "document-export-symbolic", _("Export to PDF"), null);
+        present = new HeaderbarButton (this, "media-playback-start-symbolic", _("Start Presentation"), null, {"<Ctrl><Shift>P"});
         present.get_style_context ().add_class ("suggested-action");
 
         show_notes = new Gtk.ToggleButton ();
@@ -175,9 +174,8 @@ public class Spice.Headerbar : Gtk.HeaderBar {
     }
 
     protected class HeaderbarButton : Gtk.Button {
-        public static Headerbar headerbar;
 
-        public HeaderbarButton (string icon_name, string description, HeaderButton? signal_mask, string[]? accels = null) {
+        public HeaderbarButton (Headerbar headerbar, string icon_name, string description, HeaderButton? signal_mask, string[]? accels = null) {
             can_focus = false;
 
             Gtk.Image image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);

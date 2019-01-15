@@ -42,6 +42,8 @@ public class Spice.Application : Granite.Application {
         }
     }
 
+    private Gee.HashMap<string, Spice.Window> opened_files;
+
     construct {
         flags |= ApplicationFlags.HANDLES_OPEN;
 
@@ -52,38 +54,61 @@ public class Spice.Application : Granite.Application {
 
         build_version = "1.7";
 
+        opened_files = new Gee.HashMap<string, Spice.Window>();
         settings = Spice.Services.Settings.get_instance ();
         Granite.Staging.Services.Inhibitor.initialize (this);
     }
 
     public override void open (File[] files, string hint) {
-        string[] uris = {};
         foreach (var file in files) {
-            uris += file.get_uri ();
-        }
+            if (is_file_opened (file)) {
+                // Preset active window with file
+                var window = get_window_from_file (file);
+                window.show_app ();
+            } else {
+                // Open New window
+                var window = new Spice.Window (this);
+                this.add_window (window);
 
-        var window = get_active_spice_window ();
-        if (window == null) {
-            activate ();
-            window = get_active_spice_window ();
+                window.open_file (file);
+                window.show_app ();
+            }
         }
+    }
 
-        window.open_file (File.new_for_uri (uris[0]));
-        window.show_app ();
+    public bool is_file_opened (File file) {
+        return opened_files.has_key (file.get_uri ());
+    }
+
+    public void unregister_file_from_window (File file) {
+        if (is_file_opened (file)) {
+            opened_files.unset (file.get_uri ());
+        }
+    }
+
+    public void register_file_to_window (File file, Spice.Window window) {
+        if (!is_file_opened (file)) {
+            opened_files.set (file.get_uri (), window);
+        } else {
+            warning ("File was opened in two separate windows");
+        }
+    }
+
+    public Spice.Window get_window_from_file (File file) {
+        return opened_files.get (file.get_uri ());
     }
 
     public override void activate () {
         if (!running) {
+            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
             weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
             default_theme.add_resource_path (RESOURCE_PATH);
-
-            var window = new Spice.Window (this);
-            this.add_window (window);
-
             running = true;
-
-            window.show_welcome ();
         }
+
+        var window = new Spice.Window (this);
+        this.add_window (window);
+        window.show_welcome ();
 
         get_active_spice_window ().show_app ();
     }

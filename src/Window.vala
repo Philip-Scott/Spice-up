@@ -170,8 +170,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
     construct {
         history_manager = new Spice.Services.HistoryManager ();
 
-        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
-
         var provider = new Gtk.CssProvider ();
         provider.load_from_resource ("/com/github/philip-scott/spice-up/stylesheet.css");
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -251,6 +249,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
         app_stack.set_visible_child_name ("welcome");
 
         enable_editing_actions (false);
+
+        if (current_file != null) {
+            Spice.Application.instance.unregister_file_from_window (current_file);
+            current_file = null;
+        }
     }
 
     private void connect_signals (Gtk.Application app) {
@@ -471,6 +474,13 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     public void open_file (File file) {
         save_current_file ();
+
+        if (Spice.Application.instance.is_file_opened (file)) {
+            Spice.Application.instance.get_window_from_file (file).show_app ();
+            this.destroy ();
+            return;
+        }
+
         show_editor ();
 
         slide_manager.reset ();
@@ -482,7 +492,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         slide_manager.load_data (content);
         headerbar.sensitive = true;
-        app_stack.set_visible_child_name  ("application");
+        app_stack.set_visible_child_name ("application");
 
         var basename = current_file.get_basename ();
 
@@ -490,6 +500,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
 
         title = launcher_base;
+        Spice.Application.instance.register_file_to_window (current_file, this);
     }
 
     public void save_current_file () {
@@ -499,13 +510,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
             } else {
                 Services.FileManager.write_file (current_file, slide_manager.serialise ());
             }
-
-            current_file = null;
         }
     }
 
     protected override bool delete_event (Gdk.EventAny event) {
-        save_current_file ();
+        if (current_file != null) {
+            save_current_file ();
+            Spice.Application.instance.unregister_file_from_window (current_file);
+        }
 
         int width, height, x, y;
 
