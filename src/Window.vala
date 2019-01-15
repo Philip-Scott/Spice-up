@@ -35,8 +35,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
         } public set {
             if (value == is_full_) return;
 
-            // Window Positioning
             if (value) {
+                // Window Positioning
                 var screen = Gdk.Screen.get_default ();
                 var monitor_count = screen.get_n_monitors ();
                 get_position (out old_x, out old_y);
@@ -61,6 +61,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 // set Gala Notifications
                 notifications_last_state = get_do_not_disturb_value ();
                 set_do_not_disturb_value (true);
+
+                Granite.Staging.Services.Inhibitor.get_instance ().inhibit ("Spice-Up Presentation");
             } else {
                 unfullscreen ();
                 move (old_x, old_y);
@@ -72,6 +74,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
                 set_do_not_disturb_value (notifications_last_state);
                 notifications_last_state = null;
+
+                Granite.Staging.Services.Inhibitor.get_instance ().uninhibit ();
             }
 
             is_full_ = value;
