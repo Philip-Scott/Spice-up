@@ -141,6 +141,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
     public const string ACTION_SHOW_WELCOME = "show_welcome";
     public const string ACTION_NOTES = "toggle_notes";
     public const string ACTION_EXPORT = "action_export";
+    public const string ACTION_NEW_SLIDE = "action_new_slide";
+    public const string ACTION_INSERT_TEXT = "action_insert_txt";
+    public const string ACTION_INSERT_IMG = "action_insert_img";
+    public const string ACTION_INSERT_SHAPE = "action_insert_shape";
+    public const string ACTION_BRING_FWD = "action_bring_fwd";
+    public const string ACTION_BRING_BWD = "action_send_bwd";
 
     private const ActionEntry[] action_entries = {
         { ACTION_UNDO, action_undo },
@@ -150,7 +156,13 @@ public class Spice.Window : Gtk.ApplicationWindow {
         { ACTION_PRESENT_STOP, action_present_toggle },
         { ACTION_SHOW_WELCOME, show_welcome },
         { ACTION_NOTES, action_toggle_notes },
-        { ACTION_EXPORT, action_export }
+        { ACTION_EXPORT, action_export },
+        { ACTION_NEW_SLIDE, action_new_slide },
+        { ACTION_INSERT_TEXT, action_insert_txt },
+        { ACTION_INSERT_IMG, action_insert_img },
+        { ACTION_INSERT_SHAPE, action_insert_shape },
+        { ACTION_BRING_FWD, action_bring_fwd },
+        { ACTION_BRING_BWD, action_send_bwd }
     };
 
     private const string[] editing_actions = {
@@ -160,7 +172,13 @@ public class Spice.Window : Gtk.ApplicationWindow {
         ACTION_PRESENT_START,
         ACTION_SHOW_WELCOME,
         ACTION_NOTES,
-        ACTION_EXPORT
+        ACTION_EXPORT,
+        ACTION_NEW_SLIDE,
+        ACTION_INSERT_TEXT,
+        ACTION_INSERT_IMG,
+        ACTION_INSERT_SHAPE,
+        ACTION_BRING_FWD,
+        ACTION_BRING_BWD
     };
 
     private const string[] presenting_actions = {
@@ -177,6 +195,12 @@ public class Spice.Window : Gtk.ApplicationWindow {
         action_accelerators.set (ACTION_SHOW_WELCOME, "<Control>W");
         action_accelerators.set (ACTION_NOTES, "<Control>P");
         action_accelerators.set (ACTION_EXPORT, "<Control><Shift>E");
+        action_accelerators.set (ACTION_NEW_SLIDE, "<Control><Shift>N");
+        action_accelerators.set (ACTION_INSERT_TEXT, "<Control><Shift>T");
+        action_accelerators.set (ACTION_INSERT_IMG, "<Control><Shift>Y");
+        action_accelerators.set (ACTION_INSERT_SHAPE, "<Control><Shift>U");
+        //  action_accelerators.set (ACTION_BRING_FWD, "<Control><Alt>PgUp");
+        //  action_accelerators.set (ACTION_BRING_BWD, "<Control><Alt>PgDown");
     }
 
     public Window (Gtk.Application app) {
@@ -290,14 +314,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     private void connect_signals (Gtk.Application app) {
-        headerbar.button_clicked.connect ((button) => {
-            var item = slide_manager.request_new_item (button);
-
-            if (item != null) {
-                toolbar.item_selected (item, true);
-            }
-        });
-
         slide_manager.item_clicked.connect ((item) => {
             toolbar.item_selected (item);
         });
@@ -604,5 +620,37 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     public void action_export () {
         Spice.Services.FileManager.export_to_pdf (this.slide_manager);
+    }
+
+    public void action_new_slide () {
+        Utils.new_slide (slide_manager);
+    }
+
+    private void insert_item_action (CanvasItemType type) {
+        var item = slide_manager.request_new_item (type);
+
+        if (item != null) {
+            toolbar.item_selected (item, true);
+        }
+    }
+
+    public void action_insert_txt () {
+        insert_item_action (CanvasItemType.TEXT);
+    }
+
+    public void action_insert_img () {
+        insert_item_action (CanvasItemType.IMAGE);
+    }
+
+    public void action_insert_shape () {
+        insert_item_action (CanvasItemType.SHAPE);
+    }
+
+    public void action_bring_fwd () {
+
+    }
+
+    public void action_send_bwd () {
+
     }
 }
