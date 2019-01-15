@@ -189,6 +189,10 @@ public class Spice.Utils {
     public static void set_action_enabled (string action_name, SimpleActionGroup action_group, bool enabled) {
         ((SimpleAction) action_group.lookup_action (action_name)).set_enabled (enabled);
     }
+
+    public static string get_accel_tooltip (string action_name, string description) {
+        return Granite.markup_accel_tooltip (Spice.Application.instance.get_accels_for_action ("win." + action_name), description);
+    }
 }
 
 public enum Spice.AspectRatio {
