@@ -218,6 +218,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
             if (button == Spice.HeaderButton.NOTES) {
                 presenter_notes.reveal_child = !presenter_notes.reveal_child;
+                presenter_notes.focus ();
                 return;
             }
 
@@ -292,7 +293,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
         debug ("Key: %s %u", key.str, key.keyval);
-        if (presenter_notes.notes_area.has_focus) return false;
+        if (presenter_notes.notes_focus) return false;
 
         switch (key.keyval) {
             // Next Slide

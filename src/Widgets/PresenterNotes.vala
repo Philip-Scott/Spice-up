@@ -22,9 +22,15 @@
 public class Spice.PresenterNotes : Gtk.Revealer {
     public signal void text_changed (string text);
 
-    public Gtk.TextView notes_area { get; construct set; }
+    private Gtk.TextView notes_area;
 
     private bool setting_text = false;
+
+    public bool notes_focus {
+        get {
+            return notes_area.has_focus;
+        }
+    }
 
     construct {
         var grid = new Gtk.Grid ();
@@ -52,6 +58,10 @@ public class Spice.PresenterNotes : Gtk.Revealer {
 
         add (grid);
         show_all ();
+    }
+
+    public void focus () {
+        notes_area.grab_focus ();
     }
 
     public void set_text (string text) {
