@@ -22,7 +22,7 @@
 public class Spice.PresenterNotes : Gtk.Revealer {
     public signal void text_changed (string text);
 
-    private Gtk.TextView notes_area;
+    public Gtk.TextView notes_area {get; construct; }
 
     private bool setting_text = false;
 
