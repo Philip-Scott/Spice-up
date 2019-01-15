@@ -60,6 +60,7 @@ public class Spice.Application : Granite.Application {
     }
 
     public override void open (File[] files, string hint) {
+        init ();
         foreach (var file in files) {
             if (is_file_opened (file)) {
                 // Preset active window with file
@@ -74,6 +75,29 @@ public class Spice.Application : Granite.Application {
                 window.show_app ();
             }
         }
+    }
+
+    private void init () {
+        if (!running) {
+            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
+            weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
+            default_theme.add_resource_path (RESOURCE_PATH);
+            running = true;
+        }
+    }
+
+    public override void activate () {
+        init ();
+
+        var window = new Spice.Window (this);
+        this.add_window (window);
+        window.show_welcome ();
+
+        get_active_spice_window ().show_app ();
+    }
+
+    public static unowned Spice.Window get_active_spice_window () {
+        return (Spice.Window) instance.get_active_window ();
     }
 
     public bool is_file_opened (File file) {
@@ -96,24 +120,5 @@ public class Spice.Application : Granite.Application {
 
     public Spice.Window get_window_from_file (File file) {
         return opened_files.get (file.get_uri ());
-    }
-
-    public override void activate () {
-        if (!running) {
-            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
-            weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
-            default_theme.add_resource_path (RESOURCE_PATH);
-            running = true;
-        }
-
-        var window = new Spice.Window (this);
-        this.add_window (window);
-        window.show_welcome ();
-
-        get_active_spice_window ().show_app ();
-    }
-
-    public static unowned Spice.Window get_active_spice_window () {
-        return (Spice.Window) instance.get_active_window ();
     }
 }

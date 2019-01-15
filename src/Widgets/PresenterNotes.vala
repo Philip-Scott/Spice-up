@@ -60,7 +60,7 @@ public class Spice.PresenterNotes : Gtk.Revealer {
         show_all ();
     }
 
-    public void focus () {
+    public void focus_notes () {
         notes_area.grab_focus ();
     }
 
