@@ -210,6 +210,10 @@ public class Spice.Services.FileManager {
         var file = get_file_from_user (_("Export to PDF"), _("Save"), Gtk.FileChooserAction.SAVE, filters);
         if (file == null) return;
 
+        if (!file.get_basename ().down ().has_suffix (".pdf")) {
+            file = File.new_for_path (file.get_path () + ".pdf");
+        }
+
         var current_slide = manager.current_slide.canvas;
         Cairo.Surface pdf = new Cairo.PdfSurface (file.get_path (),
                                            current_slide.get_allocated_width (),

@@ -43,6 +43,8 @@ public class Spice.Application : Granite.Application {
         app_launcher = APP_ID;
 
         build_version = "1.2";
+
+        Granite.Staging.Services.Inhibitor.initialize (this);
     }
 
     public override void open (File[] files, string hint) {
