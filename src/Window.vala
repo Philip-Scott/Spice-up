@@ -118,6 +118,32 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private Spice.Welcome? welcome = null;
     private PresenterWindow? presenter_window = null;
 
+    public SimpleActionGroup actions { get; private set; }
+    public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
+
+    public const string ACTION_PREFIX = "win.";
+    public const string ACTION_UNDO = "action_undo";
+    public const string ACTION_REDO = "action_redo";
+    public const string ACTION_CLONE = "action_clone";
+
+    private const ActionEntry[] action_entries = {
+        { ACTION_UNDO, action_undo },
+        { ACTION_REDO, action_redo },
+        { ACTION_CLONE, action_clone }
+    };
+
+    private const string[] editing_actions = {
+        ACTION_UNDO,
+        ACTION_REDO,
+        ACTION_CLONE,
+    };
+
+    static construct {
+        action_accelerators.set (ACTION_UNDO, "<Control>Z");
+        action_accelerators.set (ACTION_REDO, "<Control><Shift>Z");
+        action_accelerators.set (ACTION_CLONE, "<Control>D");
+    }
+
     public Window (Gtk.Application app) {
         Object (application: app);
 
@@ -126,6 +152,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
         move (settings.pos_x, settings.pos_y);
         resize (settings.window_width, settings.window_height);
         show_app ();
+
+        actions = new SimpleActionGroup ();
+        actions.add_action_entries (action_entries, this);
+        insert_action_group ("win", actions);
+
+        foreach (var action in action_accelerators.get_keys ()) {
+            app.set_accels_for_action (ACTION_PREFIX + action, action_accelerators[action].to_array ());
+        }
     }
 
     private void build_ui () {
@@ -196,6 +230,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
 
         app_stack.set_visible_child_name  ("application");
+
+        enable_editing_actions (true);
     }
 
     public void show_welcome () {
@@ -206,6 +242,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
         welcome.reload ();
         app_stack.transition_type = Gtk.StackTransitionType.OVER_LEFT_RIGHT;
         app_stack.set_visible_child_name ("welcome");
+
+        enable_editing_actions (false);
     }
 
     private void connect_signals (Gtk.Application app) {
@@ -246,36 +284,20 @@ public class Spice.Window : Gtk.ApplicationWindow {
             slide_manager.current_slide.notes = text;
         });
 
-        var undo_action = new SimpleAction ("undo-action", null);
-        add_action (undo_action);
-        app.set_accels_for_action ("win.undo-action", {"<Ctrl>Z"});
-        undo_action.activate.connect (() => {
-            Spice.Services.HistoryManager.get_instance ().undo ();
+        presenter_notes.notes_area.focus_in_event.connect ((event) => {
+            enable_editing_actions (false);
+            return false;
         });
 
-        var clone_action = new SimpleAction ("clone-action", null);
-        add_action (clone_action);
-        app.set_accels_for_action ("win.clone-action", {"<Ctrl>D"});
-        clone_action.activate.connect (() => {
-            var current_item = slide_manager.current_item;
-            if (current_item != null) {
-                Clipboard.duplicate (slide_manager, current_item);
-            } else {
-                Clipboard.duplicate (slide_manager, slide_manager.current_slide);
-            }
-        });
-
-        var redo_action = new SimpleAction ("redo-action", null);
-        add_action (redo_action);
-        app.set_accels_for_action ("win.redo-action", {"<Ctrl><Shift>Z"});
-        redo_action.activate.connect (() => {
-            Spice.Services.HistoryManager.get_instance ().redo ();
+        presenter_notes.notes_area.focus_out_event.connect ((event) => {
+            enable_editing_actions (true);
+            return false;
         });
 
         Gtk.drag_dest_set (aspect_frame, Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY);
         aspect_frame.drag_data_received.connect (on_drag_data_received);
 
-        this.key_press_event.connect (on_key_pressed);
+        //  this.key_press_event.connect (on_key_pressed);
     }
 
     private void on_drag_data_received (Gdk.DragContext drag_context, int x, int y, Gtk.SelectionData data, uint info, uint time) {
@@ -291,62 +313,62 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
     }
 
-    private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
-        debug ("Key: %s %u", key.str, key.keyval);
-        if (presenter_notes.notes_focus) return false;
+    //  private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
+    //      debug ("Key: %s %u", key.str, key.keyval);
+    //      if (presenter_notes.notes_focus) return false;
 
-        switch (key.keyval) {
-            // Next Slide
-            case 65363: // Right Arrow
-            case 65364: // Down Arrow
-            case 32:    // Spaceeeeeeee
-            case 65293: // Enter
-                return next_slide ();
-            // Previous Slide
-            case 65361: // Left Arrow
-            case 65362: // Up Arrow
-                return previous_slide ();
-            case 65365: // Page Up
-                return previous_slide (true);
-            case 65366: // Page Down
-                return next_slide (true);
-            case 65307: // Esc
-                return esc_event ();
-        }
+    //      switch (key.keyval) {
+    //          // Next Slide
+    //          case 65363: // Right Arrow
+    //          case 65364: // Down Arrow
+    //          case 32:    // Spaceeeeeeee
+    //          case 65293: // Enter
+    //              return next_slide ();
+    //          // Previous Slide
+    //          case 65361: // Left Arrow
+    //          case 65362: // Up Arrow
+    //              return previous_slide ();
+    //          case 65365: // Page Up
+    //              return previous_slide (true);
+    //          case 65366: // Page Down
+    //              return next_slide (true);
+    //          case 65307: // Esc
+    //              return esc_event ();
+    //      }
 
-        // Ctrl + Shift + ? Events
-        if (Gdk.ModifierType.CONTROL_MASK in key.state && Gdk.ModifierType.SHIFT_MASK in key.state) {
-            switch (key.keyval) {
-                case 80: // P
-                case 112: // p
-                    is_presenting = !is_presenting;
-                    return true;
-            }
-        }
+    //      // Ctrl + Shift + ? Events
+    //      if (Gdk.ModifierType.CONTROL_MASK in key.state && Gdk.ModifierType.SHIFT_MASK in key.state) {
+    //          switch (key.keyval) {
+    //              case 80: // P
+    //              case 112: // p
+    //                  is_presenting = !is_presenting;
+    //                  return true;
+    //          }
+    //      }
 
-        // Ctrl + ? Events
-        if (Gdk.ModifierType.CONTROL_MASK in key.state) {
-            switch (key.keyval) {
-                case 67: // C
-                case 99: // c
-                    return copy ();
+    //      // Ctrl + ? Events
+    //      if (Gdk.ModifierType.CONTROL_MASK in key.state) {
+    //          switch (key.keyval) {
+    //              case 67: // C
+    //              case 99: // c
+    //                  return copy ();
 
-                case 86: // V
-                case 118: // v
-                    return paste ();
+    //              case 86: // V
+    //              case 118: // v
+    //                  return paste ();
 
-                case 88: // X
-                case 120: // x
-                    return cut ();
+    //              case 88: // X
+    //              case 120: // x
+    //                  return cut ();
 
-                case 65535: // Delete Key
-                case 65288: // Backspace
-                    return delete_object ();
-            }
-        }
+    //              case 65535: // Delete Key
+    //              case 65288: // Backspace
+    //                  return delete_object ();
+    //          }
+    //      }
 
-        return false;
-    }
+    //      return false;
+    //  }
 
 
     private bool cut () {
@@ -516,5 +538,30 @@ public class Spice.Window : Gtk.ApplicationWindow {
     public void set_do_not_disturb_value (bool? state) {
         if (state == null || gala_notify_settings == null) return;
         gala_notify_settings.set_boolean ("do-not-disturb", state);
+    }
+
+    public void enable_editing_actions (bool enabled) {
+        foreach (var action in editing_actions) {
+            Utils.set_action_enabled (action, actions, enabled);
+        }
+    }
+
+    // Actions
+
+    private void action_undo () {
+        Spice.Services.HistoryManager.get_instance ().undo ();
+    }
+
+    private void action_redo () {
+        Spice.Services.HistoryManager.get_instance ().redo ();
+    }
+
+    private void action_clone () {
+        var current_item = slide_manager.current_item;
+        if (current_item != null) {
+            Clipboard.duplicate (slide_manager, current_item);
+        } else {
+            Clipboard.duplicate (slide_manager, slide_manager.current_slide);
+        }
     }
 }

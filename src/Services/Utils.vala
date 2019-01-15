@@ -185,6 +185,10 @@ public class Spice.Utils {
 
         manager.making_new_slide = false;
     }
+
+    public static void set_action_enabled (string action_name, SimpleActionGroup action_group, bool enabled) {
+        ((SimpleAction) action_group.lookup_action (action_name)).set_enabled (enabled);
+    }
 }
 
 public enum Spice.AspectRatio {
