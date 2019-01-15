@@ -22,8 +22,6 @@
 public class Spice.Services.FileManager {
     public const string FILE_EXTENSION = ".spice";
 
-    public static File? current_file = null;
-
     private static File? get_file_from_user (string title, string accept_button_label, Gtk.FileChooserAction chooser_action, List<Gtk.FileFilter> filters) {
         File? result = null;
 
@@ -114,50 +112,50 @@ public class Spice.Services.FileManager {
     private static string? footer = null;
     private const string RESOURCE_PATH = "resource:///com/github/philip-scott/spice-up/%s";
 
-    public static void write_file (string contents) {
-        if (current_file == null) {
+    public static void write_file (File file, string contents) {
+        if (file == null) {
             return;
         }
 
-        if (current_file.query_exists ()) {
+        if (file.query_exists ()) {
             try {
-                current_file.delete ();
+                file.delete ();
             } catch (Error e) {
                 warning ("Could not delete file: %s", e.message);
             }
         }
 
         if (header == null) {
-            var file = File.new_for_uri (RESOURCE_PATH.printf ("save-header"));
-            var dis = new DataInputStream (file.read ());
+            var temp_file = File.new_for_uri (RESOURCE_PATH.printf ("save-header"));
+            var dis = new DataInputStream (temp_file.read ());
             size_t size;
 
             header = dis.read_upto ("\0", -1, out size);
         }
 
         if (footer == null) {
-            var file = File.new_for_uri (RESOURCE_PATH.printf ("save-footer"));
-            var dis = new DataInputStream (file.read ());
+            var temp_file = File.new_for_uri (RESOURCE_PATH.printf ("save-footer"));
+            var dis = new DataInputStream (temp_file.read ());
             size_t size;
 
             footer = dis.read_upto ("\0", -1, out size);
         }
 
-        create_file_if_not_exists (current_file);
+        create_file_if_not_exists (file);
 
         try {
-            GLib.FileUtils.set_data (current_file.get_path (), (header + contents + footer).data);
+            GLib.FileUtils.set_data (file.get_path (), (header + contents + footer).data);
         } catch (Error e) {
-            warning ("Could not write file \"%s\": %s", current_file.get_basename (), e.message);
+            warning ("Could not write file \"%s\": %s", file.get_basename (), e.message);
         }
     }
 
-    public static string open_file () {
-        settings.add_file (current_file.get_path ());
-        return get_presentation_data (current_file);
+    public static string open_file (File file) {
+        settings.add_file (file.get_path ());
+        return get_presentation_data (file);
     }
 
-    public static void delete_file (File file = current_file) {
+    public static void delete_file (File file) {
         if (file != null
         && file.query_exists ()
         && file.get_basename ().contains (FILE_EXTENSION)) {
