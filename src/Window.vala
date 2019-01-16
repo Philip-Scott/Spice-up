@@ -147,6 +147,16 @@ public class Spice.Window : Gtk.ApplicationWindow {
     public const string ACTION_INSERT_SHAPE = "action_insert_shape";
     public const string ACTION_BRING_FWD = "action_bring_fwd";
     public const string ACTION_BRING_BWD = "action_send_bwd";
+    public const string ACTION_COPY = "action_copy";
+    public const string ACTION_CUT = "action_cut";
+    public const string ACTION_PASTE = "action_paste";
+    public const string ACTION_DELETE = "action_delete";
+
+    public const string ACTION_NEXT = "action_next";
+    public const string ACTION_PREVIOUS = "action_previous";
+    public const string ACTION_NEXT_EDIT = "action_next_editing";
+    public const string ACTION_PREVIOUS_EDIT = "action_previous_editing";
+
 
     private const ActionEntry[] action_entries = {
         { ACTION_UNDO, action_undo },
@@ -162,7 +172,15 @@ public class Spice.Window : Gtk.ApplicationWindow {
         { ACTION_INSERT_IMG, action_insert_img },
         { ACTION_INSERT_SHAPE, action_insert_shape },
         { ACTION_BRING_FWD, action_bring_fwd },
-        { ACTION_BRING_BWD, action_send_bwd }
+        { ACTION_BRING_BWD, action_send_bwd },
+        { ACTION_COPY, copy },
+        { ACTION_CUT, cut },
+        { ACTION_PASTE, paste },
+        { ACTION_DELETE, delete_object},
+        { ACTION_NEXT, next_slide },
+        { ACTION_PREVIOUS, previous_slide },
+        { ACTION_NEXT_EDIT, next_slide },
+        { ACTION_PREVIOUS_EDIT, previous_slide }
     };
 
     private const string[] editing_actions = {
@@ -178,11 +196,19 @@ public class Spice.Window : Gtk.ApplicationWindow {
         ACTION_INSERT_IMG,
         ACTION_INSERT_SHAPE,
         ACTION_BRING_FWD,
-        ACTION_BRING_BWD
+        ACTION_BRING_BWD,
+        ACTION_COPY,
+        ACTION_CUT,
+        ACTION_PASTE,
+        ACTION_DELETE,
+        ACTION_NEXT_EDIT,
+        ACTION_PREVIOUS_EDIT
     };
 
     private const string[] presenting_actions = {
-        ACTION_PRESENT_STOP
+        ACTION_PRESENT_STOP,
+        ACTION_NEXT,
+        ACTION_PREVIOUS
     };
 
     static construct {
@@ -199,8 +225,23 @@ public class Spice.Window : Gtk.ApplicationWindow {
         action_accelerators.set (ACTION_INSERT_TEXT, "<Control><Shift>T");
         action_accelerators.set (ACTION_INSERT_IMG, "<Control><Shift>Y");
         action_accelerators.set (ACTION_INSERT_SHAPE, "<Control><Shift>U");
-        //  action_accelerators.set (ACTION_BRING_FWD, "<Control><Alt>PgUp");
-        //  action_accelerators.set (ACTION_BRING_BWD, "<Control><Alt>PgDown");
+
+        action_accelerators.set (ACTION_COPY, "<Control>C");
+        action_accelerators.set (ACTION_CUT, "<Control>X");
+        action_accelerators.set (ACTION_PASTE, "<Control>V");
+        action_accelerators.set (ACTION_DELETE, "<Control>Delete");
+        action_accelerators.set (ACTION_DELETE, "<Control>BackSpace");
+        action_accelerators.set (ACTION_NEXT, "Right");
+        action_accelerators.set (ACTION_NEXT, "Down");
+        action_accelerators.set (ACTION_NEXT, "space");
+        action_accelerators.set (ACTION_NEXT, "Return");
+        action_accelerators.set (ACTION_PREVIOUS, "Left");
+        action_accelerators.set (ACTION_PREVIOUS, "Up");
+        action_accelerators.set (ACTION_NEXT_EDIT, "Page_Down");
+        action_accelerators.set (ACTION_PREVIOUS_EDIT, "Page_Up");
+
+        action_accelerators.set (ACTION_BRING_FWD, "<Control><Alt>Page_Up");
+        action_accelerators.set (ACTION_BRING_BWD, "<Control><Alt>Page_Down");
     }
 
     public Window (Gtk.Application app) {
@@ -220,7 +261,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     construct {
-        debug ("Key: %s", Gtk.accelerator_name (65307, 0));
         history_manager = new Spice.Services.HistoryManager ();
 
         var provider = new Gtk.CssProvider ();
@@ -333,8 +373,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
         Gtk.drag_dest_set (aspect_frame, Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY);
         aspect_frame.drag_data_received.connect (on_drag_data_received);
-
-        this.key_press_event.connect (on_key_pressed);
     }
 
     private void on_drag_data_received (Gdk.DragContext drag_context, int x, int y, Gtk.SelectionData data, uint info, uint time) {
@@ -350,56 +388,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         }
     }
 
-    private bool on_key_pressed (Gtk.Widget source, Gdk.EventKey key) {
-        debug ("Key: %s %u %s", key.str, key.keyval, Gtk.accelerator_name (65307, 0));
-        if (presenter_notes.notes_focus) return false;
-        return false;
-        switch (key.keyval) {
-            // Next Slide
-            case 65363: // Right Arrow
-            case 65364: // Down Arrow
-            case 32:    // Spaceeeeeeee
-            case 65293: // Enter
-                return next_slide ();
-            // Previous Slide
-            case 65361: // Left Arrow
-            case 65362: // Up Arrow
-                return previous_slide ();
-            case 65365: // Page Up
-                return previous_slide (true);
-            case 65366: // Page Down
-                return next_slide (true);
-            case 65307: // Esc
-                return esc_event ();
-        }
-
-
-        // Ctrl + ? Events
-        if (Gdk.ModifierType.CONTROL_MASK in key.state) {
-            switch (key.keyval) {
-                case 67: // C
-                case 99: // c
-                    return copy ();
-
-                case 86: // V
-                case 118: // v
-                    return paste ();
-
-                case 88: // X
-                case 120: // x
-                    return cut ();
-
-                case 65535: // Delete Key
-                case 65288: // Backspace
-                    return delete_object ();
-            }
-        }
-
-        return false;
-    }
-
-
-    private bool cut () {
+    private void cut () {
         var current_item = slide_manager.current_item;
 
         if (current_item != null) {
@@ -407,11 +396,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
         } else {
             Clipboard.cut (slide_manager, slide_manager.current_slide);
         }
-
-        return true;
     }
 
-    private bool copy () {
+    private void copy () {
         var current_item = slide_manager.current_item;
 
         if (current_item != null) {
@@ -419,56 +406,29 @@ public class Spice.Window : Gtk.ApplicationWindow {
         } else {
             Clipboard.copy (slide_manager, slide_manager.current_slide);
         }
-
-        return true;
     }
 
-    private bool paste () {
+    private void paste () {
         Clipboard.paste (slide_manager);
-        return true;
     }
 
-    private bool delete_object () {
+    public void delete_object () {
         var current_item = slide_manager.current_item;
 
         if (current_item != null) {
             Clipboard.delete (current_item);
+            slide_manager.current_slide.canvas.unselect_all ();
         } else if (slide_manager.current_slide != null) {
             Clipboard.delete (slide_manager.current_slide);
         }
-
-        return true;
     }
 
-    private bool next_slide (bool override = false) {
-        if (is_presenting || override) {
-            this.slide_manager.next_slide ();
-            return true;
-        }
-
-        return false;
+    private void next_slide () {
+        this.slide_manager.next_slide ();
     }
 
-    private bool previous_slide (bool override = false) {
-        if (is_presenting || override) {
-            this.slide_manager.previous_slide ();
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool esc_event () {
-        if (is_presenting) {
-            is_presenting = false;
-        } else {
-            var slide = slide_manager.current_slide;
-            if (slide != null) {
-                slide.canvas.unselect_all ();
-            }
-        }
-
-        return true;
+    private void previous_slide  () {
+        this.slide_manager.previous_slide ();
     }
 
     public void add_toast_notification (Granite.Widgets.Toast toast) {
@@ -647,10 +607,10 @@ public class Spice.Window : Gtk.ApplicationWindow {
     }
 
     public void action_bring_fwd () {
-
+        slide_manager.move_up_request ();
     }
 
     public void action_send_bwd () {
-
+        slide_manager.move_down_request ();
     }
 }

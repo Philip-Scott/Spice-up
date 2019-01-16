@@ -93,7 +93,7 @@ public class Spice.SlideList : Gtk.Grid {
 
         var new_slide_button = new Gtk.Button ();
 
-        new_slide_button.set_tooltip_text (_("Add a Slide"));
+        new_slide_button.tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NEW_SLIDE, _("Add a Slide"));
         new_slide_button.get_style_context ().add_class ("new");
         new_slide_button.add (plus_icon);
         new_slide_button.set_size_request (WIDTH, 0);
