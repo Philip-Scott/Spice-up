@@ -20,14 +20,14 @@
 */
 
 public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
-    private SlideManager manager;
+    public SlideManager manager { get; construct; }
     private Gtk.Button to_top;
     private Gtk.Button to_bottom;
     private Gtk.Button delete_button;
     private Gtk.Button clone_button;
 
     public CommonToolbar (SlideManager slide_manager) {
-        this.manager = slide_manager;
+        Object (manager: slide_manager);
     }
 
     construct {
@@ -35,23 +35,14 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
         halign = Gtk.Align.END;
 
         delete_button = new Gtk.Button.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.MENU);
-        delete_button.set_tooltip_markup (Granite.markup_accel_tooltip ({"<Ctrl>BackSpace","<Ctrl>Delete"}, _("Delete")));
+        delete_button.set_tooltip_markup (Utils.get_accel_tooltip (Window.ACTION_DELETE, _("Delete")));
         delete_button.get_style_context ().add_class ("spice");
 
-        delete_button.clicked.connect (() => {
-            if (this.item != null) {
-                this.item.delete ();
-                this.manager.current_slide.canvas.unselect_all ();
-            } else {
-                this.manager.current_slide.delete ();
-            }
-
-            item_selected (null);
-        });
+        delete_button.clicked.connect (manager.window.delete_object);
 
         clone_button = new Gtk.Button.from_icon_name ("edit-copy-symbolic", Gtk.IconSize.MENU);
         clone_button.get_style_context ().add_class ("spice");
-        clone_button.set_tooltip_markup (Granite.markup_accel_tooltip ({"<Ctrl>D"}, _("Clone")));
+        clone_button.set_tooltip_markup (Utils.get_accel_tooltip (Window.ACTION_CLONE, _("Clone")));
 
         clone_button.clicked.connect (() => {
             if (this.item != null) {
@@ -63,32 +54,19 @@ public class Spice.Widgets.CommonToolbar : Spice.Widgets.Toolbar {
 
         to_top = new Gtk.Button.from_icon_name ("selection-raise-symbolic", Gtk.IconSize.MENU);
         to_top.get_style_context ().add_class ("spice");
-        to_top.set_tooltip_text (_("Bring forward"));
+        to_top.set_tooltip_markup (Utils.get_accel_tooltip (Window.ACTION_BRING_FWD, _("Bring forward")));
 
         to_bottom = new Gtk.Button.from_icon_name ("selection-lower-symbolic", Gtk.IconSize.MENU);
         to_bottom.get_style_context ().add_class ("spice");
-        to_bottom.set_tooltip_text (_("Send backward"));
+        to_bottom.set_tooltip_markup (Utils.get_accel_tooltip (Window.ACTION_BRING_BWD, _("Send backward")));
 
         var position_grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         position_grid.get_style_context ().add_class ("linked");
         position_grid.add (to_top);
         position_grid.add (to_bottom);
 
-        to_top.clicked.connect (() => {
-            if (this.item != null) {
-                this.manager.current_slide.canvas.move_up (this.item);
-            } else {
-                this.manager.move_up (this.manager.current_slide);
-            }
-        });
-
-        to_bottom.clicked.connect (() => {
-            if (this.item != null) {
-                this.manager.current_slide.canvas.move_down (this.item);
-            } else {
-                this.manager.move_down (this.manager.current_slide);
-            }
-        });
+        to_top.clicked.connect (this.manager.window.action_bring_fwd);
+        to_bottom.clicked.connect (this.manager.window.action_send_bwd);
 
         add (position_grid);
         add (clone_button);

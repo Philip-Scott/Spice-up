@@ -460,4 +460,20 @@ public class Spice.SlideManager : Object {
             current_slide = get_previous_slide (current_slide);
         }
     }
+
+    public void move_up_request () {
+        if (current_item != null) {
+            current_slide.canvas.move_up (current_item);
+        } else {
+            move_up (current_slide);
+        }
+    }
+
+    public void move_down_request () {
+        if (current_item != null) {
+            current_slide.canvas.move_down (current_item);
+        } else {
+            move_down (current_slide);
+        }
+    }
 }
