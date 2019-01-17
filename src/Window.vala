@@ -65,6 +65,9 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 Granite.Staging.Services.Inhibitor.get_instance ().inhibit ("Spice-Up Presentation");
                 enable_action_group (editing_actions, false);
                 enable_action_group (presenting_actions, true);
+
+                motion_notify_event.connect (request_to_hide_mouse);
+                request_to_hide_mouse ();
             } else {
                 unfullscreen ();
                 move (old_x, old_y);
@@ -80,6 +83,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 Granite.Staging.Services.Inhibitor.get_instance ().uninhibit ();
                 enable_action_group (editing_actions, true);
                 enable_action_group (presenting_actions, false);
+                motion_notify_event.disconnect (request_to_hide_mouse);
+                hide_cursor (false);
             }
 
             is_full_ = value;
@@ -396,6 +401,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         } else {
             Clipboard.cut (slide_manager, slide_manager.current_slide);
         }
+
     }
 
     private void copy () {
@@ -612,5 +618,38 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     public void action_send_bwd () {
         slide_manager.move_down_request ();
+    }
+
+    // Hide cursor while presenting
+    uint? hide_id = null;
+    bool cursor_hidden = false;
+    private bool request_to_hide_mouse (Gdk.Event? event = null) {
+        if (cursor_hidden) {
+            hide_cursor (false);
+        }
+
+        if (hide_id != null) {
+            Source.remove (hide_id);
+        }
+
+        hide_id = Timeout.add (3000, () => {
+            hide_id = null;
+            return hide_cursor (true);
+        });
+
+        return false;
+    }
+
+    private bool hide_cursor (bool hide) {
+        if (hide_id != null) {
+            Source.remove (hide_id);
+            hide_id = null;
+        }
+
+        var display = get_display ();
+        var cursor = new Gdk.Cursor.for_display (display, hide ? Gdk.CursorType.BLANK_CURSOR : Gdk.CursorType.ARROW);
+        get_window ().set_cursor (cursor);
+        cursor_hidden = hide;
+        return Source.REMOVE;
     }
 }
