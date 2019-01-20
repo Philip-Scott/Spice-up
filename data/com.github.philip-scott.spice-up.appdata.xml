@@ -28,6 +28,20 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.8.0" date="2019-01-20">
+      <description>
+        <p>Multi-Files and More!</p>
+        <ul>
+          <li>Spice-Up will now prevent your computer from suspending and hide your cursor while presenting!</li>
+          <li>You can now open more than one file at the time! Makes copy-pasting slides or images between presentations easier</li>
+          <li>Spice-Up now uses the new tooltips to show the keyboard shortcuts!</li>
+          <li>There are also now keyboard shortcuts for a lot of actions such as Bring Forward and adding a new slide</li>
+          <li>Opening the presenter notes now automatically focuses it for faster note-taking</li>
+          <li>Fixed a small visual bug when returning to the editor while on the last slide</li>
+          <li>Exporting a presentation will now always have the .pdf extension</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.7.0" date="2018-10-16">
       <description>
         <p>Smart Clipboard</p>
