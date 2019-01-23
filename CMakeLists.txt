@@ -21,7 +21,7 @@ add_definitions (-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 add_definitions(-w)
 
 set (PKG_DEPS
-    granite>=5.2.0
+    granite>=5.2.1
     gee-0.8
     gtk+-3.0>=3.9.10
     json-glib-1.0

@@ -43,6 +43,8 @@ public class Spice.Services.Settings : Granite.Services.Settings {
     }
 
     public void add_file (string file) {
+        if (Granite.Services.System.is_privacy_mode_enabled ()) return;
+
         var current_files = last_files;
 
         Gee.List<string> existing_files = new Gee.ArrayList<string> ();
