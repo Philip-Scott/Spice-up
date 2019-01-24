@@ -52,7 +52,7 @@ msgstr "Ma Présentation"
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:104
 #, c-format
 msgid "By: %s"
-msgstr "De: %s"
+msgstr "De : %s"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/FileManager.vala:210
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:85
@@ -69,7 +69,7 @@ msgstr "Contrôleur trouvé"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:67
 msgid "Set up…"
-msgstr "Configuration"
+msgstr "Configuration…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:150
 msgid "Controller Configuration"
@@ -77,19 +77,19 @@ msgstr "Configuration du Contrôleur"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:159
 msgid "Next Slide:"
-msgstr "Suivant:"
+msgstr "Suivant :"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:160
 msgid "Previous Slide:"
-msgstr "Précedent:"
+msgstr "Précedent :"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:161
 msgid "Set Jump:"
-msgstr "Créer un saut:"
+msgstr "Créer un saut :"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:162
 msgid "Jump to slide:"
-msgstr "Allez à la diapositive:"
+msgstr "Allez à la diapositive :"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Services/GamepadSlideController.vala:163
 msgid "Toggle Presentation:"
@@ -114,7 +114,7 @@ msgstr "..."
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:90
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/CanvasItems/TextItem.vala:111
 msgid "Click to add text..."
-msgstr "Cliquer pour ajouter du text..."
+msgstr "Cliquer pour ajouter du texte..."
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/ColorPicker/ColorPicker.vala:94
 msgid "Color Palette"
@@ -154,11 +154,11 @@ msgstr "Annuler"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:76
 msgid "Redo"
-msgstr "Refaire"
+msgstr "Rétablir"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:77
 msgid "Insert Text Box"
-msgstr "Insérer du text"
+msgstr "Insérer du texte"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:78
 msgid "Insert Image"
@@ -166,7 +166,7 @@ msgstr "Insérer une image"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:79
 msgid "Insert Shape"
-msgstr "Inseré une forme"
+msgstr "Inserer une forme"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Headerbar.vala:80
 msgid "Return to Welcome Screen"
@@ -179,15 +179,15 @@ msgstr "Commencer la Présentation"
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:39
 #, c-format
 msgid "Open: %s"
-msgstr "Ouvrir: %s"
+msgstr "Ouvrir : %s"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:64
 msgid "Name: "
-msgstr "Nom: "
+msgstr "Nom : "
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:70
 msgid "Aspect Ratio: "
-msgstr "Ratio: "
+msgstr "Ratio : "
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:85
 msgid "Open file location…"
@@ -195,7 +195,7 @@ msgstr "Ouvrir le dossier…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Library/LibraryItem.vala:123
 msgid "Could not rename: File already exists…"
-msgstr "Renommage impossible: Le fichier existe déjà…"
+msgstr "Impossible de renommer : Le fichier existe déjà…"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/PresenterView.vala:228
 #, c-format
@@ -208,7 +208,7 @@ msgstr "Fin"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/SlideList.vala:225
 msgid "Presenter Notes:"
-msgstr "Notes du présentateur:"
+msgstr "Notes du présentateur :"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:35
 msgid "Background color"
@@ -228,7 +228,7 @@ msgstr "Tissu sombre"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:50
 msgid "Fabric light"
-msgstr "Tissu claire"
+msgstr "Tissu clair"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:51
 msgid "Batthern"
@@ -268,15 +268,15 @@ msgstr "Géométrie"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:60
 msgid "Dark geometric"
-msgstr "Sombre Géométrie"
+msgstr "Géométrie sombre"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:61
 msgid "Light wool"
-msgstr "Laine fine"
+msgstr "Laine claire"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:62
 msgid "Neutral squares"
-msgstr "Petits carrés neutres"
+msgstr "Carrés neutres"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:63
 msgid "Silver scales"
@@ -332,7 +332,7 @@ msgstr "Cercle"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ShapeBar.vala:37
 msgid "Roundness"
-msgstr "Arrondir"
+msgstr "Arrondi"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/ShapeBar.vala:56
 msgid "Shape color"
@@ -368,7 +368,7 @@ msgstr "Bas"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:70
 msgid "Font color"
-msgstr "Couleur du text"
+msgstr "Couleur du texte"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:73
 msgid "Font Style"
@@ -410,10 +410,10 @@ msgstr "Ouvrir une présentation enregistrée"
 #~ msgstr "Créer une Présentation"
 
 #~ msgid "Color 1:"
-#~ msgstr "Couleur 1:"
+#~ msgstr "Couleur 1 :"
 
 #~ msgid "Color 2:"
-#~ msgstr "Couleur 2:"
+#~ msgstr "Couleur 2 :"
 
 #~ msgid "Vertical"
 #~ msgstr "Verticale"
@@ -422,4 +422,4 @@ msgstr "Ouvrir une présentation enregistrée"
 #~ msgstr "Horizontale"
 
 #~ msgid "translator-credits"
-#~ msgstr "Damien Bouthier"
+#~ msgstr "Damien Bouthier / Corrections : NathanBnm"
