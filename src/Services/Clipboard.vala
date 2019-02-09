@@ -102,6 +102,7 @@ public class Spice.Clipboard {
         Gtk.Clipboard clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
 
         object_data = clone (object);
+        print (object_data);
 
         if (object is Spice.TextItem) {
             debug ("set text target list");

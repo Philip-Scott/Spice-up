@@ -20,11 +20,7 @@
 */
 
 public class Spice.ImageHandler : Object {
-    public static uint FILE_ID = 0;
-
     public signal void file_changed ();
-
-    private uint file_id;
 
     const string FILENAME = "/spice-up-%s-img-%u.%s";
 
@@ -32,47 +28,77 @@ public class Spice.ImageHandler : Object {
     private bool file_changing = false;
 
     public bool valid = false;
-    private string? base64_image = null;
 
-    public string image_extension { get; private set; }
+    public string image_extension {
+        owned get {
+            return get_extension (url);
+        }
+    }
 
     private string url_ = "";
     public string url {
         get {
-            return url_;
+            return  url_;
+        }
+    }
+
+    private File current_image_file {
+        owned get {
+            return File.new_for_path (url);
         } set {
-            url_ = value;
-            var file = File.new_for_path (value);
-            monitor_file (file);
-            valid = (file.query_exists () && Utils.is_valid_image (file));
+            monitor_file (value);
+            valid = (value.query_exists () && Utils.is_valid_image (value));
+            url_ = value.get_path ();
+            print (url);
             file_changed ();
         }
     }
 
-    public ImageHandler.from_data (string _extension, string _base64_data) {
-        file_id = FILE_ID++;
-        image_extension = _extension != "" ? _extension : "png";
-        base64_image = _base64_data;
-        url = data_to_file (_base64_data);
+    private unowned Services.SpiceUpFile spice_file;
+
+    public ImageHandler.from_data (Services.SpiceUpFile _spice_file, string _extension, string _base64_data) {
+        print ("From data\n");
+        spice_file = _spice_file;
+
+        var file = spice_file.get_random_file_name (spice_file.pictures_folder, _extension);
+        data_to_file (_base64_data, file);
+
+        current_image_file = file;
     }
 
-    public ImageHandler.from_file (File file) {
-        file_id = FILE_ID++;
-        replace (file);
+    public ImageHandler.from_archived_file (Services.SpiceUpFile _spice_file, string filename) {
+        print ("From archive\n");
+        spice_file = _spice_file;
+
+        var path = Path.build_filename (spice_file.pictures_folder.get_path (), filename);
+        current_image_file = File.new_for_path (path);
+    }
+
+    public ImageHandler.from_file (Services.SpiceUpFile _spice_file, File _file) {
+        print ("From file\n");
+        spice_file = _spice_file;
+
+        var file = spice_file.get_random_file_name (spice_file.pictures_folder, get_extension (_file.get_basename ()));
+        replace (_file);
+
+        current_image_file = file;
     }
 
     public void replace (File file) {
+        // TODO: Implement copy from outside file to this
         if (monitor != null) {
             monitor.cancel ();
         }
 
-        image_extension = get_extension (file.get_basename ());
-        data_from_file (file);
-        url = data_to_file (base64_image);
+        //  image_extension = get_extension (file.get_basename ());
+        //  data_from_file (file);
+        //  url = data_to_file (base64_image);
     }
 
     public string serialize () {
-        return """"image":"%s", "image-data":"%s" """.printf (image_extension, base64_image);
+        var file = File.new_for_path (url);
+
+        return """"archived-image":"%s" """.printf (file.get_basename ());
     }
 
     private void monitor_file (File file) {
@@ -83,7 +109,6 @@ public class Spice.ImageHandler : Object {
                 if (event == FileMonitorEvent.CHANGED) {
                     file_changing = true;
                 } else if (event == FileMonitorEvent.CHANGES_DONE_HINT && file_changing) {
-                    data_from_file (file);
                     file_changed ();
                     file_changing = false;
                 }
@@ -102,14 +127,7 @@ public class Spice.ImageHandler : Object {
         }
     }
 
-    private void data_from_file (File file) {
-        base64_image = Spice.Services.FileManager.file_to_base64 (file);
-    }
-
-    private string data_to_file (string data) {
-        var filename = Environment.get_tmp_dir () + FILENAME.printf (Environment.get_user_name (), file_id, image_extension);
-        Spice.Services.FileManager.base64_to_file (filename, data);
-
-        return filename;
+    private void data_to_file (string data, File file) {
+        Spice.Services.FileManager.base64_to_file (file.get_path (), data);
     }
 }
