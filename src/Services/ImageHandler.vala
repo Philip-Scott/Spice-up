@@ -66,11 +66,13 @@ public class Spice.ImageHandler : Object {
         current_image_file = file;
     }
 
-    public ImageHandler.from_archived_file (Services.SpiceUpFile _spice_file, string filename) {
+    public ImageHandler.from_archived_file (Services.SpiceUpFile? _spice_file, string filename) {
         print ("From archive\n");
         spice_file = _spice_file;
 
-        var path = Path.build_filename (spice_file.pictures_folder.get_path (), filename);
+        var pictures_folder = spice_file != null ? spice_file.pictures_folder.get_path () : "";
+        var path = Path.build_filename (pictures_folder, filename);
+
         current_image_file = File.new_for_path (path);
     }
 
@@ -84,11 +86,16 @@ public class Spice.ImageHandler : Object {
         current_image_file = file;
     }
 
+    public void copy_to_another_file () {
+        var file = spice_file.get_random_file_name (spice_file.pictures_folder, image_extension);
+
+        current_image_file.copy (file, FileCopyFlags.NONE);
+        current_image_file = file;
+    }
+
     public void replace (File file) {
         // TODO: Implement copy from outside file to this
-        if (monitor != null) {
-            monitor.cancel ();
-        }
+
 
         //  image_extension = get_extension (file.get_basename ());
         //  data_from_file (file);
@@ -103,6 +110,10 @@ public class Spice.ImageHandler : Object {
 
     private void monitor_file (File file) {
         try {
+            if (monitor != null) {
+                monitor.cancel ();
+            }
+
             monitor = file.monitor (FileMonitorFlags.NONE, null);
 
             monitor.changed.connect ((src, dest, event) => {

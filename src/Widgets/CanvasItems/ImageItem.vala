@@ -89,7 +89,7 @@ public class Spice.ImageItem : Spice.CanvasItem {
             image = new ImageHandler.from_data (canvas.window.current_file, extension, base64_image);
         } else if (save_data.has_member ("archived-image")) {
             // CURRENT Method of loading
-            image = new ImageHandler.from_archived_file (canvas.window.current_file, save_data.get_string_member ("archived-image"));
+            image = new ImageHandler.from_archived_file (canvas != null ? canvas.window.current_file : null, save_data.get_string_member ("archived-image"));
         } else {
             var tmp_uri = save_data.get_string_member ("image");
             image = new ImageHandler.from_file (canvas.window.current_file, File.new_for_uri (tmp_uri));

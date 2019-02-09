@@ -159,6 +159,10 @@ public class Spice.Clipboard {
                 } else {
                     var item = Utils.canvas_item_from_data (root_object, manager.current_slide.canvas);
                     manager.current_slide.add_item (item, true, true);
+
+                    if (item is Spice.ImageItem) {
+                        (item as Spice.ImageItem).image.copy_to_another_file ();
+                    }
                 }
             });
             return;
