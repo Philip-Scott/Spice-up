@@ -20,7 +20,7 @@
 public class Spice.Services.ZipArchiveHandler {
 
     // Prefix to be added at the beginning of the folder name when a gzipped file is opened. Should start with a period to hide the folder by default
-    private const string UNARCHIVED_PREFIX = ".~lock.spiceup.";
+    private const string UNARCHIVED_PREFIX = ".~lock.spice-up.";
 
     /**
      * The GZipped File that opened this archive

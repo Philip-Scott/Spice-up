@@ -54,8 +54,9 @@ public class Spice.Services.SpiceUpFile : Spice.Services.ZipArchiveHandler {
             clean ();
         } else {
             Services.FileManager.write_file (content_file, slide_manager.serialise ());
+            ImageHandler.delete_marked_images ();
             write_to_archive ();
-            // clean ();
+            clean ();
         }
     }
 

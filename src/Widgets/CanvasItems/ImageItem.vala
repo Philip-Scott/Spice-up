@@ -77,6 +77,18 @@ public class Spice.ImageItem : Spice.CanvasItem {
         if (canvas != null) style ();
     }
 
+    construct {
+        notify["visible"].connect (() => {
+            if (this.visible) {
+                print ("Removing from deletion\n");
+                ImageHandler.remove_from_deletion (image);
+            } else {
+                print ("adding for deletion\n");
+                ImageHandler.add_for_deletion (image);
+            }
+        });
+    }
+
     protected override void load_item_data () {
         string? base64_image = null;
 

@@ -22,8 +22,9 @@
 public class Spice.ImageHandler : Object {
     public signal void file_changed ();
 
-    const string FILENAME = "/spice-up-%s-img-%u.%s";
+    private static Gee.HashMap<string, File> for_deletion = new Gee.HashMap<string, File> ();
 
+    private unowned Services.SpiceUpFile spice_file;
     private FileMonitor? monitor = null;
     private bool file_changing = false;
 
@@ -54,8 +55,6 @@ public class Spice.ImageHandler : Object {
         }
     }
 
-    private unowned Services.SpiceUpFile spice_file;
-
     public ImageHandler.from_data (Services.SpiceUpFile _spice_file, string _extension, string _base64_data) {
         print ("From data\n");
         spice_file = _spice_file;
@@ -80,10 +79,7 @@ public class Spice.ImageHandler : Object {
         print ("From file\n");
         spice_file = _spice_file;
 
-        var file = spice_file.get_random_file_name (spice_file.pictures_folder, get_extension (_file.get_basename ()));
         replace (_file);
-
-        current_image_file = file;
     }
 
     public void copy_to_another_file () {
@@ -94,12 +90,18 @@ public class Spice.ImageHandler : Object {
     }
 
     public void replace (File file) {
-        // TODO: Implement copy from outside file to this
+        if (monitor != null) {
+            monitor.cancel ();
+        }
 
+        if (url != "") {
+            current_image_file.delete ();
+        }
 
-        //  image_extension = get_extension (file.get_basename ());
-        //  data_from_file (file);
-        //  url = data_to_file (base64_image);
+        var new_file = spice_file.get_random_file_name (spice_file.pictures_folder, get_extension (file.get_basename ()));
+        file.copy (new_file, FileCopyFlags.NONE);
+
+        current_image_file = new_file;
     }
 
     public string serialize () {
@@ -140,5 +142,21 @@ public class Spice.ImageHandler : Object {
 
     private void data_to_file (string data, File file) {
         Spice.Services.FileManager.base64_to_file (file.get_path (), data);
+    }
+
+    public static void add_for_deletion (ImageHandler image) {
+        for_deletion.set (image.current_image_file.get_basename (), image.current_image_file);
+    }
+
+    public static void remove_from_deletion (ImageHandler image) {
+        for_deletion.unset (image.current_image_file.get_basename ());
+    }
+
+    public static void delete_marked_images () {
+        foreach (var image in for_deletion.values) {
+            image.delete ();
+        };
+
+        for_deletion = new Gee.HashMap<string, File> ();
     }
 }
