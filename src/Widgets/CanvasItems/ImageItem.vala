@@ -120,11 +120,15 @@ public class Spice.ImageItem : Spice.CanvasItem {
              style ();
         });
 
+        if (canvas != null) {
+            canvas.window.current_file.file_collector.ref_file (image.current_image_file);
+        }
+
         notify["visible"].connect (() => {
             if (this.visible) {
-                canvas.window.current_file.unmark_for_deletion (image.current_image_file);
+                canvas.window.current_file.file_collector.ref_file (image.current_image_file);
             } else {
-                canvas.window.current_file.mark_for_deletion (image.current_image_file);
+                canvas.window.current_file.file_collector.unref_file (image.current_image_file);
             }
         });
     }

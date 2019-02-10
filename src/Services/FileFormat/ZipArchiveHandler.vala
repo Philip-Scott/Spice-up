@@ -19,8 +19,6 @@
 
 public class Spice.Services.ZipArchiveHandler : GLib.Object {
 
-    private static Gee.HashMap<string, File> for_deletion;
-
     // Prefix to be added at the beginning of the folder name when a gzipped file is opened. Should start with a period to hide the folder by default
     private const string UNARCHIVED_PREFIX = ".~lock.spice-up.";
 
@@ -41,43 +39,13 @@ public class Spice.Services.ZipArchiveHandler : GLib.Object {
         Object (opened_file: gzipped_file.dup ());
     }
 
-    construct {
-        for_deletion = new Gee.HashMap<string, File> ();
+    public FileCollector file_collector { get; private set; }
 
+    construct {
         var parent_folder = opened_file.get_parent ().get_path ();
         unarchived_location = File.new_for_path (Path.build_filename (parent_folder, UNARCHIVED_PREFIX + opened_file.get_basename ()));
-    }
 
-    /**
-     * Marks a file to be deleted and not saved to the archive. Said files will be deleted
-     * when write_to_archive runs or when you manually call "delete_files_marked_for_deletion".
-     *
-     * Files will only be added to the list when they are inside the unarchived location
-     */
-    public void mark_for_deletion (File file) {
-        if (file.get_path ().contains (unarchived_location.get_path ())) {
-            for_deletion.set (file.get_basename (), file);
-            print ("Marked for deletion: %s\n", file.get_basename ());
-        }
-    }
-
-    /**
-     * Unmarks a file previously marked for deletion.
-     */
-    public void unmark_for_deletion (File file) {
-        for_deletion.unset (file.get_basename ());
-        print ("unmarked for deletion: %s\n", file.get_basename ());
-    }
-
-    /**
-     * Deletes all files marked for deletion
-     */
-    public void delete_files_marked_for_deletion () {
-        foreach (var file in for_deletion.values) {
-            file.delete ();
-        };
-
-        for_deletion.clear ();
+        file_collector = new FileCollector (unarchived_location);
     }
 
     /**
@@ -130,7 +98,7 @@ public class Spice.Services.ZipArchiveHandler : GLib.Object {
      */
     protected void write_to_archive () throws Error {
         // Clear files marked before archiving anything
-        delete_files_marked_for_deletion ();
+        file_collector.delete_files_marked_for_deletion ();
 
         // Saving to a temp file first to avoid dataloss on a crash
 
@@ -326,6 +294,101 @@ public class Spice.Services.ZipArchiveHandler : GLib.Object {
             }
         } catch (Error e) {
             critical ("Error: %s\n", e.message);
+        }
+    }
+
+
+    /**
+     * Takes care of the reference counting for files inside the archive.
+     * This allows to multiple objects to reference the same file, and only
+     * mark the file for deletion it if no other object is using it.
+     */
+    protected class FileCollector {
+        private unowned File unarchived_location;
+        private Gee.HashMap<string, File> for_deletion;
+        private Gee.HashMap<string, int> ref_counter;
+
+        public FileCollector (File _unarchived_location) {
+            unarchived_location = _unarchived_location;
+
+            for_deletion = new Gee.HashMap<string, File> ();
+            ref_counter = new Gee.HashMap<string, int> ();
+        }
+
+        /**
+         * Gets the number of times a file is being used
+         */
+        public int file_references (File file) {
+            var file_basename = file.get_basename ();
+
+            if (ref_counter.has_key (file_basename)) {
+                return ref_counter.get (file_basename);
+            } else {
+                return 0;
+            }
+        }
+
+        /**
+         * Adds 1 to the ref counter for that file.
+         */
+        public void ref_file (File file) {
+            var file_basename = file.get_basename ();
+            if (for_deletion.has_key (file_basename)) {
+                unmark_for_deletion (file);
+            }
+
+            var ref_count = file_references (file);
+            ref_counter.set (file_basename, ref_count + 1);
+            print ("File ref %d %s \n", ref_count + 1, file.get_basename ());
+        }
+
+        /**
+         * Subtracts 1 on the ref counter for that file. If set to 0, the file will be marked for deletion
+         */
+        public void unref_file (File file) {
+            var file_basename = file.get_basename ();
+
+            var ref_count = file_references (file);
+            if (ref_count > 0) {
+                ref_counter.set (file_basename, ref_count - 1);
+
+                if (ref_count == 1) {
+                    mark_for_deletion (file);
+                }
+                print ("File unref %d %s \n", ref_count - 1, file.get_basename ());
+            }
+        }
+
+        /**
+         * Marks a file to be deleted and not saved to the archive. Said files will be deleted
+         * when write_to_archive runs or when you manually call "delete_files_marked_for_deletion".
+         *
+         * Files will only be added to the list when they are inside the unarchived location
+         */
+        public void mark_for_deletion (File file) {
+            if (file.get_path ().contains (unarchived_location.get_path ())) {
+                for_deletion.set (file.get_basename (), file);
+                print ("Marked for deletion: %s\n", file.get_basename ());
+            }
+        }
+
+        /**
+         * Unmarks a file previously marked for deletion.
+         */
+        public void unmark_for_deletion (File file) {
+            for_deletion.unset (file.get_basename ());
+            print ("unmarked for deletion: %s\n", file.get_basename ());
+        }
+
+        /**
+         * Deletes all files whose ref counter is set to 0, or those marked for deletion
+         */
+        public void delete_files_marked_for_deletion () {
+            foreach (var file in for_deletion.values) {
+                file.delete ();
+            };
+
+            for_deletion.clear ();
         }
     }
 }

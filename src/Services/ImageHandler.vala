@@ -22,8 +22,6 @@
 public class Spice.ImageHandler : Object {
     public signal void file_changed ();
 
-    private static Gee.HashMap<string, File> for_deletion = new Gee.HashMap<string, File> ();
-
     private unowned Services.SpiceUpFile spice_file;
     private FileMonitor? monitor = null;
     private bool file_changing = false;
@@ -50,7 +48,7 @@ public class Spice.ImageHandler : Object {
             monitor_file (value);
             valid = (value.query_exists () && Utils.is_valid_image (value));
             url_ = value.get_path ();
-            print (url);
+            print (url + "\n");
             file_changed ();
         }
     }
@@ -84,6 +82,8 @@ public class Spice.ImageHandler : Object {
 
     public void copy_to_another_file () {
         var file = spice_file.get_random_file_name (spice_file.pictures_folder, image_extension);
+
+        spice_file.file_collector.unref_file (current_image_file);
 
         current_image_file.copy (file, FileCopyFlags.NONE);
         current_image_file = file;
@@ -142,21 +142,5 @@ public class Spice.ImageHandler : Object {
 
     private void data_to_file (string data, File file) {
         Spice.Services.FileManager.base64_to_file (file.get_path (), data);
-    }
-
-    private static void add_for_deletion (ImageHandler image) {
-        for_deletion.set (image.current_image_file.get_basename (), image.current_image_file);
-    }
-
-    private static void remove_from_deletion (ImageHandler image) {
-        for_deletion.unset (image.current_image_file.get_basename ());
-    }
-
-    private static void delete_marked_images () {
-        foreach (var image in for_deletion.values) {
-            image.delete ();
-        };
-
-        for_deletion = new Gee.HashMap<string, File> ();
     }
 }
