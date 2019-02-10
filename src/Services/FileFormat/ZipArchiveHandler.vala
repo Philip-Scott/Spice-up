@@ -17,7 +17,9 @@
  *  Boston, MA 02110-1301 USA.
  */
 
-public class Spice.Services.ZipArchiveHandler {
+public class Spice.Services.ZipArchiveHandler : GLib.Object {
+
+    private static Gee.HashMap<string, File> for_deletion;
 
     // Prefix to be added at the beginning of the folder name when a gzipped file is opened. Should start with a period to hide the folder by default
     private const string UNARCHIVED_PREFIX = ".~lock.spice-up.";
@@ -25,7 +27,7 @@ public class Spice.Services.ZipArchiveHandler {
     /**
      * The GZipped File that opened this archive
      */
-    public File opened_file { get; private set; }
+    public File opened_file { get; construct set; }
 
     /**
      * The Unzipped folder location
@@ -36,18 +38,60 @@ public class Spice.Services.ZipArchiveHandler {
      * Creates a zipped file for archive purposes
      */
     public ZipArchiveHandler (File gzipped_file) {
-        opened_file = gzipped_file.dup ();
+        Object (opened_file: gzipped_file.dup ());
+    }
+
+    construct {
+        for_deletion = new Gee.HashMap<string, File> ();
 
         var parent_folder = opened_file.get_parent ().get_path ();
         unarchived_location = File.new_for_path (Path.build_filename (parent_folder, UNARCHIVED_PREFIX + opened_file.get_basename ()));
     }
 
+    /**
+     * Marks a file to be deleted and not saved to the archive. Said files will be deleted
+     * when write_to_archive runs or when you manually call "delete_files_marked_for_deletion".
+     *
+     * Files will only be added to the list when they are inside the unarchived location
+     */
+    public void mark_for_deletion (File file) {
+        if (file.get_path ().contains (unarchived_location.get_path ())) {
+            for_deletion.set (file.get_basename (), file);
+            print ("Marked for deletion: %s\n", file.get_basename ());
+        }
+    }
+
+    /**
+     * Unmarks a file previously marked for deletion.
+     */
+    public void unmark_for_deletion (File file) {
+        for_deletion.unset (file.get_basename ());
+        print ("unmarked for deletion: %s\n", file.get_basename ());
+    }
+
+    /**
+     * Deletes all files marked for deletion
+     */
+    public void delete_files_marked_for_deletion () {
+        foreach (var file in for_deletion.values) {
+            file.delete ();
+        };
+
+        for_deletion.clear ();
+    }
+
+    /**
+     * Helper function to create a directory if it does not exist
+     */
     protected void make_dir (File file) {
         if (!file.query_exists ()) {
             file.make_directory_with_parents ();
         }
     }
 
+    /**
+     * Helper function to create a file if it does not exist
+     */
     protected void make_file (File file) {
         if (!file.query_exists ()) {
             file.create (FileCreateFlags.REPLACE_DESTINATION);
@@ -57,38 +101,37 @@ public class Spice.Services.ZipArchiveHandler {
     /**
      * Used to create all the files needed for this if they do not exist.
      *
-     * Should be overwritten to add your own files and folders for the internal
-     * file structure you require. Make sure to call base.prepare ()
+     * Can be overwritten to add your own files and folders for the internal
+     * file structure you require. If overwritten, make sure to call base.prepare ()
      */
     public virtual void prepare () {
-        try {
-            var parent_folder = opened_file.get_parent ();
-            make_dir (parent_folder);
-            make_file (opened_file);
-            make_dir (unarchived_location);
-        } catch (Error e) {
-            error ("Could not write file: %s", e.message);
-        }
+        var parent_folder = opened_file.get_parent ();
+        make_dir (parent_folder);
+        make_file (opened_file);
+        make_dir (unarchived_location);
     }
 
     /**
      * Used to check if the file was already extracted. Use this to handle recovery for your users.
      */
-    public virtual bool is_opened () {
+    protected virtual bool is_opened () {
         return unarchived_location.query_exists ();
     }
 
     /**
      * Extracts the contents of the file to unarchived_location
      */
-    public void open () throws Error {
+    protected void open_archive () throws Error {
         extract (opened_file, unarchived_location);
     }
 
     /**
      * Saves content from the unzipped location to the GZipped file.
      */
-    public void write_to_archive () throws Error {
+    protected void write_to_archive () throws Error {
+        // Clear files marked before archiving anything
+        delete_files_marked_for_deletion ();
+
         // Saving to a temp file first to avoid dataloss on a crash
 
         var tmp_file = File.new_for_path (opened_file.get_path () + ".tmp");
@@ -104,16 +147,60 @@ public class Spice.Services.ZipArchiveHandler {
     /**
      * Removes all files from the unarchived location. Should run before closing the program to cleanup temp files
      */
-    public void clean () throws Error {
+    protected void clean () throws Error {
         // Checking if it contains the prefix as a safety to prevent errors
-        // This function is dangerous. not using the constant here to prevent erors
-        if (is_opened () && unarchived_location.get_path ().contains (".~lock.spice-up.")) {
+        if (is_opened () && unarchived_location.get_path ().contains (UNARCHIVED_PREFIX)) {
             delete_recursive (unarchived_location);
             unarchived_location.delete ();
         }
     }
 
-    // DANGEROUS
+    /**
+     * Get's a random file inside the archive at the location specified
+     * using a guid-like name.
+     *
+     * @param location Location inside of the archive where the file will live at.
+     *
+     * @param extension The extension the file created will have
+     *
+     * @param format The format for the file. The character "?" will be replaced
+     * with a random character. For example, XXXX-XX can become a5b7-Df.
+     * The default is "XXXXXXXX-XXXX-XX"
+     */
+    public File get_random_file_name (File location, string extension, string format = "XXXXXXXX-XXXX-XX") {
+        do {
+            var path = Path.build_filename (location.get_path (), get_guid (format) + "." + extension);
+
+            var file = File.new_for_path (path);
+            if (!file.query_exists ()) {
+                return file;
+            }
+        } while (true);
+    }
+
+    private Rand? rand = new Rand ();
+    private const string GUID_CHARS = "0123456789ABCDEFabcdef";
+
+    private string get_guid (string format) {
+        var guid = new StringBuilder.sized (format.length);
+        int format_length = format.length;
+
+        for (int i = 0; i < format_length; i++) {
+            switch (format[i]) {
+                case 'X':
+                    var r = rand.next_int () % GUID_CHARS.length;
+                    guid.append_c (GUID_CHARS[r]);
+                    break;
+                default:
+                    guid.append_c (format[i]);
+                    break;
+            }
+        }
+
+        return guid.str;
+    }
+
+    // DANGEROUS, use with caution
     private void delete_recursive (File file) {
         try {
             var enumerator = file.enumerate_children (FileAttribute.STANDARD_NAME, 0);
@@ -151,7 +238,6 @@ public class Spice.Services.ZipArchiveHandler {
 
         if (archive.open_filename (gzipped_file.get_path (), 10240) != Archive.Result.OK) {
             throw new FileError.FAILED ("Error opening %s: %s (%d)", gzipped_file.get_path (), archive.error_string (), archive.errno ());
-            return;
         }
 
         unowned Archive.Entry entry;

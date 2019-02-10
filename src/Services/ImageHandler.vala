@@ -43,7 +43,7 @@ public class Spice.ImageHandler : Object {
         }
     }
 
-    private File current_image_file {
+    public File current_image_file {
         owned get {
             return File.new_for_path (url);
         } set {
@@ -144,15 +144,15 @@ public class Spice.ImageHandler : Object {
         Spice.Services.FileManager.base64_to_file (file.get_path (), data);
     }
 
-    public static void add_for_deletion (ImageHandler image) {
+    private static void add_for_deletion (ImageHandler image) {
         for_deletion.set (image.current_image_file.get_basename (), image.current_image_file);
     }
 
-    public static void remove_from_deletion (ImageHandler image) {
+    private static void remove_from_deletion (ImageHandler image) {
         for_deletion.unset (image.current_image_file.get_basename ());
     }
 
-    public static void delete_marked_images () {
+    private static void delete_marked_images () {
         foreach (var image in for_deletion.values) {
             image.delete ();
         };

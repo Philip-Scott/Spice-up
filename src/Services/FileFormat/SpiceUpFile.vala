@@ -25,23 +25,21 @@ public class Spice.Services.SpiceUpFile : Spice.Services.ZipArchiveHandler {
     public File styles_file { get; private set; }
     public File version_file { get; private set; }
 
-    public unowned Spice.SlideManager slide_manager {get; private set; }
+    public unowned Spice.SlideManager slide_manager {get; construct set; }
 
     public SpiceUpFile (File _gzipped_file, Spice.SlideManager _slide_manager) {
-        base (_gzipped_file);
-
-        slide_manager = _slide_manager;
+        Object (opened_file: _gzipped_file.dup (), slide_manager: _slide_manager);
     }
 
     public void load_file () {
         try {
-            open ();
+            open_archive ();
             string content = Services.FileManager.get_presentation_data (content_file);
             slide_manager.load_data (content);
         } catch (Error e) {
             // GZipped file is probably the old format. T
             // Try to use it as content_file as fallback
-            print ("Running opening as legacy mode\n");
+            debug ("Opening file in legacy mode\n");
 
             string content = Services.FileManager.get_presentation_data (opened_file);
             slide_manager.load_data (content);
@@ -54,7 +52,6 @@ public class Spice.Services.SpiceUpFile : Spice.Services.ZipArchiveHandler {
             clean ();
         } else {
             Services.FileManager.write_file (content_file, slide_manager.serialise ());
-            ImageHandler.delete_marked_images ();
             write_to_archive ();
             clean ();
         }
@@ -77,40 +74,5 @@ public class Spice.Services.SpiceUpFile : Spice.Services.ZipArchiveHandler {
         make_file (content_file);
         make_file (styles_file);
         make_file (version_file);
-    }
-
-    public File get_random_file_name (File location, string format) {
-        do {
-            var path = Path.build_filename (location.get_path (), get_guid () + "." + format);
-
-            var file = File.new_for_path (path);
-            if (!file.query_exists ()) {
-                return file;
-            }
-        } while (true);
-    }
-
-    Rand rand = new Rand ();
-
-    private string get_guid () {
-        char GUID[40];
-        int t = 0;
-        string szTemp = "xxxxxxxx-xxxx-xx";
-        string szHex = "0123456789ABCDEFabcdef-";
-        int nLen = szTemp.length;
-
-        for (t = 0; t < nLen + 1; t++) {
-            var r = rand.next_int () % 22;
-            char c = ' ';
-
-            switch (szTemp[t]) {
-                case 'x' : { c = szHex [r]; } break;
-                case '-' : { c = '-'; } break;
-            }
-
-            GUID[t] = ( t < nLen ) ? c : 0x00;
-        }
-
-        return (string) GUID;
     }
 }

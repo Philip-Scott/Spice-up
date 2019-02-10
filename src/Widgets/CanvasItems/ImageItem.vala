@@ -77,18 +77,6 @@ public class Spice.ImageItem : Spice.CanvasItem {
         if (canvas != null) style ();
     }
 
-    construct {
-        notify["visible"].connect (() => {
-            if (this.visible) {
-                print ("Removing from deletion\n");
-                ImageHandler.remove_from_deletion (image);
-            } else {
-                print ("adding for deletion\n");
-                ImageHandler.add_for_deletion (image);
-            }
-        });
-    }
-
     protected override void load_item_data () {
         string? base64_image = null;
 
@@ -130,6 +118,14 @@ public class Spice.ImageItem : Spice.CanvasItem {
         image.file_changed.connect (() => {
              unstyle ();
              style ();
+        });
+
+        notify["visible"].connect (() => {
+            if (this.visible) {
+                canvas.window.current_file.unmark_for_deletion (image.current_image_file);
+            } else {
+                canvas.window.current_file.mark_for_deletion (image.current_image_file);
+            }
         });
     }
 }
