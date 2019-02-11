@@ -27,6 +27,7 @@ public class Spice.Slide : Object {
     public Canvas canvas;
     public Gtk.Image preview;
 
+    private File? thumbnail_file = null;
     public string preview_data { get; private set; default = ""; }
     public string notes { get; set; default = ""; }
     public Gtk.StackTransitionType transition { get; set; default = Gtk.StackTransitionType.NONE; }
@@ -46,8 +47,11 @@ public class Spice.Slide : Object {
                     item.visible = true;
                 }
 
+                canvas.window.current_file.file_collector.ref_file (thumbnail_file);
                 to_be_deleted.clear ();
             } else {
+                canvas.window.current_file.file_collector.unref_file (thumbnail_file);
+
                 foreach (var widget in canvas.get_children ()) {
                     if (widget is CanvasItem && widget.visible) {
                         CanvasItem item = (CanvasItem) widget;
@@ -103,11 +107,33 @@ public class Spice.Slide : Object {
     private void load_data () {
         if (save_data == null) return;
 
-        preview_data = save_data.get_string_member ("preview");
-        if (preview_data != null && preview_data != "") {
-            var pixbuf = Utils.base64_to_pixbuf (preview_data);
+        if (save_data.has_member ("preview")) {
+            preview_data = save_data.get_string_member ("preview");
 
-            preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
+            if (preview_data != null && preview_data != "") {
+                var pixbuf = Utils.base64_to_pixbuf (preview_data);
+
+                preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
+            }
+        } else if (save_data.has_member ("thumbnail")) {
+            print ("Loading thumbnail file...\n");
+            var thumbnail_basename = save_data.get_string_member ("thumbnail");
+            if (canvas != null && thumbnail_basename != "") {
+                var current_file = canvas.window.current_file;
+                thumbnail_file = current_file.get_file_from_basename (current_file.thumbnails_folder, thumbnail_basename);
+
+                var pixbuf = new Gdk.Pixbuf.from_file (thumbnail_file.get_path ());
+                preview.set_from_pixbuf (pixbuf);
+            }
+        }
+
+        if (thumbnail_file == null && canvas != null) {
+            var current_file = canvas.window.current_file;
+            thumbnail_file = current_file.get_random_file_name (current_file.thumbnails_folder, "jpg");
+        }
+
+        if (canvas != null) {
+            canvas.window.current_file.file_collector.ref_file (thumbnail_file);
         }
 
         if (save_data.has_member ("transition")) {
@@ -143,7 +169,7 @@ public class Spice.Slide : Object {
         });
     }
 
-    public string serialise () {
+    public string serialise (bool save_preview = false) {
         if (this.save_data != null) {
             var root = new Json.Node (Json.NodeType.OBJECT);
             root.set_object (save_data);
@@ -164,8 +190,19 @@ public class Spice.Slide : Object {
             }
         }
 
+        if (save_preview && thumbnail_file != null) {
+            print ("Saving thumbnail at %s\n", thumbnail_file.get_path ());
+            try {
+                preview.pixbuf.save (thumbnail_file.get_path (), "jpeg");
+            } catch (Error e) {
+                warning (e.message);
+            }
+        }
+
+        string preview_name = save_preview && thumbnail_file != null ? thumbnail_file.get_basename () : "";
         var raw_notes = (string) GLib.Base64.encode (notes.data);
-        return "{%s, \"transition\": %d, \"items\": [%s], \"notes\": \"%s\", \"preview\": \"%s\"}\n".printf (canvas.serialise (), (int) transition, data, raw_notes, preview_data);
+
+        return "{%s, \"transition\": %d, \"items\": [%s], \"notes\": \"%s\", \"thumbnail\": \"%s\" }\n".printf (canvas.serialise (), (int) transition, data, raw_notes, preview_name);
     }
 
     public void delete () {

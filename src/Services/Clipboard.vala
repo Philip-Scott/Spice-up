@@ -154,7 +154,7 @@ public class Spice.Clipboard {
                 var root_object = Utils.get_json_object (data);
                 if (root_object == null) return;
 
-                if (root_object.has_member ("preview")) {
+                if (root_object.has_member ("items")) {
                     manager.new_slide (root_object, true);
                 } else {
                     var item = Utils.canvas_item_from_data (root_object, manager.current_slide.canvas);

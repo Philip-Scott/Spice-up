@@ -123,6 +123,11 @@ public class Spice.Services.ZipArchiveHandler : GLib.Object {
         }
     }
 
+    public File get_file_from_basename (File location, string basename) {
+        var path = Path.build_filename (location.get_path (), basename);
+        return File.new_for_path (path);
+    }
+
     /**
      * Get's a random file inside the archive at the location specified
      * using a guid-like name.
