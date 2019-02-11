@@ -31,6 +31,7 @@ public class Spice.Slide : Object {
     public string notes { get; set; default = ""; }
     public Gtk.StackTransitionType transition { get; set; default = Gtk.StackTransitionType.NONE; }
 
+    private Gee.LinkedList<Spice.CanvasItem> to_be_deleted = new Gee.LinkedList<Spice.CanvasItem>();
     private bool visible_ = true;
     public bool visible {
         get {
@@ -39,6 +40,22 @@ public class Spice.Slide : Object {
             this.visible_ = value;
             canvas.visible = value;
             visible_changed (value);
+
+            if (value) {
+                foreach (var item in to_be_deleted) {
+                    item.visible = true;
+                }
+
+                to_be_deleted.clear ();
+            } else {
+                foreach (var widget in canvas.get_children ()) {
+                    if (widget is CanvasItem && widget.visible) {
+                        CanvasItem item = (CanvasItem) widget;
+                        item.visible = false;
+                        to_be_deleted.add (item);
+                    }
+                }
+            }
         }
     }
 
