@@ -158,12 +158,6 @@ public class Spice.Clipboard {
                     manager.new_slide (root_object, true);
                 } else {
                     var item = Utils.canvas_item_from_data (root_object, manager.current_slide.canvas);
-
-                    if (item is Spice.ImageItem) {
-                        // This clones the image file
-                        (item as Spice.ImageItem).image.copy_to_another_file ();
-                    }
-
                     manager.current_slide.add_item (item, true, true);
                 }
             });

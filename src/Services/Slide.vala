@@ -32,6 +32,8 @@ public class Spice.Slide : Object {
     public string notes { get; set; default = ""; }
     public Gtk.StackTransitionType transition { get; set; default = Gtk.StackTransitionType.NONE; }
 
+    private bool is_empty_last_slide = false;
+
     private Gee.LinkedList<Spice.CanvasItem> to_be_deleted = new Gee.LinkedList<Spice.CanvasItem>();
     private bool visible_ = true;
     public bool visible {
@@ -47,10 +49,15 @@ public class Spice.Slide : Object {
                     item.visible = true;
                 }
 
-                canvas.window.current_file.file_collector.ref_file (thumbnail_file);
+                if (!is_empty_last_slide) {
+                    canvas.window.current_file.file_collector.ref_file (thumbnail_file);
+                }
+
                 to_be_deleted.clear ();
             } else {
-                canvas.window.current_file.file_collector.unref_file (thumbnail_file);
+                if (!is_empty_last_slide) {
+                    canvas.window.current_file.file_collector.unref_file (thumbnail_file);
+                }
 
                 foreach (var widget in canvas.get_children ()) {
                     if (widget is CanvasItem && widget.visible) {
@@ -73,6 +80,8 @@ public class Spice.Slide : Object {
 
     public Slide.empty (Spice.Window window) {
         this.save_data = Utils.get_json_object (EMPTY_SLIDE);
+        is_empty_last_slide = true;
+
         canvas = new Spice.Canvas (window, save_data);
 
         load_data ();
@@ -116,7 +125,6 @@ public class Spice.Slide : Object {
                 preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
             }
         } else if (save_data.has_member ("thumbnail")) {
-            print ("Loading thumbnail file...\n");
             var thumbnail_basename = save_data.get_string_member ("thumbnail");
             if (canvas != null && thumbnail_basename != "") {
                 var current_file = canvas.window.current_file;
@@ -127,12 +135,12 @@ public class Spice.Slide : Object {
             }
         }
 
-        if (thumbnail_file == null && canvas != null) {
-            var current_file = canvas.window.current_file;
-            thumbnail_file = current_file.get_random_file_name (current_file.thumbnails_folder, "jpg");
-        }
+        if (!is_empty_last_slide && canvas != null) {
+            if (thumbnail_file == null) {
+                var current_file = canvas.window.current_file;
+                thumbnail_file = current_file.get_random_file_name (current_file.thumbnails_folder, "jpg");
+            }
 
-        if (canvas != null) {
             canvas.window.current_file.file_collector.ref_file (thumbnail_file);
         }
 
