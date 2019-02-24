@@ -35,7 +35,6 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
     private string[] JUSTIFICATION_TRANSLATIONS = {_("Left"), _("Center"), _("Right"), _("Justify")};
     private string[] ALIGN_TRANSLATIONS = {_("Top"), _("Middle"), _("Bottom")};
 
-    #if GTK_3_22
     const string TEXT_STYLE_CSS = """
         label {
             font: 16px '%s';
@@ -47,23 +46,6 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
             font: %i %s 16px '%s';
         }
     """;
-    #else
-    const string TEXT_STYLE_CSS = """
-        .label {
-            font: %s;
-            font-size: 14px;
-        }
-    """;
-
-    const string FONT_STYLE_CSS = """
-        .label {
-            font: %s;
-            font-size: 14px;
-            font-style: %s;
-            font-weight: %i;
-        }
-    """;
-    #endif
 
     private unowned SlideManager manager;
 
@@ -292,11 +274,8 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
                     case Pango.Weight.HEAVY: weight = 900; break;
                     case Pango.Weight.ULTRAHEAVY: weight = 1000; break;
                 }
-                #if GTK_3_22
+
                 Utils.set_style (entry, FONT_STYLE_CSS.printf (weight, style, family_name));
-                #else
-                Utils.set_style (entry, FONT_STYLE_CSS.printf (family_name, style, weight));
-                #endif
             }
         }
     }

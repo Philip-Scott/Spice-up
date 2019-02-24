@@ -205,11 +205,7 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     public override void style () {
-        #if GTK_3_22
         var converted_font_size = (5.3 * canvas.current_ratio * font_size);
-        #else
-        var converted_font_size = (4.0 * canvas.current_ratio * font_size);
-        #endif
 
         if (converted_font_size > 0) {
             var font_css = get_font_css (font, font_style.down (), converted_font_size);
@@ -266,7 +262,6 @@ public class Spice.TextItem : Spice.CanvasItem {
     private string get_font_css (string font, string _font_style, double font_size) {
         var font_size_text = font_size.to_string ().replace (",", ".");
 
-    #if GTK_3_22
         var font_style = _font_style.replace ("black", "900");
         font_style = font_style.replace ("extrabold", "800");
         font_style = font_style.replace ("semibold", "600");
@@ -278,8 +273,5 @@ public class Spice.TextItem : Spice.CanvasItem {
         font_style = font_style.replace ("thin", "100");
 
         return "%s %spx '%s'".printf (font_style, font_size_text, font);
-    #else
-        return "%s %s;\n font-size: %spx;".printf (font, _font_style, font_size_text);
-    #endif
     }
 }
