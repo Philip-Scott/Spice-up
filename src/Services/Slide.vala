@@ -22,7 +22,7 @@
 public class Spice.Slide : Object {
     public signal void visible_changed (bool val);
 
-    protected Json.Object? save_data = null;
+    private Spice.FileFormat.Slide? slide_data = null;
 
     public Canvas canvas;
     public Gtk.Image preview;
@@ -70,8 +70,9 @@ public class Spice.Slide : Object {
         }
     }
 
-    public Slide (Spice.Window window, Json.Object? save_data = null) {
-        this.save_data = save_data;
+    public Slide (Spice.Window window, Spice.FileFormat.Slide? save_data = null) {
+        this.slide_data = save_data;
+
         canvas = new Spice.Canvas (window, save_data);
 
         canvas.request_draw_preview.connect (reload_preview_data);
@@ -79,17 +80,18 @@ public class Spice.Slide : Object {
     }
 
     public Slide.empty (Spice.Window window) {
-        this.save_data = Utils.get_json_object (EMPTY_SLIDE);
+        var object = Utils.get_json_object (EMPTY_SLIDE);
+        slide_data = new Spice.FileFormat.Slide (object);
         is_empty_last_slide = true;
 
-        canvas = new Spice.Canvas (window, save_data);
+        canvas = new Spice.Canvas (window, slide_data);
 
         load_data ();
         visible = false;
     }
 
     public Slide.without_canvas (Json.Object? save_data = null) {
-        this.save_data = save_data;
+        slide_data = new Spice.FileFormat.Slide (save_data);
         canvas = null;
 
         load_data ();
@@ -100,39 +102,36 @@ public class Spice.Slide : Object {
     }
 
     public void load_slide () {
-        if (save_data == null) return;
+        if (slide_data == null) return;
         canvas.clear_all ();
 
-        var items = save_data.get_array_member ("items");
+        if (slide_data.items == null) {
+            print ("NO ITEMS\n");
+            return;
+        }
 
-        foreach (var raw in items.get_elements ()) {
-            var item = Utils.canvas_item_from_data (raw.get_object (), canvas);
+        var items = slide_data.items.elements;
+
+        foreach (var raw in items) {
+            var item = Utils.canvas_item_from_data (raw.object, canvas);
             add_item (item);
         }
 
-        this.save_data = null;
+        this.slide_data = null;
     }
 
     private void load_data () {
-        if (save_data == null) return;
+        if (slide_data == null) return;
 
-        if (save_data.has_member ("preview")) {
-            preview_data = save_data.get_string_member ("preview");
+        if (slide_data.preview != "") {
+            var pixbuf = Utils.base64_to_pixbuf (slide_data.preview);
+            preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
+        } else if (slide_data.thumbnail != "" && canvas != null) {
+            var current_file = canvas.window.current_file;
+            thumbnail_file = current_file.get_file_from_basename (current_file.thumbnails_folder, slide_data.thumbnail);
 
-            if (preview_data != null && preview_data != "") {
-                var pixbuf = Utils.base64_to_pixbuf (preview_data);
-
-                preview.set_from_pixbuf (pixbuf.scale_simple (SlideList.WIDTH, SlideList.HEIGHT, Gdk.InterpType.BILINEAR));
-            }
-        } else if (save_data.has_member ("thumbnail")) {
-            var thumbnail_basename = save_data.get_string_member ("thumbnail");
-            if (canvas != null && thumbnail_basename != "") {
-                var current_file = canvas.window.current_file;
-                thumbnail_file = current_file.get_file_from_basename (current_file.thumbnails_folder, thumbnail_basename);
-
-                var pixbuf = new Gdk.Pixbuf.from_file (thumbnail_file.get_path ());
-                preview.set_from_pixbuf (pixbuf);
-            }
+            var pixbuf = new Gdk.Pixbuf.from_file (thumbnail_file.get_path ());
+            preview.set_from_pixbuf (pixbuf);
         }
 
         if (!is_empty_last_slide && canvas != null) {
@@ -144,15 +143,10 @@ public class Spice.Slide : Object {
             canvas.window.current_file.file_collector.ref_file (thumbnail_file);
         }
 
-        if (save_data.has_member ("transition")) {
-            transition = (Gtk.StackTransitionType) save_data.get_int_member ("transition");
-        } else {
-            transition = Gtk.StackTransitionType.NONE;
-        }
+        transition = (Gtk.StackTransitionType) slide_data.transition;
 
-        var raw_notes = save_data.get_string_member ("notes");
-        if (raw_notes != null && raw_notes != "") {
-            notes = (string) GLib.Base64.decode (raw_notes);
+        if (slide_data.notes != "") {
+            notes = (string) GLib.Base64.decode (slide_data.notes);
         }
     }
 
@@ -178,14 +172,8 @@ public class Spice.Slide : Object {
     }
 
     public string serialise (bool save_preview = false) {
-        if (this.save_data != null) {
-            var root = new Json.Node (Json.NodeType.OBJECT);
-            root.set_object (save_data);
-
-            var gen = new Json.Generator ();
-            gen.set_root (root);
-
-            return gen.to_data (null);
+        if (this.slide_data != null) {
+            return slide_data.to_string (false);
         }
 
         string data = "";

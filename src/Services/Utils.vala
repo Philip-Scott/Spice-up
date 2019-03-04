@@ -157,33 +157,34 @@ public class Spice.Utils {
         Spice.Application.get_active_spice_window ().get_screen ().get_active_window ().set_cursor (cursor);
     }
 
-    public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas? canvas) {
-        string type = "";
+    public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas? canvas, string? type_override = null) {
+
+        string type;
 
         if (data.has_member ("type")) {
             type = data.get_string_member ("type");
+        } else {
+            type = type_override;
         }
 
-        CanvasItem? item = null;
+        var item_data = FileFormat.CanvasItemArray.new_canvas_item (data, type);
+
         switch (type) {
             case "text":
-                item = new TextItem (canvas, data);
-            break;
+                return new TextItem (canvas, item_data);
             case "color":
-                item = new ColorItem (canvas, data);
-            break;
+                return new ColorItem (canvas, item_data);
             case "image":
-                item = new ImageItem (canvas, data);
-            break;
+                return new ImageItem (canvas, item_data);
         }
 
-        return item;
+        return null;
     }
 
     public static void new_slide (Spice.SlideManager manager) {
         manager.making_new_slide = true;
 
-        var slide = manager.new_slide (null, true);
+        var slide = manager.new_slide (new Json.Object (), true);
         slide.reload_preview_data ();
         manager.current_slide = slide;
 

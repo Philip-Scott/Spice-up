@@ -21,6 +21,7 @@
 
 public class Spice.SlideManager : Object {
     public unowned Spice.Window window { get; construct; }
+    public FileFormat.Presentation presentation;
 
     public static int aspect_ratio_override = -1;
 
@@ -160,29 +161,23 @@ public class Spice.SlideManager : Object {
         return """{"current-slide":%d, "preview-slide":%d, "aspect-ratio":%d, "slides": [%s]}""".printf (current_slide_index, preview_slide_index,  current_ratio, data);
     }
 
-    public void load_data (string data) {
+    public void load_data (FileFormat.Presentation presentation) {
         try {
-            var parser = new Json.Parser ();
-            parser.load_from_data (data);
-
-            var root_object = parser.get_root ().get_object ();
-            var slides_array = root_object.get_array_member ("slides");
-
-            var ratio = (int) root_object.get_int_member ("aspect-ratio");
-
             if (aspect_ratio_override != -1) {
-                ratio = aspect_ratio_override;
+                presentation.aspect_ratio = aspect_ratio_override;
                 aspect_ratio_override = -1;
             }
 
-            current_ratio = Spice.AspectRatio.get_mode (ratio);
+            current_ratio = Spice.AspectRatio.get_mode (presentation.aspect_ratio);
             aspect_ratio_changed (current_ratio);
 
-            foreach (var slide_object in slides_array.get_elements ()) {
-                new_slide (slide_object.get_object ());
+            var slides_array = presentation.slides.elements;
+
+            foreach (var slide_object in slides_array) {
+                load_slide (slide_object, false);
             }
 
-            var position = (int) root_object.get_int_member ("current-slide");
+            var position = presentation.current_slide;
             if (slides.size > position && position >= 0) {
                 current_slide = slides[position];
                 current_slide.reload_preview_data ();
@@ -190,13 +185,11 @@ public class Spice.SlideManager : Object {
                 current_slide = slides[0];
             }
 
-            if (root_object.has_member ("preview-slide")) {
-                position = (int) root_object.get_int_member ("preview-slide");
-                if (slides.size > position && position >= 0) {
-                    preview_slide = slides[position];
-                } else {
-                    preview_slide = slides[0];
-                }
+            position = presentation.preview_slide;
+            if (slides.size > position && position >= 0) {
+                preview_slide = slides[position];
+            } else {
+                preview_slide = slides[0];
             }
         } catch (Error e) {
             error ("Error loading file: %s", e.message);
@@ -339,8 +332,15 @@ public class Spice.SlideManager : Object {
 
     private bool propagating_ratio = false;
 
-    public Slide new_slide (Json.Object? save_data = null, bool undoable_action = false) {
-        Slide slide = new Slide (window, save_data);
+    public Slide new_slide (Json.Object save_data = null, bool undoable_action = false) {
+        var slide_data = new Spice.FileFormat.Slide (save_data != null ? save_data : new Json.Object ());
+
+        print (slide_data.background_color);
+        return load_slide (slide_data, undoable_action);
+    }
+
+    private Slide load_slide (Spice.FileFormat.Slide slide_data, bool undoable_action) {
+        Slide slide = new Slide (window, slide_data);
 
         slide.canvas.item_clicked.connect ((item) => {
             current_item = item;
@@ -418,16 +418,17 @@ public class Spice.SlideManager : Object {
 
     public CanvasItem? request_new_item (Spice.CanvasItemType type) {
         CanvasItem? item = null;
+        string item_type = "";
 
         if (type == CanvasItemType.TEXT) {
-            item = new TextItem (current_slide.canvas);
+            item = Utils.canvas_item_from_data (new Json.Object (), current_slide.canvas, "text");
         } else if (type == CanvasItemType.IMAGE) {
             var file = Spice.Services.FileManager.open_image ();
             if (file != null && file.query_exists ()) {
                 item = new ImageItem.from_file (current_slide.canvas, file);
             }
         } else if (type == CanvasItemType.SHAPE) {
-            item = new ColorItem (current_slide.canvas);
+            item = Utils.canvas_item_from_data (new Json.Object (), current_slide.canvas, "color");
         }
 
         if (item != null) {

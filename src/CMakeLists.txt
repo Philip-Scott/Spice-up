@@ -1,14 +1,6 @@
 
 include(ValaPrecompile)
 
-pkg_check_modules (GTK_3_22 QUIET gtk+-3.0>=3.20)
-if (GTK_3_22_FOUND)
-  set (GLOBAL_VALAC_OPTIONS ${GLOBAL_VALAC_OPTIONS} --define=GTK_3_22)
-  message ("-- Compiling for Gtk 3.22")
-else (GTK_3_22_FOUND)
-  message ("-- Compiling for Gtk 3.18")
-endif (GTK_3_22_FOUND)
-
 vala_precompile(VALA_C
   Main.vala
   Application.vala
@@ -27,6 +19,11 @@ vala_precompile(VALA_C
 
   Services/FileFormat/SpiceUpFile.vala
   Services/FileFormat/ZipArchiveHandler.vala
+  Services/FileFormat/JsonObject.vala
+
+  Services/FileFormat/Objects/CanvasItem.vala
+  Services/FileFormat/Objects/Presentation.vala
+  Services/FileFormat/Objects/Slide.vala
 
   Widgets/Canvas.vala
   Widgets/EntryCombo.vala

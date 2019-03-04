@@ -32,17 +32,27 @@ public class Spice.Services.SpiceUpFile : Spice.Services.ZipArchiveHandler {
     }
 
     public void load_file () {
+        string content;
         try {
             open_archive ();
-            string content = Services.FileManager.get_presentation_data (content_file);
-            slide_manager.load_data (content);
+            content = Services.FileManager.get_presentation_data (content_file);
         } catch (Error e) {
             // GZipped file is probably the old format. T
             // Try to use it as content_file as fallback
             debug ("Opening file in legacy mode\n");
 
-            string content = Services.FileManager.get_presentation_data (opened_file);
-            slide_manager.load_data (content);
+            content = Services.FileManager.get_presentation_data (opened_file);
+        }
+
+        try {
+            var parser = new Json.Parser ();
+            parser.load_from_data (content);
+
+            var root_object = parser.get_root ().get_object ();
+            var presentation = new FileFormat.Presentation (root_object);
+            slide_manager.load_data (presentation);
+        } catch (Error e) {
+            error ("Could not load file: %s\n", e.message);
         }
     }
 

@@ -20,8 +20,23 @@
 */
 
 public class Spice.ColorItem : Spice.CanvasItem {
-    public string background_color {get; set; default = "linear-gradient(to bottom, #e00 0%, #e00 100%);"; }
-    public int border_radius {get; set; default = 0; }
+    public unowned FileFormat.ColorItem color_item_data;
+
+    public string background_color {
+        get {
+            return color_item_data.background_color;
+        } set {
+            color_item_data.background_color = value;
+        }
+    }
+
+    public int border_radius {
+        get {
+            return color_item_data.border_radius;
+        } set {
+            color_item_data.border_radius = value;
+        }
+     }
 
     const string TEXT_STYLE_CSS = """
         .colored {
@@ -30,8 +45,11 @@ public class Spice.ColorItem : Spice.CanvasItem {
         }
     """;
 
-    public ColorItem (Canvas? _canvas, Json.Object? _save_data = null) {
+    public ColorItem (Canvas? _canvas, FileFormat.CanvasItem _save_data) {
         Object (canvas: _canvas, save_data: _save_data);
+        color_item_data = (FileFormat.ColorItem) _save_data;
+
+        print (background_color);
         load_data ();
 
         if (canvas != null) style ();
@@ -44,11 +62,7 @@ public class Spice.ColorItem : Spice.CanvasItem {
     }
 
     protected override void load_item_data () {
-        background_color = save_data.get_string_member ("background_color");
 
-        if (save_data.has_member ("border-radius")) {
-            border_radius = (int) save_data.get_int_member ("border-radius");
-        }
     }
 
     public override void style () {
