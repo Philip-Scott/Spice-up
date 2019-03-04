@@ -24,12 +24,12 @@ public class Spice.TextItem : Spice.CanvasItem {
     private Gtk.Label label;
     private Gtk.Stack stack;
 
-    public int justification {get; set; default = 1; }
-    public int align { get; set; default = 1; }
-    public int font_size {get; set; default = 16; }
-    public string font {get; set; default = "Open Sans"; }
-    public string font_color {get; set; default = "#fff"; }
-    public string font_style {get; set; default = "Regular"; }
+    public int justification { get; set; }
+    public int align { get; set; }
+    public int font_size { get; set; }
+    public string font { get; set; }
+    public string font_color { get; set; }
+    public string font_style { get; set; }
 
     public bool setting_text = false;
     public bool first_change_in_edit = false;
@@ -76,8 +76,10 @@ public class Spice.TextItem : Spice.CanvasItem {
         }
     """;
 
-    public TextItem (Canvas? _canvas, Json.Object? _save_data = null) {
-        Object (canvas: _canvas, save_data: _save_data);
+    public unowned FileFormat.TextItem text_item_data;
+
+    public TextItem (Canvas? _canvas, FileFormat.CanvasItem save_data) {
+        Object (canvas: _canvas, save_data: save_data);
 
         entry = new Gtk.TextView ();
         entry.justification = Gtk.Justification.CENTER;
@@ -166,41 +168,28 @@ public class Spice.TextItem : Spice.CanvasItem {
     }
 
     protected override void load_item_data () {
-        string? text_data = null;
-        if (save_data.has_member ("text-data")) {
-            text_data = save_data.get_string_member ("text-data");
-        }
+        text_item_data = (FileFormat.TextItem) save_data;
 
-        if (text_data != null && text_data != "") {
-            this.text = (string) Base64.decode (text_data);
-        } else {
-            var text = save_data.get_string_member ("text");
-            if (text != null) {
-                this.text = text;
-            }
-        }
-
-        font_size = (int) save_data.get_int_member ("font-size");
-        font = save_data.get_string_member ("font");
-
-        if (save_data.has_member ("font-style")) {
-            var _font_style = save_data.get_string_member ("font-style");
-            font_style = _font_style;
-        }
-
-        if (save_data.has_member ("justification")) {
-            int64? justify = save_data.get_int_member ("justification");
-            justification = (int) justify;
-        }
-
-        if (save_data.has_member ("align")) {
-            align = (int) save_data.get_int_member ("align");
-        }
-
-        font_color = save_data.get_string_member ("color");
+        text = (string) Base64.decode (text_item_data.text_data);
+        font_size = text_item_data.font_size;
+        font = text_item_data.font;
+        font_style = text_item_data.font_style;
+        justification = text_item_data.justification;
+        align = text_item_data.align;
+        font_color = text_item_data.color;
     }
 
     protected override string serialise_item () {
+        text_item_data = (FileFormat.TextItem) save_data;
+
+        text_item_data.text_data = (string) Base64.encode (entry.buffer.text.data);
+        text_item_data.font_size = font_size;
+        text_item_data.font = font;
+        text_item_data.font_style = font_style;
+        text_item_data.justification = justification;
+        text_item_data.align = align;
+        text_item_data.color = font_color;
+
         return """"type":"text","text": "","text-data": "%s","font": "%s","color": "%s","font-size": %d, "font-style":"%s", "justification": %d, "align": %d """.printf (Base64.encode (entry.buffer.text.data), font, font_color, font_size, font_style, justification, align);
     }
 

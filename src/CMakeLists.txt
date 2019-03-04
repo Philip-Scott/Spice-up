@@ -27,6 +27,11 @@ vala_precompile(VALA_C
 
   Services/FileFormat/SpiceUpFile.vala
   Services/FileFormat/ZipArchiveHandler.vala
+  Services/FileFormat/JsonObject.vala
+
+  Services/FileFormat/Objects/CanvasItem.vala
+  Services/FileFormat/Objects/Presentation.vala
+  Services/FileFormat/Objects/Slide.vala
 
   Widgets/Canvas.vala
   Widgets/EntryCombo.vala

@@ -52,9 +52,22 @@ public class Spice.Canvas : Gtk.Overlay {
     public CanvasGrid grid;
 
     // Serializable items
-    public Json.Object? save_data = null;
-    public string background_color { get; set; default = "#383E41"; }
-    public string background_pattern { get; set; default = ""; }
+    public Spice.FileFormat.Slide save_data;
+
+    public string background_color {
+        get {
+            return save_data.background_color;
+        } set {
+            save_data.background_color = value;
+        }
+    }
+    public string background_pattern {
+        get {
+            return save_data.background_pattern;
+        } set {
+            save_data.background_pattern = value;
+        }
+    }
 
     const string CANVAS_CSS = """
         .view {
@@ -62,7 +75,7 @@ public class Spice.Canvas : Gtk.Overlay {
         }
     """;
 
-    public Canvas (Spice.Window window, Json.Object? save_data = null) {
+    public Canvas (Spice.Window window, Spice.FileFormat.Slide? save_data) {
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
         this.window = window;
         this.save_data = save_data;
@@ -235,16 +248,6 @@ public class Spice.Canvas : Gtk.Overlay {
 
     public void load_data () {
         if (save_data == null) return;
-
-        var background_color_ = save_data.get_string_member ("background-color");
-        if (background_color != null) {
-            background_color = background_color_;
-        }
-
-        var background_pattern_ = save_data.get_string_member ("background-pattern");
-        if (background_pattern_ != null) {
-            background_pattern = background_pattern_;
-        }
     }
 
     public string serialise () {

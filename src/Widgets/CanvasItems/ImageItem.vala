@@ -20,6 +20,8 @@
 */
 
 public class Spice.ImageItem : Spice.CanvasItem {
+    public unowned FileFormat.ImageItem image_item_data;
+
     public ImageHandler image { get; private set; }
 
     const string IMAGE_STYLE_CSS = """
@@ -51,8 +53,9 @@ public class Spice.ImageItem : Spice.CanvasItem {
         }
     }
 
-    public ImageItem (Canvas? _canvas, Json.Object? _save_data = null) {
+    public ImageItem (Canvas? _canvas, FileFormat.CanvasItem _save_data) {
         Object (canvas: _canvas, save_data: _save_data);
+        image_item_data = (FileFormat.ImageItem) _save_data;
 
         load_data ();
 
@@ -78,21 +81,14 @@ public class Spice.ImageItem : Spice.CanvasItem {
     }
 
     protected override void load_item_data () {
-        string? base64_image = null;
 
-        if (save_data.has_member ("image-data")) {
-            base64_image = save_data.get_string_member ("image-data");
-        }
-
-        if (base64_image != null && base64_image != "") {
-            var extension = save_data.get_string_member ("image");
-            image = new ImageHandler.from_data (canvas.window.current_file, extension, base64_image);
-        } else if (save_data.has_member ("archived-image")) {
+        if (image_item_data.archived_image != "") {
             // CURRENT Method of loading
-            image = new ImageHandler.from_archived_file (canvas != null ? canvas.window.current_file : null, save_data.get_string_member ("archived-image"));
+            image = new ImageHandler.from_archived_file (canvas != null ? canvas.window.current_file : null, image_item_data.archived_image);
+        } else if (image_item_data.image_data != "") {
+            image = new ImageHandler.from_data (canvas.window.current_file, image_item_data.image, image_item_data.image_data);
         } else {
-            var tmp_uri = save_data.get_string_member ("image");
-            image = new ImageHandler.from_file (canvas.window.current_file, File.new_for_uri (tmp_uri));
+            image = new ImageHandler.from_file (canvas.window.current_file, File.new_for_uri (image_item_data.image));
         }
 
         connect_image ();

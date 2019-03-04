@@ -68,14 +68,8 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
     protected int start_w = 0;
     protected int start_h = 0;
 
-    public Json.Object? save_data { protected get; construct; }
     protected bool holding = false;
     protected int holding_id = 0;
-
-    protected int real_width = 0;
-    protected int real_height = 0;
-    protected int real_x = 0;
-    protected int real_y = 0;
 
     protected Gtk.Grid grid;
     protected Gtk.Revealer grabber_revealer;
@@ -86,7 +80,15 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
 
     public unowned Canvas? canvas { protected get; construct; }
 
-    public CanvasItem (Spice.Canvas? _canvas, Json.Object _save_data) {
+    // Serializable items:
+    protected int real_width = 0;
+    protected int real_height = 0;
+    protected int real_x = 0;
+    protected int real_y = 0;
+
+    public FileFormat.CanvasItem save_data { protected get; construct; }
+
+    public CanvasItem (Spice.Canvas? _canvas, FileFormat.CanvasItem _save_data) {
         Object (canvas: _canvas, save_data: _save_data);
     }
 
@@ -94,9 +96,6 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
         events |= Gdk.EventMask.BUTTON_PRESS_MASK;
         events |= Gdk.EventMask.BUTTON_RELEASE_MASK;
         events |= Gdk.EventMask.POINTER_MOTION_MASK;
-
-        real_width = 720;
-        real_height = 510;
 
         var context = get_style_context ();
         context.add_class ("colored");
@@ -168,10 +167,10 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
 
     public void load_data () {
         if (save_data != null) {
-            real_width = (int) save_data.get_int_member ("w");
-            real_height = (int) save_data.get_int_member ("h");
-            real_x = (int) save_data.get_int_member ("x");
-            real_y = (int) save_data.get_int_member ("y");
+            real_width = (int) save_data.w;
+            real_height = (int) save_data.h;
+            real_x = (int) save_data.x;
+            real_y = (int) save_data.y;
 
             load_item_data ();
 
@@ -182,6 +181,11 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
     protected abstract string serialise_item ();
 
     public string serialise () {
+        save_data.x = real_x;
+        save_data.y = real_y;
+        save_data.w = real_width;
+        save_data.h = real_height;
+
         return "{\"x\": %d,\"y\": %d,\"w\": %d,\"h\": %d,%s}\n".printf (real_x, real_y, real_width, real_height, serialise_item ());
     }
 
