@@ -98,7 +98,7 @@ public class Spice.Welcome : Gtk.Box {
             library = null;
         }
 
-        if (files.length > 0 && Granite.Services.System.history_is_enabled () == false) {
+        if (files.length > 0 && Granite.Services.System.history_is_enabled ()) {
             library = new Spice.Widgets.Library.Library (files);
             add (library);
 

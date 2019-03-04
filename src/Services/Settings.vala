@@ -43,7 +43,7 @@ public class Spice.Services.Settings : Granite.Services.Settings {
     }
 
     public void add_file (string file) {
-        if (Granite.Services.System.history_is_enabled ()) return;
+        if (!Granite.Services.System.history_is_enabled ()) return;
 
         var current_files = last_files;
 
