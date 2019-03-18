@@ -3,14 +3,13 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-05 23:01-0600\n"
-"PO-Revision-Date: 2019-03-18 12:46+0100\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2019-03-18 14:09+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Gtranslator 3.32.0\n"
 "Last-Translator: Nico Sonack <nsonack@outlook.com>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "Language: de\n"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Application.vala:29
@@ -221,9 +220,8 @@ msgid "Background pattern"
 msgstr "Hintergrundmuster"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:48
-#, fuzzy
 msgid "3px tile"
-msgstr "3px Kachel"
+msgstr "3px Kachelmuster"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/CanvasBar.vala:49
 msgid "Fabric dark"
@@ -354,11 +352,9 @@ msgstr "Zentriert"
 msgid "Right"
 msgstr "Rechts"
 
-# Context unknown -> has to be translated later
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:35
-#, fuzzy
 msgid "Justify"
-msgstr "Justify"
+msgstr "Blocksatz"
 
 #: /home/felipe/Code/com.github.philip-scott.spice-up/po/../src/Widgets/Toolbars/TextBar.vala:36
 msgid "Top"
