@@ -28,6 +28,18 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.8.1" date="2019-04-30">
+      <description>
+        <p>Privacy Mode and Translations</p>
+        <ul>
+          <li>Spice-Up now respects privacy settings. When enabled, it will not show recently opened presentations.</li>
+          <li>The external templates fetcher service has been removed.</li>
+          <li>French translation updated by NathanBnm</li>
+          <li>German translation added by herrhotzenplotz</li>
+          <li>A big thanks to all the translators for your work!</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.8.0" date="2019-01-20">
       <description>
         <p>Multi-Files and More!</p>
