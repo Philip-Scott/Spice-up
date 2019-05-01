@@ -37,7 +37,6 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     }
 
     public string data { get; construct set; }
-    public string? remote_path {get; construct set; default = null; }
 
     private SlideWidget slide_widget;
     private Gtk.Popover? popover = null;
@@ -50,14 +49,6 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
     public LibraryItem (File file, bool real_file) {
         Object (file: file, real_file: real_file);
         get_thumbnail ();
-    }
-
-    public LibraryItem.from_remote (string data, string file_name, string path) {
-        Object (data: data, remote_path: path);
-
-        title_label.label = file_name;
-        load_thumbnail (data);
-        set_tooltip_text (_("Create Presentation"));
     }
 
     construct {
@@ -205,8 +196,6 @@ public class Spice.Widgets.Library.LibraryItem : Gtk.FlowBoxChild {
                 if (real_file) {
                     get_file_data ();
                     load_thumbnail (Utils.get_thumbnail_data (data));
-                } else if (remote_path != null) {
-                    load_thumbnail (data);
                 } else {
                     get_template_data ();
                     load_thumbnail (Utils.get_thumbnail_data (data));

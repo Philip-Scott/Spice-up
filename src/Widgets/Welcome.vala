@@ -27,14 +27,10 @@ public class Spice.Welcome : Gtk.Box {
     private Granite.Widgets.Welcome welcome;
     private Spice.Widgets.Library.Library? library = null;
     private Spice.Widgets.Library.Library? templates = null;
-    private Spice.Services.Fetcher fetcher;
     private Gtk.Separator separator;
     private Gtk.Stack welcome_stack;
 
     public Welcome () {
-        fetcher = new Spice.Services.Fetcher ();
-        fetcher.fetch_templates ();
-
         orientation = Gtk.Orientation.HORIZONTAL;
         get_style_context ().add_class ("view");
 
@@ -81,8 +77,6 @@ public class Spice.Welcome : Gtk.Box {
                     open_file (file);
                 }
             });
-
-            load_remote_templates ();
         }
 
         welcome_stack.set_visible_child_full ("templates", Gtk.StackTransitionType.SLIDE_RIGHT);
@@ -114,30 +108,5 @@ public class Spice.Welcome : Gtk.Box {
             separator.visible = false;
             separator.no_show_all = true;
         }
-    }
-
-    private void load_remote_templates () {
-        var template_data = fetcher.get_data ();
-        if (template_data == null) return;
-
-        var json_data = Spice.Utils.get_json_object (template_data);
-
-        if (json_data == null) return;
-
-        if (json_data.get_string_member ("version") != Spice.Services.Fetcher.CURRENT_VERSION) return;
-
-        var templates_array = json_data.get_array_member ("templates");
-
-        Idle.add (() => {
-            foreach (var raw in templates_array.get_elements ()) {
-                var template = raw.get_object ();
-                templates.add_remote (
-                    template.get_string_member ("name"),
-                    template.get_string_member ("url"),
-                    template.get_string_member ("preview")
-                );
-            }
-            return GLib.Source.REMOVE;
-        });
     }
 }
