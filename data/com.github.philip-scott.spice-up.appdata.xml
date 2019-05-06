@@ -28,7 +28,7 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
-    <release version="1.8.1" date="2019-04-30">
+    <release version="1.8.2" date="2019-05-05">
       <description>
         <p>Privacy Mode and Translations</p>
         <ul>
