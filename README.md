@@ -65,9 +65,6 @@ You can install Spice-Up from a PPA. But be aware that your results may vary
     sudo apt-get update
     sudo apt-get install com.github.philip-scott.spice-up
 
-### Donations
-Liked Spice-up? Would like to support its development of this app and more? Feel free to [leave a little tip :)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYD9ZJK6ZFUDQ) or support my work torwards a new feature over at [Bountysource](https://www.bountysource.com/trackers/44752823-philip-scott-spice-up). I'd really appreciate it :)
-
 ## Dependencies
 These dependencies must be present before building
  - `gtk+-3.0>=3.9.10`
