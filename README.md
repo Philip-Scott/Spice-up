@@ -82,6 +82,14 @@ cmake ..
 make && sudo make all test install
 ```
 
+### Building on Ubuntu 19.04
+
+```
+sudo apt install libgranite-dev libgee-0.8-dev libgudev-1.0-dev
+```
+
+See also [https://launchpad.net/ubuntu/+source/granite/5.2.3-1/+build/16665433](https://launchpad.net/ubuntu/+source/granite/5.2.3-1/+build/16665433) for libgranite version 5.2.3.
+
 
 <p align="center">
     <img src="data/icons/128/com.github.philip-scott.spice-up.svg" alt="Spice-Up's Icon">
