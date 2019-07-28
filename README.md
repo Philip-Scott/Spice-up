@@ -90,6 +90,14 @@ sudo apt install libgranite-dev libgee-0.8-dev libgudev-1.0-dev
 
 See also [https://launchpad.net/ubuntu/+source/granite/5.2.3-1/+build/16665433](https://launchpad.net/ubuntu/+source/granite/5.2.3-1/+build/16665433) for libgranite version 5.2.3.
 
+Finally, compile the application settings schema: 
+
+```
+sudo cp ./schemas/com.github.philip-scott.spice-up.gschema.xml /usr/share/glib-2.0/schemas/
+sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+gsettings list-schemas | grep com.github
+```
+
 
 <p align="center">
     <img src="data/icons/128/com.github.philip-scott.spice-up.svg" alt="Spice-Up's Icon">
