@@ -38,7 +38,10 @@
 <!--- If you can also run the following command and put the output here, that would be super helpful!  -->
 <!---                   uname -a && cat /etc/os-release          -->
 
+
 ```
+<!--- Also, to avoid tagging other issues or pull requests, please keep this info inside of the ``` tags, thank you! ->
+
 - Spice-Up Version: <!-- From Release, or Commit if compiled from source -->
 - OS Info:
 
