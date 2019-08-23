@@ -151,6 +151,10 @@ GtkToggleButton.spice, .spice,
     background-color: @bg_color;
 }
 
+.fullscreen .app-back {
+    background-color: black;
+}
+
 .remove-padding {
     padding: 0;
 }
