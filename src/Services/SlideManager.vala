@@ -129,7 +129,6 @@ public class Spice.SlideManager : Object {
         }
 
         slides.clear ();
-        ImageHandler.FILE_ID = 0;
 
         reseted ();
     }
@@ -151,7 +150,7 @@ public class Spice.SlideManager : Object {
 
         foreach (var slide in slides) {
             if (slide.visible) {
-                data = data + (data != "" ? "," + slide.serialise () : slide.serialise ());
+                data = data + (data != "" ? "," + slide.serialise (true) : slide.serialise (true));
             }
         }
 

@@ -16,6 +16,9 @@ vala_precompile(VALA_C
   Services/Utils.vala
   Services/GamepadSlideController.vala
 
+  Services/FileFormat/SpiceUpFile.vala
+  Services/FileFormat/ZipArchiveHandler.vala
+
   Widgets/Canvas.vala
   Widgets/EntryCombo.vala
   Widgets/Headerbar.vala

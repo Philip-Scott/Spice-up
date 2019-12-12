@@ -150,10 +150,10 @@ public class Spice.Services.FileManager {
         }
     }
 
-    public static string open_file (File file) {
-        settings.add_file (file.get_path ());
-        return get_presentation_data (file);
-    }
+    //  private static string open_file (File file) {
+    //
+    //      return get_presentation_data (file);
+    //  }
 
     public static void delete_file (File file) {
         if (file != null

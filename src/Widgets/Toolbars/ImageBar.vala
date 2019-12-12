@@ -22,6 +22,7 @@
 public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
     private Gtk.MenuButton open_with;
     private Gtk.Button replace_image;
+    private Gtk.Button unlink_image;
 
     private unowned SlideManager manager;
 
@@ -42,6 +43,22 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
         replace_image.get_style_context ().add_class ("spice");
         replace_image.get_style_context ().add_class ("image-button");
 
+        // FIXME: Add unlink button
+        unlink_image = new Gtk.Button ();
+        unlink_image.add (new Gtk.Image.from_icon_name ("text-html-symbolic", Gtk.IconSize.MENU));
+        unlink_image.set_tooltip_markup (_("Unlink shared file"));
+        unlink_image.get_style_context ().add_class ("spice");
+        unlink_image.get_style_context ().add_class ("image-button");
+
+        unlink_image.clicked.connect (() => {
+            var item = item as Spice.ImageItem;
+
+            if (item != null) {
+                item.image.copy_to_another_file ();
+                unlink_image.sensitive = false;
+            }
+        });
+
         replace_image.clicked.connect (() => {
             var file = Spice.Services.FileManager.open_image ();
 
@@ -53,6 +70,7 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
 
         add (open_with);
         add (replace_image);
+        add (unlink_image);
     }
 
     private void launch_editor (AppInfo app) {
@@ -94,6 +112,8 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
                 warning ("Could not get file info %s", e.message);
                 return;
             }
+
+            unlink_image.sensitive = manager.window.current_file.file_collector.file_references (item.image.current_image_file) > 1;
         }
     }
 
