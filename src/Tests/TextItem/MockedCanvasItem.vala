@@ -6,7 +6,7 @@ public abstract class Spice.CanvasItem : Gtk.EventBox {
     public Canvas canvas { get; set; }
     protected Gtk.Grid? grid = null;
 
-    public CanvasItem (Canvas canvas, Json.Object save_data) {
+    protected CanvasItem (Canvas canvas, Json.Object save_data) {
         Object (canvas: _canvas, save_data: _save_data);
     }
 
