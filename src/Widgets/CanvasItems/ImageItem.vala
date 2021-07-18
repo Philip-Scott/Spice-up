@@ -40,7 +40,7 @@ public class Spice.ImageItem : Spice.CanvasItem {
         }""";
 
     public string extension {
-        get {
+        owned get {
             return image.image_extension;
         }
     }
@@ -62,7 +62,7 @@ public class Spice.ImageItem : Spice.CanvasItem {
     public ImageItem.from_file (Canvas? _canvas, File file) {
         Object (canvas: _canvas, save_data: null);
 
-        this.image = new ImageHandler.from_file (file);
+        this.image = new ImageHandler.from_file (canvas.window.current_file, file);
         connect_image ();
 
         if (canvas != null) style ();
@@ -71,7 +71,7 @@ public class Spice.ImageItem : Spice.CanvasItem {
     public ImageItem.from_data (Canvas? _canvas, string base64_image, string extension) {
         Object (canvas: _canvas, save_data: null);
 
-        this.image = new ImageHandler.from_data (extension, base64_image);
+        this.image = new ImageHandler.from_data (canvas.window.current_file, extension, base64_image);
         connect_image ();
 
         if (canvas != null) style ();
@@ -86,10 +86,13 @@ public class Spice.ImageItem : Spice.CanvasItem {
 
         if (base64_image != null && base64_image != "") {
             var extension = save_data.get_string_member ("image");
-            image = new ImageHandler.from_data (extension, base64_image);
+            image = new ImageHandler.from_data (canvas.window.current_file, extension, base64_image);
+        } else if (save_data.has_member ("archived-image")) {
+            // CURRENT Method of loading
+            image = new ImageHandler.from_archived_file (canvas != null ? canvas.window.current_file : null, save_data.get_string_member ("archived-image"));
         } else {
             var tmp_uri = save_data.get_string_member ("image");
-            image = new ImageHandler.from_file (File.new_for_uri (tmp_uri));
+            image = new ImageHandler.from_file (canvas.window.current_file, File.new_for_uri (tmp_uri));
         }
 
         connect_image ();
@@ -115,6 +118,18 @@ public class Spice.ImageItem : Spice.CanvasItem {
         image.file_changed.connect (() => {
              unstyle ();
              style ();
+        });
+
+        if (canvas != null) {
+            canvas.window.current_file.file_collector.ref_file (image.current_image_file);
+        }
+
+        notify["visible"].connect (() => {
+            if (this.visible) {
+                canvas.window.current_file.file_collector.ref_file (image.current_image_file);
+            } else {
+                canvas.window.current_file.file_collector.unref_file (image.current_image_file);
+            }
         });
     }
 }

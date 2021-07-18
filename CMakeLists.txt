@@ -28,6 +28,7 @@ set (PKG_DEPS
     gudev-1.0
     libevdev
     libsoup-2.4
+    libarchive
 )
 
 set (VALA_DEPS
@@ -39,6 +40,7 @@ set (VALA_DEPS
     libevdev
     linux
     libsoup-2.4
+    libarchive
 )
 
 

@@ -158,9 +158,13 @@ public class Spice.Utils {
     }
 
     public static Spice.CanvasItem? canvas_item_from_data (Json.Object data, Spice.Canvas? canvas) {
-        string type = data.get_string_member ("type");
-        CanvasItem? item = null;
+        string type = "";
 
+        if (data.has_member ("type")) {
+            type = data.get_string_member ("type");
+        }
+
+        CanvasItem? item = null;
         switch (type) {
             case "text":
                 item = new TextItem (canvas, data);

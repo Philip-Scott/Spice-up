@@ -132,7 +132,8 @@ public class Spice.Window : Gtk.ApplicationWindow {
     private PresenterWindow? presenter_window = null;
 
     public Spice.Services.HistoryManager history_manager { get; construct; }
-    public File? current_file { get; private set; default = null; }
+
+    public Spice.Services.SpiceUpFile? current_file { get; private set; default = null; }
 
     public SimpleActionGroup actions { get; private set; }
     public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
@@ -353,7 +354,7 @@ public class Spice.Window : Gtk.ApplicationWindow {
         enable_action_group (presenting_actions, false);
 
         if (current_file != null) {
-            Spice.Application.instance.unregister_file_from_window (current_file);
+            Spice.Application.instance.unregister_file_from_window (current_file.opened_file);
             current_file = null;
         }
     }
@@ -465,42 +466,39 @@ public class Spice.Window : Gtk.ApplicationWindow {
             return;
         }
 
+        settings.add_file (file.get_path ());
         show_editor ();
 
         slide_manager.reset ();
         history_manager.clear_history ();
 
-        current_file = file;
+        current_file = new Services.SpiceUpFile (file, slide_manager);
+        current_file.prepare ();
 
-        string content = Services.FileManager.open_file (current_file);
+        current_file.load_file ();
 
-        slide_manager.load_data (content);
         headerbar.sensitive = true;
         app_stack.set_visible_child_name ("application");
 
-        var basename = current_file.get_basename ();
+        var basename = current_file.opened_file.get_basename ();
 
         var index_of_last_dot = basename.last_index_of (".");
         var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
 
         title = launcher_base;
-        Spice.Application.instance.register_file_to_window (current_file, this);
+        Spice.Application.instance.register_file_to_window (current_file.opened_file, this);
     }
 
     public void save_current_file () {
         if (current_file != null) {
-            if (slide_manager.slide_count () == 0) {
-                Services.FileManager.delete_file (current_file);
-            } else {
-                Services.FileManager.write_file (current_file, slide_manager.serialise ());
-            }
+            current_file.save_file ();
         }
     }
 
     protected override bool delete_event (Gdk.EventAny event) {
         if (current_file != null) {
             save_current_file ();
-            Spice.Application.instance.unregister_file_from_window (current_file);
+            Spice.Application.instance.unregister_file_from_window (current_file.opened_file);
         }
 
         int width, height, x, y;
