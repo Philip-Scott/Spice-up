@@ -27,7 +27,7 @@ namespace Spice {
 public class Spice.Application : Granite.Application {
     public const string PROGRAM_NAME = N_("Spice-Up");
     public const string ABOUT_STOCK = N_("About Spice-Up");
-    public const string APP_ID = "com.github.philip-scott.spice-up";
+    public const string APP_ID = "com.github.philip_scott.spice-up";
     public const string RESOURCE_PATH = "/com/github/philip-scott/spice-up/";
 
     public bool running = false;

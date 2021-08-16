@@ -1,0 +1,43 @@
+app-id: com.github.philip_scott.spice-up
+command: com.github.philip_scott.spice-up
+
+runtime: io.elementary.Platform
+runtime-version: '6'
+sdk: io.elementary.Sdk
+
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+  - '--device=all'      # Required for Controllers 
+  - '--filesystem=home' # Required to read/write files
+  - '--talk-name=org.freedesktop.ScreenSaver' # Required to stop screen from sleeping
+
+modules:
+  - "shared-modules/gudev/gudev.json"
+  - name: libevdev
+    config-opts: 
+      - '--disable-static'
+    cleanup:
+      - /bin
+      - /include
+      - /share/man
+      - /lib/pkgconfig
+      - /lib/*.la
+    sources: 
+      - type: archive
+        url: https://www.freedesktop.org/software/libevdev/libevdev-1.8.0.tar.xz
+        sha256: 20d3cae4efd277f485abdf8f2a7c46588e539998b5a08c2c4d368218379d4211
+
+  - name: spice-up
+    buildsystem: cmake
+    # post-install:
+      # - "sed 's/application-x-spiceup/com.github.philip_scott.spice-up-mime/' /app/share/mime/packages/com.github.philip-scott.spice-up.mime.xml > /app/share/mime/packages/com.github.philip_scott.spice-up.mime.xml"
+      # - "rm /app/share/mime/packages/com.github.philip-scott.spice-up.mime.xml"
+      # - "for icon_size in 16x16 24x24 32x32 48x48 64x64 128x128 scalable; do
+      #       mv /app/share/icons/hicolor/${icon_size}/mimetypes/{application-x-spiceup,com.github.philip_scott.spice-up-mime}.svg
+      #   done"
+    sources:
+      - type: dir
+        path: .
+

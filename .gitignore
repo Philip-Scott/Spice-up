@@ -1,3 +1,6 @@
 src/config.vala
 build/
 *~
+.flatpak-builder
+.buildconfig
+thumb-build
