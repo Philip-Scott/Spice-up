@@ -86,6 +86,9 @@ make && sudo make all test install
 ### Building with Flatpak
 
 ```bash
+# If you are not running elementary OS Odin (0.6), add their flatpak repo
+sudo flatpak remote-add --if-not-exists --system appcenter https://flatpak.elementary.io/repo.flatpakrepo
+
 # Install build and runtime environment
 sudo flatpak install -y appcenter io.elementary.Platform io.elementary.Sdk
 
