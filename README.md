@@ -76,12 +76,25 @@ These dependencies must be present before building
  - `libsoup-2.4`
 
 ## Building
-```
+
+```bash
 mkdir build/ && cd build
 cmake ..
 make && sudo make all test install
 ```
 
+### Building with Flatpak
+
+```bash
+# Install build and runtime environment
+sudo flatpak install -y appcenter io.elementary.Platform io.elementary.Sdk
+
+# Build the app's flatpak
+flatpak-builder build com.github.philip-scott.spice-up.yml --user --install --force-clean
+
+# Run the app
+flatpak run com.github.philip_scott.spice-up
+```
 
 <p align="center">
     <img src="data/icons/128/com.github.philip-scott.spice-up.svg" alt="Spice-Up's Icon">
