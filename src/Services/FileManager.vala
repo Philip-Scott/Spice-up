@@ -25,12 +25,13 @@ public class Spice.Services.FileManager {
     private static File? get_file_from_user (string title, string accept_button_label, Gtk.FileChooserAction chooser_action, List<Gtk.FileFilter> filters) {
         File? result = null;
 
-        var dialog = new Gtk.FileChooserDialog (
+        var dialog = new Gtk.FileChooserNative (
             title,
             Spice.Application.get_active_spice_window (),
             chooser_action,
-            _("Cancel"), Gtk.ResponseType.CANCEL,
-            accept_button_label, Gtk.ResponseType.ACCEPT);
+            accept_button_label,
+            _("Cancel")
+        );
 
         var all_filter = new Gtk.FileFilter ();
         all_filter.set_filter_name ("All Files");
