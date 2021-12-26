@@ -84,5 +84,5 @@ make && sudo make all test install
 
 
 <p align="center">
-    <img src="data/icons/128/com.github.philip-scott.spice-up.svg" alt="Spice-Up's Icon">
+    <img src="data/icons/128/com.github.philip_scott.spice-up.svg" alt="Spice-Up's Icon">
 </p>

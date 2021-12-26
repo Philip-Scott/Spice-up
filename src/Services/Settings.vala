@@ -39,7 +39,7 @@ public class Spice.Services.Settings : Granite.Services.Settings {
     }
 
     private Settings () {
-        base ("com.github.philip-scott.spice-up");
+        base ("com.github.philip_scott.spice-up");
     }
 
     public void add_file (string file) {

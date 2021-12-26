@@ -1,2 +1,2 @@
 include (GSettings)
-add_schema ("com.github.philip-scott.spice-up.gschema.xml")
+add_schema ("com.github.philip_scott.spice-up.gschema.xml")
