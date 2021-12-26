@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    container:
+      image: elementary/docker:unstable
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Dependencies
+      run: |
+        apt update
+        apt install -y libgtk-3-dev libgranite-dev libjson-glib-dev libgudev-1.0-dev libevdev-dev libsoup2.4-dev meson valac
+    - name: Build
+      env:
+        DESTDIR: out
+      run: |
+        meson build
+        ninja -C build install
+
+  lint:
+
+    runs-on: ubuntu-latest
+    
+    container:
+      image: valalang/lint
+      
+    steps:
+    - uses: actions/checkout@v1
+    - name: Lint
+      run: io.elementary.vala-lint -d .
