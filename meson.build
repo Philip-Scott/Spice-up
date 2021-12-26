@@ -13,7 +13,8 @@ add_project_arguments(
         '--define=PLATFORM_LINUX',
         '--pkg=linux',
         '--vapidir', meson.current_source_dir() / 'vapi'
-    ], language: 'vala'
+    ],
+    language: 'vala'
 )
 
 gresource = gnome.compile_resources(
@@ -32,4 +33,5 @@ gudev_dep = dependency('gudev-1.0')
 json_glib_dep = dependency('json-glib-1.0')
 soup_dep = dependency('libsoup-2.4')
 
+subdir('data')
 subdir('src')
