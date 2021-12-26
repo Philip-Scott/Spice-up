@@ -92,3 +92,5 @@ executable(
     dependencies: deps,
     install: true
 )
+
+subdir('Tests')
