@@ -47,7 +47,7 @@ public class Spice.Services.FileManager {
             result = dialog.get_file ();
         }
 
-        dialog.close ();
+        dialog.destroy ();
 
         return result;
     }
