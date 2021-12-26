@@ -27,25 +27,6 @@ jobs:
         meson build
         ninja -C build install
 
-  test:
-    runs-on: ubuntu-latest
-
-    container:
-      image: elementary/docker:unstable
-
-    steps:
-    - uses: actions/checkout@v1
-    - name: Install Dependencies
-      run: |
-        apt update
-        apt install -y libgtk-3-dev libgranite-dev libjson-glib-dev libgudev-1.0-dev libevdev-dev libsoup2.4-dev meson valac
-    - name: Test
-      env:
-        DESTDIR: out
-      run: |
-        meson build
-        ninja -C build test
-
   lint:
     runs-on: ubuntu-latest
 
