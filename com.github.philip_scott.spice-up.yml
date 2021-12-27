@@ -12,7 +12,7 @@ finish-args:
   - '--socket=wayland'
 
   - '--device=all'      # Required for Controllers
-  - '--filesystem=home' # Required to read/write files
+  - '--filesystem=xdg-documents' # Required for library
   - '--talk-name=org.freedesktop.ScreenSaver' # Required to stop screen from sleeping
 
 modules:
