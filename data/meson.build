@@ -9,17 +9,6 @@ foreach i : icon_sizes
         'icons' / i / meson.project_name() + '.svg',
         install_dir: get_option('datadir') / 'icons' / 'hicolor' / i + 'x' + i + '@2' / 'apps'
     )
-
-    install_data(
-        'icons' / i / meson.project_name() + '.svg',
-        install_dir: get_option('datadir') / 'icons' / 'hicolor' / i + 'x' + i / 'mimetypes',
-        rename:  'application-x-spiceup.svg'
-    )
-    install_data(
-        'icons' / i / meson.project_name() + '.svg',
-        install_dir: get_option('datadir') / 'icons' / 'hicolor' / i + 'x' + i + '@2' / 'mimetypes',
-        rename:  'application-x-spiceup.svg'
-    )
 endforeach
 
 install_data(
