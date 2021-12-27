@@ -88,24 +88,24 @@ public class Spice.SlideList : Gtk.Grid {
 
         add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
 
-        var plus_icon = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
-        plus_icon.margin = 3;
-
-        var new_slide_button = new Gtk.Button ();
-
-        new_slide_button.tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NEW_SLIDE, _("Add a Slide"));
-        new_slide_button.get_style_context ().add_class ("new");
-        new_slide_button.add (plus_icon);
-        new_slide_button.set_size_request (WIDTH, 0);
-        new_slide_button.margin = 0;
-        new_slide_button.can_focus = false;
+        var new_slide_button = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR) {
+            always_show_image = true,
+            label = _("Add a Slide"),
+            margin_top = 3,
+            margin_bottom = 3,
+            tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NEW_SLIDE, "")
+        };
+        new_slide_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
 
         new_slide_button.clicked.connect (() => {
             Utils.new_slide (manager);
         });
 
+        var actionbar = new Gtk.ActionBar ();
+        actionbar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        actionbar.add (new_slide_button);
 
-        add (new_slide_button);
+        add (actionbar);
 
         foreach (var slide in manager.slides) {
             add_slide (slide);
