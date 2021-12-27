@@ -66,10 +66,7 @@ vala_files = [
 
     'Services' / 'libgamepad' / 'drivers' / 'linux' / 'guid-helpers.vala',
     'Services' / 'libgamepad' / 'drivers' / 'linux' / 'raw-gamepad.vala',
-    'Services' / 'libgamepad' / 'drivers' / 'linux' / 'raw-gamepad-monitor.vala',
-
-    # Granite Staging
-    'GraniteStaging' / 'Inhibitor.vala'
+    'Services' / 'libgamepad' / 'drivers' / 'linux' / 'raw-gamepad-monitor.vala'
 ]
 
 deps = [

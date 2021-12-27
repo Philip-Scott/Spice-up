@@ -57,5 +57,3 @@ src/Services/libgamepad/standard-gamepad-button.vala
 src/Services/libgamepad/drivers/linux/guid-helpers.vala
 src/Services/libgamepad/drivers/linux/raw-gamepad.vala
 src/Services/libgamepad/drivers/linux/raw-gamepad-monitor.vala
-
-src/GraniteStaging/Inhibitor.vala'

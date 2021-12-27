@@ -22,6 +22,8 @@
 public class Spice.Window : Gtk.ApplicationWindow {
     const Gtk.TargetEntry[] DRAG_TARGETS = {{ "text/uri-list", 0, 0 }};
 
+    private uint inhibit_token = 0;
+
     int old_x;
     int old_y;
     bool? notifications_last_state = null;
@@ -62,7 +64,14 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 notifications_last_state = get_do_not_disturb_value ();
                 set_do_not_disturb_value (true);
 
-                Granite.Staging.Services.Inhibitor.get_instance ().inhibit ("Spice-Up Presentation");
+                if (inhibit_token == 0) {
+                    inhibit_token = application.inhibit (
+                    application.get_active_window (),
+                        Gtk.ApplicationInhibitFlags.IDLE | Gtk.ApplicationInhibitFlags.SUSPEND,
+                        _("Spice-Up Presentation")
+                    );
+                }
+
                 enable_action_group (editing_actions, false);
                 enable_action_group (presenting_actions, true);
 
@@ -80,7 +89,11 @@ public class Spice.Window : Gtk.ApplicationWindow {
                 set_do_not_disturb_value (notifications_last_state);
                 notifications_last_state = null;
 
-                Granite.Staging.Services.Inhibitor.get_instance ().uninhibit ();
+                if (inhibit_token != 0) {
+                    application.uninhibit (inhibit_token);
+                    inhibit_token = 0;
+                }
+
                 enable_action_group (editing_actions, true);
                 enable_action_group (presenting_actions, false);
                 motion_notify_event.disconnect (request_to_hide_mouse);
