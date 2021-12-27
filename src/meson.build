@@ -51,32 +51,15 @@ vala_files = [
     'Widgets' / 'Toolbars' / 'Toolbar.vala',
 
     'Widgets' / 'Library' / 'LibraryItem.vala',
-    'Widgets' / 'Library' / 'Library.vala',
-
-    # LibGamepad
-    'Services' / 'libgamepad' / 'libgamepad.vala',
-    'Services' / 'libgamepad' / 'gamepad-monitor.vala',
-    'Services' / 'libgamepad' / 'gamepad.vala',
-    'Services' / 'libgamepad' / 'helpers.vala',
-    'Services' / 'libgamepad' / 'input-type.vala',
-    'Services' / 'libgamepad' / 'raw-gamepad-interface.vala',
-    'Services' / 'libgamepad' / 'raw-gamepad-monitor-interface.vala',
-    'Services' / 'libgamepad' / 'standard-gamepad-axis.vala',
-    'Services' / 'libgamepad' / 'standard-gamepad-button.vala',
-
-    'Services' / 'libgamepad' / 'drivers' / 'linux' / 'guid-helpers.vala',
-    'Services' / 'libgamepad' / 'drivers' / 'linux' / 'raw-gamepad.vala',
-    'Services' / 'libgamepad' / 'drivers' / 'linux' / 'raw-gamepad-monitor.vala'
+    'Widgets' / 'Library' / 'Library.vala'
 ]
 
 deps = [
-    evdev_dep,
     gee_dep,
     glib_dep,
     gobject_dep,
     granite_dep,
     gtk_dep,
-    gudev_dep,
     json_glib_dep,
     soup_dep,
 ]
