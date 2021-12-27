@@ -71,27 +71,27 @@ public class Spice.Services.HistoryManager : Object {
 
         private void get_item_property () {
             value = Value (typeof (T));
-            (item as Object).get_property (property, ref value);
+            ((Object) item).get_property (property, ref value);
         }
 
         public void action () {
             if (history_type != HistoryActionType.ITEM_DEPTH) {
                 var temp = Value (typeof (T));
-                (item as Object).get_property (property, ref temp);
-                (item as Object).set_property (property, value);
+                ((Object) item).get_property (property, ref temp);
+                ((Object) item).set_property (property, value);
 
                 if (history_type == HistoryActionType.ITEM_CHANGED) {
-                    (item as CanvasItem).style ();
+                    ((CanvasItem) item).style ();
                 } else if (history_type == HistoryActionType.CANVAS_CHANGED) {
-                    (item as Canvas).style ();
+                    ((Canvas) item).style ();
                 }
 
                 this.value = temp;
             } else {
                 if (value.get_boolean ()) {
-                    parent.move_down (item as CanvasItem, false);
+                    parent.move_down ((CanvasItem) item, false);
                 } else {
-                    parent.move_up (item as CanvasItem, false);
+                    parent.move_up ((CanvasItem) item, false);
                 }
 
                 value.set_boolean (!value.get_boolean ());
@@ -114,7 +114,7 @@ public class Spice.Services.HistoryManager : Object {
 
         if (force_add || last_action == null
         || last_action.property != action.property
-        || (last_action as HistoryAction<CanvasItem,string>).item != (action as HistoryAction<CanvasItem,string>).item) {
+        || ((HistoryAction<CanvasItem,string>) last_action).item != ((HistoryAction<CanvasItem,string>) action).item) {
             undo_history.push_head (action);
         }
 
@@ -134,7 +134,7 @@ public class Spice.Services.HistoryManager : Object {
         item.action ();
 
         if (item.history_type != HistoryActionType.CANVAS_CHANGED) {
-            action_called ((item as HistoryAction<CanvasItem,string>).item);
+            action_called (((HistoryAction<CanvasItem,string>) item).item);
         } else {
             action_called (null);
         }
@@ -154,7 +154,7 @@ public class Spice.Services.HistoryManager : Object {
         item.action ();
 
         if (item.history_type != HistoryActionType.CANVAS_CHANGED) {
-            action_called ((item as HistoryAction<CanvasItem,string>).item);
+            action_called (((HistoryAction<CanvasItem,string>) item).item);
         } else {
            action_called (null);
         }
