@@ -2,7 +2,7 @@
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
     <mime-type type="application/x-spiceup">
         <comment>Spice-Up Presentation</comment>
-        <icon name="application-x-spiceup"/>
+        <icon name="com.github.philip_scott.spice-up"/>
         <glob-deleteall/>
         <glob pattern="*.spice"/>
     </mime-type>

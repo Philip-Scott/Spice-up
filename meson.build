@@ -1,5 +1,5 @@
 project(
-    'com.github.philip-scott.spice-up',
+    'com.github.philip_scott.spice-up',
     'vala', 'c',
     version: '0.7'
 )

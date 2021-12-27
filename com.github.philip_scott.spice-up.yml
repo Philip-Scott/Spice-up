@@ -1,0 +1,63 @@
+app-id: com.github.philip_scott.spice-up
+
+runtime: io.elementary.Platform
+runtime-version: '6.1'
+sdk: io.elementary.Sdk
+
+command: com.github.philip_scott.spice-up
+
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+
+  - '--device=all'      # Required for Controllers
+  - '--filesystem=xdg-documents' # Required for library
+
+modules:
+  - name: gudev
+    config-opts:
+      - '--disable-umockdev'
+      - '--disable-gtk-doc'
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/GNOME/libgudev.git
+        tag: '234'
+
+  - name: libevdev
+    buildsystem: meson
+    config-opts:
+      - -Dtests=disabled
+      - -Ddocumentation=disabled
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+      - /share
+    sources:
+      - type: archive
+        url: https://www.freedesktop.org/software/libevdev/libevdev-1.12.0.tar.xz
+        sha256: 2f729e3480695791f9482e8388bd723402b89f0eaf118057bbdea3cecee9b237
+        x-checker-data:
+          type: anitya
+          project-id: 20540
+          stable-only: true
+          url-template: https://www.freedesktop.org/software/libevdev/libevdev-$version.tar.xz
+
+  - name: libsoup
+    builddir: true
+    buildsystem: meson
+    config-opts:
+      - "-Dtests=false"
+      - "-Dvapi=disabled"
+      - "-Dintrospection=disabled"
+    sources:
+      - type: archive
+        url: https://gitlab.gnome.org/GNOME/libsoup/-/archive/2.68.2/libsoup-2.68.2.tar.gz
+        sha256: a2a44f8b8eb5e145c5dff473f6d8c5b8f1addcf4e6f12223b4705c7fcc6c29b6
+
+  - name: spice-up
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .

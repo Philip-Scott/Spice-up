@@ -25,7 +25,7 @@
 <!--- Providing context helps us come up with a solution that is most useful in the real world -->
 <!--- If you have a terminal output you can share with us that would also be great! -->
 
-<!--- To get debug messages: G_MESSAGES_DEBUG=all com.github.philip-scott.spice-up -->
+<!--- To get debug messages: G_MESSAGES_DEBUG=all com.github.philip_scott.spice-up -->
 
 <!--- Sharing the .spice file where the problem is at will also be super helpful. -->
 
