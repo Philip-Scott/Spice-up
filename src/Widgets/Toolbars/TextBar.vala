@@ -159,7 +159,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         });
 
         justification.mode_changed.connect ((widget) => {
-            align_button_image.icon_name = (widget as Gtk.Image).icon_name;
+            align_button_image.icon_name = ((Gtk.Image) widget).icon_name;
 
             if (!selecting) {
                 var action = new Spice.Services.HistoryManager.HistoryAction<TextItem,int>.item_changed (this.item as TextItem, "justification");
