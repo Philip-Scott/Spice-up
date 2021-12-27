@@ -56,7 +56,6 @@ public class Spice.Application : Granite.Application {
 
         opened_files = new Gee.HashMap<string, Spice.Window>();
         settings = Spice.Services.Settings.get_instance ();
-        Granite.Staging.Services.Inhibitor.initialize (this);
     }
 
     public override void open (File[] files, string hint) {
