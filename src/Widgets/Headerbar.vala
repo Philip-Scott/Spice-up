@@ -119,7 +119,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
         Gtk.Image show_notes_image = new Gtk.Image.from_icon_name ("accessories-text-editor-symbolic", Gtk.IconSize.BUTTON);
         show_notes_image.margin = 3;
 
-        show_notes.get_style_context ().add_class ("spice");
+        show_notes.get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
         show_notes.tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NOTES, _("Presenter Notes"));
         show_notes.add (show_notes_image);
 
@@ -187,7 +187,7 @@ public class Spice.Headerbar : Gtk.HeaderBar {
             Gtk.Image image = new Gtk.Image.from_icon_name (icon_name, Gtk.IconSize.BUTTON);
             image.margin = 3;
 
-            get_style_context ().add_class ("spice");
+            get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
             set_tooltip_markup (description);
             this.add (image);
         }

@@ -87,7 +87,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         align_button_image = new Gtk.Image.from_icon_name ("format-justify-fill-symbolic", Gtk.IconSize.MENU);
 
         var align_button = new Gtk.Button ();
-        align_button.get_style_context ().add_class ("spice");
+        align_button.get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
         align_button.set_tooltip_text (_("Align"));
         align_button.add (align_button_image);
 
@@ -116,7 +116,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         justification.append_icon ("format-justify-fill-symbolic", Gtk.IconSize.MENU);
 
         foreach (var child in justification.get_children ()) {
-            child.get_style_context ().add_class ("spice");
+            child.get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
         }
 
         align = new Granite.Widgets.ModeButton ();
@@ -130,7 +130,7 @@ public class Spice.Widgets.TextToolbar : Spice.Widgets.Toolbar {
         align.append (new Gtk.Image.from_resource ("/com/github/philip-scott/spice-up/align-bottom-symbolic"));
 
         foreach (var child in align.get_children ()) {
-            child.get_style_context ().add_class ("spice");
+            child.get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
         }
 
         add (text_color_button);
