@@ -101,9 +101,9 @@ public class Spice.Headerbar : Gtk.HeaderBar {
 
         undo = new HeaderbarButton (this, "edit-undo-symbolic", Utils.get_accel_tooltip (Window.ACTION_UNDO, _("Undo")));
         redo = new HeaderbarButton (this, "edit-redo-symbolic", Utils.get_accel_tooltip (Window.ACTION_REDO, _("Redo")));
-        text = new HeaderbarButton (this, "text-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_TEXT, _("Insert Text Box")));
-        image = new HeaderbarButton (this, "photo-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_IMG, _("Insert Image")));
-        shape = new HeaderbarButton (this, "shape-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_SHAPE, _("Insert Shape")));
+        text = new HeaderbarButton (this, "insert-text-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_TEXT, _("Insert Text Box")));
+        image = new HeaderbarButton (this, "insert-image-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_IMG, _("Insert Image")));
+        shape = new HeaderbarButton (this, "insert-object-symbolic", Utils.get_accel_tooltip (Window.ACTION_INSERT_SHAPE, _("Insert Shape")));
         show_welcome = new HeaderbarButton (this, "document-open-symbolic", Utils.get_accel_tooltip (Window.ACTION_SHOW_WELCOME, _("Return to Welcome Screen")));
 
         undo.sensitive = false;
