@@ -26,10 +26,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
 
     int old_x;
     int old_y;
-    bool? notifications_last_state = null;
-
-    GLib.SettingsSchema? gala_notify_schema = null;
-    Settings? gala_notify_settings = null;
 
     public bool is_presenting {
         public get {
@@ -60,10 +56,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
                     presenter_window.show ();
                 }
 
-                // set Gala Notifications
-                notifications_last_state = get_do_not_disturb_value ();
-                set_do_not_disturb_value (true);
-
                 if (inhibit_token == 0) {
                     inhibit_token = application.inhibit (
                     application.get_active_window (),
@@ -85,9 +77,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
                     presenter_window.destroy ();
                     presenter_window = null;
                 }
-
-                set_do_not_disturb_value (notifications_last_state);
-                notifications_last_state = null;
 
                 if (inhibit_token != 0) {
                     application.uninhibit (inhibit_token);
@@ -526,8 +515,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
         settings.window_width = width;
         settings.window_height = height;
 
-        set_do_not_disturb_value (notifications_last_state);
-
         return false;
     }
 
@@ -535,28 +522,6 @@ public class Spice.Window : Gtk.ApplicationWindow {
         show_all ();
         show ();
         present ();
-    }
-
-    public bool? get_do_not_disturb_value () {
-        if (gala_notify_schema == null) {
-            gala_notify_schema = SettingsSchemaSource.get_default ().lookup ("org.pantheon.desktop.gala.notifications", true);
-            if (gala_notify_schema == null || !gala_notify_schema.has_key ("do-not-disturb")) {
-                gala_notify_schema = null;
-                warning ("Notifications will not be disabled");
-                return null;
-            }
-        }
-
-        if (gala_notify_settings == null) {
-            gala_notify_settings = new GLib.Settings ("org.pantheon.desktop.gala.notifications");
-        }
-
-        return gala_notify_settings.get_boolean ("do-not-disturb");
-    }
-
-    public void set_do_not_disturb_value (bool? state) {
-        if (state == null || gala_notify_settings == null) return;
-        gala_notify_settings.set_boolean ("do-not-disturb", state);
     }
 
     public void enable_action_group (string[] action_group, bool enabled) {
