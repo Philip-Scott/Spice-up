@@ -33,13 +33,13 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
         open_with = new Gtk.MenuButton ();
         open_with.add (new Gtk.Image.from_icon_name ("applications-graphics-symbolic", Gtk.IconSize.MENU));
         open_with.set_tooltip_text (_("Edit image with…"));
-        open_with.get_style_context ().add_class ("spice");
+        open_with.get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
         open_with.get_style_context ().add_class ("image-button");
 
         replace_image = new Gtk.Button ();
         replace_image.add (new Gtk.Image.from_icon_name ("document-new-symbolic", Gtk.IconSize.MENU));
         replace_image.set_tooltip_text (_("Replace Image…"));
-        replace_image.get_style_context ().add_class ("spice");
+        replace_image.get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
         replace_image.get_style_context ().add_class ("image-button");
 
         replace_image.clicked.connect (() => {
