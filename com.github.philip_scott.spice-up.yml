@@ -13,7 +13,6 @@ finish-args:
 
   - '--device=all'      # Required for Controllers
   - '--filesystem=xdg-documents' # Required for library
-  - '--talk-name=org.freedesktop.ScreenSaver' # Required to stop screen from sleeping
 
 modules:
   - name: gudev
