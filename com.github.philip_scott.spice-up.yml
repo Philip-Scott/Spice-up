@@ -58,7 +58,7 @@ modules:
         sha256: a2a44f8b8eb5e145c5dff473f6d8c5b8f1addcf4e6f12223b4705c7fcc6c29b6
 
   - name: spice-up
-    buildsystem: cmake
+    buildsystem: meson
     sources:
       - type: dir
         path: .
