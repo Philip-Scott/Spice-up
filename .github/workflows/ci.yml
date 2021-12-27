@@ -37,7 +37,7 @@ jobs:
         with:
           bundle: spice-up.flatpak
           manifest-path: com.github.philip_scott.spice-up.yml
-          run-tests: true
+          run-tests: false
           repository-name: appcenter
           repository-url: https://flatpak.elementary.io/repo.flatpakrepo
           cache-key: "flatpak-builder-${{ github.sha }}"
