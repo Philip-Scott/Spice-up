@@ -43,17 +43,3 @@ src/Widgets/Toolbars/Toolbar.vala
 
 src/Widgets/Library/LibraryItem.vala
 src/Widgets/Library/Library.vala
-
-src/Services/libgamepad/libgamepad.vala
-src/Services/libgamepad/gamepad-monitor.vala
-src/Services/libgamepad/gamepad.vala
-src/Services/libgamepad/helpers.vala
-src/Services/libgamepad/input-type.vala
-src/Services/libgamepad/raw-gamepad-interface.vala
-src/Services/libgamepad/raw-gamepad-monitor-interface.vala
-src/Services/libgamepad/standard-gamepad-axis.vala
-src/Services/libgamepad/standard-gamepad-button.vala
-
-src/Services/libgamepad/drivers/linux/guid-helpers.vala
-src/Services/libgamepad/drivers/linux/raw-gamepad.vala
-src/Services/libgamepad/drivers/linux/raw-gamepad-monitor.vala
