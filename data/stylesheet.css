@@ -45,6 +45,7 @@
     background: rgba(255, 255, 255, 0.5);
     box-shadow: none;
     border: 1.4px solid rgba(0,0,0,0.6);
+    padding: 3px;
 }
 
 .gradient.circular.selected {

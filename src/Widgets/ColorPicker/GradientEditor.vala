@@ -300,7 +300,7 @@ public class Spice.GradientEditor : Gtk.Grid {
         construct {
             vexpand = true;
             halign = Gtk.Align.START;
-            width_request = 32;
+            width_request = 30;
             grid = new Gtk.EventBox ();
             add (grid);
         }
