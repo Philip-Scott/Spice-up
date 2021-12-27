@@ -1,0 +1,5 @@
+subdir('Canvas')
+subdir('ColorButton')
+subdir('ColorItem')
+subdir('ImageItem')
+subdir('TextItem')
