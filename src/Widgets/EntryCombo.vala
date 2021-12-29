@@ -87,19 +87,23 @@ public class Spice.EntryCombo : Gtk.Box {
     private bool outsize_set = false;
     private bool strict_signal = false;
 
+    class construct {
+        set_css_name ("button");
+    }
+
     // If strict_signal == true, it will only send activated if the entry is the same as a value on the list
     public EntryCombo (bool strict_signal = false, bool alphabetize = false, bool searchable = false) {
         this.strict_signal = strict_signal;
-        get_style_context ().add_class ("spice");
         get_style_context ().add_class ("padding-none");
 
         row_map = new Gee.HashMap<string, Gtk.ListBoxRow> ();
         keys = new Gee.HashMap<string, string> ();
 
         entry_button_stack = new Gtk.Stack ();
-        entry_button_stack.margin = 3;
 
-        entry = new Gtk.Entry ();
+        entry = new Gtk.Entry () {
+            margin = 3
+        };
 
         listbox = new Gtk.ListBox ();
         listbox.margin_top = listbox.margin_bottom = 3;
@@ -108,14 +112,16 @@ public class Spice.EntryCombo : Gtk.Box {
         substitute_label = new Gtk.Label ("");
         substitute_label.halign = Gtk.Align.START;
 
-        var entry_substitute = new Gtk.Button ();
+        var entry_substitute = new Gtk.Button () {
+            can_focus = false,
+            margin= 3
+        };
         entry_substitute.get_style_context ().add_class ("flat");
         entry_substitute.add (substitute_label);
-        entry_substitute.can_focus = false;
 
         button = new Gtk.Button.from_icon_name ("pan-down-symbolic", Gtk.IconSize.MENU);
         button.get_style_context ().add_class ("flat");
-        button.get_child ().margin = 4;
+        button.get_child ().margin = 3;
         button.can_focus = false;
 
         scroll = new Gtk.ScrolledWindow (null, null);

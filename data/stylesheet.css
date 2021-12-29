@@ -2,7 +2,7 @@
 @define-color colorAccent @SLATE_100;
 
 .padding-none {
-    padding: 0px;
+    padding: 0;
 }
 
 .icon-shadow {
@@ -83,10 +83,6 @@ GtkToggleButton.raised,
 
 .spice-dynamic-toolbar .raised .entry {
     padding: 0 3px;
-}
-
-.spice-dynamic-toolbar .raised.padding-none {
-    padding: 0;
 }
 
 .spice-scale {
