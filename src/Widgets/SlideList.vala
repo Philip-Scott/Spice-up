@@ -20,29 +20,45 @@
 */
 
 public class Spice.SlideList : Gtk.Grid {
+    public unowned SlideManager manager { get; construct; }
+
     public static int WIDTH = 200;
     public static int HEIGHT = 150;
 
     private Gtk.ListBox slides_list;
-    private unowned SlideManager manager;
 
     public SlideList (SlideManager manager) {
+        Object (manager: manager);
+    }
+
+    construct {
         orientation = Gtk.Orientation.VERTICAL;
         get_style_context ().add_class ("slide-list");
 
-        this.manager = manager;
+        slides_list = new Gtk.ListBox () {
+            vexpand = true
+        };
 
-        var scrollbox = new Gtk.ScrolledWindow (null, null);
-        scrollbox.hscrollbar_policy = Gtk.PolicyType.NEVER;
-        scrollbox.vexpand = true;
-
-        slides_list = new Gtk.ListBox ();
-        slides_list.get_style_context ().add_class ("linked");
-        slides_list.get_style_context ().add_class ("slide-list");
-        slides_list.vexpand = true;
-
+        var scrollbox = new Gtk.ScrolledWindow (null, null) {
+            hscrollbar_policy = Gtk.PolicyType.NEVER
+        };
         scrollbox.add (slides_list);
+
+        var new_slide_button = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR) {
+            always_show_image = true,
+            label = _("Add a Slide"),
+            margin_top = 3,
+            margin_bottom = 3,
+            tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NEW_SLIDE, "")
+        };
+        new_slide_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+
+        var actionbar = new Gtk.ActionBar ();
+        actionbar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        actionbar.add (new_slide_button);
+
         add (scrollbox);
+        add (actionbar);
 
         slides_list.row_selected.connect ((row) => {
             if (row is SlideListRow) {
@@ -86,26 +102,9 @@ public class Spice.SlideList : Gtk.Grid {
             else return 0;
         });
 
-        add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
-
-        var new_slide_button = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR) {
-            always_show_image = true,
-            label = _("Add a Slide"),
-            margin_top = 3,
-            margin_bottom = 3,
-            tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NEW_SLIDE, "")
-        };
-        new_slide_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
-
         new_slide_button.clicked.connect (() => {
             Utils.new_slide (manager);
         });
-
-        var actionbar = new Gtk.ActionBar ();
-        actionbar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
-        actionbar.add (new_slide_button);
-
-        add (actionbar);
 
         foreach (var slide in manager.slides) {
             add_slide (slide);
@@ -129,6 +128,12 @@ public class Spice.SlideList : Gtk.Grid {
 
         private SlideWidget slide_widget;
 
+        private const string STYLE_CSS = """
+            .list-row:active {
+                opacity: 0.90;
+            }
+        """;
+
         public SlideListRow (Slide slide, SlideManager manager) {
             this.slide = slide;
             this.manager = manager;
@@ -150,20 +155,10 @@ public class Spice.SlideList : Gtk.Grid {
                 this.show_all ();
             });
 
-            style ();
-        }
-
-        public void style () {
             Utils.set_style (this, STYLE_CSS);
         }
 
-        private const string STYLE_CSS = """
-            .list-row:active {
-                opacity: 0.90;
-            }
-        """;
-
-        public void show_rightclick_menu () {
+        private void show_rightclick_menu () {
             var menu = new Gtk.Menu ();
 
             var cut = new Gtk.MenuItem.with_label (_("Cut"));
