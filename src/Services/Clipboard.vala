@@ -53,17 +53,17 @@ public class Spice.Clipboard {
             case Target.STRING:
                 debug ("String requested\n");
                 if (object_ref is Spice.TextItem) {
-                    selection_data.set_text ((object_ref as Spice.TextItem).text, -1);
+                    selection_data.set_text (((Spice.TextItem) object_ref).text, -1);
                 }
                 break;
             case Target.IMAGE:
                 debug ("Image requested\n");
                 if (object_ref is Spice.ImageItem) {
-                    var image_item = object_ref as Spice.ImageItem;
+                    var image_item = (Spice.ImageItem) object_ref;
                     var pixbuf = new Gdk.Pixbuf.from_file (image_item.image.url);
                     selection_data.set_pixbuf (pixbuf);
                 } else if (object_ref is Gdk.Pixbuf) {
-                    var pixbuf = (object_ref as Gdk.Pixbuf);
+                    var pixbuf = (Gdk.Pixbuf) object_ref;
                     selection_data.set_pixbuf (pixbuf);
                 }
                 break;
@@ -90,7 +90,7 @@ public class Spice.Clipboard {
 
         // Use the pase operation of the textItem
         if (object == manager.current_item && object is Spice.TextItem) {
-            var text_entry = (object as Spice.TextItem).entry;
+            var text_entry = ((Spice.TextItem) object).entry;
             if (text_entry.buffer.get_has_selection ()) {
                 text_entry.copy_clipboard ();
                 return;
@@ -115,8 +115,8 @@ public class Spice.Clipboard {
 
         if (object is Spice.CanvasItem) {
             object_ref = Utils.canvas_item_from_data (Utils.get_json_object (object_data), null);
-        } else {
-            object_ref = (object as Spice.Slide).canvas.surface.load_to_pixbuf ();
+        } else if (object is Spice.Slide) {
+            object_ref = ((Spice.Slide) object).canvas.surface.load_to_pixbuf ();
         }
     }
 
@@ -141,7 +141,7 @@ public class Spice.Clipboard {
 
         // Use the pase operation of the textItem
         if (text_atom != null && image_atom == null && manager.current_item is Spice.TextItem) {
-            (manager.current_item as Spice.TextItem).entry.paste_clipboard ();
+            ((Spice.TextItem) manager.current_item).entry.paste_clipboard ();
             return;
         }
 
@@ -178,8 +178,8 @@ public class Spice.Clipboard {
                 var data = (string) raw_data.get_data ();
                 if (data == null) return;
 
-                var item = manager.request_new_item (Spice.CanvasItemType.TEXT);
-                (item as Spice.TextItem).text = data;
+                var item = (Spice.TextItem) manager.request_new_item (Spice.CanvasItemType.TEXT);
+                item.text = data;
             });
         } else {
             // Show an error instead of silently failing
@@ -191,7 +191,7 @@ public class Spice.Clipboard {
         if (object == null) return;
 
         if (object == manager.current_item && object is Spice.TextItem) {
-            var text_entry = (object as Spice.TextItem).entry;
+            var text_entry = ((Spice.TextItem) object).entry;
             if (text_entry.buffer.get_has_selection ()) {
                 text_entry.cut_clipboard ();
                 return;
@@ -207,9 +207,9 @@ public class Spice.Clipboard {
         if (object == null) return;
 
         if (object is Spice.CanvasItem) {
-            (object as Spice.CanvasItem).delete ();
+            ((Spice.CanvasItem) object).delete ();
         } else if (object is Spice.Slide) {
-            (object as Slide).delete ();
+            ((Slide) object).delete ();
         }
     }
 
@@ -217,9 +217,9 @@ public class Spice.Clipboard {
         if (object == null) return "";
 
         if (object is Spice.CanvasItem) {
-            return (object as Spice.CanvasItem).serialise ();
+            return ((Spice.CanvasItem) object).serialise ();
         } else if (object is Spice.Slide) {
-            return (object as Slide).serialise ();
+            return ((Slide) object).serialise ();
         } else {
             return "";
         }

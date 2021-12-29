@@ -219,11 +219,11 @@ public class Spice.ColorChooser : ColorButton {
         hue_scale.expand = true;
         hue_scale.draw_value = false;
 
-        foreach (var child in container.get_children ()) {
+        foreach (unowned var child in container.get_children ()) {
             if (child.visible) {
-                var color_editor = (child as Gtk.Container).get_children ().nth_data (0);
-                var overlay = (color_editor as Gtk.Container).get_children ().nth_data (0);
-                var grid = (overlay as Gtk.Container).get_children ().nth_data (0) as Gtk.Grid;
+                var color_editor = ((Gtk.Container) child).get_children ().nth_data (0);
+                var overlay = ((Gtk.Container) color_editor).get_children ().nth_data (0);
+                var grid = (Gtk.Grid)((Gtk.Container) overlay).get_children ().nth_data (0);
 
                 foreach (var picker_part in grid.get_children ()) {
                     switch (picker_part.name) {
