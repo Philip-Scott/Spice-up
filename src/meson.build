@@ -8,7 +8,6 @@ config_file = configure_file(
 
 vala_files = [
     'Application.vala',
-    'Main.vala',
     'Window.vala',
 
     'Services' / 'Clipboard.vala',
