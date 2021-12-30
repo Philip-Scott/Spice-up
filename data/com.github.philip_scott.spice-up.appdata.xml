@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2016-2018 Felipe Escoto (https://github.com/Philip-Scott/Spice-up) -->
+<!-- Copyright (c) 2016-2021 Felipe Escoto (https://github.com/Philip-Scott/Spice-up) -->
 <component type="desktop">
   <id>com.github.philip_scott.spice-up</id>
   <metadata_license>CC0-1.0</metadata_license>
@@ -28,6 +28,15 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.9.0" date="2021-12-29">
+      <description>
+        <p>Now on elementary 6+</p>
+        <ul>
+          <li>Updated and packed Spice-Up for elementary 6+</li>
+          <li>Modernized icons and parts of the code</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.8.2" date="2019-05-05">
       <description>
         <p>Privacy Mode and Translations</p>
@@ -202,9 +211,6 @@
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot3.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot4.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">
