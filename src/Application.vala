@@ -19,16 +19,20 @@
 * Authored by: Felipe Escoto <felescoto95@hotmail.com>
 */
 
+public static bool DEBUG = false;
+
 namespace Spice {
     public Spice.Services.Settings settings;
     public string DATA_DIR;
 }
 
-public class Spice.Application : Granite.Application {
+public class Spice.Application : Gtk.Application {
     public const string PROGRAM_NAME = N_("Spice-Up");
     public const string ABOUT_STOCK = N_("About Spice-Up");
     public const string APP_ID = "com.github.philip_scott.spice-up";
     public const string RESOURCE_PATH = "/com/github/philip-scott/spice-up/";
+
+    private const string APP_NAME = "Spice-Up";
 
     public bool running = false;
 
@@ -48,11 +52,6 @@ public class Spice.Application : Granite.Application {
         flags |= ApplicationFlags.HANDLES_OPEN;
 
         application_id = APP_ID;
-        program_name = PROGRAM_NAME;
-        exec_name = APP_ID;
-        app_launcher = APP_ID;
-
-        build_version = "1.7";
 
         opened_files = new Gee.HashMap<string, Spice.Window>();
         settings = Spice.Services.Settings.get_instance ();
@@ -119,5 +118,21 @@ public class Spice.Application : Granite.Application {
 
     public Spice.Window get_window_from_file (File file) {
         return opened_files.get (file.get_uri ());
+    }
+
+    public static int main (string[] args) {
+        DEBUG = "-d" in args;
+
+        /* Initiliaze gettext support */
+        Intl.setlocale (LocaleCategory.ALL, Intl.get_language_names ()[0]);
+        //Intl.setlocale (LocaleCategory.NUMERIC, "en_US");
+        //Intl.textdomain (TERMINAL_NAME);
+
+        Environment.set_application_name (APP_NAME);
+        Environment.set_prgname (APP_NAME);
+
+        var application = Spice.Application.instance;
+
+        return application.run (args);
     }
 }

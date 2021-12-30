@@ -1,5 +1,4 @@
 src/Application.vala
-src/Main.vala
 src/Window.vala
 
 src/Services/Clipboard.vala
