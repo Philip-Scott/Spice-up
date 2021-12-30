@@ -20,7 +20,7 @@
 */
 
 public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
-    private Gtk.MenuButton open_with;
+    private Gtk.Button open_with;
     private Gtk.Button replace_image;
 
     private unowned SlideManager manager;
@@ -30,11 +30,23 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
     }
 
     construct {
-        open_with = new Gtk.MenuButton ();
+        open_with = new Gtk.Button ();
         open_with.add (new Gtk.Image.from_icon_name ("applications-graphics-symbolic", Gtk.IconSize.MENU));
         open_with.set_tooltip_text (_("Edit image with…"));
         open_with.get_style_context ().add_class (Gtk.STYLE_CLASS_RAISED);
         open_with.get_style_context ().add_class ("image-button");
+
+        open_with.clicked.connect (() => {
+            var image_item = (ImageItem) item;
+            var file = File.new_for_path (image_item.url);
+
+            try {
+                Gtk.show_uri_on_window(Application.get_active_spice_window (), file.get_uri (), Gdk.CURRENT_TIME);
+            } catch (Error e) {
+                warning ("Could not launch open with portal %s", e.message);
+                return;
+            }
+        });
 
         replace_image = new Gtk.Button ();
         replace_image.add (new Gtk.Image.from_icon_name ("document-new-symbolic", Gtk.IconSize.MENU));
@@ -55,47 +67,7 @@ public class Spice.Widgets.ImageToolbar : Spice.Widgets.Toolbar {
         add (replace_image);
     }
 
-    private void launch_editor (AppInfo app) {
-        var list = new List<File>();
-        list.append (File.new_for_path (((ImageItem) this.item).url));
-
-        try {
-            app.launch (list, null);
-        } catch (Error e) {
-            warning ("Could launch application: %s", e.message);
-        }
-    }
-
-    protected override void item_selected (Spice.CanvasItem? _item, bool new_item = false) {
-        var item = _item as Spice.ImageItem;
-
-        if (item != null) {
-            var menu = new Gtk.Menu ();
-            open_with.popup = menu;
-
-            var file = File.new_for_path (item.url);
-
-            try {
-                var file_info = file.query_info ("standard::*", 0);
-
-                var apps = AppInfo.get_all_for_type (file_info.get_content_type ());
-
-                foreach (var app in apps) {
-                    var meun_item = new Gtk.MenuItem.with_label (app.get_name ());
-                    menu.add (meun_item);
-
-                    meun_item.activate.connect (() => {
-                        launch_editor (app);
-                    });
-                }
-
-                menu.show_all ();
-            } catch (Error e) {
-                warning ("Could not get file info %s", e.message);
-                return;
-            }
-        }
-    }
+    protected override void item_selected (Spice.CanvasItem? _item, bool new_item = false) {}
 
     public override void update_properties () {}
 }

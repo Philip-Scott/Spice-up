@@ -10,9 +10,10 @@ finish-args:
   - '--share=ipc'
   - '--socket=fallback-x11'
   - '--socket=wayland'
-
+  
   - '--device=all'      # Required for Controllers
   - '--filesystem=xdg-documents' # Required for library
+  - '--filesystem=/tmp' # Required to share images for editing with external apps
 
 modules:
   - name: gudev
