@@ -44,13 +44,16 @@ public class Spice.SlideList : Gtk.Grid {
         };
         scrollbox.add (slides_list);
 
-        var new_slide_button = new Gtk.Button.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR) {
+        var new_slide_button = new Gtk.Button.with_label (_("Add a Slide")) {
             always_show_image = true,
-            label = _("Add a Slide"),
             margin_top = 3,
             margin_bottom = 3,
-            tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NEW_SLIDE, "")
+            hexpand = true,
+            image = new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.MENU),
+            tooltip_markup = Utils.get_accel_tooltip (Window.ACTION_NEW_SLIDE, ""),
+            xalign = 0
         };
+
         new_slide_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
 
         var actionbar = new Gtk.ActionBar ();
