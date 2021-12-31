@@ -213,9 +213,7 @@
       <image>https://raw.githubusercontent.com/Philip-Scott/Spice-up/master/Screenshot3.png</image>
     </screenshot>
   </screenshots>
-  <content_rating type="oars-1.1">
-    <content_attribute id="social-info">mild</content_attribute>
-  </content_rating>
+  <content_rating type="oars-1.1" />
   <developer_name>Felipe Escoto</developer_name>
   <url type="homepage">https://github.com/Philip-Scott/Spice-up</url>
   <url type="bugtracker">https://github.com/Philip-Scott/Spice-up/issues</url>
