@@ -63,6 +63,10 @@ public class Spice.SlideList : Gtk.Grid {
         add (scrollbox);
         add (actionbar);
 
+        // Setting "hexpand = false" here after adding the other elements 
+        // to prevent the SlideList's slides from expanding with the window.
+        hexpand = false;
+
         slides_list.row_selected.connect ((row) => {
             if (row is SlideListRow) {
                 var slide = (SlideListRow) row;
