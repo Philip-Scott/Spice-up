@@ -28,6 +28,15 @@
     <binary>spice-up</binary>
   </provides>
   <releases>
+    <release version="1.9.1" date="2021-12-31">
+      <description>
+        <p>Now on elementary 6+</p>
+        <ul>
+          <li>OARS info now reflects the app correctly.</li>
+          <li>Hot-Fix: Slide whitespace on the Slide List was expanding on window resize when not expected.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.9.0" date="2021-12-29">
       <description>
         <p>Now on elementary 6+</p>
