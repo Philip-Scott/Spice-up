@@ -26,6 +26,8 @@
   </description>
   <provides>
     <binary>spice-up</binary>
+    <!-- Legacy RDNN -->
+    <id>com.github.philip-scott.spice-up</id>
   </provides>
   <releases>
     <release version="1.9.1" date="2021-12-31">
