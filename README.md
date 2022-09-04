@@ -64,6 +64,8 @@ You can install Spice-Up from a PPA. But be aware that your results may vary
     sudo add-apt-repository ppa:philip.scott/spice-up-daily
     sudo apt-get update
     sudo apt-get install com.github.philip-scott.spice-up
+    
+ You can also install Spice-Up on [Arch Linux](https://aur.archlinux.org/packages/?O=0&SeB=nd&K=spice-up&outdated=&SB=n&SO=a&PP=50&do_Search=Go) via the AUR.
 
 ## Dependencies
 These dependencies must be present before building
